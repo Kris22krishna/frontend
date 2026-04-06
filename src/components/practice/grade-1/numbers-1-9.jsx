@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText, Check, X, Eye, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../../../contexts/AuthContext';
-import { api } from '../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 import Navbar from '../../Navbar';
 import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
 import { LatexText } from '../../LatexText';
@@ -89,10 +89,19 @@ const DynamicVisual = ({ type, data }) => {
     return null;
 };
 
+const SKILL_ID_MAP = {
+    '201': NODE_IDS.g1MathNumbers19Reading,
+    '202': NODE_IDS.g1MathNumbers19Counting,
+    '203': NODE_IDS.g1MathNumbers19Sequence,
+    '204': NODE_IDS.g1MathNumbers19Comparison,
+    '205': NODE_IDS.g1MathNumbers19Mixed,
+};
+
 const Numbers1to9 = () => {
-    const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
     const isTest = skillId === '205';
@@ -106,8 +115,7 @@ const Numbers1to9 = () => {
     const [timer, setTimer] = useState(0);
     const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
-    const [sessionId, setSessionId] = useState(null);
-
+    const [isAutoAdvancing, setIsAutoAdvancing] = useState(false);
     const [userInput, setUserInput] = useState('');
     const [showExplanationModal, setShowExplanationModal] = useState(false);
 
@@ -166,11 +174,22 @@ const Numbers1to9 = () => {
         return null;
     };
 
-    const { topicName, skillName } = getTopicInfo();
+    const makeOptions = (correct) => {
+        const opts = new Set([correct]);
+        const offsets = [1, -1, 2, -2, 3, -3, 4];
+        for (const off of offsets) {
+            if (opts.size >= 4) break;
+            const v = correct + off;
+            if (v >= 0) opts.add(v);
+        }
+        return [...opts].sort(() => 0.5 - Math.random());
+    };
+
     const generateQuestions = (selectedSkill) => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
         const objTypes = ['circle', 'star', 'square'];
+
 
         for (let i = 0; i < totalQuestions; i++) {
             let question = {};
@@ -189,7 +208,6 @@ const Numbers1to9 = () => {
             }
 
             if (typeToGen === 'counting') {
-                // Counting objects
                 let count;
                 if (isTest) {
                     count = (i % 9) + 1;
@@ -199,14 +217,13 @@ const Numbers1to9 = () => {
                 const objType = objTypes[i % objTypes.length];
                 question = {
                     text: `How many ${objType}s can you count?`,
-                    options: [count, (count + 1) % 10 || 1, (count - 1) || 9].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
+                    options: makeOptions(count),
                     correct: count,
                     type: 'counting',
                     visualData: { count, objType, color: colors[i % colors.length] },
                     explanation: `By counting carefully, we can see there are exactly ${count} ${objType}s.`
                 };
             } else if (typeToGen === 'recognition') {
-                // Number recognition
                 const names = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
                 let num;
                 if (isTest) {
@@ -216,14 +233,13 @@ const Numbers1to9 = () => {
                 }
                 question = {
                     text: `What is the name of this number?`,
-                    options: [names[num - 1], names[num % 9], names[(num + 2) % 9]].sort(() => 0.5 - Math.random()),
+                    options: [names[num - 1], names[num % 9], names[(num + 2) % 9], names[(num + 4) % 9]].filter((v, i, self) => self.indexOf(v) === i).sort(() => 0.5 - Math.random()),
                     correct: names[num - 1],
                     type: 'recognition',
                     visualData: { num, color: colors[i % colors.length] },
                     explanation: `The number ${num} is written as '${names[num - 1].toUpperCase()}'.`
                 };
             } else if (typeToGen === 'comparison') {
-                // Comparison
                 let n1, n2;
                 if (isTest) {
                     const pairs = [[2, 5], [7, 3], [4, 8], [9, 1]];
@@ -243,7 +259,6 @@ const Numbers1to9 = () => {
                     explanation: `Group A has ${n1} and Group B has ${n2}. So ${correct} clearly has ${isMore ? 'more' : 'fewer'}.`
                 };
             } else if (typeToGen === 'userinput') {
-                // Writing numbers 1-9 (Count and Write)
                 let count;
                 if (isTest) {
                     count = ((i - 8) % 9) + 1;
@@ -253,14 +268,12 @@ const Numbers1to9 = () => {
                 const objType = objTypes[i % objTypes.length];
                 question = {
                     text: `Count the items and write the number!`,
-                    options: [], // No MCQ options
+                    options: [],
                     correct: count.toString(),
                     type: 'userinput',
                     visualData: { count, objType, color: colors[i % colors.length], forceCounting: true },
                     explanation: `We count ${count} items. We write this as the number ${count}.`
                 };
-            } else {
-                question = { text: "Count the items!", options: ["1"], correct: "1", type: "counting", visualData: { count: 1, objType: 'circle', color: '#FF6B6B' }, explanation: "Counting is fun!" };
             }
             questions.push(question);
         }
@@ -268,18 +281,11 @@ const Numbers1to9 = () => {
     };
 
     useEffect(() => {
-        const init = async () => {
-            const userId = user?.user_id || user?.id;
-            if (!userId) return;
-            const qs = generateQuestions(skillId);
-            setSessionQuestions(qs);
-            try {
-                const session = await api.createPracticeSession(userId, parseInt(skillId) || 201);
-                setSessionId(session?.session_id);
-            } catch (e) { console.error(e); }
-        };
-        init();
-    }, [user, skillId]);
+        const qs = generateQuestions(skillId);
+        setSessionQuestions(qs);
+        const nodeId = SKILL_ID_MAP[skillId] || NODE_IDS.g1MathNumbers19Mixed;
+        startSession({ nodeId, sessionType: isTest ? 'assessment' : 'practice' });
+    }, [skillId, isTest, startSession]);
 
     useEffect(() => {
         let interval;
@@ -295,6 +301,7 @@ const Numbers1to9 = () => {
 
     useEffect(() => {
         if (answers[qIndex]) {
+            const currentQ = sessionQuestions[qIndex];
             setSelectedOption(answers[qIndex].selectedOption);
             setIsAnswered(true);
             if (currentQ?.type === 'userinput') setUserInput(answers[qIndex].selectedOption);
@@ -303,16 +310,9 @@ const Numbers1to9 = () => {
             setIsAnswered(false);
             setUserInput('');
         }
-    }, [qIndex, answers]);
+    }, [qIndex, answers, sessionQuestions]);
 
     const handleExit = async () => {
-        try {
-            if (sessionId) {
-                await api.finishSession(sessionId);
-            }
-        } catch (e) {
-            console.error("Error finishing session:", e);
-        }
         navigate('/junior/grade/1');
     };
 
@@ -321,80 +321,76 @@ const Numbers1to9 = () => {
         setSelectedOption(option);
     };
 
-
     const handleSubmit = () => {
         if (isAnswered || selectedOption === null) return;
         const option = selectedOption;
+        const currentQ = sessionQuestions[qIndex];
+        const isCorrect = option.toString() === currentQ.correct.toString();
 
         setIsAnswered(true);
-        const isCorrect = option === sessionQuestions[qIndex].correct;
-        // --- AUTO-INJECTED LOGGING ---
-        try {
-            const uid = user?.user_id || user?.id || sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            const qData = sessionQuestions[qIndex] || {};
-            const skId = typeof selectedSkill !== 'undefined' ? selectedSkill : (typeof skillId !== 'undefined' ? skillId : '0');
-            const currentTimer = typeof timer !== 'undefined' ? timer : 0;
+        if (isCorrect) setScore(s => s + 1);
 
-            if (uid && sessionId) {
-                api.recordAttempt({
-                    user_id: parseInt(uid, 10),
-                    session_id: sessionId,
-                    skill_id: parseInt(skId, 10) || 0,
-                    template_id: null,
-                    difficulty_level: 'Medium',
-                    question_text: String(qData.text || ''),
-                    correct_answer: String(qData.correct || qData.correctAnswer || ''),
-                    student_answer: String(option),
-                    is_correct: isCorrect,
-                    solution_text: String(qData.explanation || qData.solution || ''),
-                    time_spent_seconds: currentTimer
-                }).catch(err => console.error("Auto-log failed:", err));
-            }
-        } catch (err) {
-            console.error("Auto-log error:", err);
-        }
-        // -----------------------------
+        const answerData = {
+            question_text: currentQ.text,
+            selected: option,
+            correct: currentQ.correct,
+            isCorrect
+        };
 
-        if (isCorrect) {
-            setScore(s => s + 1);
-        }
+        logAnswer({
+            question_index: qIndex,
+            answer_json: answerData,
+            is_correct: isCorrect ? 1 : 0
+        });
 
         setAnswers(prev => ({
             ...prev,
             [qIndex]: {
                 selectedOption: option,
                 isCorrect,
-                type: sessionQuestions[qIndex].type,
-                visualData: sessionQuestions[qIndex].visualData,
-                questionText: sessionQuestions[qIndex].text,
-                correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: sessionQuestions[qIndex].explanation || "Detailed explanation is coming soon! Feel free to ask your teacher for help in the meantime. 💡"
+                type: currentQ.type,
+                visualData: currentQ.visualData,
+                questionText: currentQ.text,
+                correctAnswer: currentQ.correct,
+                explanation: currentQ.explanation || "Detailed explanation is coming soon!"
             }
         }));
 
-        // Show modal for all answers in practice mode
         if (!isTest) {
-            setShowExplanationModal(true);
+            if (isCorrect) {
+                setIsAutoAdvancing(true);
+                setTimeout(() => {
+                    handleNext();
+                    setIsAutoAdvancing(false);
+                }, 800);
+            } else {
+                setShowExplanationModal(true);
+            }
         } else {
-            // Give a tiny delay so they see the option highlight green
-            setTimeout(() => {
-                handleNext();
-            }, 800);
+            handleNext();
         }
     };
 
     const handleSkip = () => {
         if (isAnswered) return;
+        const currentQ = sessionQuestions[qIndex];
+        
+        logAnswer({
+            question_index: qIndex,
+            answer_json: { question_text: currentQ.text, selected: 'Skipped', correct: currentQ.correct, isCorrect: false },
+            is_correct: 0
+        });
+
         setAnswers(prev => ({
             ...prev,
             [qIndex]: {
                 selectedOption: 'Skipped',
                 isCorrect: false,
-                type: sessionQuestions[qIndex].type,
-                visualData: sessionQuestions[qIndex].visualData,
-                questionText: sessionQuestions[qIndex].text,
-                correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: "This question was skipped. " + sessionQuestions[qIndex].explanation
+                type: currentQ.type,
+                visualData: currentQ.visualData,
+                questionText: currentQ.text,
+                correctAnswer: currentQ.correct,
+                explanation: "This question was skipped. " + currentQ.explanation
             }
         }));
         handleNext();
@@ -404,26 +400,12 @@ const Numbers1to9 = () => {
         if (qIndex < totalQuestions - 1) {
             setQIndex(v => v + 1);
         } else {
+            finishSession({
+                totalQuestions,
+                questionsAnswered: Object.keys(answers).length,
+                answersPayload: answers
+            });
             setShowResults(true);
-            try {
-                if (sessionId) {
-                    await api.finishSession(sessionId);
-                    await api.createReport({
-                        uid: user?.id || 'unknown',
-                        category: 'Practice',
-                        reportData: {
-                            skill_id: skillId,
-                            skill_name: skillName,
-                            score: Math.round((score / totalQuestions) * 100),
-                            total_questions: totalQuestions,
-                            correct_answers: score,
-                            time_spent: timer,
-                            timestamp: new Date().toISOString(),
-                            answers: Object.values(answers).filter(a => a !== undefined)
-                        }
-                    });
-                }
-            } catch (e) { console.error(e); }
         }
     };
 
@@ -706,10 +688,10 @@ const Numbers1to9 = () => {
 
                             {!isAnswered ? (
                                 <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>
-                                    {isTest ? 'Next' : 'Check Answer'} <ChevronRight size={24} />
+                                    {isTest ? (qIndex === totalQuestions - 1 ? 'Finish Test' : 'Next Question') : 'Check Answer'} <ChevronRight size={24} />
                                 </button>
                             ) : (
-                                <button className="g1-nav-btn next-btn" onClick={handleNext}>
+                                <button className="g1-nav-btn next-btn" onClick={handleNext} disabled={isAutoAdvancing}>
                                     {qIndex === totalQuestions - 1 ? (isTest ? 'Finish Test' : 'Finish') : 'Next Question'} <ChevronRight size={24} />
                                 </button>
                             )}

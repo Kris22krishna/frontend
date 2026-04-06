@@ -2,6 +2,7 @@
 export const SKILLS = [
     {
         "id": "real_life",
+        "nodeId": "a4101008-0001-0000-0000-000000000000",
         "title": "Trigonometry in Real-Life Situations",
         "subtitle": "Meaning and Applications",
         "icon": "🌍",
@@ -380,6 +381,7 @@ export const SKILLS = [
     },
     {
         "id": "trig_ratios",
+        "nodeId": "a4101008-0002-0000-0000-000000000000",
         "title": "Understanding Trigonometric Ratios",
         "subtitle": "The 6 Core Ratios",
         "icon": "📐",
@@ -762,6 +764,7 @@ export const SKILLS = [
     },
     {
         "id": "triangle_sides",
+        "nodeId": "a4101008-0003-0000-0000-000000000000",
         "title": "Finding Ratios from Triangle Sides",
         "subtitle": "Pythagoras 2.0",
         "icon": "📐",
@@ -1125,6 +1128,7 @@ export const SKILLS = [
     },
     {
         "id": "standard_angles",
+        "nodeId": "a4101008-0004-0000-0000-000000000000",
         "title": "Trigonometric Ratios of Standard Angles",
         "subtitle": "The Famous Table",
         "icon": "🔢",
@@ -1493,6 +1497,7 @@ export const SKILLS = [
     },
     {
         "id": "evaluating_values",
+        "nodeId": "a4101008-0005-0000-0000-000000000000",
         "title": "Evaluating Expressions Using Standard Values",
         "subtitle": "Plug and Play",
         "icon": "🧮",
@@ -1855,6 +1860,7 @@ export const SKILLS = [
     },
     {
         "id": "identities",
+        "nodeId": "a4101008-0006-0000-0000-000000000000",
         "title": "Trigonometric Identities",
         "subtitle": "The Core Equations",
         "icon": "🔗",
@@ -2221,6 +2227,7 @@ export const SKILLS = [
     },
     {
         "id": "simplify_prove",
+        "nodeId": "a4101008-0007-0000-0000-000000000000",
         "title": "Using Identities to Simplify or Prove",
         "subtitle": "Algebra meets Trig",
         "icon": "📝",
@@ -2589,6 +2596,7 @@ export const SKILLS = [
     },
     {
         "id": "angle_problems",
+        "nodeId": "a4101008-0008-0000-0000-000000000000",
         "title": "Angle-Based Problems",
         "subtitle": "Inverse Reasoning",
         "icon": "🔍",

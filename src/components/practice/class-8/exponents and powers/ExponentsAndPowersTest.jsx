@@ -210,7 +210,7 @@ const ExponentsAndPowersTest = () => {
         const uid = parseInt(rawUid, 10);
         if (!isNaN(uid) && !sessionId) {
             const sid = startSession({
-                nodeId: NODE_IDS.g8MathAlgebraExponents,
+                nodeId: NODE_IDS.g8MathEPChapterTest,
                 sessionType: 'assessment'
             });
             if (sid) setSessionId(sid);

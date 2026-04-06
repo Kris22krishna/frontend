@@ -1,4 +1,4 @@
-import { getRandomInt, shuffleArray } from '../mathUtils.mjs';
+import { getRandomInt, shuffleArray, ensureUniqueOptions } from '../mathUtils.mjs';
 
 // --- Integers ---
 
@@ -187,37 +187,17 @@ export const generateExponentLaws = (allowedTypes = [0, 1, 2, 3]) => {
 
     const question = `Using the <b>${lawName}</b>, simplify: ${expr}`;
 
-    const options = shuffleArray([
-        { value: ans, label: ans },
+    const options = ensureUniqueOptions({ value: ans, label: ans }, [
         { value: wrong1, label: wrong1 },
         { value: wrong2, label: wrong2 },
         { value: wrong3, label: wrong3 }
     ]);
 
-    // Dedupe
-    const uniqueOptions = [];
-    const seen = new Set();
-    for (const opt of options) {
-        if (!seen.has(opt.value)) {
-            seen.add(opt.value);
-            uniqueOptions.push(opt);
-        }
-    }
-    // Fill if needed (rare)
-    while (uniqueOptions.length < 4) {
-        const r = getRandomInt(1, 10);
-        const val = `$${r}$`;
-        if (!seen.has(val)) {
-            seen.add(val);
-            uniqueOptions.push({ value: val, label: val });
-        }
-    }
-
     return {
         type: "mcq",
         question: question,
         topic: `Exponents / ${lawName}`,
-        options: uniqueOptions,
+        options: options,
         answer: ans
     };
 };

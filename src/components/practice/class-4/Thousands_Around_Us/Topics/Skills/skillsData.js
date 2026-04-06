@@ -29,11 +29,16 @@ const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 const fmt = (n) => n.toLocaleString();
 
 function rnd4() { return rnd(1000, 9999); }
-function rnd4unique(count, exclude = []) {
+function rnd4Distinct() {
+  let n = rnd4();
+  while (new Set(digits(n)).size !== 4) n = rnd4();
+  return n;
+}
+function rnd4unique(count, exclude = [], generator = rnd4) {
   const set = new Set(exclude);
   const result = [];
   while (result.length < count) {
-    const n = rnd4();
+    const n = generator();
     if (!set.has(n)) { set.add(n); result.push(n); }
   }
   return result;
@@ -41,6 +46,22 @@ function rnd4unique(count, exclude = []) {
 function digits(n) {
   const s = String(n);
   return [+s[0], +s[1], +s[2], +s[3]];
+}
+function uniqueDigitPositions(n) {
+  const d = digits(n);
+  return d
+    .map((digit, idx) => (d.indexOf(digit) === d.lastIndexOf(digit) ? idx : -1))
+    .filter(idx => idx !== -1);
+}
+function ensureUniqueDigitQuestion(used) {
+  let n = rnd4Distinct();
+  let uniquePositions = uniqueDigitPositions(n);
+  while (used.has(n) || uniquePositions.length === 0) {
+    n = rnd4Distinct();
+    uniquePositions = uniqueDigitPositions(n);
+  }
+  used.add(n);
+  return { n, d: digits(n), pos: pick(uniquePositions) };
 }
 function expanded(n) {
   const d = digits(n);
@@ -55,13 +76,11 @@ function expanded(n) {
 function genPlaceValuePractice() {
   const qs = [];
   const used = new Set();
-  const ensure = () => { let n = rnd4(); while (used.has(n)) n = rnd4(); used.add(n); return n; };
+  const ensure = () => { let n = rnd4Distinct(); while (used.has(n)) n = rnd4Distinct(); used.add(n); return n; };
 
   // Type 1: MCQ — What is the place of digit X in N? (5 qs)
   for (let i = 0; i < 5; i++) {
-    const n = ensure();
-    const d = digits(n);
-    const pos = rnd(0, 3);
+    const { n, d, pos } = ensureUniqueDigitQuestion(used);
     const digit = d[pos];
     const correct = PLACES[pos];
     const opts = shuffle(PLACES);
@@ -77,9 +96,7 @@ function genPlaceValuePractice() {
 
   // Type 2: MCQ — What is the VALUE of digit X in N? (5 qs)
   for (let i = 0; i < 5; i++) {
-    const n = ensure();
-    const d = digits(n);
-    const pos = rnd(0, 3);
+    const { n, d, pos } = ensureUniqueDigitQuestion(used);
     const digit = d[pos];
     const value = digit * PLACE_VALS[pos];
     const fakes = shuffle(PLACE_VALS.map(v => digit * v).filter(v => v !== value)).slice(0, 3);
@@ -130,13 +147,11 @@ function genPlaceValuePractice() {
 function genPlaceValueAssessment() {
   const qs = [];
   const used = new Set();
-  const ensure = () => { let n = rnd4(); while (used.has(n)) n = rnd4(); used.add(n); return n; };
+  const ensure = () => { let n = rnd4Distinct(); while (used.has(n)) n = rnd4Distinct(); used.add(n); return n; };
 
   // Mix of MCQ + interactive for assessment
   for (let i = 0; i < 6; i++) {
-    const n = ensure();
-    const d = digits(n);
-    const pos = rnd(0, 3);
+    const { n, d, pos } = ensureUniqueDigitQuestion(used);
     const digit = d[pos];
     const correct = PLACES[pos];
     const opts = shuffle(PLACES);
@@ -151,9 +166,7 @@ function genPlaceValueAssessment() {
   }
 
   for (let i = 0; i < 6; i++) {
-    const n = ensure();
-    const d = digits(n);
-    const pos = rnd(0, 3);
+    const { n, d, pos } = ensureUniqueDigitQuestion(used);
     const digit = d[pos];
     const value = digit * PLACE_VALS[pos];
     const fakes = shuffle(PLACE_VALS.map(v => digit * v).filter(v => v !== value)).slice(0, 3);
@@ -203,7 +216,7 @@ function genPlaceValueAssessment() {
 function genExpandedPractice() {
   const qs = [];
   const used = new Set();
-  const ensure = () => { let n = rnd4(); while (used.has(n)) n = rnd4(); used.add(n); return n; };
+  const ensure = () => { let n = rnd4Distinct(); while (used.has(n)) n = rnd4Distinct(); used.add(n); return n; };
 
   // Type 1: MCQ — Expanded form of N (5 qs)
   for (let i = 0; i < 5; i++) {
@@ -260,13 +273,8 @@ function genExpandedPractice() {
 
   // Type 4: Interactive — Number Builder from word form (5 qs)
   for (let i = 0; i < 5; i++) {
-    const th = rnd(1, 9);
-    const h = rnd(0, 9);
-    const t = rnd(0, 9);
-    const o = rnd(0, 9);
-    const n = th * 1000 + h * 100 + t * 10 + o;
-    if (used.has(n)) { i--; continue; }
-    used.add(n);
+    const n = ensure();
+    const [th, h, t, o] = digits(n);
     const wordParts = [];
     if (th > 0) wordParts.push(`${capitalize(numWord(th))} thousand`);
     if (h > 0) wordParts.push(`${numWord(h)} hundred`);
@@ -292,7 +300,7 @@ function genExpandedPractice() {
 function genExpandedAssessment() {
   const qs = [];
   const used = new Set();
-  const ensure = () => { let n = rnd4(); while (used.has(n)) n = rnd4(); used.add(n); return n; };
+  const ensure = () => { let n = rnd4Distinct(); while (used.has(n)) n = rnd4Distinct(); used.add(n); return n; };
 
   for (let i = 0; i < 7; i++) {
     const n = ensure();
@@ -348,7 +356,7 @@ function genExpandedAssessment() {
 function genComparingPractice() {
   const qs = [];
   const used = new Set();
-  const ensure = () => { let n = rnd4(); while (used.has(n)) n = rnd4(); used.add(n); return n; };
+  const ensure = () => { let n = rnd4Distinct(); while (used.has(n)) n = rnd4Distinct(); used.add(n); return n; };
 
   // Type 1: MCQ — Compare two numbers (5 qs)
   for (let i = 0; i < 5; i++) {
@@ -367,7 +375,7 @@ function genComparingPractice() {
 
   // Type 2: MCQ — Which is greatest/smallest (5 qs)
   for (let i = 0; i < 5; i++) {
-    const nums = rnd4unique(4);
+    const nums = rnd4unique(4, [], rnd4Distinct);
     const isGreatest = rnd(0, 1) === 0;
     const target = isGreatest ? Math.max(...nums) : Math.min(...nums);
     const opts = shuffle(nums).map(v => fmt(v));
@@ -383,7 +391,7 @@ function genComparingPractice() {
 
   // Type 3: Interactive — Ordering: put numbers in correct order (5 qs)
   for (let i = 0; i < 5; i++) {
-    const nums = rnd4unique(4);
+    const nums = rnd4unique(4, [], rnd4Distinct);
     const ascending = rnd(0, 1) === 0;
     const sorted = [...nums].sort((a, b) => ascending ? a - b : b - a);
     qs.push({
@@ -431,7 +439,7 @@ function genComparingPractice() {
 function genComparingAssessment() {
   const qs = [];
   const used = new Set();
-  const ensure = () => { let n = rnd4(); while (used.has(n)) n = rnd4(); used.add(n); return n; };
+  const ensure = () => { let n = rnd4Distinct(); while (used.has(n)) n = rnd4Distinct(); used.add(n); return n; };
 
   for (let i = 0; i < 6; i++) {
     const a = ensure(), b = ensure();
@@ -448,7 +456,7 @@ function genComparingAssessment() {
   }
 
   for (let i = 0; i < 6; i++) {
-    const nums = rnd4unique(4);
+    const nums = rnd4unique(4, [], rnd4Distinct);
     const isGreatest = rnd(0, 1) === 0;
     const target = isGreatest ? Math.max(...nums) : Math.min(...nums);
     const opts = shuffle(nums).map(v => fmt(v));
@@ -463,7 +471,7 @@ function genComparingAssessment() {
   }
 
   for (let i = 0; i < 4; i++) {
-    const nums = rnd4unique(4);
+    const nums = rnd4unique(4, [], rnd4Distinct);
     const ascending = rnd(0, 1) === 0;
     const sorted = [...nums].sort((a, b) => ascending ? a - b : b - a);
     qs.push({

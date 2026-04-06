@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Check, Eye, ChevronRight, ChevronLeft, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { NODE_IDS } from '../../../../lib/curriculumIds';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import Class8PracticeReportModal from '../Class8PracticeReportModal';
@@ -113,6 +115,9 @@ const SquareRootPrimeFactorization = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
     const SKILL_ID = 1252;
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
     const SKILL_NAME = "Square Root via Prime Factorization";
     const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState(() => getSessionData(`${storageKey}_answers`, {}));
@@ -138,7 +143,8 @@ const SquareRootPrimeFactorization = () => {
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
-            api.createPracticeSession(userId, SKILL_ID).then(sess => {
+            startSession({ nodeId: NODE_IDS.g8MathSSRPrimeFactorization, sessionType: 'practice' });
+        api.createPracticeSession(userId, SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
         }
@@ -271,6 +277,10 @@ const SquareRootPrimeFactorization = () => {
             accumulatedTime.current = 0;
             questionStartTime.current = Date.now();
         } else {
+            if (!isFinishedRef.current) {
+                isFinishedRef.current = true;
+                await finishSession({ answers_payload: answersPayload.current.filter(Boolean) });
+            }
             if (sessionId) {
                 await api.finishSession(sessionId).catch(console.error);
             }

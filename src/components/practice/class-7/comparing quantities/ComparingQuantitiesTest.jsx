@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Clock, ChevronRight, ChevronLeft } from 'lucide-react';
 import { api } from '../../../../services/api';
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { NODE_IDS } from '../../../../lib/curriculumIds';
 import LatexContent from '../../../LatexContent';
 import '../../../../pages/middle/class-7/Class7PracticeLayout.css';
 import mascotImg from '../../../../assets/mascot.png';
@@ -91,6 +93,8 @@ const ComparingQuantitiesTest = () => {
     const questionStartTime = useRef(Date.now());
     const [sessionId, setSessionId] = useState(null);
     const [questions, setQuestions] = useState([]);
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const answersPayload = useRef([]);
 
     useEffect(() => {
         const generateQuestions = () => {
@@ -179,6 +183,7 @@ const ComparingQuantitiesTest = () => {
             api.createPracticeSession(uid, SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
+            startSession({ nodeId: NODE_IDS.g7MathCQChapterTest, sessionType: 'assessment' });
         }
     }, []);
 
@@ -191,9 +196,24 @@ const ComparingQuantitiesTest = () => {
     const handleRecordResponse = () => {
         const currentQ = questions[qIndex];
         const isCorrect = selectedOption ? selectedOption === currentQ.correctAnswer : null;
-        const timeSpent = Math.round((Date.now() - questionStartTime.current) / 1000);
+        const timeSpentMs = Date.now() - questionStartTime.current;
+        const timeSpent = Math.round(timeSpentMs / 1000);
         const isSkipped = !selectedOption;
         setResponses(prev => ({ ...prev, [qIndex]: { selectedOption, isCorrect, timeTaken: (prev[qIndex]?.timeTaken || 0) + timeSpent, isSkipped } }));
+
+        // v4 logging
+        const entry = {
+            question_index: qIndex,
+            answer_json: { selected: selectedOption, isSkipped },
+            is_correct: isSkipped ? false : (isCorrect === true),
+            marks_awarded: isCorrect === true ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: timeSpentMs,
+        };
+        const existingIdx = answersPayload.current.findIndex(a => a && a.question_index === qIndex);
+        if (existingIdx >= 0) { answersPayload.current[existingIdx] = entry; } else { answersPayload.current.push(entry); }
+        logAnswer(entry);
+
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         const uid = parseInt(rawUid, 10);
         if (!isNaN(uid)) {
@@ -218,6 +238,11 @@ const ComparingQuantitiesTest = () => {
     const finalizeTest = async () => {
         setIsTestOver(true);
         if (sessionId) await api.finishSession(sessionId).catch(console.error);
+        await finishSession({ 
+            total_questions: questions.length,
+            questions_answered: Object.keys(responses).length,
+            answers_payload: answersPayload.current.filter(Boolean) 
+        });
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         const uid = parseInt(rawUid, 10);
         if (!isNaN(uid)) {

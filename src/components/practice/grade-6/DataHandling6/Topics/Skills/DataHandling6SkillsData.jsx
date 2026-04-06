@@ -9,6 +9,7 @@ import {
 export const SKILLS = [
     {
         id: 'data-observations',
+        nodeId: 'a4061011-0001-0000-0000-000000000000',
         title: 'Data & Observations',
         subtitle: 'Skill 1',
         icon: '📊',
@@ -73,6 +74,7 @@ export const SKILLS = [
     },
     {
         id: 'tally-marks',
+        nodeId: 'a4061011-0002-0000-0000-000000000000',
         title: 'Tally Marks & Frequency',
         subtitle: 'Skill 2',
         icon: '📝',
@@ -152,6 +154,7 @@ export const SKILLS = [
     },
     {
         id: 'pictographs',
+        nodeId: 'a4061011-0003-0000-0000-000000000000',
         title: 'Interpreting Pictographs',
         subtitle: 'Skill 3',
         icon: '🖼️',
@@ -211,6 +214,7 @@ export const SKILLS = [
     },
     {
         id: 'bar-graphs',
+        nodeId: 'a4061011-0004-0000-0000-000000000000',
         title: 'Drawing & Reading Bar Graphs',
         subtitle: 'Skill 4',
         icon: '📈',

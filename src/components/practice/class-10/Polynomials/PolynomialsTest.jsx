@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, Eye, ChevronRight, ChevronLeft, SkipForward, ArrowLeft, RefreshCw, BarChart3, Clock, HelpCircle, CheckCircle2, XCircle } from 'lucide-react';
-import { api } from '../../../../services/api';
-import { LatexText } from '../../../LatexText';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import '../TenthPracticeSession.css';
 import mascotImg from '../../../../assets/mascot.png';
+
+const NODE_ID = 'a4101002-0010-0000-0000-000000000000'; // Polynomials Chapter Assessment
 
 const getNow = () => Date.now();
 
@@ -217,18 +218,33 @@ const PolynomialsTest = () => {
     const [isTestOver, setIsTestOver] = useState(false);
     const [responses, setResponses] = useState({});
 
-    const questionStartTime = useRef(getNow());
-    const [sessionId, setSessionId] = useState(null);
+    // Logging states
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const v4Answers = useRef([]);
+    const questionStartTime = useRef(Date.now());
+    const accumulatedTime = useRef(0);
+    const isTabActive = useRef(true);
+
     const [questions, setQuestions] = useState(() => generateQuestions());
 
     useEffect(() => {
-        const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        const uid = parseInt(rawUid, 10);
-        if (!isNaN(uid)) {
-            api.createPracticeSession(String(uid).includes("-") ? 1 : parseInt(uid, 10), SKILL_ID).then(sess => {
-                if (sess && sess.session_id) setSessionId(sess.session_id);
-            });
-        }
+        startSession({ nodeId: NODE_ID, sessionType: 'assessment' });
+        v4Answers.current = [];
+
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                accumulatedTime.current += Date.now() - questionStartTime.current;
+                isTabActive.current = false;
+            } else {
+                questionStartTime.current = Date.now();
+                isTabActive.current = true;
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
     }, []);
 
     useEffect(() => {
@@ -240,7 +256,10 @@ const PolynomialsTest = () => {
     const handleRecordResponse = () => {
         const currentQ = questions[qIndex];
         const isCorrect = selectedOption ? selectedOption === currentQ.correctAnswer : null;
-        const timeSpent = Math.round((getNow() - questionStartTime.current) / 1000);
+        
+        let t = accumulatedTime.current;
+        if (isTabActive.current) t += Date.now() - questionStartTime.current;
+        const timeSpent = Math.round(t / 1000);
         const isSkipped = !selectedOption;
 
         const responseData = {
@@ -252,13 +271,29 @@ const PolynomialsTest = () => {
 
         setResponses(prev => ({ ...prev, [qIndex]: responseData }));
 
+        // v4 Log
+        const entry = {
+            question_index: qIndex + 1,
+            answer_json: { selected: selectedOption || "SKIPPED" },
+            is_correct: isCorrect ? 1.0 : 0.0,
+            marks_awarded: isCorrect ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: t
+        };
+        v4Answers.current[qIndex] = entry;
+        logAnswer({
+            questionIndex: entry.question_index,
+            answerJson: entry.answer_json,
+            isCorrect: entry.is_correct
+        });
+
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         const uid = parseInt(rawUid, 10);
         if (!isNaN(uid)) {
             const attemptData = {
                 difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard',
                 user_id: String(uid).includes("-") ? 1 : parseInt(uid, 10),
-                session_id: sessionId,
+                session_id: null,
                 skill_id: SKILL_ID,
                 question_text: currentQ.text,
                 correct_answer: currentQ.correctAnswer,
@@ -269,13 +304,15 @@ const PolynomialsTest = () => {
             };
             api.recordAttempt(attemptData).catch(console.error);
         }
+        // Reset timers for next question
+        accumulatedTime.current = 0;
+        questionStartTime.current = Date.now();
     };
 
     const navigateToQuestion = (targetIndex) => {
         handleRecordResponse();
         setQIndex(targetIndex);
         setSelectedOption(responses[targetIndex]?.selectedOption || null);
-        questionStartTime.current = getNow();
     };
 
     const handleNext = () => {
@@ -295,7 +332,14 @@ const PolynomialsTest = () => {
 
     const finalizeTest = async () => {
         setIsTestOver(true);
-        if (sessionId) await api.finishSession(sessionId).catch(console.error);
+        
+        // v4 finish
+        const payload = v4Answers.current.filter(Boolean);
+        await finishSession({
+            totalQuestions: questions.length,
+            questionsAnswered: payload.length,
+            answersPayload: payload
+        });
 
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         const uid = parseInt(rawUid, 10);

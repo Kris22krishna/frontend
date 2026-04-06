@@ -5,6 +5,7 @@ import { LatexText } from '../../../../../LatexText';
 
 import CQPracticeEngine from './Engines/CQPracticeEngine';
 import CQAssessmentEngine from './Engines/CQAssessmentEngine';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 import {
     buildPercentagesPracticePool,
@@ -221,6 +222,13 @@ const SKILLS = [
     },
 ];
 
+const SKILL_NODE_IDS = {
+    'percentages': NODE_IDS.g8MathComparingPercentages,
+    'profit-loss': NODE_IDS.g8MathComparingProfitLoss,
+    'simple-interest': NODE_IDS.g8MathComparingSimpleInterest,
+    'compound-interest': NODE_IDS.g8MathComparingCompoundInterest,
+};
+
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
 export default function ComparingQuantitiesSkills() {
     const navigate = useNavigate();
@@ -314,6 +322,7 @@ export default function ComparingQuantitiesSkills() {
                                 title={`Practice: ${skill.title}`}
                                 color={skill.color}
                                 onBack={goBack}
+                                nodeId={SKILL_NODE_IDS[skill.id]}
                             />
                         </div>
                     ) : (
@@ -324,6 +333,7 @@ export default function ComparingQuantitiesSkills() {
                                 title={skill.title}
                                 color={skill.color}
                                 onBack={goBack}
+                                nodeId={SKILL_NODE_IDS[skill.id]}
                             />
                         </div>
                     )}

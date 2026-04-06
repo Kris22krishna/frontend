@@ -26,14 +26,28 @@ const numberToWords = (num) => {
 export const generateCounting = () => {
   const start = getRandomInt(100, 990);
   const answer = start + 1;
+  const list = [start, start + 1, start + 2];
 
-  const question = `What number comes after ${start}?`;
+  const question = `How many names are there in the list?`;
+  
+  const options = [
+    { value: String(list.length), label: String(list.length) }
+  ];
+
+  while (options.length < 4) {
+    const wrong = String(list.length + getRandomInt(-3, 3));
+    if (wrong !== String(list.length) && !options.some(o => o.value === wrong) && Number(wrong) >= 0) {
+      options.push({ value: wrong, label: wrong });
+    }
+  }
 
   return {
-    type: "userInput",
+    type: "mcq",
     question: question,
-    topic: "Number Sense / Counting",
-    answer: String(answer)
+    img: `<div style="padding: 10px; border: 1px solid #ddd; background: #fff; border-radius: 8px;">${list.join(', ')}</div>`,
+    topic: "Data Handling / Sorting",
+    options: shuffleArray(options),
+    answer: String(list.length)
   };
 };
 
@@ -129,13 +143,35 @@ export const generateValue = () => {
   // Distractors
   const distractors = new Set();
   distractors.add(answer);
-  distractors.add(String(targetDigit)); // Face value
-  distractors.add(String(targetDigit * 10));
-  distractors.add(String(targetDigit * 100));
-  distractors.add(String(getRandomInt(10, 900))); // Random fallback
+
+  // Add face value as a distractor
+  distractors.add(String(targetDigit));
+
+  if (targetDigit === 0) {
+    // For 0, place value is always 0. Add meaningful distractors.
+    distractors.add("10");
+    distractors.add("100");
+    // Add value of one of the other digits
+    if (targetPos === 'tens') {
+      distractors.add(String(hundreds * 100));
+      distractors.add(String(ones));
+    } else if (targetPos === 'ones') {
+      distractors.add(String(tens * 10));
+      distractors.add(String(hundreds * 100));
+    }
+  } else {
+    // For non-zero digits, use standard place value distractors
+    distractors.add(String(targetDigit * 10));
+    distractors.add(String(targetDigit * 100));
+  }
+
+  // Ensure we have exactly 4 unique options
+  while (distractors.size < 4) {
+    const randomVal = String(getRandomInt(1, 9) * [1, 10, 100][getRandomInt(0, 2)]);
+    distractors.add(randomVal);
+  }
 
   const options = Array.from(distractors)
-    .filter(val => val !== undefined)
     .slice(0, 4)
     .map(val => ({ value: val, label: val }));
 
@@ -182,17 +218,38 @@ export const generateComparison = () => {
   const question = `Compare: ${num1} _ ${num2}`;
 
   const options = shuffleArray([
-    { value: ">", label: ">" },
-    { value: "<", label: "<" },
-    { value: "=", label: "=" }
+    { value: "Cylinder", label: "Cylinder" },
+    { value: "Cube", label: "Cube" },
+    { value: "Cone", label: "Cone" },
+    { value: "Sphere", label: "Sphere" }
   ]);
 
   return {
     type: "mcq",
-    question: question,
-    topic: "Number Sense / Comparison",
+    question: "Which of these shapes has a curved surface and two flat faces?",
+    topic: "Geometry / Solid Shapes",
     options: options,
-    answer: answer
+    answer: "Cylinder"
+  };
+};
+
+export const generateSolidShapesIdentify = () => {
+  const shapes = [
+    { name: "Cube", desc: "6 square faces" },
+    { name: "Sphere", desc: "No corners or edges" },
+    { name: "Cylinder", desc: "2 circular faces" },
+    { name: "Cone", desc: "1 vertex and 1 circular face" }
+  ];
+  const target = shapes[getRandomInt(0, 3)];
+
+  const options = shapes.map(s => ({ value: s.name, label: s.name }));
+
+  return {
+    type: "mcq",
+    question: `Which solid shape has ${target.desc}?`,
+    topic: "Geometry / Solid Shapes",
+    options: shuffleArray(options),
+    answer: target.name
   };
 };
 
@@ -279,11 +336,13 @@ export const generateEvenOdd = () => {
 
   return {
     type: "mcq",
-    question: `Is ${num} Even or Odd?`,
+    question: `Is ${num} an Even or Odd number?`,
     topic: "Number Sense / Even & Odd",
     options: [
       { value: "Even", label: "Even" },
-      { value: "Odd", label: "Odd" }
+      { value: "Odd", label: "Odd" },
+      { value: "Both", label: "Both" },
+      { value: "Neither", label: "Neither" }
     ],
     answer: answer
   };
@@ -444,7 +503,7 @@ export const generateIdentifyMoney = () => {
   const notes = [10, 20, 50, 100, 200, 500];
   const note = notes[getRandomInt(0, notes.length - 1)];
 
-  const question = `Identify the note </br>₹${note}`;
+  const question = `Identify the note ₹${note}`;
 
   // Create options with other note values
   const uniqueOptions = new Set();
@@ -459,7 +518,6 @@ export const generateIdentifyMoney = () => {
   // Convert to array and create MCQ options with images
   const optionsArray = Array.from(uniqueOptions).map(value => ({
     value: `/assets/grade2/rupee_${value}.jpg`,
-    // label: `₹${value}`,
     image: `/assets/grade2/rupee_${value}.jpg`
   }));
 
@@ -468,7 +526,6 @@ export const generateIdentifyMoney = () => {
     question: question,
     topic: "Money / Basics",
     answer: `/assets/grade2/rupee_${note}.jpg`,
-    // image: `/assets/grade2/rupee_${note}.jpg`,
     options: shuffleArray(optionsArray)
   };
 };
@@ -546,7 +603,9 @@ export const generateWeight = () => {
 
   const options = shuffleArray([
     { value: comp.heavy, label: comp.heavy },
-    { value: comp.light, label: comp.light }
+    { value: comp.light, label: comp.light },
+    { value: "None", label: "None" },
+    { value: "Both", label: "Both" }
   ]);
 
   return {
@@ -577,7 +636,9 @@ export const generateCapacity = () => {
 
   const options = shuffleArray([
     { value: comp.more, label: comp.more },
-    { value: comp.less, label: comp.less }
+    { value: comp.less, label: comp.less },
+    { value: "Equal", label: "Equal" },
+    { value: "None", label: "None" }
   ]);
 
   return {
@@ -621,43 +682,38 @@ export const generateIdentifyShapes = () => {
     {
       name: "Circle",
       objects: [
-        { name: "Clock", img: "⏰" },
-        { name: "Coin", img: "🪙" },
-        { name: "Wheel", img: "🛞" },
-        // { name: "Pizza", img: "🍕" }, // Whole pizza usually implies circle context, or use 🌕 Full Moon
-        { name: "Ball", img: "⚽" },
-        { name: "Sun", img: "☀️" },
-        { name: "Moon", img: "🌕" }
+        { name: "Clock" },
+        { name: "Coin" },
+        { name: "Wheel" },
+        { name: "Ball" },
+        { name: "Sun" },
+        { name: "Moon" }
       ]
     },
     {
       name: "Square",
       objects: [
-        { name: "Window", img: "🪟" },
-        // { name: "Slice of Bread", img: "🍞" },
-        // { name: "Gift Box", img: "🎁" },
-        { name: "Frame", img: "🖼️" },
-        { name: "Dice", img: "🎲" } // Face of a dice is square
+        { name: "Window" },
+        { name: "Frame" },
+        { name: "Dice" }
       ]
     },
     {
       name: "Triangle",
       objects: [
-        { name: "Slice of Pizza", img: "🍕" },
-        { name: "Traffic Sign", img: "⚠️" }, // Warning sign
-        // { name: "Cheese", img: "🧀" },
-        { name: "Tent", img: "⛺" },
-        // { name: "Party Hat", img: "🎉" } // Cone looks like triangle in 2D
+        { name: "Slice of Pizza" },
+        { name: "Traffic Sign" },
+        { name: "Tent" }
       ]
     },
     {
       name: "Rectangle",
       objects: [
-        { name: "Door", img: "🚪" },
-        { name: "Book", img: "📖" },
-        { name: "Mobile Phone", img: "📱" },
-        { name: "TV Screen", img: "📺" },
-        { name: "Envelope", img: "✉️" }
+        { name: "Door" },
+        { name: "Book" },
+        { name: "Mobile Phone" },
+        { name: "TV Screen" },
+        { name: "Envelope" }
       ]
     }
   ];
@@ -669,7 +725,7 @@ export const generateIdentifyShapes = () => {
 
   return {
     type: "mcq",
-    question: `What shape does a ${object.name} look like? <br/> <div style="font-size: 4rem; margin-top: 10px;">${object.img}</div>`,
+    question: `What shape does a ${object.name} look like?`,
     topic: "Geometry / Shapes",
     options: options,
     answer: shape.name
@@ -677,19 +733,19 @@ export const generateIdentifyShapes = () => {
 };
 export const generatePatterns = () => {
   const patterns = [
-    { seq: ["A", "B", "C", "A", "B"], next: "C", wrong: "A" },
-    { seq: ["⭐", "⭐", "🌙", "⭐", "⭐"], next: "🌙", wrong: "⭐" },
-    { seq: ["10", "20", "30", "40"], next: "50", wrong: "60" },
-    { seq: ["⬆️", "⬇️", "⬆️", "⬇️"], next: "⬆️", wrong: "⬇️" }
+    { seq: ["A", "B", "C", "A", "B"], next: "C", wrong: "A", wrong2: "B", wrong3: "D" },
+    { seq: ["10", "20", "30", "40"], next: "50", wrong: "60", wrong2: "70", wrong3: "80" }
   ];
 
   const pattern = patterns[getRandomInt(0, patterns.length - 1)];
 
-  const question = `Complete the pattern: </br> ${pattern.seq.join(", ")}, ...?`;
+  const question = `Complete the pattern: ${pattern.seq.join(", ")}, ...?`;
 
   const options = shuffleArray([
     { value: pattern.next, label: pattern.next },
-    { value: pattern.wrong, label: pattern.wrong }
+    { value: pattern.wrong, label: pattern.wrong },
+    { value: pattern.wrong2, label: pattern.wrong2 },
+    { value: pattern.wrong3, label: pattern.wrong3 }
   ]);
 
   return {
@@ -705,42 +761,41 @@ export const generatePatterns = () => {
 
 const createTallySVG = (count) => {
   const height = 50;
-  const spacing = 20;
+  const strokeWidth = 4;
+  const gap = 10;
+  const groupSpacing = 20;
   const numGroups = Math.ceil(count / 5);
-  const totalWidth = numGroups * (40 + spacing);
+  const totalWidth = Math.max(100, numGroups * (4 * gap + groupSpacing) + 20);
 
   let svgLines = "";
 
   for (let g = 0; g < numGroups; g++) {
-    const groupX = g * (40 + spacing);
+    const groupX = 10 + g * (4 * gap + groupSpacing);
     const marksInGroup = Math.min(5, count - g * 5);
 
     for (let i = 0; i < Math.min(marksInGroup, 4); i++) {
-      const x = groupX + i * 10;
-      svgLines += `<line x1="${x}" y1="5" x2="${x}" y2="45" stroke="#4f46e5" stroke-width="4" stroke-linecap="round" />`;
+      const x = groupX + i * gap;
+      svgLines += `<line x1="${x}" y1="10" x2="${x}" y2="40" stroke="#4f46e5" stroke-width="${strokeWidth}" stroke-linecap="round" />`;
     }
 
     if (marksInGroup === 5) {
-      svgLines += `<line x1="${groupX - 5}" y1="5" x2="${groupX + 35}" y2="45" stroke="#4f46e5" stroke-width="4" stroke-linecap="round" />`;
+      // Diagonal line for the 5th mark
+      svgLines += `<line x1="${groupX - 5}" y1="35" x2="${groupX + 35}" y2="15" stroke="#ef4444" stroke-width="${strokeWidth}" stroke-linecap="round" />`;
     }
   }
 
-  return `<svg width="${totalWidth}" height="${height}" viewBox="0 0 ${totalWidth} ${height}" xmlns="http://www.w3.org/2000/svg" style="display:inline-block; vertical-align:middle; overflow:visible;">
-      ${svgLines}
-  </svg>`;
+  return `<svg width="${totalWidth}" height="${height}" viewBox="0 0 ${totalWidth} ${height}" xmlns="http://www.w3.org/2000/svg" style="display:block; margin: 10px 0;">${svgLines}</svg>`;
 };
 
 export const generateTally = () => {
   const count = getRandomInt(5, 15);
-  // Simple representation for tally marks as text is tricky, using simple count for now or description
-  // Switching to SVG for better rendering
-
   const tallySVG = createTallySVG(count);
-  const question = `What number does this tally show? <br/> <div style="margin-top: 20px;">${tallySVG}</div>`;
+  const question = "What number does this tally show?";
 
   return {
     type: "userInput",
     question: question,
+    img: tallySVG,
     topic: "Data Handling / Tally",
     answer: String(count)
   };
@@ -751,7 +806,7 @@ export const generatePictograph = () => {
   const count = getRandomInt(2, 6);
   const total = count * scale;
 
-  const question = `If 1 🍎 = ${scale} apples, how many apples are there in: ${"🍎 ".repeat(count)}?`;
+  const question = `If 1 item = ${scale} units, what is the total for ${count} items?`;
 
   return {
     type: "userInput",

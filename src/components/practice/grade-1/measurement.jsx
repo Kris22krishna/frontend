@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText, Check, X, Eye, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../../../contexts/AuthContext';
-import { api } from '../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 import Navbar from '../../Navbar';
 import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
 import { LatexText } from '../../LatexText';
@@ -107,10 +107,18 @@ const DynamicVisual = ({ type, data }) => {
     return null;
 };
 
+const SKILL_ID_MAP = {
+    '701': NODE_IDS.g1MathMeasurementLengthHeight,
+    '702': NODE_IDS.g1MathMeasurementWeight,
+    '703': NODE_IDS.g1MathMeasurementCapacity,
+    '704': NODE_IDS.g1MathMeasurementMixed,
+};
+
 const Measurement = () => {
-    const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
     const isTest = skillId === '704';
@@ -124,8 +132,6 @@ const Measurement = () => {
     const [timer, setTimer] = useState(0);
     const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
-    const [sessionId, setSessionId] = useState(null);
-
     const [showExplanationModal, setShowExplanationModal] = useState(false);
 
     const getTopicInfo = () => {
@@ -140,62 +146,39 @@ const Measurement = () => {
         return { topicName: 'Measurement', skillName: 'Mathematics', grade: '1' };
     };
 
+    const { topicName, skillName } = getTopicInfo();
+
     const getNextSkill = () => {
         const { grade } = getTopicInfo();
         const gradeConfig = TOPIC_CONFIGS[grade];
         const topics = Object.keys(gradeConfig);
-
         let currentTopicIdx = -1;
         let currentSkillIdx = -1;
-
         for (let i = 0; i < topics.length; i++) {
             const skills = gradeConfig[topics[i]];
             const idx = skills.findIndex(s => s.id === skillId);
-            if (idx !== -1) {
-                currentTopicIdx = i;
-                currentSkillIdx = idx;
-                break;
-            }
+            if (idx !== -1) { currentTopicIdx = i; currentSkillIdx = idx; break; }
         }
-
         if (currentTopicIdx === -1) return null;
-
         const currentTopicSkills = gradeConfig[topics[currentTopicIdx]];
-
         if (currentSkillIdx < currentTopicSkills.length - 1) {
-            return {
-                ...currentTopicSkills[currentSkillIdx + 1],
-                topicName: topics[currentTopicIdx]
-            };
+            return { ...currentTopicSkills[currentSkillIdx + 1], topicName: topics[currentTopicIdx] };
         }
-
         if (currentTopicIdx < topics.length - 1) {
             const nextTopicName = topics[currentTopicIdx + 1];
             const nextTopicSkills = gradeConfig[nextTopicName];
-            if (nextTopicSkills.length > 0) {
-                return {
-                    ...nextTopicSkills[0],
-                    topicName: nextTopicName
-                };
-            }
+            if (nextTopicSkills.length > 0) return { ...nextTopicSkills[0], topicName: nextTopicName };
         }
-
         return null;
     };
 
-    const { topicName, skillName } = getTopicInfo();
     const generateQuestions = (selectedSkill) => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#A9D18E'];
-
         for (let i = 0; i < totalQuestions; i++) {
             let question = {};
             const color1 = colors[i % colors.length];
             const color2 = colors[(i + 1) % colors.length];
-
-            // 701: Measuring Length/Height
-            // 702: Comparing Weights
-            // 703: Comparing Capacities
             let type = 'length';
             if (isTest) {
                 if (i < 4) type = Math.random() > 0.5 ? 'length' : 'height';
@@ -211,28 +194,22 @@ const Measurement = () => {
                 const randomTypes = ['length', 'height', 'weight', 'capacity'];
                 type = randomTypes[i % 4];
             }
-
             if (type === 'length' || type === 'height') {
                 const isLonger = Math.random() > 0.5;
                 const l1 = Math.floor(Math.random() * 80) + 60;
                 const l2 = l1 + (Math.random() > 0.5 ? 40 : -40);
-
-                let label1, label2, adjLong, adjShort, icon;
+                let label1, label2, adjLong, adjShort;
                 if (type === 'length') {
                     label1 = "Ribbon A"; label2 = "Ribbon B";
                     adjLong = "longer"; adjShort = "shorter";
-                    icon = "📏";
                 } else {
                     label1 = "Building A"; label2 = "Building B";
                     adjLong = "taller"; adjShort = "shorter";
-                    icon = "🏢";
                 }
-
                 const adj = isLonger ? adjLong : adjShort;
                 const correct = (isLonger ? (l1 > l2 ? label1 : label2) : (l1 < l2 ? label1 : label2));
-
                 question = {
-                    text: `Which one is ${adj}? ${icon}`,
+                    text: `Which one is ${adj}?`,
                     options: [label1, label2].sort(() => 0.5 - Math.random()),
                     correct: correct,
                     type,
@@ -243,50 +220,34 @@ const Measurement = () => {
                 const pairs = [
                     { h: { name: 'Elephant', emoji: '🐘', w: 1000 }, l: { name: 'Mouse', emoji: '🐭', w: 1 } },
                     { h: { name: 'Watermelon', emoji: '🍉', w: 50 }, l: { name: 'Apple', emoji: '🍎', w: 5 } },
-                    { h: { name: 'School Bus', emoji: '🚌', w: 5000 }, l: { name: 'Bicycle', emoji: '🚲', w: 50 } },
-                    { h: { name: 'Brick', emoji: '🧱', w: 30 }, l: { name: 'Feather', emoji: '🪶', w: 1 } },
-                    { h: { name: 'Pumpkin', emoji: '🎃', w: 40 }, l: { name: 'Leaf', emoji: '🍃', w: 1 } },
-                    { h: { name: 'Big Stone', emoji: '🪨', w: 60 }, l: { name: 'Balloon', emoji: '🎈', w: 2 } },
-                    { h: { name: 'Cake', emoji: '🎂', w: 10 }, l: { name: 'Cupcake', emoji: '🧁', w: 2 } },
-                    { h: { name: 'Tiger', emoji: '🐅', w: 200 }, l: { name: 'Cat', emoji: '🐈', w: 5 } },
-                    { h: { name: 'Bag', emoji: '🎒', w: 15 }, l: { name: 'Pencil Box', emoji: '✏️', w: 1 } },
-                    { h: { name: 'Tree', emoji: '🌳', w: 500 }, l: { name: 'Flower', emoji: '🌸', w: 1 } }
                 ];
-
                 const isHeavier = Math.random() > 0.5;
                 const pair = pairs[i % pairs.length];
-                const isReverse = Math.random() > 0.5;
-                const objA = isReverse ? pair.l : pair.h;
-                const objB = isReverse ? pair.h : pair.l;
-
+                const objA = pair.h; const objB = pair.l;
                 const adj = isHeavier ? 'heavier' : 'lighter';
-                const correct = (isHeavier ? (objA.w > objB.w ? objA.name : objB.name) : (objA.w < objB.w ? objA.name : objB.name));
-
+                const correct = (isHeavier ? objA.name : objB.name);
                 question = {
-                    text: `Look at the objects! Which one is ${adj}?`,
+                    text: `Which one is ${adj}?`,
                     options: [objA.name, objB.name].sort(() => 0.5 - Math.random()),
                     correct: correct,
                     type: 'weight',
                     visualData: { objA, objB, label1: objA.name, label2: objB.name },
-                    explanation: `A ${pair.h.name} is heavier than a ${pair.l.name}. So, ${correct} is ${adj}.`
+                    explanation: `${correct} is ${adj}.`
                 };
             } else {
                 const isMore = Math.random() > 0.5;
                 const f1 = 30 + Math.floor(Math.random() * 20);
                 const f2 = f1 + (Math.random() > 0.5 ? 40 : -20);
-                const containerType = Math.random() > 0.5 ? { name: 'Jug', emoji: '🫗' } : { name: 'Cup', emoji: '🥛' };
-                const label1 = `${containerType.name} A`;
-                const label2 = `${containerType.name} B`;
+                const label1 = "Jug A"; const label2 = "Jug B";
                 const adj = isMore ? 'holds more' : 'holds less';
                 const correct = (isMore ? (f1 > f2 ? label1 : label2) : (f1 < f2 ? label1 : label2));
-
                 question = {
-                    text: `Which ${containerType.name.toLowerCase()} ${adj}? 🧐 ${containerType.emoji}`,
+                    text: `Which one ${adj}?`,
                     options: [label1, label2].sort(() => 0.5 - Math.random()),
                     correct: correct,
                     type: 'capacity',
                     visualData: { f1, f2, color1: '#3b82f6', color2: '#3b82f6', label1, label2 },
-                    explanation: `Comparing the liquid levels, ${correct} ${adj} because its level is higher.`
+                    explanation: `${correct} ${adj}.`
                 };
             }
             questions.push(question);
@@ -295,18 +256,11 @@ const Measurement = () => {
     };
 
     useEffect(() => {
-        const init = async () => {
-            const userId = user?.user_id || user?.id;
-            if (!userId) return;
-            const qs = generateQuestions(skillId);
-            setSessionQuestions(qs);
-            try {
-                const session = await api.createPracticeSession(userId, parseInt(skillId) || 701);
-                setSessionId(session?.session_id);
-            } catch (e) { console.error(e); }
-        };
-        init();
-    }, [user, skillId]);
+        const qs = generateQuestions(skillId);
+        setSessionQuestions(qs);
+        const nodeId = SKILL_ID_MAP[skillId] || NODE_IDS.g1MathMeasurementMixed;
+        startSession({ nodeId, sessionType: isTest ? 'assessment' : 'practice' });
+    }, [skillId, isTest, startSession]);
 
     useEffect(() => {
         let interval;
@@ -331,13 +285,6 @@ const Measurement = () => {
     }, [qIndex, answers]);
 
     const handleExit = async () => {
-        try {
-            if (sessionId) {
-                await api.finishSession(sessionId);
-            }
-        } catch (e) {
-            console.error("Error finishing session:", e);
-        }
         navigate('/junior/grade/1');
     };
 
@@ -346,62 +293,44 @@ const Measurement = () => {
         setSelectedOption(option);
     };
 
-
     const handleSubmit = () => {
         if (isAnswered || selectedOption === null) return;
         const option = selectedOption;
+        const currentQ = sessionQuestions[qIndex];
+        const isCorrect = option === currentQ.correct;
 
         setIsAnswered(true);
-        const isCorrect = option === sessionQuestions[qIndex].correct;
-        // --- AUTO-INJECTED LOGGING ---
-        try {
-            const uid = user?.user_id || user?.id || sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            const qData = sessionQuestions[qIndex] || {};
-            const skId = typeof selectedSkill !== 'undefined' ? selectedSkill : (typeof skillId !== 'undefined' ? skillId : '0');
-            const currentTimer = typeof timer !== 'undefined' ? timer : 0;
+        if (isCorrect) setScore(s => s + 1);
 
-            if (uid && sessionId) {
-                api.recordAttempt({
-                    user_id: parseInt(uid, 10),
-                    session_id: sessionId,
-                    skill_id: parseInt(skId, 10) || 0,
-                    template_id: null,
-                    difficulty_level: 'Medium',
-                    question_text: String(qData.text || ''),
-                    correct_answer: String(qData.correct || qData.correctAnswer || ''),
-                    student_answer: String(option),
-                    is_correct: isCorrect,
-                    solution_text: String(qData.explanation || qData.solution || ''),
-                    time_spent_seconds: currentTimer
-                }).catch(err => console.error("Auto-log failed:", err));
-            }
-        } catch (err) {
-            console.error("Auto-log error:", err);
-        }
-        // -----------------------------
+        const answerData = {
+            question_text: currentQ.text,
+            selected: option,
+            correct: currentQ.correct,
+            isCorrect
+        };
 
-        if (isCorrect) {
-            setScore(s => s + 1);
-        }
+        logAnswer({
+            question_index: qIndex,
+            answer_json: answerData,
+            is_correct: isCorrect ? 1 : 0
+        });
 
         setAnswers(prev => ({
             ...prev,
             [qIndex]: {
                 selectedOption: option,
                 isCorrect,
-                type: sessionQuestions[qIndex].type,
-                visualData: sessionQuestions[qIndex].visualData,
-                questionText: sessionQuestions[qIndex].text,
-                correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: sessionQuestions[qIndex].explanation || "Detailed explanation is coming soon! Feel free to ask your teacher for help in the meantime. 💡"
+                type: currentQ.type,
+                visualData: currentQ.visualData,
+                questionText: currentQ.text,
+                correctAnswer: currentQ.correct,
+                explanation: currentQ.explanation || "Detailed explanation is coming soon!"
             }
         }));
 
-        // Show modal for all answers in practice mode
         if (!isTest) {
             setShowExplanationModal(true);
         } else {
-            // Give a tiny delay so they see the option highlight green
             setTimeout(() => {
                 handleNext();
             }, 800);
@@ -412,41 +341,35 @@ const Measurement = () => {
         if (qIndex < totalQuestions - 1) {
             setQIndex(v => v + 1);
         } else {
+            finishSession({
+                totalQuestions,
+                questionsAnswered: Object.keys(answers).length,
+                answersPayload: answers
+            });
             setShowResults(true);
-            try {
-                if (sessionId) {
-                    await api.finishSession(sessionId);
-                    await api.createReport({
-                        uid: user?.id || 'unknown',
-                        category: 'Practice',
-                        reportData: {
-                            skill_id: skillId,
-                            skill_name: skillName,
-                            score: Math.round((score / totalQuestions) * 100),
-                            total_questions: totalQuestions,
-                            correct_answers: score,
-                            time_spent: timer,
-                            timestamp: new Date().toISOString(),
-                            answers: Object.values(answers).filter(a => a !== undefined)
-                        }
-                    });
-                }
-            } catch (e) { console.error(e); }
         }
     };
 
     const handleSkip = () => {
         if (isAnswered) return;
+        const currentQ = sessionQuestions[qIndex];
+        
+        logAnswer({
+            question_index: qIndex,
+            answer_json: { question_text: currentQ.text, selected: 'Skipped', correct: currentQ.correct, isCorrect: false },
+            is_correct: 0
+        });
+
         setAnswers(prev => ({
             ...prev,
             [qIndex]: {
                 selectedOption: 'Skipped',
                 isCorrect: false,
-                type: sessionQuestions[qIndex].type,
-                visualData: sessionQuestions[qIndex].visualData,
-                questionText: sessionQuestions[qIndex].text,
-                correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: "This question was skipped. " + sessionQuestions[qIndex].explanation
+                type: currentQ.type,
+                visualData: currentQ.visualData,
+                questionText: currentQ.text,
+                correctAnswer: currentQ.correct,
+                explanation: "This question was skipped. " + currentQ.explanation
             }
         }));
         handleNext();

@@ -1,5 +1,6 @@
 export const skill2 = {
     id: 'arc-length',
+    nodeId: 'a4101012-0002-0000-0000-000000000000',
     title: 'Measuring Arc Length',
     subtitle: 'The Curved Distance',
     desc: 'Calculate the length of an arc using the radius and central angle.',

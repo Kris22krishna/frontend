@@ -7,6 +7,7 @@ import mascotImg from '../../../../assets/mascot.png';
 import ExplanationModal from '../../../ExplanationModal';
 import PracticeReportModal from '../../PracticeReportModal';
 import { api } from '../../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import '../TenthPracticeSession.css';
 
 const RecognisingPatterns = () => {
@@ -28,6 +29,9 @@ const RecognisingPatterns = () => {
     const isTabActive = useRef(true);
 
     const SKILL_ID = 1105; // Recognising and Describing Number Patterns
+    const NODE_ID = 'a4101005-0001-0000-0000-000000000000';
+    const { startSession, logAnswer, finishSession: finishV4Session } = useSessionLogger();
+    const v4Answers = useRef([]);
     const SKILL_NAME = "Recognising and Describing Number Patterns";
     const [answers, setAnswers] = useState({});
 
@@ -235,6 +239,8 @@ const RecognisingPatterns = () => {
             api.createPracticeSession(String(userId).includes("-") ? 1 : parseInt(userId, 10), SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
+            startSession({ nodeId: NODE_ID, sessionType: 'practice' });
+            v4Answers.current = [];
         }
         let timer;
         if (!showReportModal) {
@@ -278,6 +284,10 @@ const RecognisingPatterns = () => {
                 time_spent_seconds: sec
             }).catch(console.error);
         }
+        // v4 log
+        const v4Entry = { question_index: qIndex + 1, answer_json: { selected: selectedOption }, is_correct: isRight ? 1.0 : 0.0, marks_awarded: isRight ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+        v4Answers.current.push(v4Entry);
+        logAnswer({ questionIndex: v4Entry.question_index, answerJson: v4Entry.answer_json, isCorrect: v4Entry.is_correct });
     };
 
     const handlePrevious = () => {
@@ -313,6 +323,8 @@ const RecognisingPatterns = () => {
                     user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10)
                 }).catch(console.error);
             }
+            // v4 finish
+            await finishV4Session({ totalQuestions: questions.length, questionsAnswered: v4Answers.current.length, answersPayload: v4Answers.current });
             setShowReportModal(true);
         }
     };

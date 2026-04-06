@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../TrianglesBranch.css';
 import MathRenderer from '../../../../../MathRenderer';
 import { TERMS, FIVE_RULES, VOCAB_QUIZ } from './TrianglesTerminologyData';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+
+const TERMINOLOGY_QUIZ_NODE_ID = 'a4101006-0010-0000-0000-000000000000';
 
 export default function TrianglesTerminology() {
     const navigate = useNavigate();
@@ -20,6 +23,16 @@ export default function TrianglesTerminology() {
     const [quizTotalScore, setQuizTotalScore] = useState(0);
     const [quizFinished, setQuizFinished] = useState(false);
 
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const quizAnswers = useRef([]);
+
+    useEffect(() => {
+        if (activeTab === 'quiz') {
+            startSession({ nodeId: TERMINOLOGY_QUIZ_NODE_ID, sessionType: 'quiz' });
+            quizAnswers.current = [];
+        }
+    }, [activeTab]);
+
     const activeTerm = TERMS[selectedIdx];
     const activeRule = FIVE_RULES[selectedRuleIdx];
     const activeQuiz = VOCAB_QUIZ[quizIdx];
@@ -30,24 +43,30 @@ export default function TrianglesTerminology() {
         setQuizAnswered(false);
         setQuizTotalScore(0);
         setQuizFinished(false);
+        startSession({ nodeId: TERMINOLOGY_QUIZ_NODE_ID, sessionType: 'quiz' });
+        quizAnswers.current = [];
     };
 
-    const handleQuizSelect = (optIdx) => {
+    const handleQuizSelect = async (optIdx) => {
         if (quizAnswered) return;
         setQuizSelected(optIdx);
         setQuizAnswered(true);
-        if (optIdx === activeQuiz.correct) {
-            setQuizTotalScore((prev) => prev + 1);
-        }
+        const isCorrect = optIdx === activeQuiz.correct;
+        if (isCorrect) setQuizTotalScore((prev) => prev + 1);
+        const answerData = { question_index: quizIdx + 1, answer_json: { selected: optIdx }, is_correct: isCorrect ? 1.0 : 0.0, marks_awarded: isCorrect ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+        quizAnswers.current[quizIdx] = answerData;
+        await logAnswer({ questionIndex: answerData.question_index, answerJson: answerData.answer_json, isCorrect: answerData.is_correct });
     };
 
-    const nextQuiz = () => {
+    const nextQuiz = async () => {
         if (quizIdx + 1 < VOCAB_QUIZ.length) {
             setQuizIdx((prev) => prev + 1);
             setQuizSelected(null);
             setQuizAnswered(false);
         } else {
             setQuizFinished(true);
+            const payload = quizAnswers.current.filter(Boolean);
+            await finishSession({ totalQuestions: VOCAB_QUIZ.length, questionsAnswered: payload.length, answersPayload: payload });
         }
     };
 

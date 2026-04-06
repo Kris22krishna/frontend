@@ -1,18 +1,31 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../shapes-around-us.css';
 import { generateShapesSkillsData } from './shapesSkillsData';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
+
+const SKILL_NODE_IDS = {
+    'identifying-3d-shapes': NODE_IDS.g4MathShapesIdentifying3D,
+    'nets-of-shapes': NODE_IDS.g4MathShapesNets,
+    'types-of-angles': NODE_IDS.g4MathShapesAngles,
+    'exploring-circles': NODE_IDS.g4MathShapesCircles,
+};
 
 /* ═══════════════════════════════════════════════════════════════
    QUESTION CARD — renders MCQ with optional image
    ═══════════════════════════════════════════════════════════════ */
 function QuestionCard({ type, question, options, answer, onAnswer, disabled, selectedOption, image, showCorrect = true }) {
-    const [val, setVal] = useState('');
+    const [val, setVal] = useState(selectedOption || '');
 
     if (type === 'multiple-choice') {
         return (
             <div style={{ marginBottom: 20 }}>
-                {image && <div style={{ fontSize: 48, textAlign: 'center', marginBottom: 12, padding: 16, background: '#f8fafc', borderRadius: 16, wordBreak: 'break-all', overflowWrap: 'break-word' }}>{image}</div>}
+                {image && (
+                    <div style={{ fontSize: 48, textAlign: 'center', marginBottom: 12, padding: 16, background: '#f8fafc', borderRadius: 16, wordBreak: 'break-all', overflowWrap: 'break-word', display: 'flex', justifyContent: 'center' }}>
+                        {typeof image === 'string' && image.trim().startsWith('<svg') ? <span style={{display: 'flex'}} dangerouslySetInnerHTML={{__html: image}} /> : image}
+                    </div>
+                )}
                 <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 16 }}>{question}</p>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                     {options.map((opt, i) => {
@@ -25,14 +38,14 @@ function QuestionCard({ type, question, options, answer, onAnswer, disabled, sel
                             if (i === answer) { bg = '#f0fdf4'; bdr = '#10b981'; }
                             else if (i === selectedOption) { bg = '#fef2f2'; bdr = '#ef4444'; }
                             else { clr = '#94a3b8'; }
-                        } else if (disabled && !showCorrect) {
-                            if (i === selectedOption) { bg = '#eff6ff'; bdr = '#3b82f6'; }
+                        } else if (i === selectedOption) {
+                            bg = '#eff6ff'; bdr = '#3b82f6';
                         }
 
                         return (
                             <button
                                 key={i}
-                                onClick={() => onAnswer(i)}
+                                onClick={() => onAnswer(i === selectedOption ? null : i)}
                                 disabled={disabled}
                                 style={{
                                     display: 'flex', alignItems: 'center', gap: 12,
@@ -59,10 +72,14 @@ function QuestionCard({ type, question, options, answer, onAnswer, disabled, sel
     // Short answer
     return (
         <div style={{ marginBottom: 20 }}>
-            {image && <div style={{ fontSize: 48, textAlign: 'center', marginBottom: 12, padding: 16, background: '#f8fafc', borderRadius: 16, wordBreak: 'break-all', overflowWrap: 'break-word' }}>{image}</div>}
+            {image && (
+                <div style={{ fontSize: 48, textAlign: 'center', marginBottom: 12, padding: 16, background: '#f8fafc', borderRadius: 16, wordBreak: 'break-all', overflowWrap: 'break-word', display: 'flex', justifyContent: 'center' }}>
+                    {typeof image === 'string' && image.trim().startsWith('<svg') ? <span style={{display: 'flex'}} dangerouslySetInnerHTML={{__html: image}} /> : image}
+                </div>
+            )}
             <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 16 }}>{question}</p>
             <div style={{ display: 'flex', gap: 10 }}>
-                <input type="text" value={disabled ? (selectedOption || '') : val} onChange={e => setVal(e.target.value)} disabled={disabled}
+                <input type="text" value={val} onChange={e => setVal(e.target.value)} disabled={disabled}
                     placeholder="Type answer..." style={{ padding: '12px 16px', borderRadius: 12, border: '2px solid #e2e8f0', fontSize: 16, flex: 1 }} />
                 <button disabled={disabled || !val} onClick={() => onAnswer(val.trim())}
                     style={{ padding: '0 20px', background: disabled ? '#e2e8f0' : '#0284c7', color: '#fff', borderRadius: 12, fontWeight: 600, border: 'none', cursor: disabled ? 'default' : 'pointer' }}>Submit</button>
@@ -105,11 +122,28 @@ function fmtTime(ms) {
    MODE: LEARN
    ═══════════════════════════════════════════════════════════════ */
 function LearnMode({ skill, onBack }) {
+    const { startSession, finishSession } = useSessionLogger();
+    
+    useEffect(() => {
+        startSession({ nodeId: SKILL_NODE_IDS[skill.id], sessionType: 'practice' });
+    }, [skill.id, startSession]);
+
+    const handleBack = () => {
+        finishSession({
+            totalQuestions: 1,
+            questionsAnswered: 1,
+            answersPayload: { mode: 'learn', completed: true }
+        });
+        onBack();
+    };
+
     return (
         <div className="sau-detail-anim" style={{ maxWidth: 800, margin: '0 auto', background: '#fff', padding: 32, borderRadius: 24, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
-            <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: '#64748b', fontWeight: 600, cursor: 'pointer', marginBottom: 20 }}>← Back to Skills</button>
+            <button onClick={handleBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: '#64748b', fontWeight: 600, cursor: 'pointer', marginBottom: 20 }}>← Back to Skills</button>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24 }}>
-                <div style={{ fontSize: 40 }}>{skill.icon}</div>
+                <div style={{ fontSize: 40 }}>
+                    {typeof skill.icon === 'string' && skill.icon.trim().startsWith('<svg') ? <span style={{display: 'flex'}} dangerouslySetInnerHTML={{__html: skill.icon}} /> : skill.icon}
+                </div>
                 <div>
                     <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 28, fontWeight: 900, color: skill.color, margin: 0 }}>{skill.title}</h2>
                     <p style={{ margin: 0, fontSize: 16, color: '#64748b' }}>Learn the concepts</p>
@@ -127,7 +161,7 @@ function LearnMode({ skill, onBack }) {
                 ))}
             </div>
             <div style={{ marginTop: 30, display: 'flex', justifyContent: 'center' }}>
-                <button onClick={onBack} style={{ padding: '12px 32px', background: skill.color, color: '#fff', borderRadius: 100, fontWeight: 800, fontSize: 16, border: 'none', cursor: 'pointer', boxShadow: `0 4px 14px ${skill.color}40` }}>Got it! →</button>
+                <button onClick={handleBack} style={{ padding: '12px 32px', background: skill.color, color: '#fff', borderRadius: 100, fontWeight: 800, fontSize: 16, border: 'none', cursor: 'pointer', boxShadow: `0 4px 14px ${skill.color}40` }}>Got it! →</button>
             </div>
         </div>
     );
@@ -137,11 +171,16 @@ function LearnMode({ skill, onBack }) {
    MODE: PRACTICE (with Previous, state preservation, & report)
    ═══════════════════════════════════════════════════════════════ */
 function PracticeMode({ skill, onBack }) {
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
     const [qIdx, setQIdx] = useState(0);
     const [answersMap, setAnswersMap] = useState({});
     const [finished, setFinished] = useState(false);
     const startTime = useRef(Date.now());
     const [elapsedMs, setElapsedMs] = useState(0);
+
+    useEffect(() => {
+        startSession({ nodeId: SKILL_NODE_IDS[skill.id], sessionType: 'practice' });
+    }, [skill.id, startSession]);
 
     // Live timer
     useEffect(() => {
@@ -164,12 +203,32 @@ function PracticeMode({ skill, onBack }) {
         let correct = false;
         if (q.type === 'multiple-choice') correct = val === q.correctAnswer;
         else correct = val.toString().toLowerCase() === q.correctAnswer.toString().toLowerCase();
-        setAnswersMap(prev => ({ ...prev, [qIdx]: { selectedOpt: val, isCorrect: correct } }));
+        
+        const answerData = { selectedOpt: val, isCorrect: correct };
+        setAnswersMap(prev => ({ ...prev, [qIdx]: answerData }));
+
+        logAnswer({
+            question_index: qIdx,
+            answer_json: {
+                question_text: q.question,
+                selected_option: q.type === 'multiple-choice' ? q.options[val] : val,
+                correct_answer: q.type === 'multiple-choice' ? q.options[q.correctAnswer] : q.correctAnswer,
+                difficulty: 'Medium'
+            },
+            is_correct: correct ? 1 : 0
+        });
     };
 
     const nextQ = () => {
         if (qIdx + 1 < questions.length) setQIdx(qIdx + 1);
-        else setFinished(true);
+        else {
+            finishSession({
+                totalQuestions: questions.length,
+                questionsAnswered: Object.keys(answersMap).length,
+                answersPayload: answersMap
+            });
+            setFinished(true);
+        }
     };
     const prevQ = () => { if (qIdx > 0) setQIdx(qIdx - 1); };
 
@@ -236,6 +295,7 @@ function PracticeMode({ skill, onBack }) {
    MODE: ASSESS (question palette, timer, mark-for-review, report)
    ═══════════════════════════════════════════════════════════════ */
 function AssessMode({ skill, onBack }) {
+    const { startSession, finishSession } = useSessionLogger();
     const [qIdx, setQIdx] = useState(0);
     const [answersMap, setAnswersMap] = useState({});
     const [marked, setMarked] = useState({});
@@ -249,6 +309,10 @@ function AssessMode({ skill, onBack }) {
     const questions = skill.assessment;
     const q = questions[qIdx];
 
+    useEffect(() => {
+        startSession({ nodeId: SKILL_NODE_IDS[skill.id], sessionType: 'assessment' });
+    }, [skill.id, startSession]);
+
     // Timer tick
     useEffect(() => {
         if (finished) return;
@@ -259,7 +323,15 @@ function AssessMode({ skill, onBack }) {
     const handleAnswer = (val) => {
         const now = Date.now();
         const timeSpent = now - qStartRef.current;
-        setAnswersMap(prev => ({ ...prev, [qIdx]: val }));
+        if (val === null) {
+            setAnswersMap(prev => {
+                const next = { ...prev };
+                delete next[qIdx];
+                return next;
+            });
+        } else {
+            setAnswersMap(prev => ({ ...prev, [qIdx]: val }));
+        }
         setQTimes(prev => ({ ...prev, [qIdx]: (prev[qIdx] || 0) + timeSpent }));
         qStartRef.current = now;
     };
@@ -276,6 +348,27 @@ function AssessMode({ skill, onBack }) {
     const submitAssessment = () => {
         const now = Date.now();
         setQTimes(prev => ({ ...prev, [qIdx]: (prev[qIdx] || 0) + (now - qStartRef.current) }));
+        
+        const finalResults = {};
+        questions.forEach((qq, i) => {
+            const ans = answersMap[i];
+            if (ans !== undefined) {
+                let isCorrect = false;
+                if (qq.type === 'multiple-choice') isCorrect = ans === qq.correctAnswer;
+                else isCorrect = ans?.toString().toLowerCase() === qq.correctAnswer?.toString().toLowerCase();
+                
+                finalResults[i] = {
+                    selectedOption: qq.type === 'multiple-choice' ? qq.options[ans] : ans,
+                    isCorrect
+                };
+            }
+        });
+
+        finishSession({
+            totalQuestions: questions.length,
+            questionsAnswered: Object.keys(answersMap).length,
+            answersPayload: finalResults
+        });
         setFinished(true);
     };
 
@@ -336,7 +429,11 @@ function AssessMode({ skill, onBack }) {
                                     <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', flex: 1 }}>
                                         <span style={{ width: 28, height: 28, borderRadius: '50%', background: pillColor, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 13, flexShrink: 0 }}>{i + 1}</span>
                                         <div>
-                                            {qq.image && <div style={{ fontSize: 32, marginBottom: 8, wordBreak: 'break-all', overflowWrap: 'break-word' }}>{qq.image}</div>}
+                                            {qq.image && (
+                                                <div style={{ fontSize: 32, marginBottom: 8, wordBreak: 'break-all', overflowWrap: 'break-word', display: 'flex' }}>
+                                                    {typeof qq.image === 'string' && qq.image.trim().startsWith('<svg') ? <span style={{display: 'flex'}} dangerouslySetInnerHTML={{__html: qq.image}} /> : qq.image}
+                                                </div>
+                                            )}
                                             <p style={{ margin: 0, fontWeight: 700, fontSize: 15, color: '#0f172a', lineHeight: 1.5 }}>{qq.question}</p>
                                         </div>
                                     </div>
@@ -413,8 +510,8 @@ function AssessMode({ skill, onBack }) {
                     options={q.options}
                     answer={q.correctAnswer}
                     onAnswer={handleAnswer}
-                    disabled={currentAnswered}
-                    selectedOption={answersMap[qIdx] ?? null}
+                    disabled={false}
+                    selectedOption={answersMap[qIdx]}
                     image={q.image}
                     showCorrect={false}
                 />
@@ -490,13 +587,13 @@ export default function ShapesSkills() {
     const [skillsData, setSkillsData] = useState(() => generateShapesSkillsData());
 
     const openMode = (skill, mode) => {
-    const freshData = generateShapesSkillsData();
-    const found = freshData.find(s => s.id === skill.id);
-    setSkillsData(freshData);
-    setActiveSkill(found ?? skill);
-    setView(mode);
-};
-console.log("hi");
+        const freshData = generateShapesSkillsData();
+        const found = freshData.find(s => s.id === skill.id);
+        setSkillsData(freshData);
+        setActiveSkill(found ?? skill);
+        setView(mode);
+    };
+
     return (
         <div className="sau-skills-page">
             <nav className="sau-nav">
@@ -525,7 +622,9 @@ console.log("hi");
                             {skillsData.map((skill) => (
                                 <div key={skill.id} className="sau-skill-card">
                                     <div className="sau-skill-info">
-                                        <div className="sau-skill-icon" style={{ background: `${skill.color}15`, color: skill.color }}>{skill.icon}</div>
+                                        <div className="sau-skill-icon" style={{ background: `${skill.color}15`, color: skill.color }}>
+                                            {typeof skill.icon === 'string' && skill.icon.trim().startsWith('<svg') ? <span style={{display: 'flex'}} dangerouslySetInnerHTML={{__html: skill.icon}} /> : skill.icon}
+                                        </div>
                                         <div>
                                             <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 20, fontWeight: 800, color: '#0f172a', marginBottom: 4 }}>{skill.title}</div>
                                             <div style={{ fontSize: 14, color: '#64748b' }}>{skill.desc}</div>

@@ -7,7 +7,10 @@ import { LatexText } from '../../../LatexText';
 import mascotImg from '../../../../assets/mascot.png';
 import ExplanationModal from '../../../ExplanationModal';
 import PracticeReportModal from '../../PracticeReportModal';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import './polynomials.css'; // specific css for this chapter
+
+const NODE_ID = 'a4101002-0001-0000-0000-000000000000'; // Understanding Polynomials and Their Degrees
 
 const TypesAndDegrees = () => {
     const navigate = useNavigate();
@@ -22,7 +25,8 @@ const TypesAndDegrees = () => {
     const [questions, setQuestions] = useState([]);
 
     // Logging states
-    const [sessionId, setSessionId] = useState(null);
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const v4Answers = useRef([]);
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
@@ -176,18 +180,30 @@ const TypesAndDegrees = () => {
 
     const CORRECT_MESSAGES = ["Good job!", "Excellent!", "Perfect!", "Well done!"];
     useEffect(() => {
-        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId && !sessionId) {
-            api.createPracticeSession(String(userId).includes("-") ? 1 : parseInt(userId, 10), SKILL_ID).then(sess => {
-                if (sess && sess.session_id) setSessionId(sess.session_id);
-            });
-        }
+        startSession({ nodeId: NODE_ID, sessionType: 'practice' });
+        v4Answers.current = [];
+
         let timer;
         if (!showReportModal) {
             timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
         }
-        return () => clearInterval(timer);
-    }, [SKILL_ID, showReportModal]);
+
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                accumulatedTime.current += Date.now() - questionStartTime.current;
+                isTabActive.current = false;
+            } else {
+                questionStartTime.current = Date.now();
+                isTabActive.current = true;
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        return () => {
+            clearInterval(timer);
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
+    }, [showReportModal]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -211,17 +227,32 @@ const TypesAndDegrees = () => {
             }
         }));
 
+        // v4 Log
+        let t = accumulatedTime.current;
+        if (isTabActive.current) t += Date.now() - questionStartTime.current;
+        const entry = {
+            question_index: qIndex + 1,
+            answer_json: { selected: selectedOption },
+            is_correct: isRight ? 1.0 : 0.0,
+            marks_awarded: isRight ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: t
+        };
+        v4Answers.current[qIndex] = entry;
+        logAnswer({
+            questionIndex: entry.question_index,
+            answerJson: entry.answer_json,
+            isCorrect: entry.is_correct
+        });
+
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId) {
-            let t = accumulatedTime.current;
-            if (isTabActive.current) t += Date.now() - questionStartTime.current;
-            const sec = Math.max(0, Math.round(t / 1000));
             api.recordAttempt({
                 difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard',
-                user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10), session_id: sessionId, skill_id: SKILL_ID,
+                user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10), session_id: null, skill_id: SKILL_ID,
                 question_text: currentQ.text, correct_answer: currentQ.correctAnswer,
                 student_answer: selectedOption, is_correct: isRight, solution_text: currentQ.solution,
-                time_spent_seconds: sec
+                time_spent_seconds: Math.round(t / 1000)
             }).catch(console.error);
         }
     };
@@ -240,7 +271,13 @@ const TypesAndDegrees = () => {
             accumulatedTime.current = 0;
             questionStartTime.current = Date.now();
         } else {
-            if (sessionId) await api.finishSession(sessionId).catch(console.error);
+            // v4 finish
+            const payload = v4Answers.current.filter(Boolean);
+            await finishSession({
+                totalQuestions: questions.length,
+                questionsAnswered: payload.length,
+                answersPayload: payload
+            });
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
                 const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;

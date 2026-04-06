@@ -487,8 +487,10 @@ const Grade2CountingInTens = () => {
             }
         }));
 
-        if (!isTest && !isRight) {
+        if (!isTest && !isCorrect) {
             setShowExplanationModal(true);
+        } else if (isTest) {
+            handleNext();
         } else {
             setIsAutoAdvancing(true);
             setTimeout(() => {
@@ -797,7 +799,7 @@ const Grade2CountingInTens = () => {
 
                             {!isAnswered ? (
                                 <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>
-                                    Check Answer <ChevronRight size={24} />
+                                    {isTest ? (qIndex === totalQuestions - 1 ? 'Finish Test' : 'Next Question') : 'Check Answer'} <ChevronRight size={24} />
                                 </button>
                             ) : (
                                 <button className="g1-nav-btn next-btn" onClick={handleNext} disabled={isAutoAdvancing}>

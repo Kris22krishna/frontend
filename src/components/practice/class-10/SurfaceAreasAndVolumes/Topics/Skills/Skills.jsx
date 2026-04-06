@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../surface-volumes.css';
 import MathRenderer from '../../../../../MathRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 // ─── Shared Quiz Engine ────────────────────────────────────────────────────
-function QuizEngine({ questions, title, onBack, color, mode = 'practice' }) {
+function QuizEngine({ questions, title, onBack, color, mode = 'practice', nodeId }) {
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);
     const [responses, setResponses] = useState({}); // { index: { selected: number, isCorrect: boolean } }
@@ -12,8 +13,23 @@ function QuizEngine({ questions, title, onBack, color, mode = 'practice' }) {
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [visited, setVisited] = useState({ 0: true });
 
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
+
     const isAssessment = mode === 'assessment';
     const q = questions[current];
+
+    useEffect(() => {
+        if (!nodeId) return;
+        startSession({ nodeId, sessionType: mode === 'assessment' ? 'assessment' : 'practice' });
+        answersPayload.current = isAssessment ? new Array(questions.length).fill(null) : [];
+        isFinishedRef.current = false;
+        return () => {
+            if (!isAssessment && !isFinishedRef.current && answersPayload.current.length > 0)
+                abandonSession({ answersPayload: answersPayload.current.filter(Boolean), totalQuestions: questions.length });
+        };
+    }, [nodeId, mode]);
 
     // Timer logic
     useEffect(() => {
@@ -29,29 +45,36 @@ function QuizEngine({ questions, title, onBack, color, mode = 'practice' }) {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    const handleSelect = (optIdx) => {
+    const handleSelect = async (optIdx) => {
         if (finished) return;
         if (!isAssessment && selected !== null) return; // Lock in practice mode
 
+        const isCorrect = optIdx === q.correct;
         setSelected(optIdx);
-
         setResponses(prev => ({
             ...prev,
-            [current]: {
-                selected: optIdx,
-                isCorrect: optIdx === q.correct
-            }
+            [current]: { selected: optIdx, isCorrect }
         }));
+        const answerData = { question_index: current + 1, answer_json: { selected: optIdx }, is_correct: isCorrect ? 1.0 : 0.0, marks_awarded: isCorrect ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+        answersPayload.current[current] = answerData;
+        await logAnswer({ questionIndex: answerData.question_index, answerJson: answerData.answer_json, isCorrect: answerData.is_correct });
     };
 
-    const handleNext = () => {
+    const handleFinishAssess = async () => {
+        isFinishedRef.current = true;
+        setFinished(true);
+        const payload = answersPayload.current.filter(Boolean);
+        if (nodeId) await finishSession({ totalQuestions: questions.length, questionsAnswered: payload.length, answersPayload: payload });
+    };
+
+    const handleNext = async () => {
         if (current + 1 < questions.length) {
             const nextIdx = current + 1;
             setCurrent(nextIdx);
             setSelected(responses[nextIdx]?.selected ?? null);
             setVisited(prev => ({ ...prev, [nextIdx]: true }));
         } else {
-            setFinished(true);
+            await handleFinishAssess();
         }
     };
 
@@ -76,6 +99,11 @@ function QuizEngine({ questions, title, onBack, color, mode = 'practice' }) {
         setFinished(false);
         setTimeElapsed(0);
         setVisited({ 0: true });
+        if (nodeId) {
+            startSession({ nodeId, sessionType: mode === 'assessment' ? 'assessment' : 'practice' });
+            answersPayload.current = isAssessment ? new Array(questions.length).fill(null) : [];
+            isFinishedRef.current = false;
+        }
     };
 
     if (finished) {
@@ -436,7 +464,7 @@ function QuizEngine({ questions, title, onBack, color, mode = 'practice' }) {
                             </div>
 
                             <button
-                                onClick={() => setFinished(true)}
+                                onClick={handleFinishAssess}
                                 style={{
                                     width: '100%', padding: '12px', borderRadius: '12px', border: 'none',
                                     background: '#EF4444', color: '#fff', fontWeight: 900, cursor: 'pointer',
@@ -458,6 +486,7 @@ function QuizEngine({ questions, title, onBack, color, mode = 'practice' }) {
 const SKILLS = [
     {
         id: 'visualization',
+        nodeId: 'a4101013-0001-0000-0000-000000000000',
         title: 'Shape Visualization',
         subtitle: 'Skill 1 · Identification',
         icon: '👁️',
@@ -507,6 +536,7 @@ const SKILLS = [
     },
     {
         id: 'surface-area',
+        nodeId: 'a4101013-0002-0000-0000-000000000000',
         title: 'Surface Area: Combinations',
         subtitle: 'Skill 2 · Mastery',
         icon: '🎨',
@@ -556,6 +586,7 @@ const SKILLS = [
     },
     {
         id: 'volume',
+        nodeId: 'a4101013-0003-0000-0000-000000000000',
         title: 'Volume: Combinations',
         subtitle: 'Skill 3 · Mastery',
         icon: '🧊',
@@ -605,6 +636,7 @@ const SKILLS = [
     },
     {
         id: 'conversion',
+        nodeId: 'a4101013-0004-0000-0000-000000000000',
         title: 'Solid Conversion',
         subtitle: 'Skill 4 · Invariance',
         icon: '🔥',
@@ -654,6 +686,7 @@ const SKILLS = [
     },
     {
         id: 'hollow-parts',
+        nodeId: 'a4101013-0005-0000-0000-000000000000',
         title: 'Hollow Parts & Scoops',
         subtitle: 'Skill 5 · Subtraction',
         icon: '🕳️',
@@ -703,6 +736,7 @@ const SKILLS = [
     },
     {
         id: 'capacity',
+        nodeId: 'a4101013-0006-0000-0000-000000000000',
         title: 'Practical Capacity',
         subtitle: 'Skill 6 · Application',
         icon: '🚰',
@@ -752,6 +786,7 @@ const SKILLS = [
     },
     {
         id: 'real-world-problems',
+        nodeId: 'a4101013-0007-0000-0000-000000000000',
         title: 'Practical Applications',
         subtitle: 'Skill 7 · Complex Problems',
         icon: '🏭',
@@ -889,6 +924,7 @@ export default function Skills() {
                             onBack={() => setView('list')}
                             color={skill.color}
                             mode={view}
+                            nodeId={skill.nodeId}
                         />
                     )}
                 </div>

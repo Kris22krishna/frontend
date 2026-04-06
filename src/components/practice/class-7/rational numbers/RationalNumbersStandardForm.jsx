@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { RefreshCw, ArrowLeft, Check, X, Pencil, Eye, ChevronRight, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import mascotImg from '../../../../assets/mascot.png';
@@ -37,6 +38,9 @@ const RationalNumbersStandardForm = () => {
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
     const SKILL_ID = 'local-rn-standard';
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const v4AnswersPayload = useRef([]);
+    const v4IsFinishedRef = useRef(false);
     const SKILL_NAME = "Class 7 - Rational Numbers - Standard Form";
     const [answers, setAnswers] = useState({});
 
@@ -266,6 +270,9 @@ const RationalNumbersStandardForm = () => {
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             }).catch(err => console.error("Failed to start session", err));
+        startSession({ nodeId: 'a4071009-0005-0000-0000-000000000000', sessionType: 'practice' });
+        v4AnswersPayload.current = [];
+        v4IsFinishedRef.current = false;
         }
 
         const timer = setInterval(() => {
@@ -345,6 +352,15 @@ const RationalNumbersStandardForm = () => {
 
         setAnswers(prev => ({ ...prev, [qIndex]: { selectedOption, isCorrect: isRight } }));
         recordQuestionAttempt(currentQuestion, selectedOption, isRight);
+        const _v4t = Date.now() - questionStartTime.current;
+        v4AnswersPayload.current.push({
+            question_index: qIndex,
+            answer_json: JSON.stringify({ selected: selectedOption }),
+            is_correct: isRight,
+            marks_awarded: isRight ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: _v4t > 0 ? _v4t : 0,
+        });
     };
 
     useEffect(() => {
@@ -371,6 +387,10 @@ const RationalNumbersStandardForm = () => {
             questionStartTime.current = Date.now();
         } else {
             if (sessionId) {
+                if (!v4IsFinishedRef.current) {
+                    v4IsFinishedRef.current = true;
+                    finishSession({ answers_payload: v4AnswersPayload.current });
+                }
                 await api.finishSession(sessionId).catch(console.error);
             }
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');

@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText, Check, X, Eye, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../../../contexts/AuthContext';
-import { api } from '../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 import Navbar from '../../Navbar';
 import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
 import { LatexText } from '../../LatexText';
@@ -54,8 +54,8 @@ const DynamicVisual = ({ type, data }) => {
         const { n1, n2, color1, color2 } = data;
         return (
             <div style={{ display: 'flex', gap: 'clamp(20px, 8vw, 50px)', alignItems: 'center', justifyContent: 'center' }}>
-                <div className="g1-compare-box" style={{ background: color1 + '15', padding: '25px', borderRadius: '30px' }}>
-                    <div style={{ fontSize: '3.5rem', fontWeight: 400, color: color1, marginBottom: '15px', fontFamily: 'Nunito, sans-serif' }}>{n1}</div>
+                <div className="g1-compare-box" style={{ background: color1 + '15', padding: '25px', borderRadius: '30px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 700, color: color1, marginBottom: '15px', fontFamily: 'Nunito, sans-serif' }}>Group A</div>
                     <div style={{ display: 'flex', gap: '4px' }}>
                         <div style={{ display: 'flex', flexDirection: 'column-reverse', gap: '2px' }}>
                             {Array.from({ length: 10 }).map((_, i) => (
@@ -70,8 +70,8 @@ const DynamicVisual = ({ type, data }) => {
                     </div>
                 </div>
                 <div style={{ fontSize: '2.5rem', fontWeight: 400, color: '#CBD5E0' }}>VS</div>
-                <div className="g1-compare-box" style={{ background: color2 + '15', padding: '25px', borderRadius: '30px' }}>
-                    <div style={{ fontSize: '3.5rem', fontWeight: 400, color: color2, marginBottom: '15px', fontFamily: 'Nunito, sans-serif' }}>{n2}</div>
+                <div className="g1-compare-box" style={{ background: color2 + '15', padding: '25px', borderRadius: '30px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 700, color: color2, marginBottom: '15px', fontFamily: 'Nunito, sans-serif' }}>Group B</div>
                     <div style={{ display: 'flex', gap: '4px' }}>
                         <div style={{ display: 'flex', flexDirection: 'column-reverse', gap: '2px' }}>
                             {Array.from({ length: 10 }).map((_, i) => (
@@ -91,10 +91,18 @@ const DynamicVisual = ({ type, data }) => {
     return null;
 };
 
+const SKILL_ID_MAP = {
+    '501': NODE_IDS.g1MathNumbers1020Counting,
+    '502': NODE_IDS.g1MathNumbers1020TensOnes,
+    '503': NODE_IDS.g1MathNumbers1020Comparison,
+    '504': NODE_IDS.g1MathNumbers1020Mixed,
+};
+
 const Numbers10to20 = () => {
-    const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
     const isTest = skillId === '504';
@@ -108,12 +116,9 @@ const Numbers10to20 = () => {
     const [timer, setTimer] = useState(0);
     const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
-    const [sessionId, setSessionId] = useState(null);
-
     const [showExplanationModal, setShowExplanationModal] = useState(false);
 
     const getTopicInfo = () => {
-        const grade1Config = TOPIC_CONFIGS['1'];
         for (const gradeKey of Object.keys(TOPIC_CONFIGS)) {
             const gradeConfig = TOPIC_CONFIGS[gradeKey];
             for (const [topicName, skills] of Object.entries(gradeConfig)) {
@@ -128,10 +133,8 @@ const Numbers10to20 = () => {
         const { grade } = getTopicInfo();
         const gradeConfig = TOPIC_CONFIGS[grade];
         const topics = Object.keys(gradeConfig);
-
         let currentTopicIdx = -1;
         let currentSkillIdx = -1;
-
         for (let i = 0; i < topics.length; i++) {
             const skills = gradeConfig[topics[i]];
             const idx = skills.findIndex(s => s.id === skillId);
@@ -141,46 +144,27 @@ const Numbers10to20 = () => {
                 break;
             }
         }
-
         if (currentTopicIdx === -1) return null;
-
         const currentTopicSkills = gradeConfig[topics[currentTopicIdx]];
-
         if (currentSkillIdx < currentTopicSkills.length - 1) {
-            return {
-                ...currentTopicSkills[currentSkillIdx + 1],
-                topicName: topics[currentTopicIdx]
-            };
+            return { ...currentTopicSkills[currentSkillIdx + 1], topicName: topics[currentTopicIdx] };
         }
-
         if (currentTopicIdx < topics.length - 1) {
             const nextTopicName = topics[currentTopicIdx + 1];
             const nextTopicSkills = gradeConfig[nextTopicName];
-            if (nextTopicSkills.length > 0) {
-                return {
-                    ...nextTopicSkills[0],
-                    topicName: nextTopicName
-                };
-            }
+            if (nextTopicSkills.length > 0) return { ...nextTopicSkills[0], topicName: nextTopicName, route: nextTopicSkills[0].route };
         }
-
         return null;
     };
 
-    const { topicName, skillName } = getTopicInfo();
-    const generateQuestions = (selectedSkill) => {
+    const generateQuestions = useCallback((selectedSkill) => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
-        const names = {
-            10: 'Ten', 11: 'Eleven', 12: 'Twelve', 13: 'Thirteen', 14: 'Fourteen',
-            15: 'Fifteen', 16: 'Sixteen', 17: 'Seventeen', 18: 'Eighteen', 19: 'Nineteen', 20: 'Twenty'
-        };
-
+        const names = { 10: 'Ten', 11: 'Eleven', 12: 'Twelve', 13: 'Thirteen', 14: 'Fourteen', 15: 'Fifteen', 16: 'Sixteen', 17: 'Seventeen', 18: 'Eighteen', 19: 'Nineteen', 20: 'Twenty' };
         for (let i = 0; i < totalQuestions; i++) {
             let question = {};
             const color1 = colors[i % colors.length];
             const color2 = colors[(i + 1) % colors.length];
-
             let typeToGen = 'counting';
             if (isTest) {
                 if (i < 4) typeToGen = 'counting';
@@ -191,68 +175,57 @@ const Numbers10to20 = () => {
                 else if (selectedSkill === '502') typeToGen = 'tens-ones';
                 else typeToGen = 'comparison';
             }
-
             if (typeToGen === 'counting') {
-                const count = isTest ? (10 + i) : (Math.floor(Math.random() * 11) + 10);
-                const isWord = isTest ? (i % 2 === 0) : (Math.random() > 0.5);
+                const count = Math.floor(Math.random() * 11) + 10;
+                const isWord = Math.random() > 0.5;
                 question = {
-                    text: isWord ? "Can you pick the name for this number?" : "What number is shown here? 🎯",
-                    options: isWord ?
-                        [names[count], names[(count + 1) % 11 + 10], names[(count - 1) % 11 + 10]].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()) :
-                        [count, count + 1, count - 1].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
+                    text: isWord ? "Can you pick the name for this number?" : "What number is shown here?",
+                    options: isWord ? [names[count], names[(count + 1) % 11 + 10], names[(count - 1) % 11 + 10]].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()) : [count, count + 1, count - 1].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
                     correct: isWord ? names[count] : count,
                     type: 'counting',
                     visualData: { num: count, color: color1 },
                     explanation: `Count one ten-bar and then the single blocks. This gives us ${count}.`
                 };
             } else if (typeToGen === 'tens-ones') {
-                const num = isTest ? (12 + i - 4) : (Math.floor(Math.random() * 11) + 10);
+                const num = Math.floor(Math.random() * 11) + 10;
                 const tens = Math.floor(num / 10);
                 const ones = num % 10;
                 question = {
                     text: `How many tens and ones in ${num}?`,
-                    options: [
-                        `${tens} Ten, ${ones} Ones`,
-                        `${ones} Ten, ${tens} Ones`,
-                        `${tens + 1} Ten, ${ones} Ones`
-                    ].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
+                    options: [`${tens} Ten, ${ones} Ones`, `${ones} Ten, ${tens} Ones`, `${tens + 1} Ten, ${ones} Ones`].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
                     correct: `${tens} Ten, ${ones} Ones`,
                     type: 'tens-ones',
                     visualData: { num, color: color1 },
                     explanation: `${num} is made of ${tens} group of ten and ${ones} single blocks.`
                 };
             } else {
-                const n1 = isTest ? (10 + i) : (Math.floor(Math.random() * 11) + 10);
-                let n2 = isTest ? (20 - i) : (Math.floor(Math.random() * 11) + 10);
+                const n1 = Math.floor(Math.random() * 11) + 10;
+                let n2 = Math.floor(Math.random() * 11) + 10;
                 if (n1 === n2) n2 = 15;
-                const isGreater = isTest ? (i % 2 === 0) : (Math.random() > 0.5);
+                const isGreater = Math.random() > 0.5;
+                const correctAns = isGreater ? (n1 > n2 ? 'Group A' : 'Group B') : (n1 < n2 ? 'Group A' : 'Group B');
                 question = {
                     text: `Which group has ${isGreater ? 'MORE' : 'FEWER'} blocks?`,
-                    options: [n1, n2].sort(() => 0.5 - Math.random()),
-                    correct: isGreater ? (n1 > n2 ? n1 : n2) : (n1 < n2 ? n1 : n2),
+                    options: ['Group A', 'Group B'],
+                    correct: correctAns,
                     type: 'comparison',
                     visualData: { n1, n2, color1, color2 },
-                    explanation: `${isGreater ? 'More' : 'Fewer'} means the ${isGreater ? 'larger' : 'smaller'} number.`
+                    explanation: `Group A has ${n1} and Group B has ${n2}. ${correctAns} clearly has ${isGreater ? 'more' : 'fewer'} blocks.`
                 };
             }
             questions.push(question);
         }
         return questions;
-    };
+    }, [isTest, totalQuestions]);
+
+    const { topicName, skillName } = getTopicInfo();
 
     useEffect(() => {
-        const init = async () => {
-            const userId = user?.user_id || user?.id;
-            if (!userId) return;
-            const qs = generateQuestions(skillId);
-            setSessionQuestions(qs);
-            try {
-                const session = await api.createPracticeSession(userId, parseInt(skillId) || 501);
-                setSessionId(session?.session_id);
-            } catch (e) { console.error(e); }
-        };
-        init();
-    }, [user, skillId]);
+        const qs = generateQuestions(skillId);
+        setSessionQuestions(qs);
+        const nodeId = SKILL_ID_MAP[skillId] || NODE_IDS.g1MathNumbers1020Mixed;
+        startSession({ nodeId, sessionType: isTest ? 'assessment' : 'practice' });
+    }, [skillId, isTest, startSession, generateQuestions]);
 
     useEffect(() => {
         let interval;
@@ -276,14 +249,7 @@ const Numbers10to20 = () => {
         }
     }, [qIndex, answers]);
 
-    const handleExit = async () => {
-        try {
-            if (sessionId) {
-                await api.finishSession(sessionId);
-            }
-        } catch (e) {
-            console.error("Error finishing session:", e);
-        }
+    const handleExit = () => {
         navigate('/junior/grade/1');
     };
 
@@ -292,62 +258,44 @@ const Numbers10to20 = () => {
         setSelectedOption(option);
     };
 
-
     const handleSubmit = () => {
         if (isAnswered || selectedOption === null) return;
         const option = selectedOption;
+        const currentQ = sessionQuestions[qIndex];
+        const isCorrect = option === currentQ.correct;
 
         setIsAnswered(true);
-        const isCorrect = option === sessionQuestions[qIndex].correct;
-        // --- AUTO-INJECTED LOGGING ---
-        try {
-            const uid = user?.user_id || user?.id || sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            const qData = sessionQuestions[qIndex] || {};
-            const skId = typeof selectedSkill !== 'undefined' ? selectedSkill : (typeof skillId !== 'undefined' ? skillId : '0');
-            const currentTimer = typeof timer !== 'undefined' ? timer : 0;
+        if (isCorrect) setScore(s => s + 1);
 
-            if (uid && sessionId) {
-                api.recordAttempt({
-                    user_id: parseInt(uid, 10),
-                    session_id: sessionId,
-                    skill_id: parseInt(skId, 10) || 0,
-                    template_id: null,
-                    difficulty_level: 'Medium',
-                    question_text: String(qData.text || ''),
-                    correct_answer: String(qData.correct || qData.correctAnswer || ''),
-                    student_answer: String(option),
-                    is_correct: isCorrect,
-                    solution_text: String(qData.explanation || qData.solution || ''),
-                    time_spent_seconds: currentTimer
-                }).catch(err => console.error("Auto-log failed:", err));
-            }
-        } catch (err) {
-            console.error("Auto-log error:", err);
-        }
-        // -----------------------------
+        const answerData = {
+            question_text: currentQ.text,
+            selected: option,
+            correct: currentQ.correct,
+            isCorrect
+        };
 
-        if (isCorrect) {
-            setScore(s => s + 1);
-        }
+        logAnswer({
+            question_index: qIndex,
+            answer_json: answerData,
+            is_correct: isCorrect ? 1 : 0
+        });
 
         setAnswers(prev => ({
             ...prev,
             [qIndex]: {
                 selectedOption: option,
                 isCorrect,
-                type: sessionQuestions[qIndex].type,
-                visualData: sessionQuestions[qIndex].visualData,
-                questionText: sessionQuestions[qIndex].text,
-                correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: sessionQuestions[qIndex].explanation || "Detailed explanation is coming soon! Feel free to ask your teacher for help in the meantime. 💡"
+                type: currentQ.type,
+                visualData: currentQ.visualData,
+                questionText: currentQ.text,
+                correctAnswer: currentQ.correct,
+                explanation: currentQ.explanation || "Detailed explanation is coming soon!"
             }
         }));
 
-        // Auto advance if correct, or show modal if incorrect
         if (!isTest) {
             setShowExplanationModal(true);
         } else {
-            // Give a tiny delay so they see the option highlight green
             setTimeout(() => {
                 handleNext();
             }, 800);
@@ -356,16 +304,24 @@ const Numbers10to20 = () => {
 
     const handleSkip = () => {
         if (isAnswered) return;
+        const currentQ = sessionQuestions[qIndex];
+        
+        logAnswer({
+            question_index: qIndex,
+            answer_json: { question_text: currentQ.text, selected: 'Skipped', correct: currentQ.correct, isCorrect: false },
+            is_correct: 0
+        });
+
         setAnswers(prev => ({
             ...prev,
             [qIndex]: {
                 selectedOption: 'Skipped',
                 isCorrect: false,
-                type: sessionQuestions[qIndex].type,
-                visualData: sessionQuestions[qIndex].visualData,
-                questionText: sessionQuestions[qIndex].text,
-                correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: "This question was skipped. " + sessionQuestions[qIndex].explanation
+                type: currentQ.type,
+                visualData: currentQ.visualData,
+                questionText: currentQ.text,
+                correctAnswer: currentQ.correct,
+                explanation: "This question was skipped. " + currentQ.explanation
             }
         }));
         handleNext();
@@ -375,26 +331,12 @@ const Numbers10to20 = () => {
         if (qIndex < totalQuestions - 1) {
             setQIndex(v => v + 1);
         } else {
+            finishSession({
+                totalQuestions,
+                questionsAnswered: Object.keys(answers).length,
+                answersPayload: answers
+            });
             setShowResults(true);
-            try {
-                if (sessionId) {
-                    await api.finishSession(sessionId);
-                    await api.createReport({
-                        uid: user?.id || 'unknown',
-                        category: 'Practice',
-                        reportData: {
-                            skill_id: skillId,
-                            skill_name: skillName,
-                            score: Math.round((score / totalQuestions) * 100),
-                            total_questions: totalQuestions,
-                            correct_answers: score,
-                            time_spent: timer,
-                            timestamp: new Date().toISOString(),
-                            answers: Object.values(answers).filter(a => a !== undefined)
-                        }
-                    });
-                }
-            } catch (e) { console.error(e); }
         }
     };
 
@@ -655,8 +597,6 @@ const Numbers10to20 = () => {
                         </div>
                     </div>
 
-
-                    {/* --- INJECTED FOOTER V2 --- */}
                     <div className="g1-navigation-footer">
                         <button className="g1-nav-btn prev-btn" onClick={() => { if (qIndex > 0) setQIndex(qIndex - 1); }} disabled={qIndex === 0}>
                             <ChevronLeft size={24} /> Prev

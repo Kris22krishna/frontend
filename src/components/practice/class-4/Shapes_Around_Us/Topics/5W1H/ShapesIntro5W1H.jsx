@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home } from 'lucide-react';
 import '../../shapes-around-us.css';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 const cards5W1H = [
     {
@@ -127,17 +129,31 @@ function W1HCard({ card }) {
 
 export default function ShapesIntro5W1H() {
     const navigate = useNavigate();
+    const { startSession, finishSession } = useSessionLogger();
+
+    useEffect(() => {
+        startSession({ nodeId: NODE_IDS.g4MathShapesIntro, sessionType: 'practice' });
+    }, [startSession]);
+
+    const handleNavigate = (path) => {
+        finishSession({
+            totalQuestions: 1,
+            questionsAnswered: 1,
+            answersPayload: { mode: 'intro', completed: true }
+        });
+        navigate(path);
+    };
 
     return (
         <div className="sau-intro-page">
             <nav className="sau-nav">
-                <button className="sau-nav-back" onClick={() => navigate('/junior/grade/4/shapes-around-us')}>
+                <button className="sau-nav-back" onClick={() => handleNavigate('/junior/grade/4/shapes-around-us')}>
                     ← Back to Shapes Around Us
                 </button>
                 <div className="sau-nav-links">
-                    <button className="sau-nav-link sau-nav-link--active" onClick={() => navigate('/junior/grade/4/shapes-around-us/introduction')}>🌟 Introduction</button>
-                    <button className="sau-nav-link" onClick={() => navigate('/junior/grade/4/shapes-around-us/terminology')}>📖 Terminology</button>
-                    <button className="sau-nav-link" onClick={() => navigate('/junior/grade/4/shapes-around-us/skills')}>🎯 Skills</button>
+                    <button className="sau-nav-link sau-nav-link--active" onClick={() => handleNavigate('/junior/grade/4/shapes-around-us/introduction')}>🌟 Introduction</button>
+                    <button className="sau-nav-link" onClick={() => handleNavigate('/junior/grade/4/shapes-around-us/terminology')}>📖 Terminology</button>
+                    <button className="sau-nav-link" onClick={() => handleNavigate('/junior/grade/4/shapes-around-us/skills')}>🎯 Skills</button>
                 </div>
             </nav>
 

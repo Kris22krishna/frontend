@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../../../proportions.css';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 // Fisher-Yates sample
 function sample(arr, n) {
@@ -12,7 +13,11 @@ function sample(arr, n) {
 }
 
 // Receives: questionPool (full array), sampleSize, title, color, onBack
-export default function ProportionsPracticeEngine({ questionPool, sampleSize = 20, title, color, onBack }) {
+export default function ProportionsPracticeEngine({ questionPool, sampleSize = 20, title, color, onBack, nodeId }) {
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
+
     const [questions, setQuestions] = useState(() => sample(questionPool, sampleSize));
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);
@@ -20,6 +25,11 @@ export default function ProportionsPracticeEngine({ questionPool, sampleSize = 2
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
     const [timeTaken, setTimeTaken] = useState(0);
+
+    useEffect(() => {
+        if (!nodeId) return;
+        startSession({ nodeId, sessionType: 'practice' });
+    }, [nodeId]);
 
     useEffect(() => {
         if (finished) return;
@@ -40,17 +50,31 @@ export default function ProportionsPracticeEngine({ questionPool, sampleSize = 2
         if (answered) return;
         setSelected(idx);
         setAnswered(true);
-        if (idx === q.correct) setScore(s => s + 1);
+        const isCorrect = idx === q.correct;
+        if (isCorrect) setScore(s => s + 1);
+        if (nodeId) {
+            const entry = { question_index: current, answer_json: { selected: idx, correct_answer: q.correct }, is_correct: isCorrect, marks_awarded: isCorrect ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+            answersPayload.current[current] = entry;
+            logAnswer(entry);
+        }
     };
 
-    const handleNext = () => {
-        if (current + 1 >= questions.length) { setFinished(true); }
-        else { setCurrent(c => c + 1); setSelected(null); setAnswered(false); }
+    const handleNext = async () => {
+        if (current + 1 >= questions.length) {
+            if (nodeId && !isFinishedRef.current) {
+                isFinishedRef.current = true;
+                await finishSession({ answers_payload: answersPayload.current.filter(Boolean) });
+            }
+            setFinished(true);
+        } else { setCurrent(c => c + 1); setSelected(null); setAnswered(false); }
     };
 
     const handleRetry = () => {
+        answersPayload.current = [];
+        isFinishedRef.current = false;
         setQuestions(sample(questionPool, sampleSize));
         setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false); setTimeTaken(0);
+        if (nodeId) startSession({ nodeId, sessionType: 'practice' });
     };
 
     // ── FINISHED SCREEN ──────────────────────────────────────────────────────

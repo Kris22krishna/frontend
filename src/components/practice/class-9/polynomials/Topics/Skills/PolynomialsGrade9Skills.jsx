@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../polynomials_grade_9.css';
 import { LatexText } from '../../../../../LatexText';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 import PolynomialsPracticeEngine from './Engines/PolynomialsPracticeEngine';
 import PolynomialsAssessmentEngine from './Engines/PolynomialsAssessmentEngine';
@@ -21,6 +22,7 @@ import {
 const SKILLS = [
     {
         id: 'identify-polynomials',
+        nodeId: NODE_IDS.g9MathPolyIdentifying,
         title: 'Identifying Polynomials & Degree',
         subtitle: 'Skill 1 · Basics & Properties',
         icon: '🧊',
@@ -64,6 +66,7 @@ const SKILLS = [
     },
     {
         id: 'zeroes',
+        nodeId: NODE_IDS.g9MathPolyZeroes,
         title: 'Zeroes of a Polynomial',
         subtitle: 'Skill 2 · Value & Roots',
         icon: '🎯',
@@ -100,6 +103,7 @@ const SKILLS = [
     },
     {
         id: 'factorisation',
+        nodeId: NODE_IDS.g9MathPolyFactorisation,
         title: 'Factorisation & Factor Theorem',
         subtitle: 'Skill 3 · Breaking down equations',
         icon: '✂️',
@@ -136,6 +140,7 @@ const SKILLS = [
     },
     {
         id: 'identities',
+        nodeId: NODE_IDS.g9MathPolyIdentities,
         title: 'Algebraic Identities',
         subtitle: 'Skill 4 · Shortcuts in Algebra',
         icon: '🧬',
@@ -272,6 +277,7 @@ export default function PolynomialsGrade9Skills() {
                                 title={`Practice: ${skill.title}`}
                                 color={skill.color}
                                 onBack={goBack}
+                                nodeId={skill.nodeId}
                             />
                         </div>
                     ) : (
@@ -282,6 +288,7 @@ export default function PolynomialsGrade9Skills() {
                                 title={skill.title}
                                 color={skill.color}
                                 onBack={goBack}
+                                nodeId={skill.nodeId}
                             />
                         </div>
                     )}

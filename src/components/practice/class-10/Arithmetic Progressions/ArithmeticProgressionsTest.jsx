@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Check, Eye, ChevronRight, ChevronLeft, SkipForward, ArrowLeft, RefreshCw, BarChart3, Clock, HelpCircle, CheckCircle2, XCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { LatexText } from '../../../LatexText';
 import '../TenthPracticeSession.css';
 import mascotImg from '../../../../assets/mascot.png';
@@ -153,6 +154,7 @@ const BLUE_THEME_CSS = `
 
 const SKILL_ID = 1110;
 const SKILL_NAME = "Arithmetic Progressions - Chapter Test";
+const NODE_ID = 'a4101005-0010-0000-0000-000000000000';
 
 const ArithmeticProgressionsTest = () => {
     const navigate = useNavigate();
@@ -165,6 +167,9 @@ const ArithmeticProgressionsTest = () => {
     const questionStartTime = useRef(Date.now());
     const [sessionId, setSessionId] = useState(null);
     const [questions, setQuestions] = useState([]);
+
+    const { startSession, logAnswer, finishSession: finishV4Session } = useSessionLogger();
+    const v4Answers = useRef([]);
 
     const generateQuestions = () => {
         const pool = [
@@ -356,6 +361,8 @@ const ArithmeticProgressionsTest = () => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
         }
+        startSession({ nodeId: NODE_ID, sessionType: 'assessment' });
+        v4Answers.current = [];
     }, []);
 
     useEffect(() => {
@@ -396,6 +403,11 @@ const ArithmeticProgressionsTest = () => {
             };
             api.recordAttempt(attemptData).catch(console.error);
         }
+        // v4 log
+        const isCorr = selectedOption ? selectedOption === questions[qIndex]?.correctAnswer : false;
+        const v4Entry = { question_index: qIndex + 1, answer_json: { selected: selectedOption || 'SKIPPED' }, is_correct: isCorr ? 1.0 : 0.0, marks_awarded: isCorr ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+        v4Answers.current[qIndex] = v4Entry;
+        logAnswer({ questionIndex: v4Entry.question_index, answerJson: v4Entry.answer_json, isCorrect: v4Entry.is_correct });
     };
 
     const navigateToQuestion = (targetIndex) => {
@@ -423,6 +435,9 @@ const ArithmeticProgressionsTest = () => {
     const finalizeTest = async () => {
         setIsTestOver(true);
         if (sessionId) await api.finishSession(sessionId).catch(console.error);
+        // v4 finish
+        const fPayload = v4Answers.current.filter(Boolean);
+        await finishV4Session({ totalQuestions: questions.length, questionsAnswered: fPayload.length, answersPayload: fPayload });
 
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         const uid = parseInt(rawUid, 10);

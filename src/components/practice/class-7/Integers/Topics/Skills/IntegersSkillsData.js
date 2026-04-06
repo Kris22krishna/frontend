@@ -9,6 +9,7 @@ import {
 export const SKILLS = [
     {
         id: 'add-sub-properties',
+        nodeId: 'a4071001-0001-0000-0000-000000000000',
         title: 'Properties of Addition & Subtraction',
         subtitle: 'Main Topic 1',
         icon: '➕',
@@ -28,6 +29,7 @@ export const SKILLS = [
     },
     {
         id: 'multiplication',
+        nodeId: 'a4071001-0002-0000-0000-000000000000',
         title: 'Multiplication of Integers',
         subtitle: 'Main Topic 2',
         icon: '✖️',
@@ -45,6 +47,7 @@ export const SKILLS = [
     },
     {
         id: 'multiplication-properties',
+        nodeId: 'a4071001-0003-0000-0000-000000000000',
         title: 'Properties of Multiplication',
         subtitle: 'Main Topic 3',
         icon: '🔗',
@@ -64,6 +67,7 @@ export const SKILLS = [
     },
     {
         id: 'division',
+        nodeId: 'a4071001-0004-0000-0000-000000000000',
         title: 'Division of Integers',
         subtitle: 'Main Topic 4',
         icon: '➗',
@@ -82,6 +86,7 @@ export const SKILLS = [
     },
     {
         id: 'division-properties',
+        nodeId: 'a4071001-0005-0000-0000-000000000000',
         title: 'Properties of Division',
         subtitle: 'Main Topic 5',
         icon: '⚠️',

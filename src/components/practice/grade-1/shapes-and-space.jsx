@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText, Check, X, Eye, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../../../contexts/AuthContext';
-import { api } from '../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 import Navbar from '../../Navbar';
 import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
 import { LatexText } from '../../LatexText';
@@ -76,14 +76,14 @@ const DynamicVisual = ({ type, data }) => {
         const { pos } = data;
         return (
             <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="position-visual" style={{ border: "none" }}>
-                <svg width="100%" height="100%" style={{ maxWidth: '300px' }} viewBox="0 0 220 120">
+                <svg width="100%" height="100%" style={{ maxWidth: '300px' }} viewBox="0 0 220 150">
                     <rect x="50" y="40" width="100" height="70" rx="10" fill="#F8FAFC" stroke="#E2E8F0" strokeWidth="2" />
                     <text x="100" y="85" textAnchor="middle" fill="#64748B" fontSize="14" fontWeight="600">BOX</text>
-                    {pos === 'top' && <motion.circle initial={{ y: -20 }} animate={{ y: 0 }} cx="100" cy="20" r="18" fill="url(#ballGradient)" />}
-                    {pos === 'bottom' && <motion.circle initial={{ y: 20 }} animate={{ y: 0 }} cx="100" cy="95" r="18" fill="url(#ballGradient)" />}
+                    {pos === 'on top' && <motion.circle initial={{ y: -20 }} animate={{ y: 0 }} cx="100" cy="20" r="18" fill="url(#ballGradient)" />}
+                    {pos === 'underneath' && <motion.circle initial={{ y: 20 }} animate={{ y: 0 }} cx="100" cy="130" r="18" fill="url(#ballGradient)" />}
                     {pos === 'inside' && <motion.circle initial={{ scale: 0 }} animate={{ scale: 1 }} cx="100" cy="75" r="18" fill="url(#ballGradient)" />}
                     {pos === 'outside' && <motion.circle initial={{ x: -20 }} animate={{ x: 0 }} cx="25" cy="75" r="18" fill="url(#ballGradient)" />}
-                    {pos === 'far' && <motion.circle initial={{ opacity: 0 }} animate={{ opacity: 0.5 }} cx="205" cy="35" r="10" fill="url(#ballGradient)" />}
+                    {pos === 'far away' && <motion.circle initial={{ opacity: 0 }} animate={{ opacity: 0.5 }} cx="205" cy="35" r="10" fill="url(#ballGradient)" />}
                     <defs>
                         <radialGradient id="ballGradient">
                             <stop offset="0%" stopColor="#FFD54F" />
@@ -100,14 +100,23 @@ const DynamicVisual = ({ type, data }) => {
     return null;
 };
 
+const SKILL_ID_MAP = {
+    '101': NODE_IDS.g1MathShapesSpaceIdentify,
+    '102': NODE_IDS.g1MathShapesSpacePosition,
+    '103': NODE_IDS.g1MathShapesSpaceSize,
+    '104': NODE_IDS.g1MathShapesSpaceMixed,
+};
+
 const ShapesAndSpace = () => {
-    const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
     const isTest = skillId === '104';
     const totalQuestions = isTest ? 10 : 5;
+
     const [qIndex, setQIndex] = useState(0);
     const [score, setScore] = useState(0);
     const [showResults, setShowResults] = useState(false);
@@ -116,13 +125,12 @@ const ShapesAndSpace = () => {
     const [timer, setTimer] = useState(0);
     const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
-    const [sessionId, setSessionId] = useState(null);
+    const [showExplanationModal, setShowExplanationModal] = useState(false);
+    const [isTransitioning, setIsTransitioning] = useState(false);
     const qIndexRef = React.useRef(0);
     const nextTimeoutRef = React.useRef(null);
-    const [isTransitioning, setIsTransitioning] = React.useState(false);
-    useEffect(() => { qIndexRef.current = qIndex; }, [qIndex]);
 
-    const [showExplanationModal, setShowExplanationModal] = useState(false);
+    useEffect(() => { qIndexRef.current = qIndex; }, [qIndex]);
 
     const getTopicInfo = () => {
         const grade1Config = TOPIC_CONFIGS['1'];
@@ -135,6 +143,8 @@ const ShapesAndSpace = () => {
         }
         return { topicName: 'Shapes and Space', skillName: 'Mathematics', grade: '1' };
     };
+
+    const { topicName, skillName } = getTopicInfo();
 
     const getNextSkill = () => {
         const { grade } = getTopicInfo();
@@ -179,19 +189,17 @@ const ShapesAndSpace = () => {
         return null;
     };
 
-    const { topicName, skillName } = getTopicInfo();
     const generateQuestions = (selectedSkill) => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'].sort(() => 0.5 - Math.random());
 
-        // Pre-shuffled pools for 100% uniqueness per session
         const shapesPool = ['circle', 'square', 'triangle', 'rectangle', 'oval'].sort(() => 0.5 - Math.random());
         const posPool = [
-            { q: 'Where is the yellow ball?', a: 'top' },
-            { q: 'Is the ball inside or outside the box?', a: 'inside' },
-            { q: 'Where is the ball located?', a: 'bottom' },
-            { q: 'Where can you see the ball?', a: 'outside' },
-            { q: 'Look closely, where is the ball?', a: 'far' }
+            { q: 'Where is the ball located?', a: 'on top' },
+            { q: 'Where is the ball located?', a: 'inside' },
+            { q: 'Where is the ball located?', a: 'underneath' },
+            { q: 'Where is the ball located?', a: 'outside' },
+            { q: 'Where is the ball located?', a: 'far away' }
         ].sort(() => 0.5 - Math.random());
         const sizePool = [
             { q: 'Which bar is HIGHER?', a: 'A', aSize: 120, bSize: 60, orient: 'vertical', exp: 'Bar A has a greater height than Bar B.' },
@@ -204,8 +212,6 @@ const ShapesAndSpace = () => {
 
         for (let i = 0; i < totalQuestions; i++) {
             let question = {};
-
-            // Skill Allocation Logic
             let typeToGen = 'shape';
             if (isTest) {
                 if (i < 4) typeToGen = 'shape';
@@ -224,7 +230,7 @@ const ShapesAndSpace = () => {
                 const otherOptions = shapesPool.filter(s => s !== target);
                 question = {
                     text: `What shape is this?`,
-                    options: [target, ...otherOptions.sort(() => 0.5 - Math.random()).slice(0, 2)].sort(() => 0.5 - Math.random()),
+                    options: [target, ...otherOptions.sort(() => 0.5 - Math.random()).slice(0, 3)].sort(() => 0.5 - Math.random()),
                     correct: target,
                     type: 'shape',
                     visualData: { shape: target, color: colors[i % colors.length] },
@@ -232,7 +238,7 @@ const ShapesAndSpace = () => {
                 };
             } else if (typeToGen === 'position') {
                 const item = posPool[i % posPool.length];
-                const pool = ['top', 'bottom', 'inside', 'outside', 'far'];
+                const pool = ['on top', 'underneath', 'inside', 'outside', 'far away'];
                 const otherOptions = pool.filter(p => p !== item.a);
                 question = {
                     text: item.q,
@@ -240,7 +246,7 @@ const ShapesAndSpace = () => {
                     correct: item.a,
                     type: 'position',
                     visualData: { pos: item.a },
-                    explanation: `The ball is positioned at the ${item.a.toUpperCase()} in this visual representation.`
+                    explanation: `The ball is positioned ${item.a.toUpperCase()} in this visual representation.`
                 };
             } else if (typeToGen === 'size') {
                 const item = sizePool[i % sizePool.length];
@@ -252,9 +258,6 @@ const ShapesAndSpace = () => {
                     visualData: { aSize: item.aSize, bSize: item.bSize, orientation: item.orient },
                     explanation: item.exp
                 };
-            } else {
-                // Default fallback
-                question = { text: "Look at the object!", options: ["Yes"], correct: "Yes", type: "shape", visualData: { shape: 'circle', color: '#FF6B6B' }, explanation: "Visual matching is key here!" };
             }
             questions.push(question);
         }
@@ -262,25 +265,11 @@ const ShapesAndSpace = () => {
     };
 
     useEffect(() => {
-        const init = async () => {
-            setQIndex(0);
-            setScore(0);
-            setShowResults(false);
-            setAnswers({});
-            setIsAnswered(false);
-            setSelectedOption(null);
-
-            const userId = user?.user_id || user?.id;
-            if (!userId) return;
-            const qs = generateQuestions(skillId);
-            setSessionQuestions(qs);
-            try {
-                const session = await api.createPracticeSession(userId, parseInt(skillId) || 101);
-                setSessionId(session?.session_id);
-            } catch (e) { console.error(e); }
-        };
-        init();
-    }, [user, skillId]);
+        const qs = generateQuestions(skillId);
+        setSessionQuestions(qs);
+        const nodeId = SKILL_ID_MAP[skillId] || NODE_IDS.g1MathShapesSpaceMixed;
+        startSession({ nodeId, sessionType: isTest ? 'assessment' : 'practice' });
+    }, [skillId, isTest, startSession]);
 
     useEffect(() => {
         let interval;
@@ -306,13 +295,6 @@ const ShapesAndSpace = () => {
     }, [qIndex, answers]);
 
     const handleExit = async () => {
-        try {
-            if (sessionId) {
-                await api.finishSession(sessionId);
-            }
-        } catch (e) {
-            console.error("Error finishing session:", e);
-        }
         navigate('/junior/grade/1');
     };
 
@@ -321,74 +303,51 @@ const ShapesAndSpace = () => {
         setSelectedOption(option);
     };
 
-
     const handleSubmit = () => {
         if (isAnswered || selectedOption === null) return;
         const option = selectedOption;
+        const currentQ = sessionQuestions[qIndex];
+        const isCorrect = option === currentQ.correct;
 
         setIsAnswered(true);
-        const isCorrect = option === sessionQuestions[qIndex].correct;
-        // --- AUTO-INJECTED LOGGING ---
-        try {
-            const uid = user?.user_id || user?.id || sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            const qData = sessionQuestions[qIndex] || {};
-            const skId = typeof skillId !== 'undefined' ? skillId : '0';
-            const currentTimer = typeof timer !== 'undefined' ? timer : 0;
+        if (isCorrect) setScore(s => s + 1);
 
-            if (uid && sessionId) {
-                api.recordAttempt({
-                    user_id: parseInt(uid, 10),
-                    session_id: sessionId,
-                    skill_id: parseInt(skId, 10) || 0,
-                    template_id: null,
-                    difficulty_level: 'Medium',
-                    question_text: String(qData.text || ''),
-                    correct_answer: String(qData.correct || qData.correctAnswer || ''),
-                    student_answer: String(option),
-                    is_correct: isCorrect,
-                    solution_text: String(qData.explanation || qData.solution || ''),
-                    time_spent_seconds: currentTimer
-                }).catch(err => console.error("Auto-log failed:", err));
-            }
-        } catch (err) {
-            console.error("Auto-log error:", err);
-        }
-        // -----------------------------
+        const answerData = {
+            question_text: currentQ.text,
+            selected: option,
+            correct: currentQ.correct,
+            isCorrect
+        };
 
-        if (isCorrect) {
-            setScore(s => s + 1);
-        }
+        logAnswer({
+            question_index: qIndex,
+            answer_json: answerData,
+            is_correct: isCorrect ? 1 : 0
+        });
 
         setAnswers(prev => ({
             ...prev,
             [qIndex]: {
                 selectedOption: option,
                 isCorrect,
-                type: sessionQuestions[qIndex].type,
-                visualData: sessionQuestions[qIndex].visualData,
-                questionText: sessionQuestions[qIndex].text,
-                correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: sessionQuestions[qIndex].explanation || "Detailed explanation is coming soon! Feel free to ask your teacher for help in the meantime. 💡"
+                type: currentQ.type,
+                visualData: currentQ.visualData,
+                questionText: currentQ.text,
+                correctAnswer: currentQ.correct,
+                explanation: currentQ.explanation || "Detailed explanation is coming soon!"
             }
         }));
 
-        // Show modal for all answers in practice mode
         if (!isTest) {
             setShowExplanationModal(true);
         } else {
-            // Clear any existing timeout just in case
-            if (nextTimeoutRef.current) clearTimeout(nextTimeoutRef.current);
-            // Give a tiny delay so they see the option highlight green
-            nextTimeoutRef.current = setTimeout(() => {
-                handleNext();
-            }, 800);
+            handleNext();
         }
     };
 
     const handleNext = async () => {
         if (showResults || isTransitioning) return;
 
-        // Clear any pending auto-advance timeout
         if (nextTimeoutRef.current) {
             clearTimeout(nextTimeoutRef.current);
             nextTimeoutRef.current = null;
@@ -399,41 +358,35 @@ const ShapesAndSpace = () => {
             setIsTransitioning(true);
             setQIndex(prev => prev + 1);
         } else {
+            finishSession({
+                totalQuestions,
+                questionsAnswered: Object.keys(answers).length,
+                answersPayload: answers
+            });
             setShowResults(true);
-            try {
-                if (sessionId) {
-                    await api.finishSession(sessionId);
-                    await api.createReport({
-                        uid: user?.id || 'unknown',
-                        category: 'Practice',
-                        reportData: {
-                            skill_id: skillId,
-                            skill_name: skillName,
-                            score: Math.round((score / totalQuestions) * 100),
-                            total_questions: totalQuestions,
-                            correct_answers: score,
-                            time_spent: timer,
-                            timestamp: new Date().toISOString(),
-                            answers: Object.values(answers).filter(a => a !== undefined)
-                        }
-                    });
-                }
-            } catch (e) { console.error(e); }
         }
     };
 
     const handleSkip = () => {
         if (isAnswered) return;
+        const currentQ = sessionQuestions[qIndex];
+        
+        logAnswer({
+            question_index: qIndex,
+            answer_json: { question_text: currentQ.text, selected: 'Skipped', correct: currentQ.correct, isCorrect: false },
+            is_correct: 0
+        });
+
         setAnswers(prev => ({
             ...prev,
             [qIndex]: {
                 selectedOption: 'Skipped',
                 isCorrect: false,
-                type: sessionQuestions[qIndex].type,
-                visualData: sessionQuestions[qIndex].visualData,
-                questionText: sessionQuestions[qIndex].text,
-                correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: "This question was skipped. " + sessionQuestions[qIndex].explanation
+                type: currentQ.type,
+                visualData: currentQ.visualData,
+                questionText: currentQ.text,
+                correctAnswer: currentQ.correct,
+                explanation: "This question was skipped. " + currentQ.explanation
             }
         }));
         handleNext();
@@ -695,7 +648,7 @@ const ShapesAndSpace = () => {
 
                             {!isAnswered ? (
                                 <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>
-                                    {isTest ? 'Next' : 'Check Answer'} <ChevronRight size={24} />
+                                    {isTest ? (qIndex === totalQuestions - 1 ? 'Finish Test' : 'Next Question') : 'Check Answer'} <ChevronRight size={24} />
                                 </button>
                             ) : (
                                 <button className="g1-nav-btn next-btn" onClick={handleNext}>

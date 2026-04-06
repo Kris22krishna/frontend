@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, Pencil, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { NODE_IDS } from '../../../../lib/curriculumIds';
 import Whiteboard from '../../../Whiteboard';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
@@ -49,6 +51,11 @@ const AreaOfPolygonComponent = () => {
     const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState({});
 
+    // v4 session logging
+    const { startSession, logAnswer, finishSession: finishSessionV4 } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
+
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
@@ -56,6 +63,7 @@ const AreaOfPolygonComponent = () => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             }).catch(err => console.error("Failed to start session", err));
         }
+        startSession({ nodeId: NODE_IDS.g8MathMensAreaPolygon, sessionType: 'practice' });
 
         const timer = setInterval(() => {
             setTimeElapsed(prev => prev + 1);
@@ -352,6 +360,18 @@ const AreaOfPolygonComponent = () => {
         let timeSpent = accumulatedTime.current;
         if (isTabActive.current) timeSpent += Date.now() - questionStartTime.current;
         const seconds = Math.round(timeSpent / 1000);
+
+        const v4Entry = {
+            question_index: qIndex,
+            answer_json: { selected },
+            is_correct: isCorrect === true,
+            marks_awarded: isCorrect === true ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: timeSpent || 0,
+        };
+        answersPayload.current[qIndex] = v4Entry;
+        logAnswer(v4Entry);
+
         try {
             await api.recordAttempt({
                 user_id: parseInt(userId, 10), session_id: sessionId, skill_id: SKILL_ID,
@@ -385,6 +405,10 @@ const AreaOfPolygonComponent = () => {
             accumulatedTime.current = 0; questionStartTime.current = Date.now();
         } else {
             if (sessionId) await api.finishSession(sessionId).catch(console.error);
+            if (!isFinishedRef.current) {
+                isFinishedRef.current = true;
+                await finishSessionV4({ answers_payload: answersPayload.current.filter(Boolean) });
+            }
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
                 const totalCorrect = Object.values(answers).filter(val => val === true).length;

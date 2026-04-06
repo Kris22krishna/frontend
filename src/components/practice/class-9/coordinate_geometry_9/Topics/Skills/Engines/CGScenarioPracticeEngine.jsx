@@ -2,13 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import styles from '../../../coordinate_geometry_9.module.css';
 import { LatexText } from '../../../../../../LatexText';
 import { CGGraphMini } from './CGScenarioUtils';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 /**
  * CGScenarioPracticeEngine
  * 20-question flow: [plot + mcq×3] × 5 scenarios
  * Practice mode — immediate feedback. Wrong plot points are REJECTED with a toast.
  */
-export default function CGScenarioPracticeEngine({ scenarios, title, color, onBack }) {
+export default function CGScenarioPracticeEngine({ scenarios, title, color, onBack, nodeId }) {
     const [scenarioIdx, setScenarioIdx] = useState(0);
     const [placedPoints, setPlacedPoints] = useState([]);
     const [toast, setToast] = useState('');
@@ -20,9 +21,18 @@ export default function CGScenarioPracticeEngine({ scenarios, title, color, onBa
     const [finished, setFinished] = useState(false);
     const [timeTaken, setTimeTaken] = useState(0);
     const svgRef = useRef(null);
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const mcqAnswersRef = useRef([]);
+    const isFinishedRef = useRef(false);
 
     const sc = scenarios[scenarioIdx];
     const isReadOnly = sc.readOnly === true;
+
+    // Start session on mount
+    useEffect(() => {
+        startSession({ nodeId, sessionType: 'practice' });
+        return () => { if (!isFinishedRef.current) abandonSession(); };
+    }, []); // eslint-disable-line
 
     // Timer
     useEffect(() => {
@@ -133,12 +143,21 @@ export default function CGScenarioPracticeEngine({ scenarios, title, color, onBa
     const handleCheckMcq = () => {
         if (selected === null || answered) return;
         setAnswered(true);
-        if (selected === sc.mcqs[mcqStep].ans) {
-            setScore(s => s + 1);
-        }
+        const isCorrect = selected === sc.mcqs[mcqStep].ans;
+        if (isCorrect) setScore(s => s + 1);
+        const mcqGlobalIdx = scenarioIdx * 3 + mcqStep;
+        mcqAnswersRef.current[mcqGlobalIdx] = {
+            question_index: mcqGlobalIdx,
+            answer_json: { selected, correct_answer: sc.mcqs[mcqStep].ans },
+            is_correct: isCorrect,
+            marks_awarded: isCorrect ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0,
+        };
+        logAnswer(mcqAnswersRef.current[mcqGlobalIdx]);
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (mcqStep < 2) {
             setMcqStep(s => s + 1);
             setSelected(null);
@@ -152,12 +171,17 @@ export default function CGScenarioPracticeEngine({ scenarios, title, color, onBa
             setAnswered(false);
             setToast('');
         } else {
+            isFinishedRef.current = true;
+            await finishSession({ answers_payload: mcqAnswersRef.current.filter(Boolean) });
             setFinished(true);
         }
     };
 
     // ── RESTART ───────────────────────────────────────────────────────────────
     const handleRetry = () => {
+        mcqAnswersRef.current = [];
+        isFinishedRef.current = false;
+        startSession({ nodeId, sessionType: 'practice' });
         setScenarioIdx(0); setPlacedPoints([]); setPlotDone(false);
         setMcqStep(0); setSelected(null); setAnswered(false);
         setScore(0); setFinished(false); setTimeTaken(0); setToast('');
