@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Derivatives — Skill100 Skill Spark</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#FFF0F6;--card:#fff;--pink:#993556;--pink-light:#FBEAF0;--pink-dark:#72243E;--blue:#185FA5;--blue-light:#E6F1FB;--green:#3B6D11;--green-light:#EAF3DE;--green-dark:#27500A;--amber:#BA7517;--amber-light:#FAEEDA;--text:#1C1917;--muted:#78716C;--border:#E7E5E4;--sh:0 4px 24px rgba(0,0,0,0.08)}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem 1rem 4rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#F4C0D1 1px,transparent 1px);background-size:28px 28px;opacity:0.35;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:660px;margin:0 auto}
+.header{text-align:center;margin-bottom:2rem}
+.badge{display:inline-block;background:var(--pink);color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:4px 14px;border-radius:999px;margin-bottom:12px;text-transform:uppercase}
+.header h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,7vw,44px);line-height:1.1;margin-bottom:8px}
+.header h1 span{color:var(--pink)}
+.header p{font-size:16px;color:var(--muted);font-weight:600}
+.card{background:var(--card);border-radius:20px;padding:1.75rem;box-shadow:var(--sh);margin-bottom:1.25rem;border:1.5px solid var(--border)}
+.card-title{font-family:'Fredoka One',cursive;font-size:18px;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.story{background:var(--pink-light);border:2px solid var(--pink);border-radius:14px;padding:14px 18px;font-size:15px;font-weight:700;color:var(--pink-dark);line-height:1.5;margin-bottom:1.25rem}
+.fn-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+.fn-btn{border:2px solid var(--border);border-radius:12px;padding:9px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:var(--muted);transition:all .18s}
+.fn-btn:hover{border-color:var(--pink);color:var(--pink)}
+.fn-btn.active{background:var(--pink-light);border-color:var(--pink);color:var(--pink-dark)}
+.canvas-wrap{background:var(--bg);border-radius:12px;padding:8px;margin:.5rem 0 1rem;border:1.5px dashed var(--border)}
+canvas{display:block;width:100%;border-radius:8px}
+.slider-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.slider-row label{font-size:13px;font-weight:700;color:var(--muted);min-width:56px}
+.slider-row input[type=range]{-webkit-appearance:none;flex:1;height:6px;border-radius:3px;background:var(--border);outline:none;cursor:pointer}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--pink);border:3px solid #fff;box-shadow:0 0 0 2px var(--pink);cursor:pointer}
+.slider-row span{font-family:'Fredoka One',cursive;font-size:22px;min-width:36px;text-align:right;color:var(--text)}
+.rrow{display:flex;gap:10px;flex-wrap:wrap}
+.rcard{flex:1;min-width:100px;background:var(--bg);border-radius:12px;padding:12px;text-align:center;border:1.5px solid var(--border)}
+.rlabel{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:4px;text-transform:uppercase}
+.rval{font-family:'Fredoka One',cursive;font-size:28px}
+.rval.pink{color:var(--pink)} .rval.blue{color:var(--blue)}
+.rule-box{background:var(--pink-light);border:1.5px solid var(--pink);border-radius:12px;padding:12px 16px;font-size:14px;color:var(--pink-dark);font-weight:700;margin-top:1rem;line-height:1.6}
+.score-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.score-pill{background:var(--pink-light);color:var(--pink);font-size:14px;font-weight:800;padding:6px 14px;border-radius:999px}
+.quiz-q{font-size:15px;font-weight:700;margin-bottom:14px;line-height:1.4}
+.quiz-opts{display:flex;gap:10px;flex-wrap:wrap}
+.qbtn{border:2px solid var(--border);border-radius:12px;padding:10px 20px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;background:#fff;color:var(--text);transition:all .15s}
+.qbtn:hover{border-color:var(--pink);color:var(--pink);transform:translateY(-1px)}
+.qbtn.ok{background:var(--green-light);border-color:var(--green);color:var(--green-dark)}
+.qbtn.no{background:#FCEBEB;border-color:#A32D2D;color:#791F1F}
+.qfb{margin-top:12px;font-size:15px;font-weight:700;min-height:22px}
+.qfb.g{color:var(--green)} .qfb.b{color:#A32D2D}
+.nxt{display:none;margin-top:10px;background:var(--pink);color:#fff;border:none;border-radius:12px;padding:10px 22px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer}
+.nxt:hover{opacity:.88}
+.footer{text-align:center;font-size:13px;font-weight:700;color:var(--muted);margin-top:2rem}
+.footer span{color:var(--pink)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="badge">Skill Spark · 3 of 4</div>
+    <h1>Derivatives — the <span>slope</span> at any point!</h1>
+    <p>How steep is the curve right here? Drag to find out!</p>
+  </div>
+
+  <div class="story" id="story">A derivative tells you the SLOPE of a curve at any point. Slope = how steep is it right here? Imagine a ball rolling — is it going uphill, downhill, or flat?</div>
+
+  <div class="card">
+    <div class="card-title"><div class="icon" style="background:var(--pink-light)">📐</div> Pick a function</div>
+    <div class="fn-row">
+      <button class="fn-btn active" onclick="setFn('sq',this)">f(x) = x²</button>
+      <button class="fn-btn" onclick="setFn('cb',this)">f(x) = x³</button>
+      <button class="fn-btn" onclick="setFn('sin',this)">f(x) = sin(x)</button>
+      <button class="fn-btn" onclick="setFn('lin',this)">f(x) = 2x</button>
+    </div>
+    <div class="canvas-wrap"><canvas id="dCanvas" height="200"></canvas></div>
+    <div class="slider-row">
+      <label>Point x</label>
+      <input type="range" min="-3" max="3" step="0.1" value="1" id="xpt" oninput="updateD()">
+      <span id="xptv">1.0</span>
+    </div>
+    <div class="rrow">
+      <div class="rcard"><div class="rlabel">x</div><div class="rval blue" id="rv-x">1.0</div></div>
+      <div class="rcard"><div class="rlabel">f(x)</div><div class="rval blue" id="rv-fx">1.0</div></div>
+      <div class="rcard"><div class="rlabel">Slope f′(x)</div><div class="rval pink" id="rv-dfx">2.0</div></div>
+    </div>
+    <div class="rule-box" id="rule-box">Rule: if f(x) = x², then f′(x) = 2x. At x=1 the slope is 2×1 = 2.</div>
+  </div>
+
+  <div class="card">
+    <div class="score-row">
+      <div class="card-title" style="margin-bottom:0"><div class="icon" style="background:var(--pink-light)">🧠</div> Quick quiz!</div>
+      <div class="score-pill">Score: <span id="sc">0</span>/<span id="tq">0</span></div>
+    </div>
+    <div class="quiz-q" id="qq">Loading...</div>
+    <div class="quiz-opts" id="qopts"></div>
+    <div class="qfb" id="qfb"></div>
+    <button class="nxt" id="nxt" onclick="newQuiz()">Next question →</button>
+  </div>
+  <div class="footer">Made with ❤️ by <span>Skill100</span></div>
+</div>
+<script>
+const fns={
+  sq:{fn:x=>x*x,dfn:x=>2*x,rule:'f(x) = x²  →  f′(x) = 2x. At any point x, the slope is 2 times x!',story:'A parabola! At x=0 it is flat (slope 0). Left side slopes down, right side slopes up.'},
+  cb:{fn:x=>x*x*x,dfn:x=>3*x*x,rule:'f(x) = x³  →  f′(x) = 3x². The slope grows as x gets bigger!',story:'A cubic curve! It gets steeper fast. The derivative 3x² tells us how quickly it is rising.'},
+  sin:{fn:x=>Math.sin(x),dfn:x=>Math.cos(x),rule:'f(x) = sin(x)  →  f′(x) = cos(x). The slope of a wave is another wave!',story:'A wave! When sin is at its peak the slope is 0 (flat top). When it crosses zero the slope is steepest.'},
+  lin:{fn:x=>2*x,dfn:x=>2,rule:'f(x) = 2x  →  f′(x) = 2. A straight line always has the same slope everywhere!',story:'A straight line! The slope is always 2 no matter where you are. Derivatives of lines are constant.'},
+};
+let cur='sq';
+function setFn(k,btn){cur=k;document.querySelectorAll('.fn-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('story').textContent=fns[k].story;updateD();}
+function updateD(){
+  const x=parseFloat(document.getElementById('xpt').value);
+  const fx=fns[cur].fn(x),dfx=fns[cur].dfn(x);
+  document.getElementById('xptv').textContent=x.toFixed(1);
+  document.getElementById('rv-x').textContent=x.toFixed(1);
+  document.getElementById('rv-fx').textContent=fx.toFixed(2);
+  document.getElementById('rv-dfx').textContent=dfx.toFixed(2);
+  document.getElementById('rule-box').textContent=fns[cur].rule;
+  drawD(x,fx,dfx);
+}
+function drawD(x0,fx0,dfx0){
+  const canvas=document.getElementById('dCanvas');
+  canvas.width=(canvas.offsetWidth||560)*devicePixelRatio;canvas.height=200*devicePixelRatio;
+  const ctx=canvas.getContext('2d');ctx.scale(devicePixelRatio,devicePixelRatio);
+  const W=canvas.offsetWidth||560,H=200,cx=W/2,cy=H/2,scx=W/8,scy=H/10;
+  ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle='rgba(128,128,128,0.2)';ctx.lineWidth=0.5;
+  ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(W,cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H);ctx.stroke();
+  ctx.strokeStyle='#185FA5';ctx.lineWidth=2.5;ctx.beginPath();
+  let started=false;
+  for(let px=0;px<W;px++){const x=(px-cx)/scx,y=fns[cur].fn(x);if(!isFinite(y)||Math.abs(y)>12){started=false;continue;}const py=cy-y*scy;started?ctx.lineTo(px,py):ctx.moveTo(px,py);started=true;}
+  ctx.stroke();
+  const len=W*0.25,tx=cx+x0*scx,ty=cy-fx0*scy,ang=Math.atan(dfx0*scy/scx);
+  ctx.strokeStyle='#993556';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(tx-Math.cos(ang)*len,ty+Math.sin(ang)*len);ctx.lineTo(tx+Math.cos(ang)*len,ty-Math.sin(ang)*len);ctx.stroke();
+  ctx.fillStyle='#D85A30';ctx.beginPath();ctx.arc(tx,ty,6,0,Math.PI*2);ctx.fill();
+}
+const quizPool=[
+  {q:"If f(x)=x², what is the derivative f′(x)?",opts:['x','2x','2','x²'],ans:'2x'},
+  {q:"The derivative tells you the ___ of the curve at a point.",opts:['area','slope','limit','value'],ans:'slope'},
+  {q:"If f(x)=2x, what is f′(x)?",opts:['x','2x','2','0'],ans:'2'},
+  {q:"If f(x)=x², what is f′(3)?",opts:['3','6','9','12'],ans:'6'},
+  {q:"A flat horizontal line has a slope (derivative) of?",opts:['1','−1','0','∞'],ans:'0'},
+  {q:"If f(x)=x³, what is f′(x)?",opts:['3x','x²','3x²','3'],ans:'3x²'},
+  {q:"If f(x)=x², at what x is the slope exactly 0?",opts:['1','−1','0','2'],ans:'0'},
+];
+let sc=0,tq=0,answered=false,cq=null;
+function newQuiz(){answered=false;document.getElementById('qfb').textContent='';document.getElementById('qfb').className='qfb';document.getElementById('nxt').style.display='none';cq=quizPool[Math.floor(Math.random()*quizPool.length)];document.getElementById('qq').textContent=cq.q;const el=document.getElementById('qopts');el.innerHTML='';cq.opts.forEach(o=>{const b=document.createElement('button');b.className='qbtn';b.textContent=o;b.onclick=()=>checkQ(o,b);el.appendChild(b);});}
+function checkQ(ans,btn){if(answered)return;answered=true;tq++;document.getElementById('tq').textContent=tq;const fb=document.getElementById('qfb');if(ans===cq.ans){sc++;document.getElementById('sc').textContent=sc;fb.textContent='🎉 Correct!';fb.className='qfb g';btn.classList.add('ok');}else{fb.textContent='Not quite — answer is '+cq.ans;fb.className='qfb b';btn.classList.add('no');document.querySelectorAll('.qbtn').forEach(b=>{if(b.textContent===cq.ans)b.classList.add('ok');});}document.getElementById('nxt').style.display='inline-block';}
+updateD();newQuiz();window.addEventListener('resize',updateD);
+</script>
+</body>
+</html>

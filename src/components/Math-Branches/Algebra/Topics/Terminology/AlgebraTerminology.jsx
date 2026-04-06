@@ -4,6 +4,7 @@ import '../../algebra.css';
 import MathRenderer from '../../../../MathRenderer';
 import { TERMS, FIVE_RULES, VOCAB_QUIZ } from './AlgebraTerminologyData';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
+import SkillSparkEmbed from '../../../../common/SkillSparkEmbed';
 import { NODE_IDS } from '@/lib/curriculumIds';
 
 export default function AlgebraTerminology() {
@@ -295,6 +296,13 @@ export default function AlgebraTerminology() {
                                             </div>
                                         </div>
                                     </div>
+
+                                    {activeRule.num === 5 && (
+                                        <div style={{ marginTop: 24, width: '100%' }}>
+                                            <h4 style={{ textTransform: 'uppercase', fontSize: 11, letterSpacing: 1, color: activeRule.color, marginBottom: 10 }}>Interactive Spark Demo</h4>
+                                            <SkillSparkEmbed spark="algebra-balancer" mini={true} height={450} />
+                                        </div>
+                                    )}
                                 </>
                             )}
                         </main>

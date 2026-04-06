@@ -26,11 +26,57 @@ import RapidMathPage from './pages/RapidMathPage';
 import Internship from './pages/internship/Internship';
 import NeetMockTest from './pages/NeetMockTest';
 import Algebra from './components/Math-Branches/Algebra/Algebra';
+import AlgebraSparks from './components/Math-Branches/Algebra/AlgebraSparks';
 import AlgebraIntro5W1H from './components/Math-Branches/Algebra/Topics/5W1H/AlgebraIntro5W1H';
 import AlgebraTerminology from './components/Math-Branches/Algebra/Topics/Terminology/AlgebraTerminology';
 import AlgebraSkills from './components/Math-Branches/Algebra/Topics/Skills/AlgebraSkills';
 import AlgebraMasteryTest from './components/IDM/assessment_idm/AlgebraMasteryTest';
 import CalculusMainDashboard from './components/Math-Branches/Calculus/CalculusMainDashboard';
+import CalculusSparks from './components/Math-Branches/Calculus/CalculusSparks';
+import ArithmeticMainDashboard from './components/Math-Branches/Arithmetic/ArithmeticMainDashboard';
+import ArithmeticSparks from './components/Math-Branches/Arithmetic/ArithmeticSparks';
+
+// Arithmetic: Natural Numbers
+import NaturalNumbersDashboard from './components/Math-Branches/Arithmetic/Natural-Numbers/NaturalNumbersDashboard';
+import NaturalNumbersIntro from './components/Math-Branches/Arithmetic/Natural-Numbers/Topics/5W1H/NaturalNumbersIntro';
+import NaturalNumbersTerminology from './components/Math-Branches/Arithmetic/Natural-Numbers/Topics/Terminology/NaturalNumbersTerminology';
+import NaturalNumbersSkills from './components/Math-Branches/Arithmetic/Natural-Numbers/Topics/Skills/NaturalNumbersSkills';
+
+// Arithmetic: Integers
+import IntegersDashboard from './components/Math-Branches/Arithmetic/Integers/IntegersDashboard';
+import ArithIntegersIntro from './components/Math-Branches/Arithmetic/Integers/Topics/5W1H/IntegersIntro';
+import ArithIntegersTerminology from './components/Math-Branches/Arithmetic/Integers/Topics/Terminology/IntegersTerminology';
+import ArithIntegersSkills from './components/Math-Branches/Arithmetic/Integers/Topics/Skills/IntegersSkills';
+
+// Arithmetic: Fractions
+import FractionsDashboard from './components/Math-Branches/Arithmetic/Fractions/FractionsDashboard';
+import FractionsIntro from './components/Math-Branches/Arithmetic/Fractions/Topics/5W1H/FractionsIntro';
+import FractionsTerminology from './components/Math-Branches/Arithmetic/Fractions/Topics/Terminology/FractionsTerminology';
+import FractionsSkills from './components/Math-Branches/Arithmetic/Fractions/Topics/Skills/FractionsSkills';
+
+// Arithmetic: Rational Numbers
+import RationalNumbersDashboard from './components/Math-Branches/Arithmetic/Rational-Numbers/RationalNumbersDashboard';
+import RationalNumbersIntro from './components/Math-Branches/Arithmetic/Rational-Numbers/Topics/5W1H/RationalNumbersIntro';
+import RationalNumbersTerminology from './components/Math-Branches/Arithmetic/Rational-Numbers/Topics/Terminology/RationalNumbersTerminology';
+import RationalNumbersSkills from './components/Math-Branches/Arithmetic/Rational-Numbers/Topics/Skills/RationalNumbersSkills';
+
+// Arithmetic: Irrational Numbers
+import IrrationalNumbersDashboard from './components/Math-Branches/Arithmetic/Irrational-Numbers/IrrationalNumbersDashboard';
+import IrrationalNumbersIntro from './components/Math-Branches/Arithmetic/Irrational-Numbers/Topics/5W1H/IrrationalNumbersIntro';
+import IrrationalNumbersTerminology from './components/Math-Branches/Arithmetic/Irrational-Numbers/Topics/Terminology/IrrationalNumbersTerminology';
+import IrrationalNumbersSkills from './components/Math-Branches/Arithmetic/Irrational-Numbers/Topics/Skills/IrrationalNumbersSkills';
+
+// Arithmetic: LCM
+import LCMDashboard from './components/Math-Branches/Arithmetic/LCM/LCMDashboard';
+import LCMIntro from './components/Math-Branches/Arithmetic/LCM/Topics/5W1H/LCMIntro';
+import LCMTerminology from './components/Math-Branches/Arithmetic/LCM/Topics/Terminology/LCMTerminology';
+import LCMSkills from './components/Math-Branches/Arithmetic/LCM/Topics/Skills/LCMSkills';
+
+// Arithmetic: HCF
+import HCFDashboard from './components/Math-Branches/Arithmetic/HCF/HCFDashboard';
+import HCFIntro from './components/Math-Branches/Arithmetic/HCF/Topics/5W1H/HCFIntro';
+import HCFTerminology from './components/Math-Branches/Arithmetic/HCF/Topics/Terminology/HCFTerminology';
+import HCFSkills from './components/Math-Branches/Arithmetic/HCF/Topics/Skills/HCFSkills';
 // Functions
 import FunctionsDashboard from './components/Math-Branches/Calculus/Functions/FunctionsDashboard';
 import FunctionsIntro5W1H from './components/Math-Branches/Calculus/Functions/Topics/5W1H/FunctionsIntro5W1H';
@@ -1126,13 +1172,61 @@ function App() {
 
           <Route path="ai" element={<ContentPage topic="ai" />} />
           <Route path="algebra" element={<ProtectedRoute redirectTo="/login"><Algebra /></ProtectedRoute>} />
+          <Route path="algebra/sparks" element={<ProtectedRoute redirectTo="/login"><AlgebraSparks /></ProtectedRoute>} />
           {/* Algebra Topic Pages */}
           <Route path="algebra/introduction" element={<ProtectedRoute redirectTo="/login"><AlgebraIntro5W1H onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/terminology" element={<ProtectedRoute redirectTo="/login"><AlgebraTerminology onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra/skills" element={<ProtectedRoute redirectTo="/login"><AlgebraSkills onBack={() => window.history.back()} /></ProtectedRoute>} />
           <Route path="algebra-mastery" element={<ProtectedRoute redirectTo="/login"><AlgebraMasteryTest /></ProtectedRoute>} />
+          {/* Arithmetic Master Dashboard */}
+          <Route path="arithmetic/dashboard" element={<ProtectedRoute redirectTo="/login"><ArithmeticMainDashboard /></ProtectedRoute>} />
+          <Route path="arithmetic/sparks" element={<ProtectedRoute redirectTo="/login"><ArithmeticSparks /></ProtectedRoute>} />
+          
+          {/* Arithmetic: Natural Numbers */}
+          <Route path="arithmetic/natural-numbers" element={<ProtectedRoute redirectTo="/login"><NaturalNumbersDashboard /></ProtectedRoute>} />
+          <Route path="arithmetic/natural-numbers/introduction" element={<ProtectedRoute redirectTo="/login"><NaturalNumbersIntro /></ProtectedRoute>} />
+          <Route path="arithmetic/natural-numbers/terminology" element={<ProtectedRoute redirectTo="/login"><NaturalNumbersTerminology /></ProtectedRoute>} />
+          <Route path="arithmetic/natural-numbers/skills" element={<ProtectedRoute redirectTo="/login"><NaturalNumbersSkills /></ProtectedRoute>} />
+
+          {/* Arithmetic: Integers */}
+          <Route path="arithmetic/integers" element={<ProtectedRoute redirectTo="/login"><IntegersDashboard /></ProtectedRoute>} />
+          <Route path="arithmetic/integers/introduction" element={<ProtectedRoute redirectTo="/login"><ArithIntegersIntro /></ProtectedRoute>} />
+          <Route path="arithmetic/integers/terminology" element={<ProtectedRoute redirectTo="/login"><ArithIntegersTerminology /></ProtectedRoute>} />
+          <Route path="arithmetic/integers/skills" element={<ProtectedRoute redirectTo="/login"><ArithIntegersSkills /></ProtectedRoute>} />
+          
+          {/* Arithmetic: Fractions */}
+          <Route path="arithmetic/fractions" element={<ProtectedRoute redirectTo="/login"><FractionsDashboard /></ProtectedRoute>} />
+          <Route path="arithmetic/fractions/introduction" element={<ProtectedRoute redirectTo="/login"><FractionsIntro /></ProtectedRoute>} />
+          <Route path="arithmetic/fractions/terminology" element={<ProtectedRoute redirectTo="/login"><FractionsTerminology /></ProtectedRoute>} />
+          <Route path="arithmetic/fractions/skills" element={<ProtectedRoute redirectTo="/login"><FractionsSkills /></ProtectedRoute>} />
+          
+          {/* Arithmetic: Rational Numbers */}
+          <Route path="arithmetic/rational-numbers" element={<ProtectedRoute redirectTo="/login"><RationalNumbersDashboard /></ProtectedRoute>} />
+          <Route path="arithmetic/rational-numbers/introduction" element={<ProtectedRoute redirectTo="/login"><RationalNumbersIntro /></ProtectedRoute>} />
+          <Route path="arithmetic/rational-numbers/terminology" element={<ProtectedRoute redirectTo="/login"><RationalNumbersTerminology /></ProtectedRoute>} />
+          <Route path="arithmetic/rational-numbers/skills" element={<ProtectedRoute redirectTo="/login"><RationalNumbersSkills /></ProtectedRoute>} />
+
+          {/* Arithmetic: Irrational Numbers */}
+          <Route path="arithmetic/irrational-numbers" element={<ProtectedRoute redirectTo="/login"><IrrationalNumbersDashboard /></ProtectedRoute>} />
+          <Route path="arithmetic/irrational-numbers/introduction" element={<ProtectedRoute redirectTo="/login"><IrrationalNumbersIntro /></ProtectedRoute>} />
+          <Route path="arithmetic/irrational-numbers/terminology" element={<ProtectedRoute redirectTo="/login"><IrrationalNumbersTerminology /></ProtectedRoute>} />
+          <Route path="arithmetic/irrational-numbers/skills" element={<ProtectedRoute redirectTo="/login"><IrrationalNumbersSkills /></ProtectedRoute>} />
+
+          {/* Arithmetic: LCM */}
+          <Route path="arithmetic/lcm" element={<ProtectedRoute redirectTo="/login"><LCMDashboard /></ProtectedRoute>} />
+          <Route path="arithmetic/lcm/introduction" element={<ProtectedRoute redirectTo="/login"><LCMIntro /></ProtectedRoute>} />
+          <Route path="arithmetic/lcm/terminology" element={<ProtectedRoute redirectTo="/login"><LCMTerminology /></ProtectedRoute>} />
+          <Route path="arithmetic/lcm/skills" element={<ProtectedRoute redirectTo="/login"><LCMSkills /></ProtectedRoute>} />
+
+          {/* Arithmetic: HCF */}
+          <Route path="arithmetic/hcf" element={<ProtectedRoute redirectTo="/login"><HCFDashboard /></ProtectedRoute>} />
+          <Route path="arithmetic/hcf/introduction" element={<ProtectedRoute redirectTo="/login"><HCFIntro /></ProtectedRoute>} />
+          <Route path="arithmetic/hcf/terminology" element={<ProtectedRoute redirectTo="/login"><HCFTerminology /></ProtectedRoute>} />
+          <Route path="arithmetic/hcf/skills" element={<ProtectedRoute redirectTo="/login"><HCFSkills /></ProtectedRoute>} />
+          
           {/* Calculus Master Dashboard */}
           <Route path="calculus" element={<ProtectedRoute redirectTo="/login"><CalculusMainDashboard /></ProtectedRoute>} />
+          <Route path="calculus/sparks" element={<ProtectedRoute redirectTo="/login"><CalculusSparks /></ProtectedRoute>} />
 
           {/* Calculus: Functions */}
           <Route path="calculus/functions" element={<ProtectedRoute redirectTo="/login"><FunctionsDashboard /></ProtectedRoute>} />

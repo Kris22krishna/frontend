@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unrolling Pi</title>
+    <style>
+        body { margin: 0; padding: 20px; font-family: 'Inter', system-ui, sans-serif; background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        .is-mini body { padding: 0; justify-content: flex-start; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .is-mini .header { display: none; }
+        .container { background: #fff; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 100%; max-width: 900px; padding: 40px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 30px; }
+        .is-mini .container { box-shadow: none; border: none; padding: 20px; padding-top:40px; max-width: 100%; }
+        
+        .viewport { position: relative; width: 100%; height: 200px; background: #fdf4ff; border-radius: 16px; border: 2px solid #f5d0fe; overflow: hidden; }
+        .number-line { position: absolute; bottom: 40px; left: 10%; width: 80%; height: 4px; background: #c084fc; border-radius: 2px; }
+        
+        .tick { position: absolute; bottom: -8px; width: 4px; height: 20px; background: #a855f7; border-radius: 2px; }
+        .tick-label { position: absolute; bottom: -35px; width: 40px; text-align: center; margin-left: -18px; font-weight: 800; color: #7e22ce; }
+
+        .circle-container { position: absolute; left: 10%; bottom: 44px; width: 100px; height: 100px; margin-left: -50px; transition: transform 2s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: center bottom; }
+        
+        /* The literal circle SVG */
+        .circle-svg { width: 100%; height: 100%; animation: none; }
+        
+        /* The unrolled path */
+        .unroll-path { position: absolute; left: 10%; bottom: 44px; height: 6px; background: #ec4899; width: 0; transition: width 2s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 3px; z-index: 5; }
+
+        .btn-panel { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .btn-unroll { background: linear-gradient(135deg, #d946ef, #a855f7); color: white; border: none; padding: 16px 32px; border-radius: 12px; font-weight: 900; font-size: 18px; cursor: pointer; transition: all 0.2s; box-shadow: 0 6px 20px rgba(217, 70, 239, 0.3); }
+        .btn-unroll:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(217, 70, 239, 0.4); }
+        .btn-unroll:active { transform: translateY(0); }
+        .btn-reset { background: transparent; color: #94a3b8; border: none; font-weight: 700; cursor: pointer; padding: 10px; }
+
+        .pi-marker { position: absolute; bottom: 40px; width: 4px; height: 30px; background: #ec4899; margin-left: -2px; z-index: 10; opacity: 0; transition: opacity 0.5s 2s; }
+        .pi-label { position: absolute; bottom: 75px; color: #ec4899; font-weight: 900; font-size: 24px; transform: translateX(-50%); opacity: 0; transition: opacity 0.5s 2s; }
+
+        .desc-box { background: #f8fafc; padding: 16px; border-radius: 16px; text-align: center; font-size: 16px; color: #475569; font-weight: 500; border: 1px solid #f1f5f9; }
+        .desc-box span { font-weight: 800; color: #d946ef; font-family: monospace; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 style="margin: 0 0 10px; font-weight: 900; font-size: 32px; color: #0f172a;">Unraveling Pi (π)</h1>
+        <p style="margin: 0; color: #64748b; font-size: 16px;">Watch a circle of diameter 1 unroll completely onto the number line.</p>
+    </div>
+
+    <div class="container">
+        <div class="viewport" id="viewport">
+            <div class="number-line" id="numberLine">
+                <!-- Ticks inserted via JS -->
+            </div>
+            
+            <div class="unroll-path" id="unrollPath"></div>
+            
+            <div class="circle-container" id="circleContainer">
+                <svg class="circle-svg" viewBox="0 0 100 100">
+                    <!-- Unit circle diameter = 100px. Circumference = 314.159px -->
+                    <circle cx="50" cy="50" r="47" fill="transparent" stroke="#ec4899" stroke-width="6" stroke-dasharray="10 10" />
+                    <!-- Visual radius line to see rolling -->
+                    <line x1="50" y1="50" x2="50" y2="97" stroke="#d946ef" stroke-width="4" />
+                </svg>
+            </div>
+
+            <!-- Absolute Pi marker on line -->
+            <div class="pi-marker" id="piMarker"></div>
+            <div class="pi-label" id="piLabel">π</div>
+        </div>
+
+        <div class="desc-box">
+            A circle of diameter 1 unit has a circumference exactly equal to <span>3.14159265...</span> units.
+        </div>
+
+        <div class="btn-panel">
+            <button class="btn-unroll" onclick="unroll()">🟢 Unroll Circle</button>
+            <button class="btn-reset" onclick="reset()">Reset</button>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('mini') === 'true') { document.documentElement.classList.add('is-mini'); }
+
+        const numberLine = document.getElementById('numberLine');
+        const circleContainer = document.getElementById('circleContainer');
+        const unrollPath = document.getElementById('unrollPath');
+        const piMarker = document.getElementById('piMarker');
+        const piLabel = document.getElementById('piLabel');
+
+        const unitSize = 100; // 1 unit = 100px
+        const maxUnits = 4;
+
+        // Render Ticks (relative to the number-line which starts at 10% left)
+        for(let i=0; i<=maxUnits; i++) {
+            const tickX = i * unitSize;
+            const tick = document.createElement('div');
+            tick.className = 'tick';
+            tick.style.left = tickX + 'px';
+            numberLine.appendChild(tick);
+
+            const label = document.createElement('div');
+            label.className = 'tick-label';
+            label.style.left = tickX + 'px';
+            label.innerText = i;
+            numberLine.appendChild(label);
+        }
+
+        // Set Pi Marker Location
+        const piPixels = Math.PI * unitSize; // ~314.159px
+        piMarker.style.left = `calc(10% + ${piPixels}px)`;
+        piLabel.style.left = `calc(10% + ${piPixels}px)`;
+
+        function unroll() {
+            // Unroll path length = Pi * unit
+            unrollPath.style.width = piPixels + 'px';
+            
+            // Move circle center by Pi * unit, and rotate by 360 degrees (since C = Pi*D, 1 full rotation covers Pi*unit distance if D=1)
+            // Wait, circumference = Pi * D. If D = 1 unit, then 1 full rotation covers exactly Pi units.
+            circleContainer.style.transform = `translateX(${piPixels}px) rotate(360deg)`;
+
+            piMarker.style.opacity = 1;
+            piLabel.style.opacity = 1;
+        }
+
+        function reset() {
+            unrollPath.style.width = '0px';
+            circleContainer.style.transform = `translateX(0px) rotate(0deg)`;
+            piMarker.style.opacity = 0;
+            piLabel.style.opacity = 0;
+        }
+    </script>
+</body>
+</html>
