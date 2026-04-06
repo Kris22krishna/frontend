@@ -212,13 +212,14 @@ export const generateAdditionObjects = () => {
 
   // Using simple text representation for objects as emojis might not render consistently everywhere, 
   // but for a web app, emojis are usually fine.
-  const object = "🍎";
-  const question = `Add the apples:</br> ${object.repeat(num1)} + ${object.repeat(num2)} = ?`;
+  const question = "How many apples are shown in the image?";
+  const visual = "🍎".repeat(num1) + " + " + "🍎".repeat(num2);
 
   if (Math.random() > 0) {
     return {
       type: "userInput",
       question: question,
+      img: `<div style="font-size: 2rem; padding: 10px;">${visual}</div>`,
       topic: "Addition / Basics",
       answer: String(answer)
     };
@@ -234,6 +235,7 @@ export const generateAdditionObjects = () => {
   return {
     type: "mcq",
     question: question,
+    img: `<div style="font-size: 2rem; padding: 10px;">${visual}</div>`,
     topic: "Addition / Basics",
     options: options,
     answer: String(answer)
@@ -284,13 +286,14 @@ export const generateSubtractionObjects = () => {
   const num2 = getRandomInt(1, 2);
   const answer = num1 - num2;
 
-  const object = "🎈";
-  const question = `Subtract the balloons:</br> ${object.repeat(num1)} - ${object.repeat(num2)} = ?`;
+  const question = "How many balloons are left after subtraction?";
+  const visual = "🎈".repeat(num1) + " - " + "🎈".repeat(num2);
 
   if (Math.random() > 0) {
     return {
       type: "userInput",
       question: question,
+      img: `<div style="font-size: 2rem; padding: 10px;">${visual}</div>`,
       topic: "Subtraction / Basics",
       answer: String(answer)
     };
@@ -306,6 +309,7 @@ export const generateSubtractionObjects = () => {
   return {
     type: "mcq",
     question: question,
+    img: `<div style="font-size: 2rem; padding: 10px;">${visual}</div>`,
     topic: "Subtraction / Basics",
     options: options,
     answer: String(answer)
@@ -405,7 +409,7 @@ export const generateIdentifyShapes = () => {
 
   return {
     type: "mcq",
-    question: `What shape does a ${object.name} look like? <br/> <div style="font-size: 4rem; margin-top: 10px;">${object.img}</div>`,
+    question: `What shape does a ${object.name} look like?`,
     topic: "Geometry / Shapes",
     options: options,
     answer: shape.name
@@ -446,7 +450,8 @@ export const generateSpatial = () => {
 
   return {
     type: "mcq",
-    question: `${concept.question} <br/> <img src="${concept.img}" alt="${concept.type}" style="max-width: 300px; margin-top: 10px; border-radius: 8px;" />`,
+    question: concept.question,
+    img: `<img src="${concept.img}" alt="${concept.type}" style="max-width: 300px; margin-top: 10px; border-radius: 8px;" />`,
     topic: "Geometry / Spatial",
     options: options,
     answer: concept.answer
@@ -507,7 +512,8 @@ export const generateWeightComparison = () => {
 
   return {
     type: "mcq",
-    question: `${question} <br/> <img src="${comp.img}" alt="${comp.heavy} vs ${comp.light}" style="max-width: 300px; margin-top: 10px; border-radius: 8px;" />`,
+    question: question,
+    img: `<img src="${comp.img}" alt="${comp.heavy} vs ${comp.light}" style="max-width: 300px; margin-top: 10px; border-radius: 8px;" />`,
     topic: "Measurement / Weight",
     options: options,
     answer: answer
@@ -538,7 +544,8 @@ export const generateCapacityComparison = () => {
 
   return {
     type: "mcq",
-    question: `${question} <br/> <img src="${comp.img}" alt="${comp.more} vs ${comp.less}" style="max-width: 300px; margin-top: 10px; border-radius: 8px;" />`,
+    question: question,
+    img: `<img src="${comp.img}" alt="${comp.more} vs ${comp.less}" style="max-width: 300px; margin-top: 10px; border-radius: 8px;" />`,
     topic: "Measurement / Capacity",
     options: options,
     answer: answer
@@ -585,12 +592,14 @@ export const generateMoneyCounting = () => {
     total += note;
   }
 
-  const question = `Count the money:</br> ${selectedNotes.map(n => `₹${n}`).join(" + ")} = ?`;
+  const visual = selectedNotes.map(n => `₹${n}`).join(" + ");
+  const question = `Count the money:`;
 
   if (Math.random() > 0) {
     return {
       type: "userInput",
       question: question,
+      img: `<div style="font-size: 1.5rem; padding: 10px;">${visual}</div>`,
       topic: "Money / Basics",
       answer: String(total)
     };
@@ -633,7 +642,8 @@ export const generatePatterns = () => {
 
   return {
     type: "mcq",
-    question: question,
+    question: `What comes next in the pattern?`,
+    img: `<div style="font-size: 1.5rem; padding: 10px;">${pattern.seq.join(", ")}</div>`,
     topic: "Patterns / Basics",
     options: options,
     answer: pattern.next
@@ -658,57 +668,47 @@ export const generateSequencePattern = () => {
 
 const createTallySVG = (count) => {
   const height = 50;
-  const spacing = 20;
+  const strokeWidth = 4;
+  const gap = 10;
+  const groupSpacing = 20;
   const numGroups = Math.ceil(count / 5);
-  const totalWidth = numGroups * (40 + spacing);
+  const totalWidth = Math.max(100, numGroups * (4 * gap + groupSpacing) + 20);
 
   let svgLines = "";
 
   for (let g = 0; g < numGroups; g++) {
-    const groupX = g * (40 + spacing);
+    const groupX = 10 + g * (4 * gap + groupSpacing);
     const marksInGroup = Math.min(5, count - g * 5);
 
     for (let i = 0; i < Math.min(marksInGroup, 4); i++) {
-      const x = groupX + i * 10;
-      svgLines += `<line x1="${x}" y1="5" x2="${x}" y2="45" stroke="#4f46e5" stroke-width="4" stroke-linecap="round" />`;
+        const x = groupX + i * gap;
+        svgLines += `<line x1="${x}" y1="10" x2="${x}" y2="40" stroke="#4f46e5" stroke-width="${strokeWidth}" stroke-linecap="round" />`;
     }
 
     if (marksInGroup === 5) {
-      svgLines += `<line x1="${groupX - 5}" y1="5" x2="${groupX + 35}" y2="45" stroke="#4f46e5" stroke-width="4" stroke-linecap="round" />`;
+      svgLines += `<line x1="${groupX - 5}" y1="35" x2="${groupX + 35}" y2="15" stroke="#ef4444" stroke-width="${strokeWidth}" stroke-linecap="round" />`;
     }
   }
 
-  return `<svg width="${totalWidth}" height="${height}" viewBox="0 0 ${totalWidth} ${height}" xmlns="http://www.w3.org/2000/svg" style="display:inline-block; vertical-align:middle; overflow:visible;">
-      ${svgLines}
-  </svg>`;
+  return `<svg width="${totalWidth}" height="${height}" viewBox="0 0 ${totalWidth} ${height}" xmlns="http://www.w3.org/2000/svg" style="display:block; margin: 10px 0;">${svgLines}</svg>`;
 };
 
 export const generateTally = () => {
   const count = getRandomInt(1, 10);
   const tallySVG = createTallySVG(count);
-  const question = `Count the tally marks:</br> <div style="margin-top: 20px;">${tallySVG}</div>`;
-
-  if (Math.random() > 0) {
-    return {
-      type: "userInput",
-      question: question,
-      topic: "Data Handling / Tally",
-      answer: String(count)
-    };
-  }
-
-  const options = shuffleArray([
-    { value: String(count), label: String(count) },
-    { value: String(count + 1), label: String(count + 1) },
-    { value: String(count - 1), label: String(count - 1) },
-    { value: String(count + 2), label: String(count + 2) }
-  ]);
+  const question = "How many tally marks are shown?";
 
   return {
     type: "mcq",
     question: question,
+    img: tallySVG,
     topic: "Data Handling / Tally",
-    options: options,
+    options: shuffleArray([
+      { value: String(count), label: String(count) },
+      { value: String(count + 1), label: String(count + 1) },
+      { value: String(count - 1), label: String(count - 1) },
+      { value: String(count + 2), label: String(count + 2) }
+    ]),
     answer: String(count)
   };
 };
@@ -718,14 +718,14 @@ export const generateCountingObjects = () => {
   const objects = ["🍎", "🍌", "🍇", "🍊", "🍓", "⚽", "🎈", "⭐"];
   const selectedObject = objects[getRandomInt(0, objects.length - 1)];
 
-  const questionString = selectedObject.repeat(count);
-  const question = `Count the objects: </br>
-    ${questionString}`;
+  const visual = selectedObject.repeat(count);
+  const question = `How many objects are shown in the image?`;
 
   if (Math.random() > 0) {
     return {
       type: "userInput",
       question: question,
+      img: `<div style="font-size: 2rem; padding: 10px;">${visual}</div>`,
       topic: "Number Sense / Counting Objects",
       answer: String(count)
     };
@@ -741,6 +741,7 @@ export const generateCountingObjects = () => {
   return {
     type: "mcq",
     question: question,
+    img: `<div style="font-size: 2rem; padding: 10px;">${visual}</div>`,
     topic: "Number Sense / Counting Objects",
     options: options,
     answer: String(count)
@@ -785,12 +786,14 @@ export const generatePictureGraph = () => {
   const selectedItem = items[getRandomInt(0, items.length - 1)];
   const count = getRandomInt(1, 8);
 
-  const question = `If 1 😃 = 1 fruit, how many fruits are there?</br> ${"😃 ".repeat(count)}`;
+  const question = "If 😃 represents 1 fruit, how many fruits are there in total?";
+  const visual = "😃 ".repeat(count);
 
   if (Math.random() > 0) {
     return {
       type: "userInput",
       question: question,
+      img: `<div style="font-size: 2rem; padding: 10px;">${visual}</div>`,
       topic: "Data Handling / Picture Graph",
       answer: String(count)
     };
@@ -806,6 +809,7 @@ export const generatePictureGraph = () => {
   return {
     type: "mcq",
     question: question,
+    img: `<div style="font-size: 2rem; padding: 10px;">${visual}</div>`,
     topic: "Data Handling / Picture Graph",
     options: options,
     answer: String(count)

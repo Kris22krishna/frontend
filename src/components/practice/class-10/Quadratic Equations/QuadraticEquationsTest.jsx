@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Check, Eye, ChevronRight, ChevronLeft, SkipForward, ArrowLeft, RefreshCw, BarChart3, Clock, HelpCircle, CheckCircle2, XCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '../../../../lib/curriculumIds';
 import { LatexText } from '../../../LatexText';
 import '../TenthPracticeSession.css';
 import mascotImg from '../../../../assets/mascot.png';
@@ -153,6 +155,7 @@ const BLUE_THEME_CSS = `
 
 const SKILL_ID = 1128;
 const SKILL_NAME = "Quadratic Equations - Chapter Test";
+const NODE_ID = NODE_IDS.g10MathQuadraticChapterTest;
 
 const QuadraticEquationsTest = () => {
     const navigate = useNavigate();
@@ -165,6 +168,9 @@ const QuadraticEquationsTest = () => {
     const questionStartTime = useRef(Date.now());
     const [sessionId, setSessionId] = useState(null);
     const [questions, setQuestions] = useState([]);
+
+    const { startSession, logAnswer, finishSession: finishV4Session } = useSessionLogger();
+    const v4Answers = useRef([]);
 
     const generateQuestions = () => {
         const pool = [
@@ -356,6 +362,8 @@ const QuadraticEquationsTest = () => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
         }
+        startSession({ nodeId: NODE_ID, sessionType: 'assessment' });
+        v4Answers.current = [];
     }, []);
 
     useEffect(() => {
@@ -399,6 +407,10 @@ const QuadraticEquationsTest = () => {
                 console.log('✅ recordAttempt response:', res);
             }).catch(console.error);
         }
+
+        const v4Entry = { question_index: qIndex + 1, answer_json: { selected: skipped ? null : selectedOption }, is_correct: (skipped || !isCorrect) ? 0.0 : 1.0, marks_awarded: (!skipped && isCorrect) ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+        v4Answers.current[qIndex] = v4Entry;
+        logAnswer({ questionIndex: v4Entry.question_index, answerJson: v4Entry.answer_json, isCorrect: v4Entry.is_correct });
     };
 
     const handleNext = () => {
@@ -433,6 +445,8 @@ const QuadraticEquationsTest = () => {
 
     const finalizeTest = async () => {
         setIsTestOver(true);
+        const fPayload = v4Answers.current.filter(Boolean);
+        await finishV4Session({ totalQuestions: questions.length, questionsAnswered: fPayload.length, answersPayload: fPayload });
         if (sessionId) await api.finishSession(sessionId).catch(console.error);
 
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');

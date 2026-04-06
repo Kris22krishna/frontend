@@ -61,7 +61,9 @@ const SeniorGradeSyllabus = () => {
                     setSkills([
                         { skill_id: 12000, skill_name: 'Matrices: Interactive Chapter', topic: 'Matrices', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/matrices' },
                         { skill_id: 12100, skill_name: 'Determinants: Interactive Chapter', topic: 'Determinants', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/determinants' },
-                        { skill_id: 12200, skill_name: 'Relations: Interactive Chapter', topic: 'Relations', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/relations' }
+                        { skill_id: 12200, skill_name: 'Relations: Interactive Chapter', topic: 'Relations', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/relations' },
+                        { skill_id: 12300, skill_name: 'Functions: Interactive Chapter', topic: 'Functions', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/functions' },
+                        { skill_id: 12400, skill_name: 'Inverse Trigonometric Functions: Interactive Chapter', topic: 'Inverse Trigonometric Functions', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/inverse-trigonometric-functions' }
                     ]);
                 } else if (grade === '10') {
                     setSkills([
@@ -192,6 +194,7 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 'local-8-proportions-landing', skill_name: 'Direct and Inverse Proportions Chapter', topic: 'Direct and Inverse Proportions' },
                         { skill_id: 'local-8-cq-landing', skill_name: 'Comparing Quantities Chapter', topic: 'Comparing Quantities' },
                         { skill_id: 'local-8-leq-landing', skill_name: 'Linear Equations Chapter', topic: 'Linear Equations in One Variable' },
+                        { skill_id: 'local-8-ccr-landing', skill_name: 'Cubes and Cube Roots Chapter', topic: 'Cubes and Cube Roots' },
                     ]);
                 } else {
                     const response = await api.getSkills(grade);
@@ -575,6 +578,30 @@ const SeniorGradeSyllabus = () => {
             }
         ];
 
+        // Cubes and Cube Roots (NCERT Ch. 7 — Grade 8)
+        skillsByTopic['Cubes and Cube Roots'] = [
+            {
+                skill_id: 'local-8-ccr-landing',
+                skill_name: 'Cubes and Cube Roots Chapter',
+                topic: 'Cubes and Cube Roots',
+                subtopic: 'Perfect Cubes, Cube Roots, Estimating',
+                isLocal: true,
+                path: '/senior/grade/8/cubes-and-cube-roots'
+            }
+        ];
+
+        // Understanding Quadrilaterals (NCERT Ch. 3 — Grade 8)
+        skillsByTopic['Understanding Quadrilaterals'] = [
+            {
+                skill_id: 'local-8-uq-landing',
+                skill_name: 'Understanding Quadrilaterals Chapter',
+                topic: 'Understanding Quadrilaterals',
+                subtopic: 'Polygons, Angles, and Special Quadrilaterals',
+                isLocal: true,
+                path: '/senior/grade/8/understanding-quadrilaterals'
+            }
+        ];
+
         // Comparing Quantities (NCERT Ch. 8 — Grade 8)
         skillsByTopic['Comparing Quantities'] = [
             {
@@ -699,8 +726,6 @@ const SeniorGradeSyllabus = () => {
                 <div className="header-inner">
                     <nav className="breadcrumb">
                         <Link to="/" className="home-link">Home</Link>
-                        <ChevronRight size={14} />
-                        <Link to="/" className="home-link">Math</Link>
                         <ChevronRight size={14} />
                         <span>Grade {grade}</span>
                     </nav>
@@ -946,7 +971,6 @@ const SeniorGradeSyllabus = () => {
                                                         >
                                                             <h4><LatexText text={capitalizeFirstLetter(skill.skill_name)} /></h4>
                                                             <div className="skill-card-footer">
-                                                                <span className="skill-badge">ID: {skill.skill_id}</span>
                                                                 <span className="start-btn">
                                                                     Start <ChevronRight size={16} />
                                                                 </span>

@@ -1,7 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../MathRenderer';
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
 
-export default function QuizEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'alg' }) {
+export default function QuizEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'alg', nodeId }) {
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
     const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
     const [current, setCurrent] = useState(0);
     const [answersMap, setAnswersMap] = useState({}); // { [idx]: { selectedIdx?, textAnswer?, isCorrect } }
@@ -14,7 +18,15 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
         setAnswersMap({});
         setFinished(false);
         setDraftTextAnswer('');
+        answersPayload.current = [];
+        isFinishedRef.current = false;
     }, [questions]);
+
+    useEffect(() => {
+        if (!nodeId) return;
+        startSession({ nodeId, sessionType: 'practice' });
+        return () => { if (!isFinishedRef.current) abandonSession(); };
+    }, [nodeId]);
 
     // Timer — counts up while not finished
     const [timeTaken, setTimeTaken] = useState(0);
@@ -48,18 +60,32 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
     // ── Handlers ──────────────────────────────────────────
     const handleSelect = (optIdx) => {
         if (isAnswered) return;
-        const isCorrect = optIdx === q.correct;
+        const isCorrect = optIdx === q.correct || (q.options && q.options[optIdx] !== undefined && String(q.options[optIdx]) === String(q.correct));
         setAnswersMap(prev => ({ ...prev, [current]: { selectedIdx: optIdx, isCorrect } }));
+        if (nodeId) {
+            const entry = { question_index: current, answer_json: { selected: optIdx, correct_answer: q.correct }, is_correct: isCorrect, marks_awarded: isCorrect ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+            answersPayload.current[current] = entry;
+            logAnswer(entry);
+        }
     };
 
     const handleTextSubmit = () => {
         if (isAnswered || !draftTextAnswer.trim()) return;
         const isCorrect = draftTextAnswer.trim().toLowerCase() === String(q.answer).trim().toLowerCase();
         setAnswersMap(prev => ({ ...prev, [current]: { textAnswer: draftTextAnswer, isCorrect } }));
+        if (nodeId) {
+            const entry = { question_index: current, answer_json: { text: draftTextAnswer, correct_answer: q.answer }, is_correct: isCorrect, marks_awarded: isCorrect ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+            answersPayload.current[current] = entry;
+            logAnswer(entry);
+        }
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (current + 1 >= questionSet.length) {
+            if (nodeId && !isFinishedRef.current) {
+                isFinishedRef.current = true;
+                await finishSession({ answers_payload: answersPayload.current.filter(Boolean) });
+            }
             setFinished(true);
         } else {
             setCurrent(c => c + 1);
@@ -123,6 +149,8 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
                         onClick={() => {
                             if (typeof questions === 'function') setQuestionSet(questions());
                             setCurrent(0); setAnswersMap({}); setTimeTaken(0); setFinished(false);
+                            answersPayload.current = []; isFinishedRef.current = false;
+                            if (nodeId) startSession({ nodeId, sessionType: 'practice' });
                         }}
                         style={{ padding: '16px 32px', background: color, color: '#fff', border: 'none', borderRadius: 100, fontSize: 16, fontWeight: 800, cursor: 'pointer', boxShadow: `0 8px 24px ${color}40`, flex: 1, minWidth: 200 }}
                     >

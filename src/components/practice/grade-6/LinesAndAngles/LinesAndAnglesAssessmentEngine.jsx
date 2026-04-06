@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../MathRenderer';
 import ProtractorInteractive from './Topics/Skills/ProtractorInteractive.jsx';
 import GeometryDrawInteractive from './Topics/Skills/GeometryDrawInteractive.jsx';
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
 
-export default function AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'alg' }) {
+export default function AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'alg' , nodeId }) {
     const getQuestionType = (question) => {
         if (question?.type === 'text') return 'text';
         if (question?.type === 'msq') return 'msq';
@@ -62,7 +63,7 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
             const actual = Array.isArray(answer) ? [...answer].sort((a, b) => a - b) : [];
             return expected.length === actual.length && expected.every((value, index) => value === actual[index]);
         }
-        return answer === question.correct;
+        return answer === question.correct || (question.options && question.options[answer] !== undefined && String(question.options[answer]) === String(question.correct));
     };
 
     const formatAnswer = (value) => String(value ?? '');
@@ -106,6 +107,17 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
     const [answers, setAnswers] = useState(Array(questionSet.length).fill(null));
     const [markedForReview, setMarkedForReview] = useState(Array(questionSet.length).fill(false));
     const [finished, setFinished] = useState(false);
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const v4IsFinished = useRef(false);
+
+
+    useEffect(() => {
+        if (!nodeId) return;
+        v4IsFinished.current = false;
+        startSession({ nodeId, sessionType: 'assessment' });
+        return () => { if (!v4IsFinished.current) abandonSession(); };
+    }, [nodeId]);
+
     const [paletteOpen, setPaletteOpen] = useState(false);
     const topRef = useRef(null);
     const [questionTimes, setQuestionTimes] = useState(Array(questionSet.length).fill(0));
@@ -148,6 +160,24 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         }, 1000);
         return () => clearInterval(timer);
     }, [timeLeft, finished]);
+
+    useEffect(() => {
+        if (!finished || !nodeId || v4IsFinished.current) return;
+        v4IsFinished.current = true;
+        const payload = questionSet.map((question, index) => {
+            const userAns = answers[index];
+            const correct = isAnswerCorrect ? isAnswerCorrect(question, userAns) : false;
+            return {
+                question_index: index,
+                answer_json: JSON.stringify({ answer: userAns }),
+                is_correct: correct,
+                marks_awarded: correct ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0,
+            };
+        });
+        finishSession({ answers_payload: payload });
+    }, [finished]);
 
     const formatTime = (seconds) => {
         const m = Math.floor(seconds / 60);
@@ -211,11 +241,24 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         });
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (questionSet.some((question, index) => !isAnswerComplete(question, answers[index]))) {
             if (!window.confirm('You have unanswered questions. Are you sure you want to submit?')) return;
         }
         recordCurrentQuestionTime();
+        if (nodeId && !v4IsFinished.current) {
+            v4IsFinished.current = true;
+            await finishSession({
+                answers_payload: answers.map((ans, idx) => ({
+                    question_index: idx,
+                    answer_json: JSON.stringify({ selected: ans }),
+                    is_correct: isAnswerCorrect(questionSet[idx], ans),
+                    marks_awarded: isAnswerCorrect(questionSet[idx], ans) ? 1 : 0,
+                    marks_possible: 1,
+                    time_taken_ms: 0,
+                }))
+            });
+        }
         setFinished(true);
         setPaletteOpen(false);
     };
@@ -269,6 +312,10 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                         const isCorrect = isAnswerCorrect(question, answers[index]);
                         const correctOptText = getCorrectAnswerLabel(question);
                         const userOptText = getUserAnswerLabel(question, answers[index]);
+                        const isSkipped = userOptText === 'Not Answered';
+                        const statusColor = isSkipped ? '#eab308' : isCorrect ? '#10b981' : '#ef4444';
+                        const statusBg = isSkipped ? 'rgba(234,179,8,0.05)' : isCorrect ? 'rgba(16,185,129,0.03)' : 'rgba(239,68,68,0.03)';
+                        const statusText = isSkipped ? 'Skipped ⚠️' : isCorrect ? 'Correct ✅' : 'Incorrect ❌';
 
                         return (
                             <div
@@ -281,12 +328,30 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                                 }}
                             >
                                 <div style={{ fontWeight: 800, marginBottom: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: isCorrect ? `var(--${prefix}-teal)` : `var(--${prefix}-red)` }}>
-                                    <span>Question {index + 1} - {isCorrect ? 'Correct' : 'Incorrect'}</span>
+                                    <span>Question {index + 1} - {statusText}</span>
                                     <span style={{ fontSize: 12, fontWeight: 700, color: `var(--${prefix}-muted, #64748b)`, background: '#f1f5f9', padding: '3px 10px', borderRadius: 6 }}>⏱️ {formatTime(questionTimes[index])}</span>
                                 </div>
                                 <div className={`${prefix}-quiz-question-text`} style={{ fontSize: 16, marginBottom: 16, color: `var(--${prefix}-text, #1e293b)`, fontWeight: 600 }}>
+                                    {question.image && (
+                                        <div style={{ marginBottom: 24, borderRadius: 16, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
+                                            <img src={question.image} alt="Problem Illustration" style={{ width: '100%', height: 'auto', display: 'block' }} />
+                                        </div>
+                                    )}
+                                    {question.svg && (
+                                        <div style={{ marginBottom: 24, textAlign: 'center', background: '#f8fafc', padding: 20, borderRadius: 16 }} dangerouslySetInnerHTML={{ __html: question.svg }} />
+                                    )}
                                     <MathRenderer text={question.question} />
                                 </div>
+                                {['geometry-draw', 'protractor'].includes(getQuestionType(question)) && (
+                                    <div style={{ marginBottom: 24, pointerEvents: 'none' }}>
+                                        {getQuestionType(question) === 'geometry-draw' && (
+                                            <GeometryDrawInteractive question={question} answered={true} userAnswer={answers[index]} onChange={() => {}} color={color} prefix={prefix} />
+                                        )}
+                                        {getQuestionType(question) === 'protractor' && (
+                                            <ProtractorInteractive question={question} answered={true} userAnswer={answers[index]} onChange={() => {}} color={color} prefix={prefix} />
+                                        )}
+                                    </div>
+                                )}
                                 <div className={`${prefix}-summary-split`}>
                                     <div className={`${prefix}-summary-item`}>
                                         <strong style={{ color: `var(--${prefix}-teal)` }}>Correct Answer:</strong>

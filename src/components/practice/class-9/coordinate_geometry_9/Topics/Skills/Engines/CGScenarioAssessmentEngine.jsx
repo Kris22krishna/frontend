@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styles from '../../../coordinate_geometry_9.module.css';
 import { LatexText } from '../../../../../../LatexText';
 import { CGGraphMini } from './CGScenarioUtils';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 /**
  * CGScenarioAssessmentEngine
@@ -9,7 +10,7 @@ import { CGGraphMini } from './CGScenarioUtils';
  * No immediate feedback. True exam mode.
  * Sidebar question palette + detailed report at the end.
  */
-export default function CGScenarioAssessmentEngine({ scenarios, title, color, onBack }) {
+export default function CGScenarioAssessmentEngine({ scenarios, title, color, onBack, nodeId }) {
     // Flatten 5 scenarios × 4 steps (1 plot + 3 mcqs) = 20 global steps
     // Step types: { type: 'plot', scIdx: 0, ptCount: 5 } or { type: 'mcq', scIdx: 0, mcqIdx: 0 }
     const allSteps = [];
@@ -27,10 +28,37 @@ export default function CGScenarioAssessmentEngine({ scenarios, title, color, on
     const [finished, setFinished] = useState(false);
     const [timeLeft, setTimeLeft] = useState(20 * 60); // 20 min
     const svgRef = useRef(null);
+    const { startSession, finishSession } = useSessionLogger();
+    const isFinishedRef = useRef(false);
 
     const stepInfo = allSteps[currentStep];
     const sc = scenarios[stepInfo.scIdx];
     const isReadOnly = sc.readOnly === true;
+
+    // Start session on mount
+    useEffect(() => {
+        startSession({ nodeId, sessionType: 'assessment' });
+    }, []); // eslint-disable-line
+
+    // Finish session when assessment ends
+    useEffect(() => {
+        if (!finished || isFinishedRef.current) return;
+        isFinishedRef.current = true;
+        const mcqAnswers = allSteps.map((step, i) => {
+            if (step.type !== 'mcq') return null;
+            const sc = scenarios[step.scIdx];
+            const mcq = sc.mcqs[step.mcqIdx];
+            return {
+                question_index: i,
+                answer_json: { selected: answers[i] ?? null, correct_answer: mcq.ans },
+                is_correct: answers[i] === mcq.ans,
+                marks_awarded: answers[i] === mcq.ans ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0,
+            };
+        }).filter(Boolean);
+        finishSession({ answers_payload: mcqAnswers });
+    }, [finished]); // eslint-disable-line
 
     // Auto-answer readOnly plots
     useEffect(() => {

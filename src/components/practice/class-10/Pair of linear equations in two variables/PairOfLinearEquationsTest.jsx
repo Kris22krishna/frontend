@@ -6,6 +6,9 @@ import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
 import '../TenthPracticeSession.css';
 import mascotImg from '../../../../assets/mascot.png';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+
+const NODE_ID = 'a4101003-0010-0000-0000-000000000000'; // Chapter Test: Pair of Linear Equations in Two Variables
 
 const BLUE_THEME_CSS = `
     .option-btn-modern.selected {
@@ -162,8 +165,12 @@ const PairOfLinearEquationsTest = () => {
     const [isTestOver, setIsTestOver] = useState(false);
     const [responses, setResponses] = useState({}); // Stores { qIndex: { selected, isCorrect, timeTaken, isSkipped } }
 
-    // Timer refs
+    // Logging states
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const v4Answers = useRef([]);
     const questionStartTime = useRef(Date.now());
+    const accumulatedTime = useRef(0);
+    const isTabActive = useRef(true);
     const [sessionId, setSessionId] = useState(null);
     const [questions, setQuestions] = useState([]);
 
@@ -359,13 +366,30 @@ const PairOfLinearEquationsTest = () => {
 
     useEffect(() => {
         setQuestions(generateQuestions());
-        const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        const uid = parseInt(rawUid, 10);
-        if (!isNaN(uid)) {
-            api.createPracticeSession(String(uid).includes("-") ? 1 : parseInt(uid, 10), SKILL_ID).then(sess => {
+        startSession({ nodeId: NODE_ID, sessionType: 'assessment' });
+        v4Answers.current = [];
+
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                accumulatedTime.current += Date.now() - questionStartTime.current;
+                isTabActive.current = false;
+            } else {
+                questionStartTime.current = Date.now();
+                isTabActive.current = true;
+            }
+        };
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
+        if (userId && !sessionId) {
+            api.createPracticeSession(String(userId).includes("-") ? 1 : parseInt(userId, 10), SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
         }
+
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
     }, []);
 
     useEffect(() => {
@@ -377,7 +401,10 @@ const PairOfLinearEquationsTest = () => {
     const handleRecordResponse = () => {
         const currentQ = questions[qIndex];
         const isCorrect = selectedOption ? selectedOption === currentQ.correctAnswer : null;
-        const timeSpent = Math.round((Date.now() - questionStartTime.current) / 1000);
+        
+        let t = accumulatedTime.current;
+        if (isTabActive.current) t += Date.now() - questionStartTime.current;
+        const timeSpent = Math.round(t / 1000);
         const isSkipped = !selectedOption;
 
         const responseData = {
@@ -389,13 +416,29 @@ const PairOfLinearEquationsTest = () => {
 
         setResponses(prev => ({ ...prev, [qIndex]: responseData }));
 
+        // v4 Log
+        const entry = {
+            question_index: qIndex + 1,
+            answer_json: { selected: selectedOption || 'SKIPPED' },
+            is_correct: isCorrect ? 1.0 : 0.0,
+            marks_awarded: isCorrect ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: t
+        };
+        v4Answers.current[qIndex] = entry;
+        logAnswer({
+            questionIndex: entry.question_index,
+            answerJson: entry.answer_json,
+            isCorrect: entry.is_correct
+        });
+
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         const uid = parseInt(rawUid, 10);
         if (!isNaN(uid)) {
             const attemptData = {
                 difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard',
                 user_id: String(uid).includes("-") ? 1 : parseInt(uid, 10),
-                session_id: sessionId,
+                session_id: null,
                 skill_id: SKILL_ID,
                 question_text: currentQ.text,
                 correct_answer: currentQ.correctAnswer,
@@ -432,6 +475,13 @@ const PairOfLinearEquationsTest = () => {
 
     const finalizeTest = async () => {
         setIsTestOver(true);
+        // v4 finish
+        const payload = v4Answers.current.filter(Boolean);
+        await finishSession({
+            totalQuestions: questions.length,
+            questionsAnswered: payload.length,
+            answersPayload: payload
+        });
         if (sessionId) await api.finishSession(sessionId).catch(console.error);
 
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');

@@ -1,5 +1,6 @@
 export const skill3 = {
     id: 'sector-area',
+    nodeId: 'a4101012-0003-0000-0000-000000000000',
     title: 'Calculating Sector Area',
     subtitle: 'Slices of Space',
     desc: 'Find the area of a sector based on its central angle and radius.',

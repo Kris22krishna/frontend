@@ -13,6 +13,15 @@ const chapters = [
         gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
         shadow: 'rgba(67,233,123,0.35)',
     },
+    {
+        key: 'relations-and-functions',
+        title: 'Relations & Functions',
+        desc: 'Ordered pairs, Cartesian product, relations, functions, types of functions, and algebra of functions.',
+        icon: 'f(x)',
+        questions: 120,
+        gradient: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+        shadow: 'rgba(99,102,241,0.35)',
+    },
     // Future chapters can be added here
 ];
 

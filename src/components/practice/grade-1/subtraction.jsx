@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText, Check, X, Eye, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../../../contexts/AuthContext';
-import { api } from '../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 import Navbar from '../../Navbar';
 import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
 import { LatexText } from '../../LatexText';
@@ -59,10 +59,18 @@ const DynamicVisual = ({ type, data }) => {
     return null;
 };
 
+const SKILL_ID_MAP = {
+    '401': NODE_IDS.g1MathSubtractionVisual,
+    '402': NODE_IDS.g1MathSubtractionNumeric,
+    '403': NODE_IDS.g1MathSubtractionZero,
+    '404': NODE_IDS.g1MathSubtractionMixed,
+};
+
 const Subtraction = () => {
-    const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
     const isTest = skillId === '404';
@@ -76,8 +84,6 @@ const Subtraction = () => {
     const [timer, setTimer] = useState(0);
     const [answers, setAnswers] = useState({});
     const [sessionQuestions, setSessionQuestions] = useState([]);
-    const [sessionId, setSessionId] = useState(null);
-
     const [showExplanationModal, setShowExplanationModal] = useState(false);
 
     const getTopicInfo = () => {
@@ -90,15 +96,48 @@ const Subtraction = () => {
     };
 
     const { topicName, skillName } = getTopicInfo();
+
+    const getNextSkill = () => {
+        const gradeConfig = TOPIC_CONFIGS['1'];
+        const topics = Object.keys(gradeConfig);
+        let currentTopicIdx = -1;
+        let currentSkillIdx = -1;
+        for (let i = 0; i < topics.length; i++) {
+            const skills = gradeConfig[topics[i]];
+            const idx = skills.findIndex(s => s.id === skillId);
+            if (idx !== -1) { currentTopicIdx = i; currentSkillIdx = idx; break; }
+        }
+        if (currentTopicIdx === -1) return null;
+        const currentTopicSkills = gradeConfig[topics[currentTopicIdx]];
+        if (currentSkillIdx < currentTopicSkills.length - 1) {
+            return { ...currentTopicSkills[currentSkillIdx + 1], topicName: topics[currentTopicIdx] };
+        }
+        if (currentTopicIdx < topics.length - 1) {
+            const nextTopicName = topics[currentTopicIdx + 1];
+            const nextTopicSkills = gradeConfig[nextTopicName];
+            if (nextTopicSkills.length > 0) return { ...nextTopicSkills[0], topicName: nextTopicName };
+        }
+        return null;
+    };
+
+    const makeOptions = (correct) => {
+        const opts = new Set([correct]);
+        const offsets = [1, -1, 2, -2, 3, -3, 4];
+        for (const off of offsets) {
+            if (opts.size >= 4) break;
+            const v = correct + off;
+            if (v >= 0) opts.add(v);
+        }
+        return [...opts].sort(() => 0.5 - Math.random());
+    };
+
     const generateQuestions = (selectedSkill) => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
-
         for (let i = 0; i < totalQuestions; i++) {
             let question = {};
             const color1 = colors[i % colors.length];
             const color2 = colors[(i + 1) % colors.length];
-
             let typeToGen = 'visual';
             if (isTest) {
                 if (i < 5) typeToGen = 'visual';
@@ -111,7 +150,6 @@ const Subtraction = () => {
             }
 
             if (typeToGen === 'visual') {
-                // Visual Subtraction
                 let n1, n2;
                 if (isTest) {
                     const pairs = [[6, 2], [7, 3], [5, 4], [8, 2], [9, 5]];
@@ -122,7 +160,7 @@ const Subtraction = () => {
                 }
                 question = {
                     text: `How many objects are left after taking away ${n2}?`,
-                    options: [n1 - n2, (n1 - n2 + 1), Math.max(0, n1 - n2 - 2)].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
+                    options: makeOptions(n1 - n2),
                     correct: n1 - n2,
                     type: 'visual',
                     visualData: { n1, n2, color: color1 },
@@ -130,7 +168,6 @@ const Subtraction = () => {
                     solution: `${n1} - ${n2} = ${n1 - n2}`
                 };
             } else if (typeToGen === 'numeric') {
-                // Numeric
                 let n1, n2;
                 if (isTest) {
                     const pairs = [[9, 4], [8, 3], [7, 5], [6, 1]];
@@ -140,8 +177,8 @@ const Subtraction = () => {
                     n2 = Math.floor(Math.random() * n1);
                 }
                 question = {
-                    text: `What is ${n1} take away ${n2}? ➖`,
-                    options: [n1 - n2, n1 - n2 + 1, Math.max(0, n1 - n2 - 1)].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
+                    text: `What is ${n1} take away ${n2}?`,
+                    options: makeOptions(n1 - n2),
                     correct: n1 - n2,
                     type: 'numeric',
                     visualData: { n1, n2, color1, color2 },
@@ -149,18 +186,14 @@ const Subtraction = () => {
                     solution: `${n1} - ${n2} = ${n1 - n2}`
                 };
             } else if (typeToGen === 'zero') {
-                // Zero
                 let n;
-                if (isTest) {
-                    n = 7;
-                } else {
-                    n = Math.floor(Math.random() * 9) + 1;
-                }
+                if (isTest) n = 7;
+                else n = Math.floor(Math.random() * 9) + 1;
                 const subtractSame = isTest ? true : Math.random() > 0.5;
                 const n2 = subtractSame ? n : 0;
                 question = {
                     text: `Subtract ${n2} from ${n}!`,
-                    options: [n - n2, n, 0].filter((v, idx, self) => self.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
+                    options: makeOptions(n - n2),
                     correct: n - n2,
                     type: 'zero',
                     visualData: { n1: n, n2, color1, color2 },
@@ -168,27 +201,17 @@ const Subtraction = () => {
                     solution: `${n} - ${n2} = ${n - n2}`
                 };
             }
-            else {
-                question = { text: "Solve this!", options: ["1"], correct: "1", type: "numeric", visualData: { n1: 2, n2: 1, color1, color2 }, explanation: "Simple subtraction!" };
-            }
             questions.push(question);
         }
         return questions;
     };
 
     useEffect(() => {
-        const init = async () => {
-            const userId = user?.user_id || user?.id;
-            if (!userId) return;
-            const qs = generateQuestions(skillId);
-            setSessionQuestions(qs);
-            try {
-                const session = await api.createPracticeSession(userId, parseInt(skillId) || 401);
-                setSessionId(session?.session_id);
-            } catch (e) { console.error(e); }
-        };
-        init();
-    }, [user, skillId]);
+        const qs = generateQuestions(skillId);
+        setSessionQuestions(qs);
+        const nodeId = SKILL_ID_MAP[skillId] || NODE_IDS.g1MathSubtractionMixed;
+        startSession({ nodeId, sessionType: isTest ? 'assessment' : 'practice' });
+    }, [skillId, isTest, startSession]);
 
     useEffect(() => {
         let interval;
@@ -213,13 +236,6 @@ const Subtraction = () => {
     }, [qIndex, answers]);
 
     const handleExit = async () => {
-        try {
-            if (sessionId) {
-                await api.finishSession(sessionId);
-            }
-        } catch (e) {
-            console.error("Error finishing session:", e);
-        }
         navigate('/junior/grade/1');
     };
 
@@ -228,80 +244,69 @@ const Subtraction = () => {
         setSelectedOption(option);
     };
 
-
     const handleSubmit = () => {
         if (isAnswered || selectedOption === null) return;
         const option = selectedOption;
+        const currentQ = sessionQuestions[qIndex];
+        const isCorrect = option === currentQ.correct;
 
         setIsAnswered(true);
-        const isCorrect = option === sessionQuestions[qIndex].correct;
-        // --- AUTO-INJECTED LOGGING ---
-        try {
-            const uid = user?.user_id || user?.id || sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            const qData = sessionQuestions[qIndex] || {};
-            const skId = typeof selectedSkill !== 'undefined' ? selectedSkill : (typeof skillId !== 'undefined' ? skillId : '0');
-            const currentTimer = typeof timer !== 'undefined' ? timer : 0;
+        if (isCorrect) setScore(s => s + 1);
 
-            if (uid && sessionId) {
-                api.recordAttempt({
-                    user_id: parseInt(uid, 10),
-                    session_id: sessionId,
-                    skill_id: parseInt(skId, 10) || 0,
-                    template_id: null,
-                    difficulty_level: 'Medium',
-                    question_text: String(qData.text || ''),
-                    correct_answer: String(qData.correct || qData.correctAnswer || ''),
-                    student_answer: String(option),
-                    is_correct: isCorrect,
-                    solution_text: String(qData.explanation || qData.solution || ''),
-                    time_spent_seconds: currentTimer
-                }).catch(err => console.error("Auto-log failed:", err));
-            }
-        } catch (err) {
-            console.error("Auto-log error:", err);
-        }
-        // -----------------------------
+        const answerData = {
+            question_text: currentQ.text,
+            selected: option,
+            correct: currentQ.correct,
+            isCorrect
+        };
 
-        if (isCorrect) {
-            setScore(s => s + 1);
-        }
+        logAnswer({
+            question_index: qIndex,
+            answer_json: answerData,
+            is_correct: isCorrect ? 1 : 0
+        });
 
         setAnswers(prev => ({
             ...prev,
             [qIndex]: {
                 selectedOption: option,
                 isCorrect,
-                type: sessionQuestions[qIndex].type,
-                visualData: sessionQuestions[qIndex].visualData,
-                questionText: sessionQuestions[qIndex].text,
-                correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: sessionQuestions[qIndex].explanation || "Detailed explanation is coming soon! Feel free to ask your teacher for help in the meantime. 💡"
+                type: currentQ.type,
+                visualData: currentQ.visualData,
+                questionText: currentQ.text,
+                correctAnswer: currentQ.correct,
+                explanation: currentQ.explanation || "Detailed explanation is coming soon!",
+                solution: currentQ.solution
             }
         }));
 
-        // Show modal for all answers in practice mode
         if (!isTest) {
             setShowExplanationModal(true);
         } else {
-            // Give a tiny delay so they see the option highlight green
-            setTimeout(() => {
-                handleNext();
-            }, 800);
+            handleNext();
         }
     };
 
     const handleSkip = () => {
         if (isAnswered) return;
+        const currentQ = sessionQuestions[qIndex];
+        
+        logAnswer({
+            question_index: qIndex,
+            answer_json: { question_text: currentQ.text, selected: 'Skipped', correct: currentQ.correct, isCorrect: false },
+            is_correct: 0
+        });
+
         setAnswers(prev => ({
             ...prev,
             [qIndex]: {
                 selectedOption: 'Skipped',
                 isCorrect: false,
-                type: sessionQuestions[qIndex].type,
-                visualData: sessionQuestions[qIndex].visualData,
-                questionText: sessionQuestions[qIndex].text,
-                correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: "This question was skipped. " + sessionQuestions[qIndex].explanation
+                type: currentQ.type,
+                visualData: currentQ.visualData,
+                questionText: currentQ.text,
+                correctAnswer: currentQ.correct,
+                explanation: "This question was skipped. " + currentQ.explanation
             }
         }));
         handleNext();
@@ -311,26 +316,12 @@ const Subtraction = () => {
         if (qIndex < totalQuestions - 1) {
             setQIndex(v => v + 1);
         } else {
+            finishSession({
+                totalQuestions,
+                questionsAnswered: Object.keys(answers).length,
+                answersPayload: answers
+            });
             setShowResults(true);
-            try {
-                if (sessionId) {
-                    await api.finishSession(sessionId);
-                    await api.createReport({
-                        uid: user?.id || 'unknown',
-                        category: 'Practice',
-                        reportData: {
-                            skill_id: skillId,
-                            skill_name: skillName,
-                            score: Math.round((score / totalQuestions) * 100),
-                            total_questions: totalQuestions,
-                            correct_answers: score,
-                            time_spent: timer,
-                            timestamp: new Date().toISOString(),
-                            answers: Object.values(answers).filter(a => a !== undefined)
-                        }
-                    });
-                }
-            } catch (e) { console.error(e); }
         }
     };
 
@@ -596,7 +587,7 @@ const Subtraction = () => {
 
                             {!isAnswered ? (
                                 <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>
-                                    {isTest ? 'Next' : 'Check Answer'} <ChevronRight size={24} />
+                                    {isTest ? (qIndex === totalQuestions - 1 ? 'Finish Test' : 'Next Question') : 'Check Answer'} <ChevronRight size={24} />
                                 </button>
                             ) : (
                                 <button className="g1-nav-btn next-btn" onClick={handleNext}>

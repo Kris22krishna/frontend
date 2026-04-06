@@ -73,12 +73,19 @@ export const useViolationTracker = (maxViolations = 3, onMaxViolationsReached) =
         }
     };
 
+    const resetViolations = useCallback(() => {
+        setViolationCount(0);
+        setShowWarning(false);
+        setViolationMessage("");
+    }, []);
+
     return {
         violationCount,
         maxViolations,
         showWarning,
         violationMessage,
         dismissWarning,
-        requestFullscreen
+        requestFullscreen,
+        resetViolations
     };
 };

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Timer, Star, ChevronLeft, ChevronRight, Check, RefreshCw, FileText } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { api } from '../../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 import Navbar from '../../../Navbar';
 import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
@@ -11,25 +12,28 @@ import '../../../../pages/juniors/class-1/Grade1Practice.css';
 import '../../../../pages/juniors/grade3/time-goes-ontest.css';
 import './toy-joy.css';
 
+const SKILL_ID_MAP = {
+    'TJ-01': NODE_IDS.g3MathToyJoyIdentifying3D,
+    'TJ-02': NODE_IDS.g3MathToyJoyCounting,
+    'TJ-03': NODE_IDS.g3MathToyJoyPosition,
+    'TJ-04': NODE_IDS.g3MathToyJoyProperties,
+    'TJ-05': NODE_IDS.g3MathToyJoyClassifying,
+    'TJ-06': NODE_IDS.g3MathToyJoyOppositeFaces,
+    'TJ-07': NODE_IDS.g3MathToyJoyBuilding,
+    'TJ-08': NODE_IDS.g3MathToyJoySequencing,
+};
+
 const TOTAL_QUESTIONS = 5;
 
-/**
- * questionMeta shape (one per question):
- * { type: 'mcq'|'tf'|'rocket'|'match'|'multipick'|'singlePic',
- *   correct: any,        // value to compare against
- *   totalPairs?: number, // for match questions
- *   explanation: string, // shown in ExplanationModal
- *   correctLabel: string // human-readable correct answer
- * }
- */
 const ToyJoyPracticeTemplate = ({ skillId, skillName, questions, questionMeta, logicProps }) => {
     const navigate = useNavigate();
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
     const [qIndex, setQIndex] = useState(0);
     const [score, setScore] = useState(0);
     const [showResults, setShowResults] = useState(false);
     const [timer, setTimer] = useState(0);
-    const [sessionId, setSessionId] = useState(null);
     const [showExplanationModal, setShowExplanationModal] = useState(false);
+    const [answersMap, setAnswersMap] = useState({});
 
     const {
         isAnswered, setIsAnswered,
@@ -40,17 +44,9 @@ const ToyJoyPracticeTemplate = ({ skillId, skillName, questions, questionMeta, l
     } = logicProps;
 
     useEffect(() => {
-        const init = async () => {
-            const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            if (userId) {
-                try {
-                    const session = await api.createPracticeSession(userId, skillId || 9999);
-                    setSessionId(session?.session_id);
-                } catch (e) { console.error(e); }
-            }
-        };
-        init();
-    }, [skillId]);
+        const nodeId = SKILL_ID_MAP[skillId] || NODE_IDS.g3MathToyJoy;
+        startSession({ nodeId, sessionType: 'practice' });
+    }, [skillId, startSession]);
 
     useEffect(() => {
         let interval;
@@ -66,6 +62,20 @@ const ToyJoyPracticeTemplate = ({ skillId, skillName, questions, questionMeta, l
         const isCorrect = checkCurrentAnswer(qIndex, meta);
         setIsAnswered(true);
         if (isCorrect) setScore(s => s + 1);
+        
+        const answerData = {
+            selected: selectedOption,
+            correct: meta?.correctLabel || meta?.correct,
+            isCorrect
+        };
+        setAnswersMap(prev => ({ ...prev, [qIndex]: answerData }));
+
+        logAnswer({
+            question_index: qIndex,
+            answer_json: answerData,
+            is_correct: isCorrect ? 1 : 0
+        });
+
         setShowExplanationModal(true);
     };
 
@@ -77,6 +87,11 @@ const ToyJoyPracticeTemplate = ({ skillId, skillName, questions, questionMeta, l
             if (resetState) resetState();
             setShowExplanationModal(false);
         } else {
+            finishSession({
+                totalQuestions: TOTAL_QUESTIONS,
+                questionsAnswered: Object.keys(answersMap).length,
+                answersPayload: answersMap
+            });
             setShowResults(true);
             setShowExplanationModal(false);
         }

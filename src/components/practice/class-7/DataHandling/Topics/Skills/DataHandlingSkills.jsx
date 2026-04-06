@@ -25,6 +25,7 @@ import AssessmentEngine from "../../../../../Math-Branches/Algebra/Topics/Skills
 const SKILLS = [
     {
         id: "mean",
+        nodeId: "a4071003-0001-0000-0000-000000000000",
         title: "Arithmetic Mean",
         subtitle: "Skill 1 · Average",
         icon: "📐",
@@ -61,6 +62,7 @@ const SKILLS = [
     },
     {
         id: "range",
+        nodeId: "a4071003-0002-0000-0000-000000000000",
         title: "Range of Data",
         subtitle: "Skill 2 · Spread",
         icon: "↔️",
@@ -90,6 +92,7 @@ const SKILLS = [
     },
     {
         id: "mode",
+        nodeId: "a4071003-0003-0000-0000-000000000000",
         title: "Mode",
         subtitle: "Skill 3 · Frequency",
         icon: "🏆",
@@ -119,6 +122,7 @@ const SKILLS = [
     },
     {
         id: "median",
+        nodeId: "a4071003-0004-0000-0000-000000000000",
         title: "Median",
         subtitle: "Skill 4 · Middle Value",
         icon: "📍",
@@ -148,6 +152,7 @@ const SKILLS = [
     },
     {
         id: "bargraph",
+        nodeId: "a4071003-0005-0000-0000-000000000000",
         title: "Bar Graphs",
         subtitle: "Skill 5 · Visualization",
         icon: "📊",
@@ -177,6 +182,7 @@ const SKILLS = [
     },
     {
         id: "doublebargraph",
+        nodeId: "a4071003-0006-0000-0000-000000000000",
         title: "Double Bar Graphs",
         subtitle: "Skill 6 · Comparison",
         icon: "📊",
@@ -229,6 +235,8 @@ export default function DataHandlingSkills() {
                         onBack={() => setMode(null)}
                         color={skill.color}
                         prefix="dh"
+                        nodeId={skill.nodeId}
+                        sessionType="practice"
                     />
                 </div>
             </div>
@@ -245,6 +253,8 @@ export default function DataHandlingSkills() {
                         onBack={() => setMode(null)}
                         color={skill.color}
                         prefix="dh"
+                        nodeId={skill.nodeId}
+                        sessionType="assessment"
                     />
                 </div>
             </div>

@@ -118,6 +118,8 @@ export default function IntegersSkills() {
                                 color={skill.color}
                                 onBack={() => setView('list')}
                                 prefix="int"
+                                nodeId={skill.nodeId}
+                                sessionType="practice"
                             />
                         )
                     ) : (
@@ -127,6 +129,8 @@ export default function IntegersSkills() {
                             color={skill.color}
                             onBack={() => setView('list')}
                             prefix="int"
+                            nodeId={skill.nodeId}
+                            sessionType="assessment"
                         />
                     )}
                 </div>

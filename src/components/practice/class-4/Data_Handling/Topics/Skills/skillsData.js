@@ -55,7 +55,7 @@ export const LEARN_CONTENT = {
     },
 };
 
-export const generatePracticeQs = (skillId) => {
+const generateQuestionBatch = (skillId) => {
     const qs = [];
     const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
     const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -145,7 +145,7 @@ export const generatePracticeQs = (skillId) => {
             const cats = pick([fruits, sports]);
             const a = rand(4, 12), b = rand(4, 12), c = rand(4, 12);
             if (act === 1) {
-                qs.push({ type: 'mcq', q: `Table: ${cats[0]}=${a}, ${cats[1]}=${b}, ${cats[2]}=${c}. Which has the most?`, opts: [cats[0], cats[1], cats[2], 'All equal'].sort(() => Math.random() - 0.5), ans: -1, expl: `The highest is ${Math.max(a, b, c)}.` });
+                qs.push({ type: 'mcq', q: `Table: ${cats[0]}=${a}, ${cats[1]}=${b}, ${cats[2]}=${c}. Which category has the highest count?`, opts: [cats[0], cats[1], cats[2], 'All equal'].sort(() => Math.random() - 0.5), ans: -1, expl: `The highest is ${Math.max(a, b, c)}.` });
                 const maxVal = Math.max(a, b, c);
                 const maxCat = maxVal === a ? cats[0] : maxVal === b ? cats[1] : cats[2];
                 qs[qs.length - 1].ans = qs[qs.length - 1].opts.indexOf(maxCat);
@@ -177,7 +177,7 @@ export const generatePracticeQs = (skillId) => {
                 qs[qs.length - 1].ans = qs[qs.length - 1].opts.indexOf(`${combo}`);
             } else if (act === 3) {
                 const diff = Math.abs(a - b);
-                qs.push({ type: 'fill_blank', q: `${cats[0]}=${a}, ${cats[1]}=${b}. How many more chose ${a > b ? cats[0] : cats[1]}? ___`, answer: diff, hint: 'Subtract smaller from bigger!', expl: `${Math.max(a, b)} − ${Math.min(a, b)} = ${diff}.` });
+                qs.push({ type: 'fill_blank', q: `${cats[0]}=${a}, ${cats[1]}=${b}. How many more students chose ${a > b ? cats[0] : cats[1]} than ${a > b ? cats[1] : cats[0]}? ___`, answer: diff, hint: 'Subtract smaller from bigger!', expl: `${Math.max(a, b)} − ${Math.min(a, b)} = ${diff}.` });
             } else {
                 qs.push({ type: 'true_false', statement: `In a table, every category should have the same count.`, correct: false, visual: '', expl: 'No! Categories can have different counts. The table just organizes and shows what each count is.' });
             }
@@ -206,7 +206,7 @@ export const generatePracticeQs = (skillId) => {
     // Skill 3: Pictograph Reading
     if (skillId === 3) {
         const icons = ['🍎', '🍦', '📚', '⭐', '🎈'];
-        const categories = ['Apple', 'Ice cream', 'Books', 'Stars', 'Balloons'];
+        const categories = ['Apple', 'Ice cream', 'Book', 'Star', 'Balloon'];
 
         // Easy (1–6): scale = 1
         for (let i = 0; i < 6; i++) {
@@ -246,9 +246,9 @@ export const generatePracticeQs = (skillId) => {
                 const count2 = rand(2, 6);
                 const total2 = count2 * scale;
                 const diff = Math.abs(total - total2);
-                qs.push({ type: 'fill_blank', q: `Key: 1 icon = ${scale}. ${categories[0]}: ${count} icons, ${categories[1]}: ${count2} icons. Difference = ___`, answer: diff, hint: `(${count}×${scale}) − (${count2}×${scale})`, expl: `${total} − ${total2} = ${diff}. (Remember to multiply icons by scale first!)` });
+                qs.push({ type: 'fill_blank', q: `Key: 1 icon = ${scale}. ${categories[0]} has ${count} icons and ${categories[1]} has ${count2} icons. What is the difference between their totals? ___`, answer: diff, hint: `(${count}×${scale}) − (${count2}×${scale})`, expl: `${total} − ${total2} = ${diff}. (Remember to multiply icons by scale first!)` });
             } else if (act === 3) {
-                qs.push({ type: 'picture_problem', scene: icon, sceneCount: count, perItem: `Key: 1 ${icon} = ${scale}`, q: `How many total ${cat.toLowerCase()}s?`, answer: total, expl: `${count} × ${scale} = ${total}.` });
+                qs.push({ type: 'picture_problem', scene: icon, sceneCount: count, perItem: `Key: 1 ${icon} = ${scale}`, q: `How many total ${cat.toLowerCase()} are shown?`, answer: total, expl: `${count} × ${scale} = ${total}.` });
             } else {
                 const wrongScale = scale + 1;
                 qs.push({ type: 'true_false', statement: `Key says 1 ${icon} = ${scale}. So ${count} icons = ${count * wrongScale}.`, correct: false, visual: '', expl: `No! ${count} × ${scale} = ${total}, not ${count * wrongScale}.` });
@@ -270,7 +270,7 @@ export const generatePracticeQs = (skillId) => {
             } else if (act === 2) {
                 const most = Math.max(t1, t2, t3);
                 const least = Math.min(t1, t2, t3);
-                qs.push({ type: 'fill_blank', q: `Key: 1${icon}=${scale}. Totals: ${t1}, ${t2}, ${t3}. How many more does the most popular have than the least? ___`, answer: most - least, hint: `${most} − ${least}`, expl: `${most} − ${least} = ${most - least}.` });
+                qs.push({ type: 'fill_blank', q: `Key: 1${icon}=${scale}. The three category totals are ${t1}, ${t2}, and ${t3}. How many more items are there in the most popular category than in the least popular category? ___`, answer: most - least, hint: `${most} − ${least}`, expl: `${most} − ${least} = ${most - least}.` });
             } else {
                 qs.push({ type: 'mcq', q: `Key: 1 icon = ${scale}. You need to show ${count1 * scale} items. How many icons do you draw?`, opts: [`${count1}`, `${count1 * scale}`, `${scale}`, `${count1 + scale}`].sort(() => Math.random() - 0.5), ans: -1, expl: `${count1 * scale} ÷ ${scale} = ${count1} icons.` });
                 qs[qs.length - 1].ans = qs[qs.length - 1].opts.indexOf(`${count1}`);
@@ -299,15 +299,15 @@ export const generatePracticeQs = (skillId) => {
             const leastCat = ctx.cats[vals.indexOf(least)];
 
             if (act === 1) {
-                qs.push({ type: 'mcq', q: `Favourite ${ctx.label}: ${ctx.cats[0]}=${a}, ${ctx.cats[1]}=${b}, ${ctx.cats[2]}=${c}. Most popular?`, opts: [ctx.cats[0], ctx.cats[1], ctx.cats[2], 'All equal'].sort(() => Math.random() - 0.5), ans: -1, expl: `${mostCat} has ${most} — the highest count!` });
+                qs.push({ type: 'mcq', q: `Favourite ${ctx.label}: ${ctx.cats[0]}=${a}, ${ctx.cats[1]}=${b}, ${ctx.cats[2]}=${c}. Which category is the most popular?`, opts: [ctx.cats[0], ctx.cats[1], ctx.cats[2], 'All equal'].sort(() => Math.random() - 0.5), ans: -1, expl: `${mostCat} has ${most} — the highest count!` });
                 qs[qs.length - 1].ans = qs[qs.length - 1].opts.indexOf(mostCat);
             } else if (act === 2) {
-                qs.push({ type: 'mcq', q: `Favourite ${ctx.label}: ${ctx.cats[0]}=${a}, ${ctx.cats[1]}=${b}, ${ctx.cats[2]}=${c}. Least popular?`, opts: [ctx.cats[0], ctx.cats[1], ctx.cats[2], 'None'].sort(() => Math.random() - 0.5), ans: -1, expl: `${leastCat} has ${least} — the lowest count!` });
+                qs.push({ type: 'mcq', q: `Favourite ${ctx.label}: ${ctx.cats[0]}=${a}, ${ctx.cats[1]}=${b}, ${ctx.cats[2]}=${c}. Which category is the least popular?`, opts: [ctx.cats[0], ctx.cats[1], ctx.cats[2], 'None'].sort(() => Math.random() - 0.5), ans: -1, expl: `${leastCat} has ${least} — the lowest count!` });
                 qs[qs.length - 1].ans = qs[qs.length - 1].opts.indexOf(leastCat);
             } else if (act === 3) {
                 qs.push({ type: 'fill_blank', q: `${ctx.cats[0]}=${a}, ${ctx.cats[1]}=${b}, ${ctx.cats[2]}=${c}. Total = ___`, answer: a + b + c, hint: 'Add all values!', expl: `${a}+${b}+${c} = ${a + b + c}.` });
             } else {
-                qs.push({ type: 'fill_blank', q: `${ctx.cats[0]}=${a}, ${ctx.cats[1]}=${b}. How many more chose ${a > b ? ctx.cats[0] : ctx.cats[1]}? ___`, answer: Math.abs(a - b), hint: 'Bigger − smaller', expl: `${Math.max(a, b)} − ${Math.min(a, b)} = ${Math.abs(a - b)}.` });
+                qs.push({ type: 'fill_blank', q: `${ctx.cats[0]}=${a}, ${ctx.cats[1]}=${b}. How many more students chose ${a > b ? ctx.cats[0] : ctx.cats[1]} than ${a > b ? ctx.cats[1] : ctx.cats[0]}? ___`, answer: Math.abs(a - b), hint: 'Bigger − smaller', expl: `${Math.max(a, b)} − ${Math.min(a, b)} = ${Math.abs(a - b)}.` });
             }
         }
 
@@ -324,13 +324,13 @@ export const generatePracticeQs = (skillId) => {
             if (act === 1) {
                 qs.push({ type: 'fill_blank', q: `${ctx.cats[0]}=${a}, ${ctx.cats[1]}=${b}, ${ctx.cats[2]}=${c}, ${ctx.cats[3]}=${d}. Total = ___`, answer: total, hint: 'Sum of all 4!', expl: `${a}+${b}+${c}+${d} = ${total}.` });
             } else if (act === 2) {
-                qs.push({ type: 'fill_blank', q: `Most popular has ${most}, least has ${least}. Difference = ___`, answer: most - least, hint: `${most} − ${least}`, expl: `${most} − ${least} = ${most - least}.` });
+                qs.push({ type: 'fill_blank', q: `The most popular category has ${most} students and the least popular category has ${least} students. What is the difference between them? ___`, answer: most - least, hint: `${most} − ${least}`, expl: `${most} − ${least} = ${most - least}.` });
             } else if (act === 3) {
                 // Two-group comparison
                 const boysA = rand(4, 12), boysB = rand(4, 12);
                 const girlsA = rand(4, 12), girlsB = rand(4, 12);
                 const totalBoys = boysA + boysB;
-                qs.push({ type: 'fill_blank', q: `Boys: ${ctx.cats[0]}=${boysA}, ${ctx.cats[1]}=${boysB}. Girls: ${ctx.cats[0]}=${girlsA}, ${ctx.cats[1]}=${girlsB}. Total boys = ___`, answer: totalBoys, hint: `${boysA} + ${boysB}`, expl: `Boys total = ${boysA} + ${boysB} = ${totalBoys}.` });
+                qs.push({ type: 'fill_blank', q: `In this survey, each child chose only one option. Boys: ${ctx.cats[0]}=${boysA}, ${ctx.cats[1]}=${boysB}. Girls: ${ctx.cats[0]}=${girlsA}, ${ctx.cats[1]}=${girlsB}. What is the total number of boys surveyed? ___`, answer: totalBoys, hint: `${boysA} + ${boysB}`, expl: `Since each boy chose only one option, total boys surveyed = ${boysA} + ${boysB} = ${totalBoys}.` });
             } else {
                 const halfTotal = Math.floor(total / 2);
                 qs.push({ type: 'true_false', statement: `If total is ${total}, then more than half chose one category means that category has more than ${halfTotal}.`, correct: true, visual: '', expl: `Half of ${total} is ${halfTotal}. So "more than half" means > ${halfTotal}.` });
@@ -350,7 +350,7 @@ export const generatePracticeQs = (skillId) => {
                 const boysA = rand(5, 15), boysB = rand(5, 15);
                 const girlsA = rand(5, 15), girlsB = rand(5, 15);
                 const diff = Math.abs((boysA + boysB) - (girlsA + girlsB));
-                qs.push({ type: 'fill_blank', q: `Boys total: ${boysA + boysB}. Girls total: ${girlsA + girlsB}. How many more ${(boysA + boysB) > (girlsA + girlsB) ? 'boys' : 'girls'}? ___`, answer: diff, hint: 'Subtract the smaller total from bigger!', expl: `${Math.max(boysA + boysB, girlsA + girlsB)} − ${Math.min(boysA + boysB, girlsA + girlsB)} = ${diff}.` });
+                qs.push({ type: 'fill_blank', q: `Boys total = ${boysA + boysB}. Girls total = ${girlsA + girlsB}. How many more ${(boysA + boysB) > (girlsA + girlsB) ? 'boys are there than girls' : 'girls are there than boys'}? ___`, answer: diff, hint: 'Subtract the smaller total from bigger!', expl: `${Math.max(boysA + boysB, girlsA + girlsB)} − ${Math.min(boysA + boysB, girlsA + girlsB)} = ${diff}.` });
             } else {
                 const a = rand(10, 25), b = rand(10, 25), c = rand(10, 25), d = rand(10, 25);
                 const vals = [a, b, c, d];
@@ -362,4 +362,53 @@ export const generatePracticeQs = (skillId) => {
     }
 
     return qs;
+};
+
+const getQuestionKey = (q) => JSON.stringify({
+    type: q.type,
+    q: q.q || '',
+    statement: q.statement || '',
+    answer: q.answer ?? null,
+    answer2: q.answer2 ?? null,
+    ans: q.ans ?? null,
+    correct: q.correct ?? null,
+    category: q.category || '',
+    emoji: q.emoji || '',
+    rows: q.rows ?? null,
+    perRow: q.perRow ?? null,
+    scene: q.scene || '',
+    sceneCount: q.sceneCount ?? null,
+    perItem: q.perItem || '',
+    table: q.table || null,
+    tableHeaders: q.tableHeaders || null,
+});
+
+export const generatePracticeQs = (skillId, options = {}) => {
+    const { excludeKeys = new Set(), target = 20 } = options;
+    const seen = new Set(excludeKeys);
+    const uniqueQs = [];
+    let attempts = 0;
+
+    while (uniqueQs.length < target && attempts < 50) {
+        const batch = generateQuestionBatch(skillId);
+        batch.forEach(q => {
+            if (uniqueQs.length >= target) return;
+            const key = getQuestionKey(q);
+            if (!seen.has(key)) {
+                seen.add(key);
+                uniqueQs.push(q);
+            }
+        });
+        attempts++;
+    }
+
+    return uniqueQs.slice(0, target);
+};
+
+export const generateQuestionSets = (skillId) => {
+    const practice = generatePracticeQs(skillId, { target: 20 });
+    const practiceKeys = new Set(practice.map(getQuestionKey));
+    const assessment = generatePracticeQs(skillId, { excludeKeys: practiceKeys, target: 20 });
+
+    return { practice, assessment };
 };

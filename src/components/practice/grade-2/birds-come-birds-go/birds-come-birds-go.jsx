@@ -171,14 +171,22 @@ const Grade2BirdsComeBirdsGo = () => {
             { name: 'Pigeons', emoji: '🕊️' }
         ];
 
+        // Helper: pick 3 distinct counts so max/min questions always have a clear answer
+        const getDistinctCounts = () => {
+            const pool = [2, 3, 4, 5, 6, 7].sort(() => 0.5 - Math.random());
+            return [pool[0], pool[1], pool[2]];
+        };
+
         const qs = [];
         for (let i = 0; i < totalQuestions; i++) {
             const useBirds = Math.random() > 0.5;
             const items = (useBirds ? birdPool : fruitPool).sort(() => 0.5 - Math.random()).slice(0, 3);
-            const categories = items.map(it => ({ ...it, count: Math.floor(Math.random() * 6) + 2 }));
+            const counts = getDistinctCounts();
+            const categories = items.map((it, idx) => ({ ...it, count: counts[idx] }));
 
             const target = categories[Math.floor(Math.random() * 3)];
-            const type = Math.random() > 0.5 ? 'max' : 'specific';
+            const rand = Math.random();
+            const type = rand < 0.33 ? 'max' : rand < 0.66 ? 'min' : 'specific';
 
             if (type === 'max') {
                 const maxCat = categories.reduce((p, c) => (c.count > p.count ? c : p));
@@ -190,10 +198,27 @@ const Grade2BirdsComeBirdsGo = () => {
                     visualData: { categories },
                     explanation: `${maxCat.name} has ${maxCat.count} icons, which is the most.`
                 });
+            } else if (type === 'min') {
+                const minCat = categories.reduce((p, c) => (c.count < p.count ? c : p));
+                qs.push({
+                    text: `Look at the pictograph. Which ${useBirds ? 'bird' : 'fruit'} is the least in number?`,
+                    options: categories.map(c => c.name),
+                    correct: minCat.name,
+                    type: 'pictograph',
+                    visualData: { categories },
+                    explanation: `${minCat.name} has only ${minCat.count} icons, which is the least.`
+                });
             } else {
+                const optSet = new Set([String(target.count)]);
+                const offsets = [2, -1, 1, -2, 3];
+                for (const off of offsets) {
+                    if (optSet.size >= 4) break;
+                    const v = target.count + off;
+                    if (v >= 0) optSet.add(String(v));
+                }
                 qs.push({
                     text: `How many ${target.name.toLowerCase()} are shown in the pictograph?`,
-                    options: [String(target.count), String(target.count + 2), String(target.count - 1), '0'].sort(() => 0.5 - Math.random()),
+                    options: [...optSet].sort(() => 0.5 - Math.random()),
                     correct: String(target.count),
                     type: 'pictograph',
                     visualData: { categories },
@@ -207,15 +232,24 @@ const Grade2BirdsComeBirdsGo = () => {
     const generateChartQS = () => {
         const qs = [];
         for (let i = 0; i < totalQuestions; i++) {
+            // Ensure distinct counts so chart comparisons are always valid
+            const countPool = [2, 3, 4, 5, 6, 7, 8, 9].sort(() => 0.5 - Math.random());
             const categories = [
-                { name: 'Blue', count: Math.floor(Math.random() * 8) + 2, color: '#3182CE' },
-                { name: 'Red', count: Math.floor(Math.random() * 8) + 2, color: '#E53E3E' },
-                { name: 'Green', count: Math.floor(Math.random() * 8) + 2, color: '#319795' }
+                { name: 'Blue', count: countPool[0], color: '#3182CE' },
+                { name: 'Red', count: countPool[1], color: '#E53E3E' },
+                { name: 'Green', count: countPool[2], color: '#319795' }
             ];
             const target = categories[Math.floor(Math.random() * 3)];
+            const optSet = new Set([String(target.count)]);
+            const offsets = [1, -1, 2, -2, 3];
+            for (const off of offsets) {
+                if (optSet.size >= 4) break;
+                const v = target.count + off;
+                if (v >= 0) optSet.add(String(v));
+            }
             qs.push({
                 text: `According to the chart, what is the count for the ${target.name} team?`,
-                options: categories.map(c => String(c.count)).concat([String(Math.floor(Math.random() * 15) + 10)]).sort(() => 0.5 - Math.random()),
+                options: [...optSet].sort(() => 0.5 - Math.random()),
                 correct: String(target.count),
                 type: 'chart',
                 visualData: { categories, unit: 'Team Score' },

@@ -1,6 +1,7 @@
 export const SKILLS = [
     {
         id: 'tangent-basics',
+        nodeId: 'a4101010-0001-0000-0000-000000000000',
         title: 'Lines and Circles Interaction',
         subtitle: 'Secants and Tangents',
         desc: 'Understand the difference between non-intersecting lines, secants, and tangents.',
@@ -52,6 +53,7 @@ The tangent is a special case of the secant when the two end points of its corre
     },
     {
         id: 'tangent-perpendicularity',
+        nodeId: 'a4101010-0002-0000-0000-000000000000',
         title: 'Tangent Perpendicularity Theorem',
         subtitle: 'Radius Meets Tangent',
         desc: 'Learn the fundamental property that a tangent is perpendicular to the radius at the point of contact.',
@@ -101,6 +103,7 @@ Because the shortest distance from a point to a line is the perpendicular distan
     },
     {
         id: 'number-of-tangents',
+        nodeId: 'a4101010-0003-0000-0000-000000000000',
         title: 'Number of Tangents from a Point',
         subtitle: 'Inside, On, or Outside',
         desc: 'Determine how many tangents can be drawn depending on where a point is located relative to the circle.',
@@ -150,7 +153,7 @@ Because the shortest distance from a point to a line is the perpendicular distan
     },
     {
         id: 'lengths-of-tangents',
-        title: 'Lengths of Tangents from an External Point',
+        nodeId: 'a4101010-0004-0000-0000-000000000000',
         title: 'Equal Tangents Theorem',
         subtitle: 'Symmetry in Action',
         desc: 'Master the rule that tangents drawn from the same external point to a circle are equal in length.',
@@ -200,6 +203,7 @@ This happens because the two right triangles formed by the center, the external 
     },
     {
         id: 'angle-properties',
+        nodeId: 'a4101010-0005-0000-0000-000000000000',
         title: 'Angle Properties of Tangents',
         subtitle: 'The $180^\\circ$ Connection',
         desc: 'Understand the relationship between the angle formed by two tangents and the angle at the center.',
@@ -251,6 +255,7 @@ Therefore, <b>the central angle and the external angle are supplementary.</b>`,
     },
     {
         id: 'circumscribed-polygons',
+        nodeId: 'a4101010-0006-0000-0000-000000000000',
         title: 'Circumscribed Polygons',
         subtitle: 'Circles Inside Shapes',
         desc: 'Solve problems where a circle is completely bounded by a polygon whose sides are all tangents.',
@@ -301,6 +306,7 @@ $AB + CD = AD + BC$`,
     },
     {
         id: 'complex-applications',
+        nodeId: 'a4101010-0007-0000-0000-000000000000',
         title: 'Applications and Complex Proofs',
         subtitle: 'Putting it all together',
         desc: 'Combine Pythagoras theorem, similar triangles, and tangent rules to solve advanced circle problems.',

@@ -4,6 +4,7 @@ import Navbar from '../../../components/Navbar';
 import { Loader2, BookOpen, Trophy, Clock, Target, CheckCircle2, XCircle, ArrowLeft, Activity } from 'lucide-react';
 import { api } from '../../../services/api';
 import MathRenderer from '../../../components/MathRenderer';
+import DiagnosisResults from '../../../components/Diagnosis_test/DiagnosisResults';
 
 const StudentDiagnosisResultsPage = () => {
     const navigate = useNavigate();
@@ -126,8 +127,10 @@ const StudentDiagnosisResultsPage = () => {
                             <div key={r.id || idx} className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow">
                                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                                     <div className="flex items-center gap-5">
-                                        <div className="w-16 h-16 rounded-full bg-slate-50 border border-slate-100 flex flex-col items-center justify-center flex-shrink-0 shadow-sm">
-                                            <span className="text-2xl font-bold text-slate-700">{r.score || 0}</span>
+                                        <div className="w-16 h-16 rounded-full bg-slate-50 border border-slate-100 flex flex-col items-center justify-center flex-shrink-0 shadow-sm overflow-hidden">
+                                            <span className="text-xl font-bold text-slate-700 leading-tight">
+                                                {typeof r.score === 'number' ? (r.score % 1 === 0 ? r.score : r.score.toFixed(2)) : (r.score || 0)}
+                                            </span>
                                             <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Score</span>
                                         </div>
                                         <div>
@@ -178,112 +181,22 @@ const StudentDiagnosisResultsPage = () => {
                 </div>
             </div>
 
-            {/* Test Details Modal */}
+            {/* Test Details View */}
             {selectedTest && (
-                <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <div className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[85vh] overflow-hidden flex flex-col">
-                        <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-white relative z-10">
-                            <div>
-                                <h2 className="text-2xl font-bold text-slate-900">Test Performance</h2>
-                                <p className="text-slate-500 font-medium">Grade {selectedTest.grade} Diagnosis • {formatDate(selectedTest.created_at)}</p>
-                            </div>
-                            <button
-                                onClick={() => setSelectedTest(null)}
-                                className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400 hover:text-slate-600"
-                            >
-                                <XCircle size={24} />
-                            </button>
-                        </div>
-
-                        <div className="flex-1 overflow-y-auto p-6 bg-slate-50">
-                            <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-8">
-                                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                                    <div className="w-10 h-10 rounded-full bg-indigo-50 text-indigo-500 flex items-center justify-center mb-3">
-                                        <BookOpen size={20} />
-                                    </div>
-                                    <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Grade</p>
-                                    <p className="text-2xl font-bold text-slate-800">{selectedTest.grade}</p>
-                                </div>
-                                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                                    <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center mb-3">
-                                        <CheckCircle2 size={20} />
-                                    </div>
-                                    <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Correct</p>
-                                    <p className="text-2xl font-bold text-slate-800">{selectedTest.total_correct || selectedTest.score || 0}</p>
-                                </div>
-                                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                                    <div className="w-10 h-10 rounded-full bg-rose-50 text-rose-500 flex items-center justify-center mb-3">
-                                        <XCircle size={20} />
-                                    </div>
-                                    <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Incorrect</p>
-                                    <p className="text-2xl font-bold text-slate-800">{selectedTest.total_wrong || (selectedTest.total_questions - selectedTest.score) || 0}</p>
-                                </div>
-                                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                                    <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center mb-3">
-                                        <Target size={20} />
-                                    </div>
-                                    <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Accuracy</p>
-                                    <p className="text-2xl font-bold text-slate-800">
-                                        {selectedTest.total_questions ? Math.round((selectedTest.score / selectedTest.total_questions) * 100) : 0}%
-                                    </p>
-                                </div>
-                                <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                                    <div className="w-10 h-10 rounded-full bg-purple-50 text-purple-500 flex items-center justify-center mb-3">
-                                        <Clock size={20} />
-                                    </div>
-                                    <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Time Spent</p>
-                                    <p className="text-xl font-bold text-slate-800">{formatTime(selectedTest.time_taken_seconds || 0)}</p>
-                                </div>
-                            </div>
-
-                            <h3 className="text-lg font-bold text-slate-800 mb-4 px-1">Detailed Analysis</h3>
-                            <div className="space-y-3">
-                                {selectedTest.results && Array.isArray(selectedTest.results) && selectedTest.results.length > 0 ? (
-                                    selectedTest.results.map((q, i) => (
-                                        <div key={i} className="p-5 rounded-2xl border border-slate-100 bg-white shadow-sm flex items-start gap-4">
-                                            <div className={`mt-0.5 p-1.5 rounded-full ${q.isCorrect ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'}`}>
-                                                {q.isCorrect ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
-                                            </div>
-                                            <div className="flex-1">
-                                                <div className="text-sm text-slate-800 font-medium mb-3 leading-relaxed">
-                                                    <MathRenderer text={q.question} />
-                                                </div>
-                                                <div className="flex flex-wrap gap-4 text-sm bg-slate-50 p-3 rounded-xl border border-slate-100">
-                                                    <div>
-                                                        <span className="text-slate-400 text-xs uppercase tracking-wider font-bold mb-1 block">Your Answer</span>
-                                                        <span className={`font-semibold ${q.isCorrect ? 'text-emerald-600' : 'text-rose-600'}`}>
-                                                            {q.userAnswer ? <MathRenderer text={q.userAnswer.toString()} /> : 'Skipped'}
-                                                        </span>
-                                                    </div>
-                                                    {!q.isCorrect && (
-                                                        <div>
-                                                            <span className="text-slate-400 text-xs uppercase tracking-wider font-bold mb-1 block">Correct Answer</span>
-                                                            <span className="text-emerald-600 font-semibold">
-                                                                <MathRenderer text={q.correctAnswer?.toString() || ''} />
-                                                            </span>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <div className="bg-white p-8 rounded-2xl border border-slate-100 text-center shadow-sm">
-                                        <p className="text-slate-500 font-medium">Detailed question breakdown is not available for this legacy test.</p>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="p-5 border-t border-slate-100 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-10">
-                            <button
-                                onClick={() => setSelectedTest(null)}
-                                className="w-full py-3.5 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-colors shadow-sm"
-                            >
-                                Close Details
-                            </button>
-                        </div>
-                    </div>
+                <div className="fixed inset-0 bg-slate-50 z-[1100] overflow-y-auto">
+                    <DiagnosisResults 
+                        results={{
+                            score: selectedTest.score,
+                            total: selectedTest.total_questions,
+                            timeTaken: selectedTest.time_taken_seconds || 0,
+                            questionResults: selectedTest.results || [],
+                            totalWrong: selectedTest.total_wrong,
+                            totalPartial: selectedTest.total_partial
+                        }}
+                        grade={selectedTest.grade}
+                        isAdmin={true}
+                        onClose={() => setSelectedTest(null)}
+                    />
                 </div>
             )}
         </div>

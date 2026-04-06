@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SKILLS } from './CoordinateGeometrySkillsData';
 import '../../CoordinateGeometryBranch.css';
 import MathRenderer from '../../../../../MathRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 export default function CoordinateGeometrySkills() {
     const navigate = useNavigate();
@@ -247,9 +248,19 @@ function PracticeView({ skill, onAssess }) {
     const [finished, setFinished] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
 
+    const { startSession, logAnswer, finishSession: finishV4Session } = useSessionLogger();
+    const v4Answers = useRef([]);
+
     const questions = skill.practice;
     const q = questions[current];
     const color = skill.color;
+
+    // Start v4 session on mount
+    useEffect(() => {
+        startSession({ nodeId: skill.nodeId, sessionType: 'practice' });
+        v4Answers.current = [];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [skill.nodeId]);
 
     // Timer logic
     useEffect(() => {
@@ -268,22 +279,27 @@ function PracticeView({ skill, onAssess }) {
     const handleSelect = (optIdx) => {
         if (finished || selected !== null) return; // Lock after selection in practice
 
+        const isRight = optIdx === q.correct;
         setSelected(optIdx);
         setResponses(prev => ({
             ...prev,
-            [current]: {
-                selected: optIdx,
-                isCorrect: optIdx === q.correct
-            }
+            [current]: { selected: optIdx, isCorrect: isRight }
         }));
+        // v4 log
+        const v4Entry = { question_index: current + 1, answer_json: { selected: optIdx }, is_correct: isRight ? 1.0 : 0.0, marks_awarded: isRight ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+        v4Answers.current[current] = v4Entry;
+        logAnswer({ questionIndex: v4Entry.question_index, answerJson: v4Entry.answer_json, isCorrect: v4Entry.is_correct });
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (current + 1 < questions.length) {
             const nextIdx = current + 1;
             setCurrent(nextIdx);
             setSelected(responses[nextIdx]?.selected ?? null);
         } else {
+            // v4 finish
+            const payload = v4Answers.current.filter(Boolean);
+            await finishV4Session({ totalQuestions: questions.length, questionsAnswered: payload.length, answersPayload: payload });
             setFinished(true);
         }
     };
@@ -302,6 +318,8 @@ function PracticeView({ skill, onAssess }) {
         setResponses({});
         setFinished(false);
         setTimeElapsed(0);
+        startSession({ nodeId: skill.nodeId, sessionType: 'practice' });
+        v4Answers.current = [];
     };
 
     if (finished) {
@@ -487,9 +505,19 @@ function AssessView({ skill, onComplete }) {
     const [finished, setFinished] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
 
+    const { startSession, logAnswer, finishSession: finishV4Session } = useSessionLogger();
+    const v4Answers = useRef([]);
+
     const questions = skill.assessment;
     const q = questions[qIdx];
     const color = 'var(--rn-indigo)';
+
+    // Start v4 session on mount
+    useEffect(() => {
+        startSession({ nodeId: skill.nodeId, sessionType: 'assessment' });
+        v4Answers.current = [];
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [skill.nodeId]);
 
     // Timer logic
     useEffect(() => {
@@ -507,22 +535,27 @@ function AssessView({ skill, onComplete }) {
 
     const handleSelect = (optIdx) => {
         if (finished) return;
+        const isRight = optIdx === q.correct;
         setSelected(optIdx);
         setResponses(prev => ({
             ...prev,
-            [qIdx]: {
-                selected: optIdx,
-                isCorrect: optIdx === q.correct
-            }
+            [qIdx]: { selected: optIdx, isCorrect: isRight }
         }));
+        // v4 log
+        const v4Entry = { question_index: qIdx + 1, answer_json: { selected: optIdx }, is_correct: isRight ? 1.0 : 0.0, marks_awarded: isRight ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+        v4Answers.current[qIdx] = v4Entry;
+        logAnswer({ questionIndex: v4Entry.question_index, answerJson: v4Entry.answer_json, isCorrect: v4Entry.is_correct });
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (qIdx + 1 < questions.length) {
             const nextIdx = qIdx + 1;
             setQIdx(nextIdx);
             setSelected(responses[nextIdx]?.selected ?? null);
         } else {
+            // v4 finish
+            const payload = v4Answers.current.filter(Boolean);
+            await finishV4Session({ totalQuestions: questions.length, questionsAnswered: payload.length, answersPayload: payload });
             setFinished(true);
         }
     };

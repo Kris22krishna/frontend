@@ -105,19 +105,26 @@ export function useSessionLogger() {
   const finishSession = useCallback(async (params) => {
     const {
       totalQuestions,
+      total_questions,
       questionsAnswered,
+      questions_answered,
       answersPayload,
+      answers_payload,
       totalScore,        // optional fallback
       retainTempRows = false,
       status = 'completed',
     } = params;
+
+    const tQty = totalQuestions ?? total_questions ?? 0;
+    const qAns = questionsAnswered ?? questions_answered;
+    const aPayload = answersPayload ?? answers_payload;
 
     const s = sessionRef.current;
     if (!s || logginRef.current) return null;
     logginRef.current = true;
 
     try {
-      let finalAnswers = answersPayload || [];
+      let finalAnswers = aPayload || [];
 
       // Fallback: fetch from temp if payload missing
       if (finalAnswers.length === 0) {
@@ -146,7 +153,7 @@ export function useSessionLogger() {
           answer_json: { summary: true },
           is_correct: 1.0, 
           marks_awarded: totalScore,
-          marks_possible: totalQuestions || totalScore,
+          marks_possible: tQty || totalScore,
           time_taken_ms: 0
         }];
       }
@@ -181,8 +188,8 @@ export function useSessionLogger() {
         node_id:              s.nodeId,
         session_type:         s.sessionType,
         status,
-        total_questions:      totalQuestions,
-        questions_answered:   questionsAnswered ?? finalAnswers.length,
+        total_questions:      tQty,
+        questions_answered:   qAns ?? finalAnswers.length,
         total_marks_awarded:  totalMarksAwarded,
         total_marks_possible: totalMarksPossible,
         accuracy_pct:         accuracyPct,

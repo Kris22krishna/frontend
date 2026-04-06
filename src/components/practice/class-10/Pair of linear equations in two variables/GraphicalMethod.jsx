@@ -8,7 +8,10 @@ import ExplanationModal from '../../../ExplanationModal';
 import PracticeReportModal from '../../PracticeReportModal';
 import { api } from '../../../../services/api';
 import InteractiveGraph from '../../../InteractiveGraph'; // Keep this from original
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import '../TenthPracticeSession.css';
+
+const NODE_ID = 'a4101003-0002-0000-0000-000000000000'; // Solve a pair of linear equations by graphing
 
 const GraphicalMethod = () => {
     const navigate = useNavigate();
@@ -37,7 +40,8 @@ const GraphicalMethod = () => {
     const graphSize = isMobile ? Math.min(windowWidth - 80, 350) : 480;
 
     // Logging states
-    const [sessionId, setSessionId] = useState(null);
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const v4Answers = useRef([]);
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
@@ -289,12 +293,9 @@ const GraphicalMethod = () => {
 
     const CORRECT_MESSAGES = ["Good job!", "Excellent!", "Perfect!", "Well done!"];
     useEffect(() => {
-        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId && !sessionId) {
-            api.createPracticeSession(String(userId).includes("-") ? 1 : parseInt(userId, 10), SKILL_ID).then(sess => {
-                if (sess && sess.session_id) setSessionId(sess.session_id);
-            });
-        }
+        startSession({ nodeId: NODE_ID, sessionType: 'practice' });
+        v4Answers.current = [];
+
         let timer;
         if (!showReportModal) {
             timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
@@ -372,11 +373,28 @@ const GraphicalMethod = () => {
             let t = accumulatedTime.current;
             if (isTabActive.current) t += Date.now() - questionStartTime.current;
             const sec = Math.max(0, Math.round(t / 1000));
+
+            // v4 Log
+            const entry = {
+                question_index: qIndex + 1,
+                answer_json: { answer: answerToLog },
+                is_correct: isRight ? 1.0 : 0.0,
+                marks_awarded: isRight ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: t
+            };
+            v4Answers.current[qIndex] = entry;
+            logAnswer({
+                questionIndex: entry.question_index,
+                answerJson: entry.answer_json,
+                isCorrect: entry.is_correct
+            });
+
             api.recordAttempt({
                 difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard',
-                user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10), session_id: sessionId, skill_id: SKILL_ID,
+                user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10), session_id: null, skill_id: SKILL_ID,
                 question_text: currentQ.text, correct_answer: currentQ.correctAnswer,
-                student_answer: answerToLog, is_correct: isRight, solution_text: currentQ.solution,
+                student_answer: String(answerToLog), is_correct: isRight, solution_text: currentQ.solution,
                 time_spent_seconds: sec
             }).catch(console.error);
         }
@@ -396,7 +414,13 @@ const GraphicalMethod = () => {
             accumulatedTime.current = 0;
             questionStartTime.current = Date.now();
         } else {
-            if (sessionId) await api.finishSession(sessionId).catch(console.error);
+            // v4 finish
+            const payload = v4Answers.current.filter(Boolean);
+            await finishSession({
+                totalQuestions: questions.length,
+                questionsAnswered: payload.length,
+                answersPayload: payload
+            });
             const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (userId) {
                 const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;

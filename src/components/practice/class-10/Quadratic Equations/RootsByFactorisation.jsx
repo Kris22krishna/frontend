@@ -6,7 +6,8 @@ import { LatexText } from '../../../LatexText';
 import mascotImg from '../../../../assets/mascot.png';
 import ExplanationModal from '../../../ExplanationModal';
 import PracticeReportModal from '../../PracticeReportModal';
-import { api } from '../../../../services/api';
+import { useSessionLogger } from "@/hooks/useSessionLogger";
+import { NODE_IDS } from "@/lib/curriculumIds";
 import '../TenthPracticeSession.css';
 
 const RootsByFactorisation = () => {
@@ -22,14 +23,15 @@ const RootsByFactorisation = () => {
     const [feedbackMessage, setFeedbackMessage] = useState("");
     const [questions, setQuestions] = useState([]);
 
-    const [sessionId, setSessionId] = useState(null);
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const nodeId = NODE_IDS.g10MathQuadraticFactorisation;
+    const SKILL_ID = 1123;
+    const sessionType = "practice";
+    const [answers, setAnswers] = useState({});
+
+    // Time tracking refs
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
-    const isTabActive = useRef(true);
-
-    const SKILL_ID = 1123; // Finding Roots by Factorisation
-    const SKILL_NAME = "Finding Roots by Factorisation";
-    const [answers, setAnswers] = useState({});
 
     const generateQuestions = () => {
         const newQuestions = [];
@@ -129,18 +131,13 @@ Roots: $-\\dfrac{5}{\\sqrt{2}}, -\\sqrt{2}$.`
 
     const CORRECT_MESSAGES = ["Good job!", "Excellent!", "Perfect!", "Well done!"];
     useEffect(() => {
-        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId && !sessionId) {
-            api.createPracticeSession(String(userId).includes("-") ? 1 : parseInt(userId, 10), SKILL_ID).then(sess => {
-                if (sess && sess.session_id) setSessionId(sess.session_id);
-            });
-        }
+        startSession({ nodeId, sessionType });
         let timer;
         if (!showReportModal) {
             timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
         }
         return () => clearInterval(timer);
-    }, [SKILL_ID, showReportModal]);
+    }, [nodeId, showReportModal]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -164,19 +161,16 @@ Roots: $-\\dfrac{5}{\\sqrt{2}}, -\\sqrt{2}$.`
             }
         }));
 
-        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId) {
-            let t = accumulatedTime.current;
-            if (isTabActive.current) t += Date.now() - questionStartTime.current;
-            const sec = Math.max(0, Math.round(t / 1000));
-            api.recordAttempt({
-                difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard',
-                user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10), session_id: sessionId, skill_id: SKILL_ID,
-                question_text: currentQ.text, correct_answer: currentQ.correctAnswer,
-                student_answer: selectedOption, is_correct: isRight, solution_text: currentQ.solution,
-                time_spent_seconds: sec
-            }).catch(console.error);
-        }
+        logAnswer({
+            question_index: qIndex,
+            answer_json: {
+                question_text: currentQ.text,
+                selected_option: selectedOption,
+                correct_answer: currentQ.correctAnswer,
+                difficulty: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard'
+            },
+            is_correct: isRight ? 1 : 0
+        });
     };
 
     const handleNext = async () => {
@@ -185,25 +179,11 @@ Roots: $-\\dfrac{5}{\\sqrt{2}}, -\\sqrt{2}$.`
             accumulatedTime.current = 0;
             questionStartTime.current = Date.now();
         } else {
-            if (sessionId) await api.finishSession(sessionId).catch(console.error);
-            const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            if (userId) {
-                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
-                await api.createReport({
-                    title: SKILL_NAME,
-                    type: 'practice',
-                    score: (totalCorrect / questions.length) * 100,
-                    parameters: {
-                        skill_id: SKILL_ID,
-                        skill_name: SKILL_NAME,
-                        total_questions: questions.length,
-                        correct_answers: totalCorrect,
-                        timestamp: new Date().toISOString(),
-                        time_taken_seconds: timeElapsed
-                    },
-                    user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10)
-                }).catch(console.error);
-            }
+            finishSession({
+                totalQuestions: questions.length,
+                questionsAnswered: Object.keys(answers).length,
+                answersPayload: answers
+            });
             setShowReportModal(true);
         }
     };
@@ -223,7 +203,7 @@ Roots: $-\\dfrac{5}{\\sqrt{2}}, -\\sqrt{2}$.`
         <div className="junior-practice-page" style={{ fontFamily: '"Open Sans", sans-serif' }}>
             <header className="junior-practice-header" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto minmax(0, 1fr)', alignItems: 'center', padding: '0 2rem', gap: '1rem' }}>
                 <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#31326F', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {SKILL_NAME}
+                    Roots by Factorisation
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 sm:px-6 sm:py-2 rounded-full border-2 border-[#4FB7B3]/30 text-[#31326F] font-black text-sm sm:text-xl shadow-lg whitespace-nowrap">

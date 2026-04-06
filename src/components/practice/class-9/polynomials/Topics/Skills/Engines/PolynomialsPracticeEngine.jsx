@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../../../polynomials_grade_9.css';
 import { LatexText } from '../../../../../../LatexText';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 // Fisher-Yates sample
 function sample(arr, n) {
@@ -12,8 +13,9 @@ function sample(arr, n) {
     return copy.slice(0, n);
 }
 
-// Receives: questionPool (full array), sampleSize, title, color, onBack
-export default function PolynomialsPracticeEngine({ questionPool, sampleSize = 20, title, color, onBack }) {
+// Receives: questionPool (full array), sampleSize, title, color, onBack, nodeId
+export default function PolynomialsPracticeEngine({ questionPool, sampleSize = 20, title, color, onBack, nodeId }) {
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
     const [questions, setQuestions] = useState(() => sample(questionPool, sampleSize));
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);       // for mcq/multiStep/truefalse
@@ -23,6 +25,11 @@ export default function PolynomialsPracticeEngine({ questionPool, sampleSize = 2
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
     const [timeTaken, setTimeTaken] = useState(0);
+    const [answers, setAnswers] = useState({}); // Keep track of answers for payload
+
+    useEffect(() => {
+        startSession({ nodeId, sessionType: 'practice' });
+    }, [nodeId, startSession]);
 
     useEffect(() => {
         if (finished) return;
@@ -42,30 +49,62 @@ export default function PolynomialsPracticeEngine({ questionPool, sampleSize = 2
     const isMCQ = q.type === 'mcq' || q.type === 'multiStep';
     const progress = ((current + (finished ? 1 : 0)) / questions.length) * 100;
 
+    const recordLocalAnswer = (isRight, response) => {
+        const currentQ = questions[current];
+        const newAnswers = {
+            ...answers,
+            [current]: { selectedOption: response, isCorrect: isRight }
+        };
+        setAnswers(newAnswers);
+
+        logAnswer({
+            question_index: current,
+            answer_json: {
+                question_text: currentQ.question,
+                selected_option: response,
+                correct_answer: isFill ? currentQ.correctValue : currentQ.options[currentQ.correct],
+                difficulty: 'Medium' // Engines don't have explicit difficulty, defaulting to Medium
+            },
+            is_correct: isRight ? 1 : 0
+        });
+    };
+
     const handleSelect = (idx) => {
         if (answered) return;
+        const isRight = idx === q.correct;
         setSelected(idx);
         setAnswered(true);
-        if (idx === q.correct) setScore((s) => s + 1);
+        if (isRight) setScore((s) => s + 1);
+        recordLocalAnswer(isRight, q.options[idx]);
     };
 
     const handleFillSubmit = () => {
         if (answered) return;
         const userNum = parseFloat(fillValue);
-        const isCorrect = !isNaN(userNum) && Math.abs(userNum - q.correctValue) < 0.1;
-        setFillCorrect(isCorrect);
+        const isRight = !isNaN(userNum) && Math.abs(userNum - q.correctValue) < 0.1;
+        setFillCorrect(isRight);
         setAnswered(true);
-        if (isCorrect) setScore((s) => s + 1);
+        if (isRight) setScore((s) => s + 1);
+        recordLocalAnswer(isRight, fillValue);
     };
 
     const handleNext = () => {
-        if (current + 1 >= questions.length) { setFinished(true); }
+        if (current + 1 >= questions.length) { 
+            finishSession({
+                totalQuestions: questions.length,
+                questionsAnswered: Object.keys(answers).length,
+                answersPayload: answers
+            });
+            setFinished(true); 
+        }
         else { setCurrent((c) => c + 1); setSelected(null); setFillValue(''); setAnswered(false); setFillCorrect(false); }
     };
 
     const handleRetry = () => {
         setQuestions(sample(questionPool, sampleSize));
         setCurrent(0); setSelected(null); setFillValue(''); setAnswered(false); setFillCorrect(false); setScore(0); setFinished(false); setTimeTaken(0);
+        setAnswers({});
+        startSession({ nodeId, sessionType: 'practice' });
     };
 
     // ── FINISHED SCREEN ──────────────────────────────────────────────────────

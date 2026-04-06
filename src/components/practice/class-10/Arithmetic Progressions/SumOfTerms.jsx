@@ -6,6 +6,7 @@ import { LatexText } from '../../../LatexText';
 import ExplanationModal from '../../../ExplanationModal';
 import PracticeReportModal from '../../PracticeReportModal';
 import { api } from '../../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import '../TenthPracticeSession.css';
 
 const SumOfTerms = () => {
@@ -27,6 +28,9 @@ const SumOfTerms = () => {
     const isTabActive = useRef(true);
 
     const SKILL_ID = 1109; // Finding the Sum of Terms of an AP
+    const NODE_ID = 'a4101005-0005-0000-0000-000000000000';
+    const { startSession, logAnswer, finishSession: finishV4Session } = useSessionLogger();
+    const v4Answers = useRef([]);
     const SKILL_NAME = "Finding the Sum of Terms of an AP";
     const [answers, setAnswers] = useState({});
 
@@ -253,6 +257,8 @@ const SumOfTerms = () => {
             api.createPracticeSession(String(userId).includes("-") ? 1 : parseInt(userId, 10), SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
+            startSession({ nodeId: NODE_ID, sessionType: 'practice' });
+            v4Answers.current = [];
         }
         let timer;
         if (!showReportModal) {
@@ -296,6 +302,10 @@ const SumOfTerms = () => {
                 time_spent_seconds: sec
             }).catch(console.error);
         }
+        // v4 log
+        const v4Entry = { question_index: qIndex + 1, answer_json: { selected: selectedOption }, is_correct: isRight ? 1.0 : 0.0, marks_awarded: isRight ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+        v4Answers.current.push(v4Entry);
+        logAnswer({ questionIndex: v4Entry.question_index, answerJson: v4Entry.answer_json, isCorrect: v4Entry.is_correct });
     };
 
     const handlePrevious = () => {
@@ -331,6 +341,8 @@ const SumOfTerms = () => {
                     user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10)
                 }).catch(console.error);
             }
+            // v4 finish
+            await finishV4Session({ totalQuestions: questions.length, questionsAnswered: v4Answers.current.length, answersPayload: v4Answers.current });
             setShowReportModal(true);
         }
     };

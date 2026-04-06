@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Timer, Star, ChevronLeft, RefreshCw, FileText, Check, X, Eye, ChevronRight, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../../../../contexts/AuthContext';
-import { api } from '../../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 import Navbar from '../../../Navbar';
 import { TOPIC_CONFIGS } from '../../../../lib/topicConfig';
 import { LatexText } from '../../../LatexText';
@@ -20,9 +20,9 @@ const DynamicVisual = ({ type, data }) => {
             <motion.div initial={{ scale: 0.5, rotate: -10 }} animate={{ scale: 1, rotate: 0 }} className="g1-visual-item flex justify-center w-full">
                 <svg width="100%" height="auto" style={{ maxWidth: '300px', maxHeight: '300px', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }} viewBox="0 0 100 100">
                     {shape === 'circle' && <circle cx="50" cy="50" r="42" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
-                    {shape === 'square' && <rect x="8" y="8" width="84" height="84" rx="15" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
+                    {shape === 'square' && <rect x="8" y="8" width="84" height="84" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
                     {shape === 'triangle' && <polygon points="50,5 95,90 5,90" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
-                    {shape === 'rectangle' && <rect x="5" y="25" width="90" height="50" rx="12" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
+                    {shape === 'rectangle' && <rect x="5" y="25" width="90" height="50" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
                     {shape === 'oval' && <ellipse cx="50" cy="50" rx="45" ry="30" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
                 </svg>
             </motion.div>
@@ -103,10 +103,16 @@ const DynamicVisual = ({ type, data }) => {
     return null;
 };
 
+const SKILL_ID_MAP = {
+    '1001': NODE_IDS.g2MathLongRoundShapes,
+    '1002': NODE_IDS.g2MathLongRoundComparison,
+    '1003': NODE_IDS.g2MathLongRoundClassification,
+};
+
 const Grade2WhatIsLong = () => {
-    const { user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
 
     const queryParams = new URLSearchParams(location.search);
     const skillId = queryParams.get('skillId');
@@ -190,7 +196,7 @@ const Grade2WhatIsLong = () => {
             const otherOptions = shapes.filter(s => s !== target);
             questions.push({
                 text: `Identify this 2D shape!`,
-                options: [target, ...otherOptions.sort(() => 0.5 - Math.random()).slice(0, 2)].sort(() => 0.5 - Math.random()),
+                options: [target, ...otherOptions.sort(() => 0.5 - Math.random()).slice(0, 3)].sort(() => 0.5 - Math.random()),
                 correct: target,
                 type: 'shape',
                 visualData: { shape: target, color: colors[i % colors.length] },
@@ -304,19 +310,11 @@ const Grade2WhatIsLong = () => {
     };
 
     useEffect(() => {
-        const init = async () => {
-            const userId = user?.user_id || user?.id;
-            if (!userId) return;
-            const qs = generateQuestions(skillId);
-            setSessionQuestions(qs);
-            try {
-                const parsedSkillId = parseInt(skillId) || 0;
-                const session = await api.createPracticeSession(userId, parsedSkillId);
-                setSessionId(session?.session_id);
-            } catch (e) { console.error(e); }
-        };
-        init();
-    }, [user, skillId]);
+        const qs = generateQuestions(skillId);
+        setSessionQuestions(qs);
+        const nodeId = SKILL_ID_MAP[skillId] || NODE_IDS.g2MathLongRoundMixed;
+        startSession({ nodeId, sessionType: isTest ? 'assessment' : 'practice' });
+    }, [skillId, isTest, startSession]);
 
     useEffect(() => {
         let interval;
@@ -341,13 +339,6 @@ const Grade2WhatIsLong = () => {
     }, [qIndex, answers]);
 
     const handleExit = async () => {
-        try {
-            if (sessionId) {
-                await api.finishSession(sessionId);
-            }
-        } catch (e) {
-            console.error("Error finishing session:", e);
-        }
         navigate('/junior/grade/2');
     };
 
@@ -359,55 +350,42 @@ const Grade2WhatIsLong = () => {
     const handleSubmit = () => {
         if (isAnswered || selectedOption === null) return;
         const option = selectedOption;
+        const currentQ = sessionQuestions[qIndex];
+        const isCorrect = option === currentQ.correct;
 
         setIsAnswered(true);
-        const isCorrect = option === sessionQuestions[qIndex].correct;
+        if (isCorrect) setScore(s => s + 1);
 
-        // Auto-log
-        try {
-            const uid = user?.user_id || user?.id || sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            const qData = sessionQuestions[qIndex] || {};
-            const skId = typeof skillId !== 'undefined' ? skillId : '0';
-            const currentTimer = typeof timer !== 'undefined' ? timer : 0;
+        const answerData = {
+            question_text: currentQ.text,
+            selected: option,
+            correct: currentQ.correct,
+            isCorrect
+        };
 
-            if (uid && sessionId) {
-                api.recordAttempt({
-                    user_id: parseInt(uid, 10),
-                    session_id: sessionId,
-                    skill_id: parseInt(skId, 10) || 0,
-                    template_id: null,
-                    difficulty_level: 'Medium',
-                    question_text: String(qData.text || ''),
-                    correct_answer: String(qData.correct || qData.correctAnswer || ''),
-                    student_answer: String(option),
-                    is_correct: isCorrect,
-                    solution_text: String(qData.explanation || qData.solution || ''),
-                    time_spent_seconds: currentTimer
-                }).catch(err => console.error("Auto-log failed:", err));
-            }
-        } catch (err) {
-            console.error("Auto-log error:", err);
-        }
-
-        if (isCorrect) {
-            setScore(s => s + 1);
-        }
+        logAnswer({
+            question_index: qIndex,
+            answer_json: answerData,
+            is_correct: isCorrect ? 1 : 0
+        });
 
         setAnswers(prev => ({
             ...prev,
             [qIndex]: {
                 selectedOption: option,
                 isCorrect,
-                type: sessionQuestions[qIndex].type,
-                visualData: sessionQuestions[qIndex].visualData,
-                questionText: sessionQuestions[qIndex].text,
-                correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: sessionQuestions[qIndex].explanation || "Detailed explanation is coming soon! Feel free to ask your teacher for help in the meantime. 💡"
+                type: currentQ.type,
+                visualData: currentQ.visualData,
+                questionText: currentQ.text,
+                correctAnswer: currentQ.correct,
+                explanation: currentQ.explanation || "Detailed explanation is coming soon!"
             }
         }));
 
-        if (!isTest && !isRight) {
+        if (!isTest && !isCorrect) {
             setShowExplanationModal(true);
+        } else if (isTest) {
+            handleNext();
         } else {
             setIsAutoAdvancing(true);
             setTimeout(() => {
@@ -419,16 +397,24 @@ const Grade2WhatIsLong = () => {
 
     const handleSkip = () => {
         if (isAnswered) return;
+        const currentQ = sessionQuestions[qIndex];
+        
+        logAnswer({
+            question_index: qIndex,
+            answer_json: { question_text: currentQ.text, selected: 'Skipped', correct: currentQ.correct, isCorrect: false },
+            is_correct: 0
+        });
+
         setAnswers(prev => ({
             ...prev,
             [qIndex]: {
                 selectedOption: 'Skipped',
                 isCorrect: false,
-                type: sessionQuestions[qIndex].type,
-                visualData: sessionQuestions[qIndex].visualData,
-                questionText: sessionQuestions[qIndex].text,
-                correctAnswer: sessionQuestions[qIndex].correct,
-                explanation: "This question was skipped. " + sessionQuestions[qIndex].explanation
+                type: currentQ.type,
+                visualData: currentQ.visualData,
+                questionText: currentQ.text,
+                correctAnswer: currentQ.correct,
+                explanation: "This question was skipped. " + currentQ.explanation
             }
         }));
         handleNext();
@@ -438,26 +424,12 @@ const Grade2WhatIsLong = () => {
         if (qIndex < totalQuestions - 1) {
             setQIndex(v => v + 1);
         } else {
+            finishSession({
+                totalQuestions,
+                questionsAnswered: Object.keys(answers).length,
+                answersPayload: answers
+            });
             setShowResults(true);
-            try {
-                if (sessionId) {
-                    await api.finishSession(sessionId);
-                    await api.createReport({
-                        uid: user?.id || 'unknown',
-                        category: 'Practice',
-                        reportData: {
-                            skill_id: skillId,
-                            skill_name: skillName,
-                            score: Math.round((score / totalQuestions) * 100),
-                            total_questions: totalQuestions,
-                            correct_answers: score,
-                            time_spent: timer,
-                            timestamp: new Date().toISOString(),
-                            answers: Object.values(answers).filter(a => a !== undefined)
-                        }
-                    });
-                }
-            } catch (e) { console.error(e); }
         }
     };
 
@@ -716,7 +688,7 @@ const Grade2WhatIsLong = () => {
 
                             {!isAnswered ? (
                                 <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={selectedOption === null}>
-                                    Check Answer <ChevronRight size={24} />
+                                    {isTest ? (qIndex === totalQuestions - 1 ? 'Finish Test' : 'Next Question') : 'Check Answer'} <ChevronRight size={24} />
                                 </button>
                             ) : (
                                 <button className="g1-nav-btn next-btn" onClick={handleNext} disabled={isAutoAdvancing}>

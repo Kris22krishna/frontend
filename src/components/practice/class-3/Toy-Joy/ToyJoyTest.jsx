@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Check, ChevronRight, ChevronLeft, Clock } from 'lucide-react';
-import { api } from '../../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 import { LatexText } from '../../../LatexText';
 import '../../../../pages/juniors/grade3/time-goes-ontest.css';
 import mascotImg from '../../../../assets/mascot.png';
@@ -134,24 +135,18 @@ const generateQuestions = () => {
 
 const ToyJoyTest = () => {
     const navigate = useNavigate();
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
     const [qIndex, setQIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [isTestOver, setIsTestOver] = useState(false);
     const [responses, setResponses] = useState({});
     const questionStartTime = useRef(Date.now());
-    const [sessionId, setSessionId] = useState(null);
     const [questions] = useState(generateQuestions());
 
     useEffect(() => {
-        const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        const uid = parseInt(rawUid, 10);
-        if (!isNaN(uid)) {
-            api.createPracticeSession(uid, SKILL_ID).then(sess => {
-                if (sess && sess.session_id) setSessionId(sess.session_id);
-            });
-        }
-    }, []);
+        startSession({ nodeId: NODE_IDS.g3MathToyJoyTest, sessionType: 'assessment' });
+    }, [startSession]);
 
     useEffect(() => {
         if (isTestOver) return;
@@ -159,26 +154,31 @@ const ToyJoyTest = () => {
         return () => clearInterval(timer);
     }, [isTestOver]);
 
-    const handleRecordResponse = () => {
+    const handleRecordResponse = useCallback(() => {
         const currentQ = questions[qIndex];
         const isCorrect = selectedOption ? selectedOption === currentQ.correctAnswer : null;
         const timeSpent = Math.round((Date.now() - questionStartTime.current) / 1000);
         const isSkipped = !selectedOption;
-        const responseData = { selectedOption, isCorrect, timeTaken: (responses[qIndex]?.timeTaken || 0) + timeSpent, isSkipped };
+        
+        const responseData = { 
+            selectedOption, 
+            isCorrect, 
+            timeTaken: (responses[qIndex]?.timeTaken || 0) + timeSpent, 
+            isSkipped 
+        };
         setResponses(prev => ({ ...prev, [qIndex]: responseData }));
-        const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        const uid = parseInt(rawUid, 10);
-        if (!isNaN(uid)) {
-            const attemptData = {
-                user_id: uid, session_id: sessionId, skill_id: SKILL_ID,
-                question_text: currentQ.text, correct_answer: currentQ.correctAnswer,
+
+        logAnswer({
+            question_index: qIndex,
+            answer_json: {
+                question_text: currentQ.text,
                 student_answer: isSkipped ? 'SKIPPED' : selectedOption,
-                is_correct: isSkipped ? false : isCorrect,
-                solution_text: currentQ.solution, time_spent_seconds: timeSpent
-            };
-            api.recordAttempt(attemptData).catch(console.error);
-        }
-    };
+                correct_answer: currentQ.correctAnswer,
+                solution: currentQ.solution,
+            },
+            is_correct: isSkipped ? 0 : (isCorrect ? 1 : 0)
+        });
+    }, [qIndex, questions, responses, selectedOption, logAnswer]);
 
     const navigateToQuestion = (targetIndex) => {
         handleRecordResponse();
@@ -196,20 +196,11 @@ const ToyJoyTest = () => {
 
     const finalizeTest = async () => {
         setIsTestOver(true);
-        if (sessionId) await api.finishSession(sessionId).catch(console.error);
-        const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        const uid = parseInt(rawUid, 10);
-        if (!isNaN(uid)) {
-            const correctCount = Object.values(responses).filter(r => r.isCorrect === true).length;
-            const wrongCount = Object.values(responses).filter(r => r.isCorrect === false && !r.isSkipped).length;
-            const skippedCount = questions.length - correctCount - wrongCount;
-            await api.createReport({
-                title: SKILL_NAME, type: 'practice',
-                score: (correctCount / questions.length) * 100,
-                parameters: { skill_id: SKILL_ID, total_questions: questions.length, correct_answers: correctCount, skipped_questions: skippedCount, time_taken_seconds: timeElapsed },
-                user_id: uid
-            }).catch(console.error);
-        }
+        finishSession({
+            totalQuestions: questions.length,
+            questionsAnswered: Object.keys(responses).length,
+            answersPayload: responses
+        });
     };
 
     const formatTime = (seconds) => {

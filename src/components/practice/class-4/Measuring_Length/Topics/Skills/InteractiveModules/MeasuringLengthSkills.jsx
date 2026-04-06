@@ -115,7 +115,15 @@ function FillBlankQ({ data, color, onHasInput, onAnswer, checkTrigger, saved, is
 
     return (
         <div>
-            <p style={{ fontSize: 20, fontWeight: 700, color: '#0f172a', lineHeight: 1.5, marginBottom: 20 }}>{data.q.replace('___', '▢')}</p>
+            <p style={{ fontSize: 20, fontWeight: 700, color: '#0f172a', lineHeight: 1.5, marginBottom: 20 }}>
+                {data.q.includes('___') ? (
+                    <>
+                        {data.q.split('___')[0]}
+                        <span style={{ display: 'inline-block', fontSize: 34, lineHeight: 1, verticalAlign: 'middle', margin: '0 4px', color: '#64748b' }}>▢</span>
+                        {data.q.split('___').slice(1).join('___')}
+                    </>
+                ) : data.q}
+            </p>
             <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap', marginBottom: 12 }}>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                     <input type="number" value={ans1} onChange={e => setAns1(e.target.value)} disabled={!!result && !isAssessment} style={{ width: 100, padding: '10px 14px', borderRadius: 12, fontSize: 22, fontWeight: 900, border: `2px solid ${result && !isAssessment ? (result === 'correct' ? '#10b981' : '#ef4444') : '#e2e8f0'}`, outline: 'none', fontFamily: 'Outfit, sans-serif', textAlign: 'center' }} />
@@ -165,7 +173,7 @@ function TrueFalseQ({ data, color, onHasInput, onAnswer, checkTrigger, saved, is
                     }
                     return (
                         <button onClick={() => pick(true)} disabled={!!result && !isAssessment} style={{ flex: 1, padding: '20px', borderRadius: 20, border: `3px solid ${bdr}`, background: bg, cursor: result && !isAssessment ? 'default' : 'pointer', transition: 'all 0.2s', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                            <div style={{ fontSize: 32 }}>✅</div>
+                            <div style={{ width: 48, height: 48, borderRadius: '50%', background: result && !isAssessment && data.correct === true ? '#22c55e' : '#e2e8f0', color: result && !isAssessment && data.correct === true ? '#fff' : '#475569', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 900 }}>T</div>
                             <div style={{ fontSize: 16, fontWeight: 800, color: '#16a34a', marginTop: 6 }}>TRUE</div>
                         </button>
                     );
@@ -179,8 +187,8 @@ function TrueFalseQ({ data, color, onHasInput, onAnswer, checkTrigger, saved, is
                     }
                     return (
                         <button onClick={() => pick(false)} disabled={!!result && !isAssessment} style={{ flex: 1, padding: '20px', borderRadius: 20, border: `3px solid ${bdr}`, background: bg, cursor: result && !isAssessment ? 'default' : 'pointer', transition: 'all 0.2s', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                            <div style={{ fontSize: 32 }}>❌</div>
-                            <div style={{ fontSize: 16, fontWeight: 800, color: '#dc2626', marginTop: 6 }}>FALSE</div>
+                            <div style={{ width: 48, height: 48, borderRadius: '50%', background: result && !isAssessment && data.correct === false ? '#22c55e' : '#e2e8f0', color: result && !isAssessment && data.correct === false ? '#fff' : '#475569', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 900 }}>F</div>
+                            <div style={{ fontSize: 16, fontWeight: 800, color: '#475569', marginTop: 6 }}>FALSE</div>
                         </button>
                     );
                 })()}
@@ -627,6 +635,7 @@ function AssessmentPractice({ questions, title, color, onBack, onRetry }) {
     const [score, setScore] = useState(0);
     const [done, setDone] = useState(false);
     const [expandedBreakdown, setExpandedBreakdown] = useState(null);
+    const [submitPrompt, setSubmitPrompt] = useState({ open: false, unanswered: 0 });
 
     // Timer
     const [elapsed, setElapsed] = useState(0);
@@ -690,13 +699,8 @@ function AssessmentPractice({ questions, title, color, onBack, onRetry }) {
     const goNext = () => { accumulateTime(); if (idx + 1 < total) setIdx(i => i + 1); };
     const goPrev = () => { accumulateTime(); if (idx > 0) setIdx(i => i - 1); };
 
-    const handleSubmit = () => {
-        const notAnswered = qStates.filter(s => !s.answered).length;
-        if (notAnswered > 0) {
-            if (!window.confirm(`You have ${notAnswered} unanswered questions. Are you sure you want to submit?`)) return;
-        } else {
-            if (!window.confirm("Are you sure you want to submit the assessment?")) return;
-        }
+    const confirmSubmit = () => {
+        setSubmitPrompt({ open: false, unanswered: 0 });
         accumulateTime();
         let s = 0;
         questions.forEach((q, i) => {
@@ -707,6 +711,11 @@ function AssessmentPractice({ questions, title, color, onBack, onRetry }) {
         });
         setScore(s);
         setDone(true);
+    };
+
+    const handleSubmit = () => {
+        const notAnswered = qStates.filter(s => !s.answered).length;
+        setSubmitPrompt({ open: true, unanswered: notAnswered });
     };
 
     if (done) {
@@ -743,6 +752,7 @@ function AssessmentPractice({ questions, title, color, onBack, onRetry }) {
                         const statusBg = status === 'Correct' ? '#dcfce7' : status === 'Incorrect' ? '#fee2e2' : '#f1f5f9';
                         const isExpanded = expandedBreakdown === i;
                         const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
+                        const questionText = q.q || q.statement || 'Question text unavailable';
 
                         return (
                             <div key={i} style={{ border: '2px solid #f1f5f9', borderRadius: 16, padding: '20px 24px', background: '#fafafa' }}>
@@ -751,7 +761,7 @@ function AssessmentPractice({ questions, title, color, onBack, onRetry }) {
                                     <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
                                         <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 14, color: '#475569', flexShrink: 0, marginTop: 2 }}>{i + 1}</div>
                                         <div style={{ fontSize: 16, fontWeight: 700, color: '#0f172a', lineHeight: 1.5 }}>
-                                            {q.q}
+                                            {questionText}
                                             {q.type === 'fill_blank' && <span style={{ color: '#64748b', fontWeight: 600 }}> (Answer: {q.answer}{q.twoAnswers ? `, R ${q.answer2}` : ''})</span>}
                                         </div>
                                     </div>
@@ -797,9 +807,10 @@ function AssessmentPractice({ questions, title, color, onBack, onRetry }) {
                                             let bg = '#fff', bdr = '#e2e8f0';
                                             if (isAns) { bg = '#f0fdf4'; bdr = '#22c55e'; }
                                             else if (wasUserPick) { bg = '#fef2f2'; bdr = '#fca5a5'; }
+                                            const label = val ? 'TRUE' : 'FALSE';
                                             return (
                                                 <div key={String(val)} style={{ flex: 1, padding: '10px', borderRadius: 12, border: `2px solid ${bdr}`, background: bg, textAlign: 'center', fontWeight: 800, fontSize: 14, color: isAns ? '#166534' : '#64748b' }}>
-                                                    {val ? '✅ TRUE' : '❌ FALSE'} {isAns && <span style={{ color: '#22c55e' }}>✓</span>}
+                                                    {label} {isAns && <span style={{ color: '#22c55e' }}>✓</span>}
                                                 </div>
                                             );
                                         })}
@@ -833,6 +844,7 @@ function AssessmentPractice({ questions, title, color, onBack, onRetry }) {
     }
 
     return (
+        <>
         <div style={{ display: 'flex', gap: 20, alignItems: 'stretch', maxWidth: 1100, margin: '0 auto', height: 'calc(100vh - 120px)' }}>
             {/* Left Pane: Question Area */}
             <div style={{ flex: '1 1 600px', background: '#fff', borderRadius: 24, padding: '28px 32px', boxShadow: '0 8px 30px rgba(0,0,0,0.04)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
@@ -924,6 +936,34 @@ function AssessmentPractice({ questions, title, color, onBack, onRetry }) {
                 </div>
             </div>
         </div>
+        {submitPrompt.open && (
+            <div style={{ position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24, zIndex: 1000 }}>
+                <div style={{ width: '100%', maxWidth: 460, background: '#fff', borderRadius: 24, padding: '28px 24px', boxShadow: '0 24px 60px rgba(15, 23, 42, 0.24)' }}>
+                    <div style={{ width: 56, height: 56, borderRadius: '50%', background: '#fee2e2', color: '#dc2626', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, marginBottom: 16 }}>?</div>
+                    <h3 style={{ margin: '0 0 10px', fontSize: 24, fontWeight: 900, color: '#0f172a', fontFamily: 'Outfit, sans-serif' }}>Submit assessment?</h3>
+                    <p style={{ margin: '0 0 20px', fontSize: 15, lineHeight: 1.6, color: '#475569' }}>
+                        {submitPrompt.unanswered > 0
+                            ? `You still have ${submitPrompt.unanswered} unanswered ${submitPrompt.unanswered === 1 ? 'question' : 'questions'}. Do you want to submit anyway?`
+                            : 'Please make sure you are ready. Once you submit, your assessment will be scored.'}
+                    </p>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
+                        <button
+                            onClick={() => setSubmitPrompt({ open: false, unanswered: 0 })}
+                            style={{ padding: '12px 18px', borderRadius: 999, border: '2px solid #e2e8f0', background: '#fff', color: '#475569', fontWeight: 800, cursor: 'pointer' }}
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={confirmSubmit}
+                            style={{ padding: '12px 18px', borderRadius: 999, border: 'none', background: '#ef4444', color: '#fff', fontWeight: 800, cursor: 'pointer', boxShadow: '0 10px 24px rgba(239, 68, 68, 0.25)' }}
+                        >
+                            Yes, submit
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )}
+        </>
     );
 }
 

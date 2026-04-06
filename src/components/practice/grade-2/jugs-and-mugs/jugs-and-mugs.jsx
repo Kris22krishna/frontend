@@ -166,7 +166,7 @@ const Grade2JugsAndMugs = () => {
             const cB = isSwapped ? pair.a : pair.b;
             const bigger = cA.capacity > cB.capacity ? cA : cB;
             const smaller = cA.capacity < cB.capacity ? cA : cB;
-            questions.push({ text: askingMore ? `Which holds MORE water? 💧` : `Which holds LESS water? 💧`, options: [cA.name, cB.name], correct: askingMore ? bigger.name : smaller.name, type: 'capacity-compare', visualData: { containerA: cA, containerB: cB }, explanation: askingMore ? `A ${bigger.name} ${bigger.emoji} holds more water because it is bigger than a ${smaller.name} ${smaller.emoji}.` : `A ${smaller.name} ${smaller.emoji} holds less water because it is smaller than a ${bigger.name} ${bigger.emoji}.` });
+            questions.push({ text: askingMore ? `Which holds MORE water?` : `Which holds LESS water?`, options: [cA.name, cB.name], correct: askingMore ? bigger.name : smaller.name, type: 'capacity-compare', visualData: { containerA: cA, containerB: cB }, explanation: askingMore ? `A ${bigger.name} ${bigger.emoji} holds more water because it is bigger than a ${smaller.name} ${smaller.emoji}.` : `A ${smaller.name} ${smaller.emoji} holds less water because it is smaller than a ${bigger.name} ${bigger.emoji}.` });
         }
         return questions;
     };
@@ -178,7 +178,7 @@ const Grade2JugsAndMugs = () => {
         for (let i = 0; i < totalQuestions; i++) {
             const bigC = bigContainers[i % bigContainers.length], unit = smallUnits[i % smallUnits.length], count = bigC.capacity;
             const options = [...new Set([String(count), String(count + 2), String(Math.max(1, count - 1))])].sort(() => 0.5 - Math.random());
-            questions.push({ text: `How many ${unit.name}s of water fill a ${bigC.name}? ${bigC.emoji}`, options: options.slice(0, 3), correct: String(count), type: 'measure-liquid', visualData: { bigContainer: bigC, smallUnit: unit, count }, explanation: `A ${bigC.name} ${bigC.emoji} holds ${count} ${unit.name}s of water.` });
+            questions.push({ text: `How many ${unit.name}s of water fill a ${bigC.name}?`, options: options.slice(0, 3), correct: String(count), type: 'measure-liquid', visualData: { bigContainer: bigC, smallUnit: unit, count }, explanation: `A ${bigC.name} ${bigC.emoji} holds ${count} ${unit.name}s of water.` });
         }
         return questions;
     };
