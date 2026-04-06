@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Clock, ChevronRight, ChevronLeft } from 'lucide-react';
 import { api } from '../../../../services/api';
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
 import LatexContent from '../../../LatexContent';
 import '../../../../pages/middle/class-7/Class7PracticeLayout.css';
 import mascotImg from '../../../../assets/mascot.png';
@@ -91,6 +92,8 @@ const RationalNumbersTest = () => {
     const [isTestOver, setIsTestOver] = useState(false);
     const [responses, setResponses] = useState({});
     const questionStartTime = useRef(Date.now());
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const answersPayload = useRef([]);
     const [sessionId, setSessionId] = useState(null);
     const [questions, setQuestions] = useState([]);
 
@@ -303,6 +306,7 @@ const RationalNumbersTest = () => {
             api.createPracticeSession(uid, SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
+            startSession({ nodeId: 'a4071009-0010-0000-0000-000000000000', sessionType: 'assessment' });
         }
     }, []);
 
@@ -318,6 +322,19 @@ const RationalNumbersTest = () => {
         const timeSpent = Math.round((Date.now() - questionStartTime.current) / 1000);
         const isSkipped = !selectedOption;
         setResponses(prev => ({ ...prev, [qIndex]: { selectedOption, isCorrect, timeTaken: (prev[qIndex]?.timeTaken || 0) + timeSpent, isSkipped } }));
+
+        const _v4timeMs = Date.now() - questionStartTime.current;
+        const _v4isCorrect = selectedOption ? selectedOption === questions[qIndex]?.correctAnswer : null;
+        const _v4entry = {
+            question_index: qIndex,
+            answer_json: JSON.stringify({ selected: selectedOption }),
+            is_correct: _v4isCorrect === true,
+            marks_awarded: _v4isCorrect === true ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: _v4timeMs,
+        };
+        const _v4idx = answersPayload.current.findIndex(a => a && a.question_index === qIndex);
+        if (_v4idx >= 0) { answersPayload.current[_v4idx] = _v4entry; } else { answersPayload.current.push(_v4entry); }
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         const uid = parseInt(rawUid, 10);
         if (!isNaN(uid)) {
@@ -342,6 +359,11 @@ const RationalNumbersTest = () => {
     const finalizeTest = async () => {
         setIsTestOver(true);
         if (sessionId) await api.finishSession(sessionId).catch(console.error);
+        await finishSession({
+            total_questions: questions.length,
+            questions_answered: Object.keys(responses).length,
+            answers_payload: answersPayload.current.filter(Boolean)
+        });
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         const uid = parseInt(rawUid, 10);
         if (!isNaN(uid)) {

@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../graphs.css';
+import { NODE_IDS } from '@/lib/curriculumIds';
+
+const SKILL_NODE_IDS = [
+    NODE_IDS.g8MathGraphsLineGraph,   // index 0 — linegraph
+    NODE_IDS.g8MathGraphsLinearGraph, // index 1 — lineargraph
+];
 
 import {
     PatientTemperatureChart, TrendLinesChart, LinearGraphChart,
@@ -148,7 +154,7 @@ export default function GraphsSkills() {
                     ) : view === 'practice' ? (
                         <div style={{ maxWidth: 920, margin: '0 auto' }}>
                             {skill.id === 'lineargraph' ? (
-                                <LinearGraphPracticeEngine color={skill.color} onBack={goBack} />
+                                <LinearGraphPracticeEngine color={skill.color} onBack={goBack} nodeId={SKILL_NODE_IDS[activeSkill]} />
                             ) : (
                                 <GraphsPracticeEngine
                                     questionPool={skill.practicePool()}
@@ -156,13 +162,14 @@ export default function GraphsSkills() {
                                     title={`Practice: ${skill.title}`}
                                     color={skill.color}
                                     onBack={goBack}
+                                    nodeId={SKILL_NODE_IDS[activeSkill]}
                                 />
                             )}
                         </div>
                     ) : (
                         <div style={{ maxWidth: 1050, margin: '0 auto' }}>
                             {skill.id === 'lineargraph' ? (
-                                <LinearGraphAssessmentEngine color={skill.color} onBack={goBack} />
+                                <LinearGraphAssessmentEngine color={skill.color} onBack={goBack} nodeId={SKILL_NODE_IDS[activeSkill]} />
                             ) : (
                                 <GraphsAssessmentEngine
                                     questionPool={skill.assessmentPool()}
@@ -170,6 +177,7 @@ export default function GraphsSkills() {
                                     title={skill.title}
                                     color={skill.color}
                                     onBack={goBack}
+                                    nodeId={SKILL_NODE_IDS[activeSkill]}
                                 />
                             )}
                         </div>

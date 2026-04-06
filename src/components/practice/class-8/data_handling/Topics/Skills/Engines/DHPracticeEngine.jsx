@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { LatexText } from '../../../../../../LatexText';
 import styles from '../../../data_handling.module.css';
 import DHChartRenderer from './DHChartRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 // ── Shuffle helper ─────────────────────────────────────────────────────────
 function shuffle(arr) {
@@ -32,7 +33,11 @@ function interleaved(pool, n) {
     return result.slice(0, n);
 }
 
-export default function DHPracticeEngine({ questionPool, sampleSize = 20, title, color, onBack }) {
+export default function DHPracticeEngine({ questionPool, sampleSize = 20, title, color, onBack, nodeId }) {
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
+
     const [questions, setQuestions] = useState(() => interleaved(questionPool, sampleSize));
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);
@@ -42,6 +47,11 @@ export default function DHPracticeEngine({ questionPool, sampleSize = 20, title,
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
     const [timeTaken, setTimeTaken] = useState(0);
+
+    useEffect(() => {
+        if (!nodeId) return;
+        startSession({ nodeId, sessionType: 'practice' });
+    }, [nodeId]);
 
     useEffect(() => {
         if (finished) return;
@@ -66,7 +76,13 @@ export default function DHPracticeEngine({ questionPool, sampleSize = 20, title,
         if (answered) return;
         setSelected(idx);
         setAnswered(true);
-        if (idx === q.correct) setScore((s) => s + 1);
+        const isCorrect = idx === q.correct;
+        if (isCorrect) setScore((s) => s + 1);
+        if (nodeId) {
+            const entry = { question_index: current, answer_json: { selected: idx, correct_answer: q.correct }, is_correct: isCorrect, marks_awarded: isCorrect ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+            answersPayload.current[current] = entry;
+            logAnswer(entry);
+        }
     };
 
     const handleFillSubmit = () => {
@@ -78,14 +94,22 @@ export default function DHPracticeEngine({ questionPool, sampleSize = 20, title,
         if (isCorrect) setScore((s) => s + 1);
     };
 
-    const handleNext = () => {
-        if (current + 1 >= questions.length) { setFinished(true); }
-        else { setCurrent((c) => c + 1); setSelected(null); setFillValue(''); setAnswered(false); setFillCorrect(false); }
+    const handleNext = async () => {
+        if (current + 1 >= questions.length) {
+            if (nodeId && !isFinishedRef.current) {
+                isFinishedRef.current = true;
+                await finishSession({ answers_payload: answersPayload.current.filter(Boolean) });
+            }
+            setFinished(true);
+        } else { setCurrent((c) => c + 1); setSelected(null); setFillValue(''); setAnswered(false); setFillCorrect(false); }
     };
 
     const handleRetry = () => {
+        answersPayload.current = [];
+        isFinishedRef.current = false;
         setQuestions(interleaved(questionPool, sampleSize));
         setCurrent(0); setSelected(null); setFillValue(''); setAnswered(false); setFillCorrect(false); setScore(0); setFinished(false); setTimeTaken(0);
+        if (nodeId) startSession({ nodeId, sessionType: 'practice' });
     };
 
     // ── Finished screen ────────────────────────────────────────────────────

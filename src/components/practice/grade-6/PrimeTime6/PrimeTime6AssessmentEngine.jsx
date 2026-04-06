@@ -3,8 +3,9 @@ import MathRenderer from '../../../MathRenderer';
 import FactorTreeInteractive from './Topics/Skills/FactorTreeInteractive';
 import DivisionTableInteractive from './Topics/Skills/DivisionTableInteractive';
 import styles from './primeTime6.module.css';
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
 
-export default function AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'pt' }) {
+export default function AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'pt' , nodeId }) {
     const normalizeTextAnswer = (value) => String(value ?? '').replace(/\s+/g, ' ').trim().toLowerCase();
 
     const getQuestionType = (question) => {
@@ -49,6 +50,17 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
     const [answers, setAnswers] = useState(Array(questionSet.length).fill(null));
     const [markedForReview, setMarkedForReview] = useState(Array(questionSet.length).fill(false));
     const [finished, setFinished] = useState(false);
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const v4IsFinished = useRef(false);
+
+
+    useEffect(() => {
+        if (!nodeId) return;
+        v4IsFinished.current = false;
+        startSession({ nodeId, sessionType: 'assessment' });
+        return () => { if (!v4IsFinished.current) abandonSession(); };
+    }, [nodeId]);
+
     const [paletteOpen, setPaletteOpen] = useState(false);
     const topRef = useRef(null);
     const [questionTimes, setQuestionTimes] = useState(Array(questionSet.length).fill(0));
@@ -86,6 +98,24 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
         return () => clearInterval(timer);
     }, [timeLeft, finished]);
+
+    useEffect(() => {
+        if (!finished || !nodeId || v4IsFinished.current) return;
+        v4IsFinished.current = true;
+        const payload = questionSet.map((question, index) => {
+            const userAns = answers[index];
+            const correct = isAnswerCorrect ? isAnswerCorrect(question, userAns) : false;
+            return {
+                question_index: index,
+                answer_json: JSON.stringify({ answer: userAns }),
+                is_correct: correct,
+                marks_awarded: correct ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0,
+            };
+        });
+        finishSession({ answers_payload: payload });
+    }, [finished]);
 
     const formatTime = (seconds) => {
         const m = Math.floor(seconds / 60);

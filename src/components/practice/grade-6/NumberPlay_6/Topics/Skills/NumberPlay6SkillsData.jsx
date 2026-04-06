@@ -10,6 +10,7 @@ import {
 export const SKILLS = [
     {
         id: 'numbers-daily-life',
+        nodeId: 'a4061003-0001-0000-0000-000000000000',
         title: 'Numbers in Daily Life',
         subtitle: 'Skill 1',
         icon: '🌍',
@@ -27,6 +28,7 @@ export const SKILLS = [
     },
     {
         id: 'patterns-number-line',
+        nodeId: 'a4061003-0002-0000-0000-000000000000',
         title: 'Patterns on the Number Line',
         subtitle: 'Skill 2',
         icon: '📈',
@@ -44,6 +46,7 @@ export const SKILLS = [
     },
     {
         id: 'supercells-number-puzzles',
+        nodeId: 'a4061003-0003-0000-0000-000000000000',
         title: 'Supercells & Puzzles',
         subtitle: 'Skill 3',
         icon: '🧩',
@@ -61,6 +64,7 @@ export const SKILLS = [
     },
     {
         id: 'palindromic-numbers',
+        nodeId: 'a4061003-0004-0000-0000-000000000000',
         title: 'Palindromes & Reversals',
         subtitle: 'Skill 4',
         icon: '🔁',
@@ -78,6 +82,7 @@ export const SKILLS = [
     },
     {
         id: 'kaprekar-constant',
+        nodeId: 'a4061003-0005-0000-0000-000000000000',
         title: "Kaprekar's Constant",
         subtitle: 'Skill 5',
         icon: '🔢',
@@ -95,6 +100,7 @@ export const SKILLS = [
     },
     {
         id: 'number-games-strategies',
+        nodeId: 'a4061003-0006-0000-0000-000000000000',
         title: 'Number Games & Strategy',
         subtitle: 'Skill 6',
         icon: '🎲',

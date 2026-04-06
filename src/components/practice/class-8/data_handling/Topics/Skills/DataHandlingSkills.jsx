@@ -2,6 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LatexText } from '../../../../../LatexText';
 import styles from '../../data_handling.module.css';
+import { NODE_IDS } from '@/lib/curriculumIds';
+
+const SKILL_NODE_IDS = {
+    'organising-data': NODE_IDS.g8MathDHOrganisingData,
+    'bar-graphs': NODE_IDS.g8MathDHBarGraphs,
+    'pie-charts': NODE_IDS.g8MathDHPieCharts,
+    'probability': NODE_IDS.g8MathDHProbability,
+};
 import {
     organisingDataQuestions,
     barGraphQuestions,
@@ -294,6 +302,7 @@ export default function DataHandlingSkills() {
                         title={activeSkill.label}
                         color={activeSkill.color}
                         onBack={backToList}
+                        nodeId={SKILL_NODE_IDS[activeSkill.id]}
                     />
                 </div>
             </div>
@@ -323,6 +332,7 @@ export default function DataHandlingSkills() {
                         title={activeSkill.label}
                         color={activeSkill.color}
                         onBack={backToList}
+                        nodeId={SKILL_NODE_IDS[activeSkill.id]}
                     />
                 </div>
             </div>

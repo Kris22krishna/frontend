@@ -114,6 +114,8 @@ export default function LinesAndAnglesSkills() {
                             />
                         ) : (
                             <QuizEngine
+                        nodeId={skill.nodeId}
+                        sessionType="practice"
                                 questions={skill.practice}
                                 title={`Practice: ${skill.title}`}
                                 color={skill.color}
@@ -123,6 +125,8 @@ export default function LinesAndAnglesSkills() {
                         )
                     ) : (
                         <AssessmentEngine
+                        nodeId={skill.nodeId}
+                        sessionType="assessment"
                             questions={skill.assessment}
                             title={skill.title}
                             color={skill.color}

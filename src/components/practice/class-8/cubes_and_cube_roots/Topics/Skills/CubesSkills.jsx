@@ -2,6 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LatexText } from '@/components/LatexText';
 import styles from '../../cubes_and_cube_roots.module.css';
+import { NODE_IDS } from '@/lib/curriculumIds';
+
+const SKILL_NODE_IDS = {
+    'perfect-cubes': NODE_IDS.g8MathCCRPerfectCubes,
+    'prime-factorisation': NODE_IDS.g8MathCCRPrimeFactorisation,
+    'estimating-roots': NODE_IDS.g8MathCCREstimatingRoots,
+    'missing-multiples': NODE_IDS.g8MathCCRMissingMultiples,
+};
 import {
     findingPerfectCubes,
     primeFactorisation,
@@ -279,6 +287,7 @@ export default function CubesSkills() {
                         title={activeSkill.label}
                         color={activeSkill.color}
                         onBack={backToList}
+                        nodeId={SKILL_NODE_IDS[activeSkill.id]}
                     />
                 </div>
             </div>
@@ -308,6 +317,7 @@ export default function CubesSkills() {
                         title={activeSkill.label}
                         color={activeSkill.color}
                         onBack={backToList}
+                        nodeId={SKILL_NODE_IDS[activeSkill.id]}
                     />
                 </div>
             </div>
