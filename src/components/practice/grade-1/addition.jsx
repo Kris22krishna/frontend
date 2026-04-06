@@ -268,11 +268,15 @@ const Addition = () => {
 
     const makeOptions = (correct) => {
         const opts = new Set([correct]);
-        const offsets = [1, -1, 2, -2, 3, -3, 4];
+        const offsets = [1, -1, 2, -2, 3, -3, 4, -4, 5];
         for (const off of offsets) {
             if (opts.size >= 4) break;
             const v = correct + off;
-            if (v >= 0) opts.add(v);
+            if (v >= 0 && v <= 20) opts.add(v);
+        }
+        // Fallback to ensure 4 options
+        while (opts.size < 4) {
+            opts.add(Math.floor(Math.random() * 20) + 1);
         }
         return [...opts].sort(() => 0.5 - Math.random());
     };
@@ -304,7 +308,7 @@ const Addition = () => {
                 if (isTest) [n1, n2] = visualPairs[i % visualPairs.length];
                 else { n1 = Math.floor(Math.random() * 5) + 1; n2 = Math.floor(Math.random() * 4) + 1; }
                 question = {
-                    text: `Count all the circles together!`,
+                    text: `How many circles are there in total?`,
                     options: makeOptions(n1 + n2),
                     correct: n1 + n2,
                     type: 'visual',
@@ -317,7 +321,7 @@ const Addition = () => {
                 if (isTest) [n1, n2] = numericPairs[i % numericPairs.length];
                 else { n1 = Math.floor(Math.random() * 9) + 1; n2 = Math.floor(Math.random() * (10 - n1)); }
                 question = {
-                    text: `What is ${n1} plus ${n2}?`,
+                    text: `How much is ${n1} plus ${n2}?`,
                     options: makeOptions(n1 + n2),
                     correct: n1 + n2,
                     type: 'numeric',
@@ -330,7 +334,7 @@ const Addition = () => {
                 if (typeToGen === 'numberline') {
                     n1 = Math.floor(Math.random() * 6) + 1; n2 = Math.floor(Math.random() * (10 - n1)) + 1;
                     question = {
-                        text: `Use the number line to find: ${n1} + ${n2}`,
+                        text: `Find the answer using the number line: ${n1} + ${n2}`,
                         options: makeOptions(n1 + n2),
                         correct: n1 + n2,
                         type: 'numberline',
@@ -343,7 +347,7 @@ const Addition = () => {
                     const withZeroFirst = Math.random() > 0.5;
                     const z1 = withZeroFirst ? 0 : val; const z2 = withZeroFirst ? val : 0;
                     question = {
-                        text: `Add zero to the number!`,
+                        text: `How much is ${z1} plus ${z2}?`,
                         options: makeOptions(val),
                         correct: val,
                         type: 'numeric',

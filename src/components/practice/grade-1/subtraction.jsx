@@ -122,11 +122,15 @@ const Subtraction = () => {
 
     const makeOptions = (correct) => {
         const opts = new Set([correct]);
-        const offsets = [1, -1, 2, -2, 3, -3, 4];
+        const offsets = [1, -1, 2, -2, 3, -3, 4, -4, 5];
         for (const off of offsets) {
             if (opts.size >= 4) break;
             const v = correct + off;
-            if (v >= 0) opts.add(v);
+            if (v >= 0 && v <= 10) opts.add(v);
+        }
+        // Fallback to ensure 4 options
+        while (opts.size < 4) {
+            opts.add(Math.floor(Math.random() * 10));
         }
         return [...opts].sort(() => 0.5 - Math.random());
     };
@@ -159,7 +163,7 @@ const Subtraction = () => {
                     n2 = Math.floor(Math.random() * 4) + 1;
                 }
                 question = {
-                    text: `How many objects are left after taking away ${n2}?`,
+                    text: `How many are left when you take away ${n2}?`,
                     options: makeOptions(n1 - n2),
                     correct: n1 - n2,
                     type: 'visual',
@@ -177,7 +181,7 @@ const Subtraction = () => {
                     n2 = Math.floor(Math.random() * n1);
                 }
                 question = {
-                    text: `What is ${n1} take away ${n2}?`,
+                    text: `How much is ${n1} minus ${n2}?`,
                     options: makeOptions(n1 - n2),
                     correct: n1 - n2,
                     type: 'numeric',
@@ -192,7 +196,7 @@ const Subtraction = () => {
                 const subtractSame = isTest ? true : Math.random() > 0.5;
                 const n2 = subtractSame ? n : 0;
                 question = {
-                    text: `Subtract ${n2} from ${n}!`,
+                    text: `How much is ${n} minus ${n2}?`,
                     options: makeOptions(n - n2),
                     correct: n - n2,
                     type: 'zero',

@@ -31,7 +31,7 @@ const DynamicVisual = ({ type, data, isAnswered }) => {
                             <div className="g1-pattern-item" style={{ background: color, color: '#fff', fontWeight: 400, fontSize: 'clamp(1.4rem, 4vw, 1.8rem)' }}>
                                 {n}
                             </div>
-                            {i < seq.length - 1 && <div className="g1-pattern-arrow">+{step}</div>}
+                            {i < seq.length - 1 && <div className="g1-pattern-arrow" style={{ opacity: 0 }}>+{step}</div>}
                         </motion.div>
                     ))}
                     <motion.div
@@ -282,15 +282,25 @@ const Numbers51to100 = () => {
                     explanation: `${correct} is the answer.`
                 });
             } else if (typeToGen === 'skip') {
-                const start = 50; const step = 10;
+                const steps = [2, 5, 10];
+                const step = steps[Math.floor(Math.random() * steps.length)];
+                const start = Math.floor(Math.random() * 20) + 50; 
                 const seq = [start, start + step, start + step * 2];
+                const correct = seq[2] + step;
+                const optionsSet = new Set([correct]);
+                while (optionsSet.size < 3) {
+                    const off = (Math.floor(Math.random() * 3) + 1) * step;
+                    const val = Math.random() > 0.5 ? correct + off : correct - off;
+                    if (val > 50 && val <= 100) optionsSet.add(val);
+                    else optionsSet.add(correct + (optionsSet.size * 5)); // ensure we populate
+                }
                 questions.push({
                     text: `Next number in pattern?`,
-                    options: [seq[2] + step, seq[2] + step + 5].sort(() => 0.5 - Math.random()),
-                    correct: seq[2] + step,
+                    options: Array.from(optionsSet).sort(() => 0.5 - Math.random()),
+                    correct,
                     type: 'skip',
                     visualData: { seq, step, color: color1 },
-                    explanation: `Next is ${seq[2] + step}.`
+                    explanation: `The pattern skips by ${step}. Next is ${correct}.`
                 });
             }
         }
