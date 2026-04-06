@@ -32,6 +32,13 @@ export const NODE_IDS = {
   grade9:  'a2000000-0000-0000-0000-000000000009',
   grade10: 'a2000000-0000-0000-0000-000000000010',
 
+  // ── GRADE 4: DATA HANDLING (CHAPTER 14) ───────────────────────────────────
+  g4MathDataHandling:                'a3041014-0000-0000-0000-000000000001',
+  g4MathDHCollectingOrganizing:      'a4041014-0001-0000-0000-000000000000',
+  g4MathDHReadingCreatingTables:     'a4041014-0002-0000-0000-000000000000',
+  g4MathDHPictographReading:         'a4041014-0003-0000-0000-000000000000',
+  g4MathDHDataInterpretation:        'a4041014-0004-0000-0000-000000000000',
+
   // ── GRADE 4: SHAPES AROUND US (CHAPTER 5) ──────────────────────────────────
   g4MathShapesAroundUs: 'a3041005-0000-0000-0000-000000000001',
   g4MathShapesIntro:   'a4041005-0000-0000-0000-000000000000',
