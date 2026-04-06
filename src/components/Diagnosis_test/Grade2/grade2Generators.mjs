@@ -28,7 +28,7 @@ export const generateCounting = () => {
   const answer = start + 1;
   const list = [start, start + 1, start + 2];
 
-  const question = `How many names are there in the list?`;
+  const question = `How many numbers are there in the list?`;
   
   const options = [
     { value: String(list.length), label: String(list.length) }
