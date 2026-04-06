@@ -295,6 +295,7 @@ function PracticeMode({ skill, onBack }) {
    MODE: ASSESS (question palette, timer, mark-for-review, report)
    ═══════════════════════════════════════════════════════════════ */
 function AssessMode({ skill, onBack }) {
+    const { startSession, finishSession } = useSessionLogger();
     const [qIdx, setQIdx] = useState(0);
     const [answersMap, setAnswersMap] = useState({});
     const [marked, setMarked] = useState({});
@@ -510,7 +511,7 @@ function AssessMode({ skill, onBack }) {
                     answer={q.correctAnswer}
                     onAnswer={handleAnswer}
                     disabled={false}
-                    selectedOption={answersMap[qIdx] ?? null}
+                    selectedOption={answersMap[qIdx]}
                     image={q.image}
                     showCorrect={false}
                 />
@@ -586,13 +587,13 @@ export default function ShapesSkills() {
     const [skillsData, setSkillsData] = useState(() => generateShapesSkillsData());
 
     const openMode = (skill, mode) => {
-    const freshData = generateShapesSkillsData();
-    const found = freshData.find(s => s.id === skill.id);
-    setSkillsData(freshData);
-    setActiveSkill(found ?? skill);
-    setView(mode);
-};
-console.log("hi");
+        const freshData = generateShapesSkillsData();
+        const found = freshData.find(s => s.id === skill.id);
+        setSkillsData(freshData);
+        setActiveSkill(found ?? skill);
+        setView(mode);
+    };
+
     return (
         <div className="sau-skills-page">
             <nav className="sau-nav">
