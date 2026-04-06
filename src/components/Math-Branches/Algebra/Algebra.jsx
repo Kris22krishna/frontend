@@ -4,17 +4,6 @@ import './algebra.css';
 
 const MODULES = [
     {
-        id: 'skill-sparks',
-        path: '/algebra/sparks',
-        label: 'Skill Sparks ⚡',
-        emoji: '⚡',
-        tagline: 'Interactive Playgrounds',
-        desc: 'Explore highly immersive, interactive simulations for Algebra concepts.',
-        gradFrom: '#f97316',
-        gradTo: '#fde047',
-        shadow: 'rgba(249,115,22,0.5)',
-    },
-    {
         id: 'introduction',
         path: '/algebra/introduction',
         label: 'Introduction',

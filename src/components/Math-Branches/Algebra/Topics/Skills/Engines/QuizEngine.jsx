@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../../MathRenderer';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
-import '../../../../Calculus/calculus.css';
 
 export default function QuizEngine({ 
     questions, 
@@ -15,7 +14,8 @@ export default function QuizEngine({
 }) {
     const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
     const [current, setCurrent] = useState(0);
-    const [answers, setAnswers] = useState({});
+    const [selected, setSelected] = useState(null);
+    const [answered, setAnswered] = useState(false);
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
 
@@ -33,7 +33,8 @@ export default function QuizEngine({
     useEffect(() => {
         setQuestionSet(typeof questions === 'function' ? questions() : questions);
         setCurrent(0);
-        setAnswers({});
+        setSelected(null);
+        setAnswered(false);
         setScore(0);
         setFinished(false);
     }, [questions]);
@@ -77,19 +78,12 @@ export default function QuizEngine({
     const q = questionSet[current];
     const progress = ((current + (finished ? 1 : 0)) / questionSet.length) * 100;
 
-    const currentAnswer = answers[current] || {};
-    const selected = currentAnswer.selected ?? null;
-    const answered = currentAnswer.answered ?? false;
-
     const handleSelect = async (optIdx) => {
-        if (answered) return; // LOCKED: Practice mode does not allow changing answers
+        if (answered) return;
+        setSelected(optIdx);
+        setAnswered(true);
         
         const isCorrect = optIdx === q.correct;
-        setAnswers(prev => ({
-            ...prev,
-            [current]: { selected: optIdx, answered: true, isCorrect }
-        }));
-        
         if (isCorrect) setScore(s => s + 1);
 
         // v4 Log
@@ -124,12 +118,8 @@ export default function QuizEngine({
             }
         } else {
             setCurrent(c => c + 1);
-        }
-    };
-
-    const handlePrev = () => {
-        if (current > 0) {
-            setCurrent(c => c - 1);
+            setSelected(null);
+            setAnswered(false);
         }
     };
 
@@ -193,7 +183,7 @@ export default function QuizEngine({
                         className={`${prefix}-btn-primary`}
                         onClick={() => {
                             if (typeof questions === 'function') { setQuestionSet(questions()); }
-                            setCurrent(0); setAnswers({}); setScore(0); setTimeTaken(0); setFinished(false);
+                            setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setTimeTaken(0); setFinished(false);
                         }}
                         style={{ padding: '16px 32px', background: color, fontSize: 16, boxShadow: `0 8px 24px ${color}40`, flex: 1, minWidth: 200 }}
                     >
@@ -260,27 +250,14 @@ export default function QuizEngine({
 
             {/* Question Card */}
             <div className={`${prefix}-quiz-card`}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
-                     <div style={{
-                        display: 'inline-flex', alignItems: 'center', gap: 6,
-                        background: `${color}15`, padding: '6px 16px', borderRadius: 10,
-                        fontSize: 11, fontWeight: 900, color: color,
-                        textTransform: 'uppercase', letterSpacing: 1
-                    }}>
-                        QUESTION {current + 1}
-                    </div>
-                    {answered && (
-                         <div style={{
-                            display: 'inline-flex', alignItems: 'center', gap: 6,
-                            background: '#10b98115', padding: '6px 16px', borderRadius: 10,
-                            fontSize: 11, fontWeight: 900, color: '#10b981',
-                            textTransform: 'uppercase', letterSpacing: 1
-                        }}>
-                             ✓ Locked
-                        </div>
-                    )}
+                <div style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    background: `${color}15`, padding: '6px 16px', borderRadius: 10,
+                    fontSize: 11, fontWeight: 900, color: color, marginBottom: 20,
+                    textTransform: 'uppercase', letterSpacing: 1
+                }}>
+                    QUESTION {current + 1}
                 </div>
-
                 <div className={`${prefix}-quiz-question-text`} style={{ fontSize: 18, fontWeight: 600, color: `var(--${prefix}-text, #1e293b)`, lineHeight: 1.6, marginBottom: 24 }}>
                     {q.image && (
                         <div style={{ marginBottom: 20, borderRadius: 16, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
@@ -303,16 +280,16 @@ export default function QuizEngine({
 
                         if (answered) {
                             if (oi === q.correct) {
-                                borderColor = `var(--${prefix}-teal, #10b981)`;
+                                borderColor = `var(--${prefix}-teal)`;
                                 bgColor = 'rgba(16,185,129,0.05)';
-                                textColor = `var(--${prefix}-teal, #10b981)`;
-                                dotColor = `var(--${prefix}-teal, #10b981)`;
+                                textColor = `var(--${prefix}-teal)`;
+                                dotColor = `var(--${prefix}-teal)`;
                             }
                             else if (oi === selected) {
-                                borderColor = `var(--${prefix}-red, #ef4444)`;
+                                borderColor = `var(--${prefix}-red)`;
                                 bgColor = 'rgba(239,68,68,0.05)';
-                                textColor = `var(--${prefix}-red, #ef4444)`;
-                                dotColor = `var(--${prefix}-red, #ef4444)`;
+                                textColor = `var(--${prefix}-red)`;
+                                dotColor = `var(--${prefix}-red)`;
                             }
                         } else if (selected === oi) {
                             borderColor = color;
@@ -333,7 +310,7 @@ export default function QuizEngine({
                                     background: bgColor, cursor: answered ? 'default' : 'pointer',
                                     fontSize: 14, color: textColor, textAlign: 'left',
                                     transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                                    fontWeight: (selected === oi || (answered && oi === q.correct)) ? 700 : 500,
+                                    fontWeight: selected === oi ? 700 : 500,
                                     boxShadow: selected === oi && !answered ? '0 4px 12px rgba(0,0,0,0.05)' : 'none',
                                     width: '100%',
                                     minHeight: 78,
@@ -358,31 +335,16 @@ export default function QuizEngine({
                     <div style={{
                         marginTop: 24, padding: '16px 20px', borderRadius: 12,
                         background: 'rgba(59,130,246,0.05)', border: '1px solid rgba(59,130,246,0.1)',
-                        color: `var(--${prefix}-muted, #64748b)`, fontSize: 13.5, lineHeight: 1.6
+                        color: `var(--${prefix}-muted)`, fontSize: 13.5, lineHeight: 1.6
                     }}>
-                        <strong style={{ color: `var(--${prefix}-blue, #3b82f6)` }}>💡 Explanation: </strong>
+                        <strong style={{ color: `var(--${prefix}-blue)` }}>💡 Explanation: </strong>
                         <MathRenderer text={q.explanation} />
                     </div>
                 )}
             </div>
 
             {/* Actions */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '16px' }}>
-                <button
-                    onClick={handlePrev}
-                    disabled={current === 0}
-                    className={`${prefix}-btn-secondary`}
-                    style={{
-                        padding: '12px 28px',
-                        background: '#fff',
-                        color: current === 0 ? '#cbd5e1' : `var(--${prefix}-text, #1e293b)`,
-                        cursor: current === 0 ? 'not-allowed' : 'pointer',
-                        border: '1px solid #e2e8f0', borderRadius: 100, fontSize: 15, fontWeight: 800,
-                        visibility: current === 0 ? 'hidden' : 'visible'
-                    }}
-                >
-                    ← Previous
-                </button>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <button
                     onClick={handleNext}
                     disabled={!answered}

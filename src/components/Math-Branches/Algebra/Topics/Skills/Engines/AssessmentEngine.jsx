@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../../MathRenderer';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
-import '../../../../Calculus/calculus.css';
 
 export default function AssessmentEngine({ 
     questions, 
@@ -151,16 +150,15 @@ export default function AssessmentEngine({
     const handleSelect = async (optIdx) => {
         if (finished) return;
         const newAns = [...answers];
-        const isDeselect = newAns[current] === optIdx;
-        newAns[current] = isDeselect ? null : optIdx;
+        newAns[current] = optIdx;
         setAnswers(newAns);
 
         // v4 Log
         if (nodeId) {
-            const isCorrect = !isDeselect && isAnswerCorrect(q, optIdx);
+            const isCorrect = isAnswerCorrect(q, optIdx);
             const answerData = {
                 question_index: current + 1,
-                answer_json: isDeselect ? { selected: null, text: "Unanswered" } : { selected: optIdx, text: q.options[optIdx] },
+                answer_json: { selected: optIdx, text: q.options[optIdx] },
                 is_correct: isCorrect ? 1.0 : 0.0,
                 marks_awarded: isCorrect ? 1 : 0,
                 marks_possible: 1,
@@ -312,20 +310,9 @@ export default function AssessmentEngine({
                 <h3 style={{ fontSize: 24, fontWeight: 800, marginBottom: 20, color: `var(--${prefix}-text, #1e293b)` }}>Summary Report</h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                     {questionSet.map((question, index) => {
-                        const isAnswered = isAnswerComplete(question, answers[index]);
                         const isCorrect = isAnswerCorrect(question, answers[index]);
                         const correctOptText = getCorrectAnswerLabel(question);
                         const userOptText = getUserAnswerLabel(question, answers[index]);
-
-                        let statusColor = '#f59e0b';
-                        let bgCol = 'rgba(245,158,11,0.05)';
-                        let statusText = 'Skipped';
-
-                        if (isAnswered) {
-                            statusColor = isCorrect ? `var(--${prefix}-teal, #10b981)` : `var(--${prefix}-red, #ef4444)`;
-                            bgCol = isCorrect ? 'rgba(16,185,129,0.05)' : 'rgba(239,68,68,0.05)';
-                            statusText = isCorrect ? 'Correct' : 'Incorrect';
-                        }
 
                         return (
                             <div
@@ -333,44 +320,30 @@ export default function AssessmentEngine({
                                 style={{
                                     padding: 20,
                                     borderRadius: 12,
-                                    border: `2px solid ${statusColor}`,
-                                    background: bgCol
+                                    border: `2px solid ${isCorrect ? `var(--${prefix}-teal)` : `var(--${prefix}-red)`}`,
+                                    background: isCorrect ? 'rgba(16,185,129,0.05)' : 'rgba(239,68,68,0.05)'
                                 }}
                             >
-                                <div style={{ fontWeight: 800, marginBottom: 8, color: statusColor }}>
-                                    Question {index + 1} - {statusText}
+                                <div style={{ fontWeight: 800, marginBottom: 8, color: isCorrect ? `var(--${prefix}-teal)` : `var(--${prefix}-red)` }}>
+                                    Question {index + 1} - {isCorrect ? 'Correct' : 'Incorrect'}
                                 </div>
                                 <div className={`${prefix}-quiz-question-text`} style={{ fontSize: 16, marginBottom: 16, color: `var(--${prefix}-text, #1e293b)`, fontWeight: 600 }}>
-                                    {question.image && (
-                                        <div style={{ marginBottom: 16, borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(0,0,0,0.05)' }}>
-                                            <img src={question.image} alt="Problem Illustration" style={{ width: '100%', height: 'auto', display: 'block' }} />
-                                        </div>
-                                    )}
-                                    {question.svg && (
-                                        <div style={{ marginBottom: 16, textAlign: 'center' }} dangerouslySetInnerHTML={{ __html: question.svg }} />
-                                    )}
                                     <MathRenderer text={question.question} />
                                 </div>
                                 <div className={`${prefix}-summary-split`}>
                                     <div className={`${prefix}-summary-item`}>
-                                        <strong style={{ color: `var(--${prefix}-teal, #10b981)` }}>Correct Answer:</strong>
+                                        <strong style={{ color: `var(--${prefix}-teal)` }}>Correct Answer:</strong>
                                         <div style={{ marginTop: 6 }}>
                                             <MathRenderer text={formatAnswer(correctOptText).includes('$') || formatAnswer(correctOptText).includes('^') ? (formatAnswer(correctOptText).includes('$') ? formatAnswer(correctOptText) : `$${correctOptText}$`) : formatAnswer(correctOptText)} />
                                         </div>
                                     </div>
                                     <div className={`${prefix}-summary-item user-ans`}>
-                                        <strong style={{ color: statusColor }}>Your Answer:</strong>
+                                        <strong style={{ color: isCorrect ? `var(--${prefix}-teal)` : `var(--${prefix}-red)` }}>Your Answer:</strong>
                                         <div style={{ marginTop: 6 }}>
                                             {userOptText === 'Not Answered'
-                                                ? <span style={{ color: '#f59e0b', fontStyle: 'italic' }}>Not Answered</span>
+                                                ? 'Not Answered'
                                                 : <MathRenderer text={formatAnswer(userOptText).includes('$') || formatAnswer(userOptText).includes('^') ? (formatAnswer(userOptText).includes('$') ? formatAnswer(userOptText) : `$${userOptText}$`) : formatAnswer(userOptText)} />}
                                         </div>
-                                        {isAnswered && !isCorrect && question.explanation && (
-                                            <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid rgba(0,0,0,0.05)', fontSize: 13, color: `var(--${prefix}-muted, #64748b)` }}>
-                                                <strong style={{ color: `var(--${prefix}-blue, #3b82f6)` }}>💡 Hint: </strong>
-                                                <MathRenderer text={question.explanation} />
-                                            </div>
-                                        )}
                                     </div>
                                 </div>
                             </div>
