@@ -439,7 +439,7 @@ export const NODE_IDS = {
   g3MathTimeGoesOnClockTime:         'a4031001-0009-0000-0000-000000000000',
   g3MathTimeGoesOnTimeDurations:     'a4031001-0010-0000-0000-000000000000',
   
-  // Grade 6 Math: Patterns
+  // Grade 6 Math: Patterns in Mathematics (Chapter 1)
   g6MathPatterns:                      'a3061001-0000-0000-0000-000000000001',
   g6MathPatternsIntro:                 'a4061001-0001-0000-0000-000000000000',
   g6MathPatternsTerminology:           'a4061001-0002-0000-0000-000000000000',
@@ -448,6 +448,66 @@ export const NODE_IDS = {
   g6MathPatternsShapeGeometry:         'a4061001-0005-0000-0000-000000000000',
   g6MathPatternsSpecialPatterns:       'a4061001-0006-0000-0000-000000000000',
   g6MathPatternsVocabQuiz:             'a4061001-0010-0000-0000-000000000000',
+
+  // Grade 6 Math: Lines and Angles (Chapter 2)
+  g6MathLinesAndAngles:                'a3061002-0000-0000-0000-000000000001',
+  g6MathLALinesSegmentsRays:           'a4061002-0001-0000-0000-000000000000',
+  g6MathLAClassifyingAngles:           'a4061002-0002-0000-0000-000000000000',
+  g6MathLAMeasuringAngles:             'a4061002-0003-0000-0000-000000000000',
+
+  // Grade 6 Math: Number Play (Chapter 3)
+  g6MathNumberPlay:                    'a3061003-0000-0000-0000-000000000001',
+  g6MathNPNumbersDailyLife:            'a4061003-0001-0000-0000-000000000000',
+  g6MathNPPatternsNumberLine:          'a4061003-0002-0000-0000-000000000000',
+  g6MathNPSupercells:                  'a4061003-0003-0000-0000-000000000000',
+  g6MathNPPalindromicNumbers:          'a4061003-0004-0000-0000-000000000000',
+  g6MathNPKaprekarConstant:            'a4061003-0005-0000-0000-000000000000',
+  g6MathNPNumberGamesStrategies:       'a4061003-0006-0000-0000-000000000000',
+
+  // Grade 6 Math: Data Handling and Presentation (Chapter 4 - flat files)
+  g6MathDataHandlingPresentation:      'a3061004-0000-0000-0000-000000000001',
+  g6MathDHPCollecting:                 'a4061004-0001-0000-0000-000000000000',
+  g6MathDHPPictographs:                'a4061004-0002-0000-0000-000000000000',
+  g6MathDHPBarGraphs:                  'a4061004-0003-0000-0000-000000000000',
+  g6MathDHPDrawingBarGraph:            'a4061004-0004-0000-0000-000000000000',
+  g6MathDHPFigureItOut:                'a4061004-0005-0000-0000-000000000000',
+
+  // Grade 6 Math: Prime Time (Chapter 5)
+  g6MathPrimeTime:                     'a3061005-0000-0000-0000-000000000001',
+  g6MathPTFactorsMultiples:            'a4061005-0001-0000-0000-000000000000',
+  g6MathPTPrimeComposite:              'a4061005-0002-0000-0000-000000000000',
+  g6MathPTDivisibilityRules:           'a4061005-0003-0000-0000-000000000000',
+  g6MathPTPrimeFactorization:          'a4061005-0004-0000-0000-000000000000',
+  g6MathPTHcfLcm:                      'a4061005-0005-0000-0000-000000000000',
+
+  // Grade 6 Math: Perimeter and Area (Chapter 6 - flat files)
+  g6MathPerimeterArea:                 'a3061006-0000-0000-0000-000000000001',
+  g6MathPARectangle:                   'a4061006-0001-0000-0000-000000000000',
+  g6MathPASquare:                      'a4061006-0002-0000-0000-000000000000',
+  g6MathPATriangle:                    'a4061006-0003-0000-0000-000000000000',
+  g6MathPARegularPolygon:              'a4061006-0004-0000-0000-000000000000',
+  g6MathPAMixedBag:                    'a4061006-0005-0000-0000-000000000000',
+
+  // Grade 6 Math: Symmetry (Chapter 9 - flat files)
+  g6MathSymmetry:                      'a3061009-0000-0000-0000-000000000001',
+  g6MathSymLineOfSymmetry:             'a4061009-0001-0000-0000-000000000000',
+  g6MathSymReflection:                 'a4061009-0002-0000-0000-000000000000',
+  g6MathSymRotational:                 'a4061009-0003-0000-0000-000000000000',
+  g6MathSymOrderRotational:            'a4061009-0004-0000-0000-000000000000',
+
+  // Grade 6 Math: Data Handling 6 - engine chapter (Chapter 11)
+  g6MathDataHandling6:                 'a3061011-0000-0000-0000-000000000001',
+  g6MathDH6DataObservations:           'a4061011-0001-0000-0000-000000000000',
+  g6MathDH6TallyMarks:                 'a4061011-0002-0000-0000-000000000000',
+  g6MathDH6Pictographs:                'a4061011-0003-0000-0000-000000000000',
+  g6MathDH6BarGraphs:                  'a4061011-0004-0000-0000-000000000000',
+
+  // Grade 6 Math: Mensuration 6 - engine chapter (Chapter 12)
+  g6MathMensuration6:                  'a3061012-0000-0000-0000-000000000001',
+  g6MathM6PerimeterBasics:             'a4061012-0001-0000-0000-000000000000',
+  g6MathM6AreaGrids:                   'a4061012-0002-0000-0000-000000000000',
+  g6MathM6ShapeDecomposition:          'a4061012-0003-0000-0000-000000000000',
+  g6MathM6TriangleArea:                'a4061012-0004-0000-0000-000000000000',
 
   // Grade 3 EVS Skills
   g3EvsOurFamiliesRoles:        'b4031001-0001-0000-0000-000000000000',

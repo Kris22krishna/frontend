@@ -2,6 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { BookOpen, ChevronRight, Check, X, Info, ChevronLeft, Eye, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { LatexText } from '../../../LatexText';
+import mascotImg from '../../../../assets/mascot.png';
+import ExplanationModal from '../../../ExplanationModal';
+import PracticeReportModal from '../../PracticeReportModal';
 import { useSessionLogger } from "@/hooks/useSessionLogger";
 import { NODE_IDS } from "@/lib/curriculumIds";
 import '../TenthPracticeSession.css';
@@ -21,8 +25,13 @@ const DiscriminantAnalysis = () => {
 
     const { startSession, logAnswer, finishSession } = useSessionLogger();
     const nodeId = NODE_IDS.g10MathQuadraticDiscriminant;
+    const SKILL_ID = 1126;
     const sessionType = "practice";
     const [answers, setAnswers] = useState({});
+
+    // Time tracking refs
+    const questionStartTime = useRef(Date.now());
+    const accumulatedTime = useRef(0);
 
     const generateQuestions = () => {
         const newQuestions = [];
