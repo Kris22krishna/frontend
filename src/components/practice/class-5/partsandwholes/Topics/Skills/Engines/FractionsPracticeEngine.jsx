@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSessionLogger } from '../../../../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import styles from './FractionsEngines.module.css';
 import { LatexText } from '@/components/LatexText';
 import mascotImg from '../../../../../../../assets/mascot.png';

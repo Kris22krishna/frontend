@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
-import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import LatexContent from '../../../../LatexContent';
 import ExplanationModal from '../../../../ExplanationModal';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
@@ -20,13 +20,14 @@ const CORRECT_MESSAGES = [
 ];
 
 const SKILL_ID = 1142;
-    const { startSession, logAnswer, finishSession } = useSessionLogger();
-    const v4AnswersPayload = useRef([]);
-    const v4IsFinishedRef = useRef(false);
 const SKILL_NAME = "Tenths and Hundredths Word Problems";
 const TOTAL_QUESTIONS = 10;
 
 const DecimalWordProblems = () => {
+
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const v4AnswersPayload = useRef([]);
+    const v4IsFinishedRef = useRef(false);
     const { grade } = useParams();
     const navigate = useNavigate();
     const [qIndex, setQIndex] = useState(0);

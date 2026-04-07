@@ -4,7 +4,7 @@ import PerimeterDrawInteractive from './Topics/Skills/PerimeterDrawInteractive';
 import AreaDrawInteractive from './Topics/Skills/AreaDrawInteractive';
 import CompositeDrawInteractive from './Topics/Skills/CompositeDrawInteractive';
 import styles from './mensuration6.module.css';
-import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 export default function AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'men' , nodeId }) {
     const normalizeTextAnswer = (value) => String(value ?? '').replace(/\s+/g, ' ').trim().toLowerCase();

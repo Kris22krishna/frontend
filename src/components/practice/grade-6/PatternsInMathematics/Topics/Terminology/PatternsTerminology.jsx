@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from '../../patterns.module.css';
 import MathRenderer from '../../../../../MathRenderer';
 import { TERMS, FOUR_RULES, VOCAB_QUIZ } from './PatternsTerminologyData';
-import { useSessionLogger } from '../../../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 const VOCAB_QUIZ_NODE_ID = 'a4061001-0010-0000-0000-000000000000';
 

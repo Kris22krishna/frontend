@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, Map, Compass, Globe, Mail, Book, School, TreePine, MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
-import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import LatexContent from '../../../../LatexContent';
 import ExplanationModal from '../../../../ExplanationModal';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';

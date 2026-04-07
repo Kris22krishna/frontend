@@ -5,7 +5,7 @@ import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star } from 'lucid
 import { motion, AnimatePresence } from 'framer-motion';
 // Corrected relative paths based on depth (5 levels up from src)
 import { api } from '../../../../../services/api';
-import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 // Use the shared components that the other junior files use
 import LatexContent from '../../../../LatexContent';
 import ExplanationModal from '../../../../ExplanationModal';

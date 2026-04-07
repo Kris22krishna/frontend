@@ -10,7 +10,7 @@ import Class8PracticeReportModal from '../Class8PracticeReportModal';
 import StickerExit from '../../../StickerExit';
 import { FullScreenScratchpad } from '../../../FullScreenScratchpad';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
-import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { NODE_IDS } from '../../../../lib/curriculumIds';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
