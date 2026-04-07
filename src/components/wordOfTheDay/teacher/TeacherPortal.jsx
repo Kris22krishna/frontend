@@ -45,7 +45,7 @@ const TeacherPortal = () => {
 
     const payload = {
       ...formData,
-      image_url: imagePreview || '', // Send base64 or empty string
+      image_url: imagePreview || "", // Send base64 or empty string
       user_id: user?.id || sessionStorage.getItem('userId') || 'system',
     };
 

@@ -35,7 +35,7 @@ export const wordApi = {
         word: wordData.word,
         meaning: wordData.meaning,
         sentence: wordData.sentence,
-        image_url: wordData.image_url || '',
+        image_url: wordData.image_url || "",
         date: wordData.date,
         user_id: wordData.user_id,
       }),
