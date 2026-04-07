@@ -4,14 +4,14 @@ import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { NODE_IDS } from '@/lib/curriculumIds';
-import Navbar from '../../Navbar';
-import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
-import { LatexText } from '../../LatexText';
-import ExplanationModal from '../../ExplanationModal';
-import StickerExit from '../../StickerExit';
-import mascotImg from '../../../assets/mascot.png';
-import avatarImg from '../../../assets/avatar.png';
-import '../../../pages/juniors/class-1/Grade1Practice.css';
+import Navbar from '@/components/Navbar';
+import { TOPIC_CONFIGS } from '@/lib/topicConfig';
+import { LatexText } from '@/components/LatexText';
+import ExplanationModal from '@/components/ExplanationModal';
+import StickerExit from '@/components/StickerExit';
+import mascotImg from '@/assets/mascot.png';
+import avatarImg from '@/assets/avatar.png';
+import '@/pages/juniors/class-1/Grade1Practice.css';
 
 const DynamicVisual = ({ type, data }) => {
     if (type === 'counting' || type === 'names' || type === 'tens-ones') {
@@ -178,9 +178,26 @@ const Numbers10to20 = () => {
             if (typeToGen === 'counting') {
                 const count = Math.floor(Math.random() * 11) + 10;
                 const isWord = Math.random() > 0.5;
+                const optionsSet = new Set();
+                if (isWord) {
+                    optionsSet.add(names[count]);
+                    while (optionsSet.size < 3) {
+                        const randomCount = Math.floor(Math.random() * 11) + 10;
+                        optionsSet.add(names[randomCount]);
+                    }
+                } else {
+                    optionsSet.add(count);
+                    optionsSet.add(count + 1);
+                    optionsSet.add(count - 1);
+                    // Ensure unique and within range
+                    while (optionsSet.size < 3) {
+                        optionsSet.add(Math.floor(Math.random() * 11) + 10);
+                    }
+                }
+                
                 question = {
-                    text: isWord ? "Can you pick the name for this number?" : "What number is shown here?",
-                    options: isWord ? [names[count], names[(count + 1) % 11 + 10], names[(count - 1) % 11 + 10]].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()) : [count, count + 1, count - 1].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
+                    text: isWord ? "What is the number name for this number?" : "How many are there in total?",
+                    options: Array.from(optionsSet).sort(() => 0.5 - Math.random()),
                     correct: isWord ? names[count] : count,
                     type: 'counting',
                     visualData: { num: count, color: color1 },
@@ -190,9 +207,23 @@ const Numbers10to20 = () => {
                 const num = Math.floor(Math.random() * 11) + 10;
                 const tens = Math.floor(num / 10);
                 const ones = num % 10;
+                const optionsSet = new Set([`${tens} Ten, ${ones} Ones`]);
+                
+                // Swap digits fallback
+                if (tens !== ones) {
+                    optionsSet.add(`${ones} Ten, ${tens} Ones`);
+                }
+                
+                // Add more distractors until we have 3 unique
+                while (optionsSet.size < 3) {
+                    const rTens = Math.floor(Math.random() * 2) + 1; // 1 or 2
+                    const rOnes = Math.floor(Math.random() * 10);
+                    optionsSet.add(`${rTens} Ten, ${rOnes} Ones`);
+                }
+
                 question = {
-                    text: `How many tens and ones in ${num}?`,
-                    options: [`${tens} Ten, ${ones} Ones`, `${ones} Ten, ${tens} Ones`, `${tens + 1} Ten, ${ones} Ones`].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
+                    text: `How many Tens and Ones make ${num}?`,
+                    options: Array.from(optionsSet).sort(() => 0.5 - Math.random()),
                     correct: `${tens} Ten, ${ones} Ones`,
                     type: 'tens-ones',
                     visualData: { num, color: color1 },

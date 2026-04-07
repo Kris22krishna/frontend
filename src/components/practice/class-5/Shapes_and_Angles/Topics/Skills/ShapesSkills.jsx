@@ -85,6 +85,7 @@ export default function ShapesSkills() {
                             sampleSize={10}
                             title={skill.title}
                             color={skill.color}
+                            nodeId={skill.nodeId}
                             onBack={() => setView('list')}
                         />
                     ) : (
@@ -92,6 +93,7 @@ export default function ShapesSkills() {
                             questions={skill.assessment()}
                             title={skill.title}
                             color={skill.color}
+                            nodeId={skill.nodeId}
                             onBack={() => setView('list')}
                             onSecondaryBack={() => navigate('/shapes-and-angles')}
                         />

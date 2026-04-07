@@ -32,6 +32,30 @@ export const NODE_IDS = {
   grade9:  'a2000000-0000-0000-0000-000000000009',
   grade10: 'a2000000-0000-0000-0000-000000000010',
 
+  // ── GRADE 4: ELEPHANTS, TIGERS AND LEOPARDS (CHAPTER 3) ───────────────────
+  g4MathElephantsChapter:          'a3041003-0000-0000-0000-000000000001',
+  g4MathETLNimGame:                'a4041003-0001-0000-0000-000000000000',
+  g4MathETLNumberGridPatterns:     'a4041003-0002-0000-0000-000000000000',
+  g4MathETLMagicMirrorNumbers:     'a4041003-0003-0000-0000-000000000000',
+  g4MathETLForestRestorationAdd:   'a4041003-0004-0000-0000-000000000000',
+  g4MathETLJourneySums:            'a4041003-0005-0000-0000-000000000000',
+  g4MathETLEstimationBeforeAdd:    'a4041003-0006-0000-0000-000000000000',
+  g4MathETLRiverCrossingSubtract:  'a4041003-0007-0000-0000-000000000000',
+  g4MathETLHiddenPathDifference:   'a4041003-0008-0000-0000-000000000000',
+  g4MathETLEstimationBeforeSub:    'a4041003-0009-0000-0000-000000000000',
+  g4MathETLBalanceScaleEstimation: 'a4041003-0010-0000-0000-000000000000',
+  g4MathETLQuickCompare:           'a4041003-0011-0000-0000-000000000000',
+  g4MathETLSmartShortcuts:         'a4041003-0012-0000-0000-000000000000',
+  g4MathETLCompensationStrategy:   'a4041003-0013-0000-0000-000000000000',
+  g4MathETLChapterTest:            'a4041003-0014-0000-0000-000000000000',
+
+  // ── GRADE 4: DATA HANDLING (CHAPTER 14) ───────────────────────────────────
+  g4MathDataHandling:                'a3041014-0000-0000-0000-000000000001',
+  g4MathDHCollectingOrganizing:      'a4041014-0001-0000-0000-000000000000',
+  g4MathDHReadingCreatingTables:     'a4041014-0002-0000-0000-000000000000',
+  g4MathDHPictographReading:         'a4041014-0003-0000-0000-000000000000',
+  g4MathDHDataInterpretation:        'a4041014-0004-0000-0000-000000000000',
+
   // ── GRADE 4: SHAPES AROUND US (CHAPTER 5) ──────────────────────────────────
   g4MathShapesAroundUs: 'a3041005-0000-0000-0000-000000000001',
   g4MathShapesIntro:   'a4041005-0000-0000-0000-000000000000',
@@ -439,6 +463,134 @@ export const NODE_IDS = {
   g3MathTimeGoesOnClockTime:         'a4031001-0009-0000-0000-000000000000',
   g3MathTimeGoesOnTimeDurations:     'a4031001-0010-0000-0000-000000000000',
   
+  // ── GRADE 5 MATH ─────────────────────────────────────────────────────────
+
+  // Ch 1: The Fish Tale
+  g5MathFishTale:                     'a3051001-0000-0000-0000-000000000001',
+  g5MathFTNumberSensePlaceValue:      'a4051001-0001-0000-0000-000000000000',
+  g5MathFTReadingWritingBigNumbers:   'a4051001-0002-0000-0000-000000000000',
+  g5MathFTPlaceValueLakhs:            'a4051001-0003-0000-0000-000000000000',
+  g5MathFTComparison:                 'a4051001-0004-0000-0000-000000000000',
+  g5MathFTEstimation:                 'a4051001-0005-0000-0000-000000000000',
+  g5MathFTEstimationSkills:           'a4051001-0006-0000-0000-000000000000',
+  g5MathFTRealLifeData:               'a4051001-0007-0000-0000-000000000000',
+  g5MathFTRealLifeSituations:         'a4051001-0008-0000-0000-000000000000',
+
+  // Ch 2: Shapes and Angles
+  g5MathShapesAndAngles:              'a3051002-0000-0000-0000-000000000001',
+  g5MathSASkill1:                     'a4051002-0001-0000-0000-000000000000',
+  g5MathSASkill2:                     'a4051002-0002-0000-0000-000000000000',
+  g5MathSASkill3:                     'a4051002-0003-0000-0000-000000000000',
+  g5MathSASkill4:                     'a4051002-0004-0000-0000-000000000000',
+
+  // Ch 3: How Many Squares?
+  g5MathHowManySquares:               'a3051003-0000-0000-0000-000000000001',
+  g5MathHMSSkill1:                    'a4051003-0001-0000-0000-000000000000',
+  g5MathHMSSkill2:                    'a4051003-0002-0000-0000-000000000000',
+  g5MathHMSSkill3:                    'a4051003-0003-0000-0000-000000000000',
+
+  // Ch 4: Parts and Wholes
+  g5MathPartsAndWholes:               'a3051004-0000-0000-0000-000000000001',
+  g5MathPWPartsOfWhole:               'a4051004-0001-0000-0000-000000000000',
+  g5MathPWEquivalentFractions:        'a4051004-0002-0000-0000-000000000000',
+
+  // Ch 5: Does it Look the Same?
+  g5MathDoesItLookSame:               'a3051005-0000-0000-0000-000000000001',
+  g5MathDILSVisualSymmetry:           'a4051005-0001-0000-0000-000000000000',
+  g5MathDILSPatternObservation:       'a4051005-0002-0000-0000-000000000000',
+  g5MathDILSGeometricReasoning:       'a4051005-0003-0000-0000-000000000000',
+
+  // Ch 6: Be My Multiple, I'll be Your Factor
+  g5MathBeMyMultiple:                 'a3051006-0000-0000-0000-000000000001',
+  g5MathBMFSkill1:                    'a4051006-0001-0000-0000-000000000000',
+  g5MathBMFSkill2:                    'a4051006-0002-0000-0000-000000000000',
+  g5MathBMFSkill3:                    'a4051006-0003-0000-0000-000000000000',
+
+  // Ch 7: Can You See the Pattern? (engine-based)
+  g5MathCanYouSeePattern:             'a3051007-0000-0000-0000-000000000001',
+  g5MathCYSPNumberPatterns:           'a4051007-0001-0000-0000-000000000000',
+  g5MathCYSPShapePatterns:            'a4051007-0002-0000-0000-000000000000',
+  g5MathCYSPPatternRules:             'a4051007-0003-0000-0000-000000000000',
+  g5MathCYSPContinuingPatterns:       'a4051007-0004-0000-0000-000000000000',
+  // Ch 7: Can You See the Pattern? (flat-file skills)
+  g5MathCYSPPatternIdentification:    'a4051007-0005-0000-0000-000000000000',
+  g5MathCYSPGridPattern:              'a4051007-0006-0000-0000-000000000000',
+  g5MathCYSPRuleBasedPattern:         'a4051007-0007-0000-0000-000000000000',
+  g5MathCYSPUnderstandingRotations:   'a4051007-0008-0000-0000-000000000000',
+  g5MathCYSPPalindromeRecognition:    'a4051007-0009-0000-0000-000000000000',
+  g5MathCYSPDigitRelationships:       'a4051007-0010-0000-0000-000000000000',
+  g5MathCYSPPropertiesOfOperations:   'a4051007-0011-0000-0000-000000000000',
+  g5MathCYSPStructuredNumberPatterns: 'a4051007-0012-0000-0000-000000000000',
+  g5MathCYSPMentalCalcStrategies:     'a4051007-0013-0000-0000-000000000000',
+  g5MathCYSPMissingNumberReasoning:   'a4051007-0014-0000-0000-000000000000',
+  g5MathCYSPMultiStepOperations:      'a4051007-0015-0000-0000-000000000000',
+  g5MathCYSPRuleApplication:          'a4051007-0016-0000-0000-000000000000',
+  g5MathCYSPSkillApplicationPatterns: 'a4051007-0017-0000-0000-000000000000',
+  g5MathCYSPChapterTest:              'a4051007-0018-0000-0000-000000000000',
+
+  // Ch 8: Mapping Your Way
+  g5MathMappingYourWay:               'a3051008-0000-0000-0000-000000000001',
+  g5MathMYWMapsDirections:            'a4051008-0001-0000-0000-000000000000',
+  g5MathMYWReadingMaps:               'a4051008-0002-0000-0000-000000000000',
+  g5MathMYWGridReferences:            'a4051008-0003-0000-0000-000000000000',
+
+  // Ch 10: Tenths and Hundredths
+  g5MathTenthsAndHundredths:          'a3051010-0000-0000-0000-000000000001',
+  g5MathTHPlaceValues:                'a4051010-0001-0000-0000-000000000000',
+  g5MathTHVisualRepresentation:       'a4051010-0002-0000-0000-000000000000',
+  g5MathTHFractionToDecimal:          'a4051010-0003-0000-0000-000000000000',
+  g5MathTHComparingDecimals:          'a4051010-0004-0000-0000-000000000000',
+  g5MathTHDecimalInMoney:             'a4051010-0005-0000-0000-000000000000',
+  g5MathTHDecimalInMeasurement:       'a4051010-0006-0000-0000-000000000000',
+  g5MathTHDecimalOperations:          'a4051010-0007-0000-0000-000000000000',
+  g5MathTHConversionBetweenForms:     'a4051010-0008-0000-0000-000000000000',
+  g5MathTHSkillApplicationProb:       'a4051010-0009-0000-0000-000000000000',
+  g5MathTHChapterTest:                'a4051010-0010-0000-0000-000000000000',
+
+  // Ch 11: Area and its Boundary
+  g5MathAreaAndBoundary:              'a3051011-0000-0000-0000-000000000001',
+  g5MathAABFindingArea:               'a4051011-0001-0000-0000-000000000000',
+  g5MathAABAppropriateAreaUnits:      'a4051011-0002-0000-0000-000000000000',
+  g5MathAABAreaRealLife:              'a4051011-0003-0000-0000-000000000000',
+  g5MathAABCompareShapesSameArea:     'a4051011-0004-0000-0000-000000000000',
+  g5MathAABFindingPerimeter:          'a4051011-0005-0000-0000-000000000000',
+  g5MathAABPerimeterAsBoundary:       'a4051011-0006-0000-0000-000000000000',
+  g5MathAABPerimeterRealLife:         'a4051011-0007-0000-0000-000000000000',
+  g5MathAABSamePerimeterDiffShapes:   'a4051011-0008-0000-0000-000000000000',
+  g5MathAABAreaPerimeterRelation:     'a4051011-0009-0000-0000-000000000000',
+  g5MathAABSkillApplicationProblems:  'a4051011-0010-0000-0000-000000000000',
+  g5MathAABChapterTest:               'a4051011-0011-0000-0000-000000000000',
+
+  // Ch 13: Ways to Multiply and Divide
+  g5MathWaysToMultiplyDivide:         'a3051013-0000-0000-0000-000000000001',
+  g5MathWMDMult2Digit:                'a4051013-0001-0000-0000-000000000000',
+  g5MathWMDMult3Digit:                'a4051013-0002-0000-0000-000000000000',
+  g5MathWMDMultEndingZeros:           'a4051013-0003-0000-0000-000000000000',
+  g5MathWMDMultMultipleNumbers:       'a4051013-0004-0000-0000-000000000000',
+  g5MathWMDMultWordProblems:          'a4051013-0005-0000-0000-000000000000',
+  g5MathWMDDivOneDigit:               'a4051013-0006-0000-0000-000000000000',
+  g5MathWMDDivTwoDigit:               'a4051013-0007-0000-0000-000000000000',
+  g5MathWMDDivEndingZeros:            'a4051013-0008-0000-0000-000000000000',
+  g5MathWMDDivWordProblems:           'a4051013-0009-0000-0000-000000000000',
+  g5MathWMDSkillApplicationProblems:  'a4051013-0010-0000-0000-000000000000',
+  g5MathWMDChapterTest:               'a4051013-0011-0000-0000-000000000000',
+
+  // Ch 14: How Big? How Heavy?
+  g5MathHowBigHowHeavy:              'a3051014-0000-0000-0000-000000000001',
+  g5MathHBHHUnitsOfVolume:           'a4051014-0001-0000-0000-000000000000',
+  g5MathHBHHVolumeEstimation:        'a4051014-0002-0000-0000-000000000000',
+  g5MathHBHHVolumeUnitCubes:         'a4051014-0003-0000-0000-000000000000',
+  g5MathHBHHVolumeDisplacement:      'a4051014-0004-0000-0000-000000000000',
+  g5MathHBHHUnitsOfMass:             'a4051014-0005-0000-0000-000000000000',
+  g5MathHBHHWeightEstimation:        'a4051014-0006-0000-0000-000000000000',
+  g5MathHBHHMassConversion:          'a4051014-0007-0000-0000-000000000000',
+  g5MathHBHHMassCalculation:         'a4051014-0008-0000-0000-000000000000',
+  g5MathHBHHMeasurementRealLife:     'a4051014-0009-0000-0000-000000000000',
+  g5MathHBHH3DShapeConstruction:     'a4051014-0010-0000-0000-000000000000',
+  g5MathHBHHPackagingLayering:       'a4051014-0011-0000-0000-000000000000',
+  g5MathHBHHSkillApplicationProblem: 'a4051014-0012-0000-0000-000000000000',
+  g5MathHBHHChapterTest:             'a4051014-0013-0000-0000-000000000000',
+
   // Grade 6 Math: Patterns in Mathematics (Chapter 1)
   g6MathPatterns:                      'a3061001-0000-0000-0000-000000000001',
   g6MathPatternsIntro:                 'a4061001-0001-0000-0000-000000000000',

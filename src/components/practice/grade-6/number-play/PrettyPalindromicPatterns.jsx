@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { RefreshCw, Check, Eye, ChevronRight, Pencil, X, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
-import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import Whiteboard from '../../../../Whiteboard';
 import LatexContent from '../../../../LatexContent';
 import ExplanationModal from '../../../../ExplanationModal';

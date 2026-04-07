@@ -6,7 +6,7 @@ import { LatexText } from '../../../LatexText';
 import mascotImg from '../../../../assets/mascot.png';
 import ExplanationModal from '../../../ExplanationModal';
 import PracticeReportModal from '../../PracticeReportModal';
-import { useSessionLogger } from "@/hooks/useSessionLogger";
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { NODE_IDS } from "@/lib/curriculumIds";
 import '../TenthPracticeSession.css';
 

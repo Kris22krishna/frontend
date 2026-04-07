@@ -100,6 +100,7 @@ const generateAnglesInShapesQuestions = () => {
 export const SKILLS = [
     {
         id: 'sa-01',
+        nodeId: 'a4051002-0001-0000-0000-000000000000',
         title: 'Angle Types',
         subtitle: 'Identification',
         icon: '📐',
@@ -136,6 +137,7 @@ export const SKILLS = [
     },
     {
         id: 'sa-02',
+        nodeId: 'a4051002-0002-0000-0000-000000000000',
         title: 'Measuring',
         subtitle: 'Using Protractor',
         icon: '📏',
@@ -158,6 +160,7 @@ export const SKILLS = [
     },
     {
         id: 'sa-03',
+        nodeId: 'a4051002-0003-0000-0000-000000000000',
         title: 'Turn & Rotation',
         subtitle: 'Clockwise & More',
         icon: '🕒',
@@ -187,6 +190,7 @@ export const SKILLS = [
     },
     {
         id: 'sa-04',
+        nodeId: 'a4051002-0004-0000-0000-000000000000',
         title: 'Angles in shapes',
         subtitle: 'Visualization',
         icon: '🧱',

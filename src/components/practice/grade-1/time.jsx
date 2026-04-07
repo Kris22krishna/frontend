@@ -4,40 +4,126 @@ import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { NODE_IDS } from '@/lib/curriculumIds';
-import Navbar from '../../Navbar';
-import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
-import { LatexText } from '../../LatexText';
-import ExplanationModal from '../../ExplanationModal';
-import StickerExit from '../../StickerExit';
-import mascotImg from '../../../assets/mascot.png';
-import avatarImg from '../../../assets/avatar.png';
-import '../../../pages/juniors/class-1/Grade1Practice.css';
+import Navbar from '@/components/Navbar';
+import { TOPIC_CONFIGS } from '@/lib/topicConfig';
+import { LatexText } from '@/components/LatexText';
+import ExplanationModal from '@/components/ExplanationModal';
+import StickerExit from '@/components/StickerExit';
+import mascotImg from '@/assets/mascot.png';
+import avatarImg from '@/assets/avatar.png';
+import '@/pages/juniors/class-1/Grade1Practice.css';
 
 const DynamicVisual = ({ type, data }) => {
     if (type === 'day-night') {
-        const { scenario } = data;
+        const { scenario, visualType } = data;
         return (
-            <motion.div initial={{ scale: 0.8, rotate: -5 }} animate={{ scale: 1, rotate: 0 }} className="g1-time-visual">
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="g1-time-visual">
                 <div style={{
-                    width: 'clamp(120px, 40vw, 180px)', height: 'clamp(120px, 40vw, 180px)', borderRadius: '50%',
-                    background: scenario === 'Day' ? 'linear-gradient(135deg, #FFD700, #FFA500)' : 'linear-gradient(135deg, #1a1a2e, #16213e)',
+                    width: 'clamp(140px, 45vw, 200px)', height: 'clamp(140px, 45vw, 200px)', borderRadius: '40px',
+                    background: scenario === 'Day' ? 'linear-gradient(135deg, #87CEEB, #BAE6FD)' : 'linear-gradient(135deg, #1E1B4B, #312E81)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
-                    position: 'relative', overflow: 'hidden'
+                    boxShadow: '0 15px 35px rgba(0,0,0,0.1)',
+                    position: 'relative', overflow: 'hidden', border: '4px solid white'
                 }}>
-                    {scenario === 'Day' ? (
-                        <>
-                            <motion.div animate={{ rotate: 360 }} transition={{ duration: 10, repeat: Infinity, ease: "linear" }} style={{ position: 'absolute' }}>
-                                <Star color="#fff" fill="#fff" size={'clamp(60px, 20vw, 100px)'} opacity={0.2} />
-                            </motion.div>
-                            <span style={{ fontSize: 'clamp(40px, 15vw, 60px)' }}>☀️</span>
-                        </>
-                    ) : (
-                        <>
-                            <div style={{ position: 'absolute', top: '20px', left: '30px', fontSize: '14px' }}>✨</div>
-                            <div style={{ position: 'absolute', bottom: '30px', right: '40px', fontSize: '10px' }}>⭐</div>
-                            <span style={{ fontSize: '60px' }}>🌙</span>
-                        </>
+                    {visualType === 'sun' && (
+                        <svg width="80%" height="80%" viewBox="0 0 100 100">
+                            <defs>
+                                <radialGradient id="sunGradient" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" stopColor="#FFF7ED" />
+                                    <stop offset="60%" stopColor="#FBBF24" />
+                                    <stop offset="100%" stopColor="#EA580C" />
+                                </radialGradient>
+                            </defs>
+                            <motion.g animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} style={{ transformOrigin: 'center' }}>
+                                {[...Array(12)].map((_, i) => (
+                                    <path 
+                                        key={i} 
+                                        d="M 50 10 L 55 25 L 45 25 Z" 
+                                        fill="#FDE047" 
+                                        transform={`rotate(${i * 30}, 50, 50)`} 
+                                    />
+                                ))}
+                            </motion.g>
+                            <circle cx="50" cy="50" r="28" fill="url(#sunGradient)" filter="drop-shadow(0 0 10px rgba(251, 191, 36, 0.6))" />
+                        </svg>
+                    )}
+
+                    {visualType === 'moon' && (
+                        <svg width="80%" height="80%" viewBox="0 0 100 100">
+                            <defs>
+                                <filter id="moonGlow">
+                                    <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
+                                    <feOffset dx="0" dy="0" result="offsetblur" />
+                                    <feComponentTransfer><feFuncA type="linear" slope="0.5"/></feComponentTransfer>
+                                    <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+                                </filter>
+                            </defs>
+                            {[...Array(6)].map((_, i) => (
+                                <motion.circle 
+                                    key={i} 
+                                    cx={Math.random() * 80 + 10} 
+                                    cy={Math.random() * 80 + 10} 
+                                    r={Math.random() * 1.5 + 0.5} 
+                                    fill="white" 
+                                    animate={{ opacity: [0.2, 1, 0.2] }} 
+                                    transition={{ duration: Math.random() * 2 + 1, repeat: Infinity }} 
+                                />
+                            ))}
+                            <path 
+                                d="M 65 30 A 35 35 0 1 0 65 70 A 28 28 0 1 1 65 30 Z" 
+                                fill="#F1F5F9" 
+                                filter="url(#moonGlow)" 
+                                transform="rotate(-15, 50, 50)" 
+                            />
+                        </svg>
+                    )}
+
+                    {visualType === 'sleep' && (
+                        <svg width="80%" height="80%" viewBox="0 0 100 100">
+                            <defs>
+                                <filter id="glow">
+                                    <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+                                    <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                                </filter>
+                            </defs>
+                            <path d="M 20 70 L 80 70 L 80 50 L 20 50 Z" fill="#4338CA" rx="5" />
+                            <circle cx="20" cy="70" r="3" fill="#312E81" />
+                            <circle cx="80" cy="70" r="3" fill="#312E81" />
+                            <rect x="22" y="52" width="56" height="15" fill="#6366F1" rx="4" />
+                            <rect x="25" y="45" width="15" height="8" fill="#F8FAFC" rx="3" />
+                            <motion.text 
+                                x="60" y="40" fontSize="12" fill="#E2E8F0" fontWeight="bold" 
+                                animate={{ y: [40, 20], opacity: [1, 0], scale: [0.8, 1.2] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                            >Z</motion.text>
+                            <motion.text 
+                                x="70" y="30" fontSize="8" fill="#E2E8F0" fontWeight="bold" 
+                                animate={{ y: [30, 10], opacity: [1, 0], scale: [0.8, 1.2] }}
+                                transition={{ duration: 2, delay: 0.7, repeat: Infinity }}
+                            >z</motion.text>
+                        </svg>
+                    )}
+
+                    {visualType === 'breakfast' && (
+                        <svg width="80%" height="80%" viewBox="0 0 100 100">
+                            <circle cx="50" cy="65" r="30" fill="#F1F5F9" stroke="#E2E8F0" strokeWidth="2" />
+                            <circle cx="50" cy="65" r="22" fill="#FFFFFF" stroke="#F1F5F9" strokeWidth="1" />
+                            <rect x="38" y="55" width="24" height="20" fill="#FDE68A" rx="2" transform="rotate(-5, 50, 65)" />
+                            <path d="M 65 45 L 85 45 L 83 65 L 67 65 Z" fill="#FF6B6B" rx="3" />
+                            <path d="M 85 50 Q 92 50 92 57 Q 92 64 85 64" fill="none" stroke="#FF6B6B" strokeWidth="3" />
+                            <motion.path 
+                                d="M 70 40 Q 72 35 70 30" 
+                                fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"
+                                animate={{ y: [0, -10], opacity: [0, 0.8, 0] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                            />
+                            <motion.path 
+                                d="M 78 40 Q 80 35 78 30" 
+                                fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"
+                                animate={{ y: [0, -10], opacity: [0, 0.8, 0] }}
+                                transition={{ duration: 2, delay: 0.5, repeat: Infinity }}
+                            />
+                        </svg>
                     )}
                 </div>
             </motion.div>
@@ -275,10 +361,11 @@ const Time = () => {
             let question = {};
             if (type === 'day-night') {
                 const scenarios = [
-                    { q: 'When can we see the big yellow Sun?', a: 'Day' },
-                    { q: 'When do we see the silver Moon and Stars?', a: 'Night' },
-                    { q: 'When is it time to put on PJs and sleep? 😴', a: 'Night' },
-                    { q: 'When do we have yummy breakfast? 🥞', a: 'Day' }
+                    { q: 'When can we see the big yellow Sun?', a: 'Day', vt: 'sun' },
+                    { q: 'When do we see the silver Moon?', a: 'Night', vt: 'moon' },
+                    { q: 'When is it time to put on our sleeping clothes and go to bed? 😴', a: 'Night', vt: 'sleep' },
+                    { q: 'When do we have yummy breakfast? 🥞', a: 'Day', vt: 'breakfast' },
+                    { q: 'When do we see the beautiful twinkling stars in the sky? ✨', a: 'Night', vt: 'moon' }
                 ];
                 const item = scenarios[Math.floor(Math.random() * scenarios.length)];
                 question = {
@@ -286,7 +373,7 @@ const Time = () => {
                     options: ['Day', 'Night'].sort(() => 0.5 - Math.random()),
                     correct: item.a,
                     type: 'day-night',
-                    visualData: { scenario: item.a },
+                    visualData: { scenario: item.a, visualType: item.vt },
                     explanation: `We usually associate this activity or visual with the ${item.a.toUpperCase()} time.`
                 };
             } else if (type === 'days-week') {
@@ -413,7 +500,7 @@ const Time = () => {
     const handleSkip = () => {
         if (isAnswered) return;
         const currentQ = sessionQuestions[qIndex];
-        
+
         logAnswer({
             question_index: qIndex,
             answer_json: { question_text: currentQ.text, selected: 'Skipped', correct: currentQ.correct, isCorrect: false },

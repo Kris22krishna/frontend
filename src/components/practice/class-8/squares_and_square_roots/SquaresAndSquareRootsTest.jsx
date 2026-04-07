@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Check, Eye, ChevronRight, ChevronLeft, SkipForward, ArrowLeft, RefreshCw, BarChart3, Clock, HelpCircle, CheckCircle2, XCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
-import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { NODE_IDS } from '../../../../lib/curriculumIds';
 import { LatexText } from '../../../LatexText';
 import mascotImg from '../../../../assets/mascot.png';

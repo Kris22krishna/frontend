@@ -3,7 +3,7 @@ import MathRenderer from '../../../MathRenderer';
 import TallyDrawInteractive from './Topics/Skills/TallyDrawInteractive';
 import PictographDrawInteractive from './Topics/Skills/PictographDrawInteractive';
 import BarGraphDrawInteractive from './Topics/Skills/BarGraphDrawInteractive';
-import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 export default function AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'dh' , nodeId }) {
     const normalizeTextAnswer = (value) => String(value ?? '').replace(/\s+/g, ' ').trim().toLowerCase();

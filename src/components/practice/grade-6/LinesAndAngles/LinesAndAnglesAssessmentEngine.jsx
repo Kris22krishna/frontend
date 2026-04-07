@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../MathRenderer';
 import ProtractorInteractive from './Topics/Skills/ProtractorInteractive.jsx';
 import GeometryDrawInteractive from './Topics/Skills/GeometryDrawInteractive.jsx';
-import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 export default function AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'alg' , nodeId }) {
     const getQuestionType = (question) => {

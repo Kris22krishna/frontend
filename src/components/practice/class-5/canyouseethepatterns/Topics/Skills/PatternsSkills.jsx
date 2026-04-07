@@ -92,6 +92,7 @@ export default function PatternsSkills() {
                             sampleSize={10}
                             title={skill.title}
                             color={skill.color}
+                            nodeId={skill.nodeId}
                             onBack={() => setView('list')}
                         />
                     ) : (
@@ -99,6 +100,7 @@ export default function PatternsSkills() {
                             questions={skill.assessment}
                             title={skill.title}
                             color={skill.color}
+                            nodeId={skill.nodeId}
                             onBack={() => setView('list')}
                             onSecondaryBack={() => navigate('/middle/grade/5/canyouseethepatterns')}
                         />

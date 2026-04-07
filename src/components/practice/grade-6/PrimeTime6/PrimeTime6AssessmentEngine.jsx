@@ -3,7 +3,7 @@ import MathRenderer from '../../../MathRenderer';
 import FactorTreeInteractive from './Topics/Skills/FactorTreeInteractive';
 import DivisionTableInteractive from './Topics/Skills/DivisionTableInteractive';
 import styles from './primeTime6.module.css';
-import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 export default function AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'pt' , nodeId }) {
     const normalizeTextAnswer = (value) => String(value ?? '').replace(/\s+/g, ' ').trim().toLowerCase();

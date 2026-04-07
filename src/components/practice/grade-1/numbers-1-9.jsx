@@ -4,14 +4,14 @@ import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { NODE_IDS } from '@/lib/curriculumIds';
-import Navbar from '../../Navbar';
-import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
-import { LatexText } from '../../LatexText';
-import ExplanationModal from '../../ExplanationModal';
-import StickerExit from '../../StickerExit';
-import mascotImg from '../../../assets/mascot.png';
-import avatarImg from '../../../assets/avatar.png';
-import '../../../pages/juniors/class-1/Grade1Practice.css';
+import Navbar from '@/components/Navbar';
+import { TOPIC_CONFIGS } from '@/lib/topicConfig';
+import { LatexText } from '@/components/LatexText';
+import ExplanationModal from '@/components/ExplanationModal';
+import StickerExit from '@/components/StickerExit';
+import mascotImg from '@/assets/mascot.png';
+import avatarImg from '@/assets/avatar.png';
+import '@/pages/juniors/class-1/Grade1Practice.css';
 
 const DynamicVisual = ({ type, data }) => {
     if (type === 'counting' || data.forceCounting) {
@@ -131,6 +131,8 @@ const Numbers1to9 = () => {
         return { topicName: 'Practice', skillName: 'Mathematics', grade: '1' };
     };
 
+    const { topicName, skillName } = getTopicInfo();
+
     const getNextSkill = () => {
         const { grade } = getTopicInfo();
         const gradeConfig = TOPIC_CONFIGS[grade];
@@ -176,11 +178,15 @@ const Numbers1to9 = () => {
 
     const makeOptions = (correct) => {
         const opts = new Set([correct]);
-        const offsets = [1, -1, 2, -2, 3, -3, 4];
+        const offsets = [1, -1, 2, -2, 3, -3, 4, -4, 5];
         for (const off of offsets) {
             if (opts.size >= 4) break;
             const v = correct + off;
-            if (v >= 0) opts.add(v);
+            if (v >= 0 && v <= 10) opts.add(v);
+        }
+        // Fallback for very small numbers if needed
+        while (opts.size < 4) {
+            opts.add(Math.floor(Math.random() * 10));
         }
         return [...opts].sort(() => 0.5 - Math.random());
     };
@@ -231,9 +237,15 @@ const Numbers1to9 = () => {
                 } else {
                     num = Math.floor(Math.random() * 9) + 1;
                 }
+                const optionsArr = [names[num - 1]];
+                while (optionsArr.length < 4) {
+                    const randomName = names[Math.floor(Math.random() * names.length)];
+                    if (!optionsArr.includes(randomName)) optionsArr.push(randomName);
+                }
+                
                 question = {
-                    text: `What is the name of this number?`,
-                    options: [names[num - 1], names[num % 9], names[(num + 2) % 9], names[(num + 4) % 9]].filter((v, i, self) => self.indexOf(v) === i).sort(() => 0.5 - Math.random()),
+                    text: `What is the number name for this number?`,
+                    options: optionsArr.sort(() => 0.5 - Math.random()),
                     correct: names[num - 1],
                     type: 'recognition',
                     visualData: { num, color: colors[i % colors.length] },
@@ -267,7 +279,7 @@ const Numbers1to9 = () => {
                 }
                 const objType = objTypes[i % objTypes.length];
                 question = {
-                    text: `Count the items and write the number!`,
+                    text: `How many ${objType}s are there?`,
                     options: [],
                     correct: count.toString(),
                     type: 'userinput',

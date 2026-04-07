@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Clock, ChevronRight, ChevronLeft } from 'lucide-react';
 import { api } from '../../../../services/api';
-import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import LatexContent from '../../../LatexContent';
 import '../../../../pages/middle/class-7/Class7PracticeLayout.css';
 import mascotImg from '../../../../assets/mascot.png';
