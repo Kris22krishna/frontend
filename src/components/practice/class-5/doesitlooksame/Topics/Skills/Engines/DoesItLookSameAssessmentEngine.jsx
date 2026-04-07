@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { useSessionLogger } from '../../../../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { useNavigate } from 'react-router-dom';
 import '../../../doesitlooksame.css';
 import MathRenderer from '@/components/MathRenderer';

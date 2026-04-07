@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../MathRenderer';
 import FactorTreeInteractive from './Topics/Skills/FactorTreeInteractive';
 import DivisionTableInteractive from './Topics/Skills/DivisionTableInteractive';
-import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 export default function QuizEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'pt' , nodeId }) {
     const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);

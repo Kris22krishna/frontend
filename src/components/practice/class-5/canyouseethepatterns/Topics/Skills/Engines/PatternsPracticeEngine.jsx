@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSessionLogger } from '../../../../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { ChevronLeft, ChevronRight, Lightbulb } from 'lucide-react';
 import '../../../Patterns.css';
 import MathRenderer from '../../../../../../MathRenderer';

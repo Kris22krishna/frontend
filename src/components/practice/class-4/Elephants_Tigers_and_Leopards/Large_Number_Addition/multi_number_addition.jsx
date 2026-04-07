@@ -6,7 +6,7 @@ import { api } from '../../../../../services/api';
 import LatexContent from '../../../../LatexContent';
 import ExplanationModal from '../../../../ExplanationModal';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
-import { useSessionLogger } from '../../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 // Simple SVGs for fruits/items if Lucide doesn't have exact ones
 const MangoIcon = () => <span className="text-3xl">🥭</span>;

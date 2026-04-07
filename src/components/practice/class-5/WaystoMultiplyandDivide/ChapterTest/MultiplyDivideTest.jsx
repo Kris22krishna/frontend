@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star, FastForward } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
-import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import LatexContent from '../../../../LatexContent';
 import mascotImg from '../../../../../assets/mascot.png';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
