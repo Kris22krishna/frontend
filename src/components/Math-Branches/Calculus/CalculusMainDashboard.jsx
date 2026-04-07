@@ -4,6 +4,17 @@ import './calculus.css';
 
 const BRANCHES = [
     {
+        id: 'skill-sparks',
+        path: '/calculus/sparks',
+        label: 'Skill Sparks ⚡',
+        emoji: '⚡',
+        tagline: 'Interactive Playgrounds',
+        desc: 'Explore highly immersive, interactive simulations for Calculus concepts.',
+        gradFrom: '#f97316',
+        gradTo: '#fde047',
+        shadow: 'rgba(249,115,22,0.5)',
+    },
+    {
         id: 'functions',
         path: '/calculus/functions',
         label: 'Functions',
