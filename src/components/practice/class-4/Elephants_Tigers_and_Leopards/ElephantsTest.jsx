@@ -6,7 +6,7 @@ import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
 import mascotImg from '../../../../assets/mascot.png';
-import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 const BLUE_THEME_CSS = `
     .option-btn-modern.selected {

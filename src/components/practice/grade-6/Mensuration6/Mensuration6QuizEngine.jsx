@@ -3,7 +3,7 @@ import MathRenderer from '../../../MathRenderer';
 import PerimeterDrawInteractive from './Topics/Skills/PerimeterDrawInteractive';
 import AreaDrawInteractive from './Topics/Skills/AreaDrawInteractive';
 import CompositeDrawInteractive from './Topics/Skills/CompositeDrawInteractive';
-import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 export default function QuizEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'dh' , nodeId }) {
     const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);

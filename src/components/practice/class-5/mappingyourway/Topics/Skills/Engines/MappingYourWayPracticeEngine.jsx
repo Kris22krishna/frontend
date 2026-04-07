@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSessionLogger } from '../../../../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import '../../../mappingyourway.css';
 import MathRenderer from '../../../../../../MathRenderer';
 

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Check, Eye, ChevronRight, ChevronLeft, X, Trophy } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
-import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import './polynomials.css';

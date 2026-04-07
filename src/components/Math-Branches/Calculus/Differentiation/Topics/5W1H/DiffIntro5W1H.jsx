@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../../calculus.css';
 import MathRenderer from '../../../../../MathRenderer';
+import SkillSparkEmbed from '../../../../../common/SkillSparkEmbed';
 import { diffCards5W1H } from './DiffIntroData';
 
 /* ─── Single card ─────────────────────────────────── */
@@ -116,6 +117,11 @@ export default function DiffIntro5W1H() {
                     {diffCards5W1H.map((card, idx) => (
                         <W1HCard key={idx} card={card} />
                     ))}
+                </div>
+
+                <div style={{ marginTop: 40, width: '100%' }}>
+                    <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 24, fontWeight: 800, color: '#1e293b', marginBottom: 16 }}>Interactive Spark: The Moving Derivative</h2>
+                    <SkillSparkEmbed spark="calculus-tangent" mini={true} height={500} />
                 </div>
 
                 <div style={{

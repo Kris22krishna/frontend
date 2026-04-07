@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { RefreshCw, ArrowLeft, Check, X, Pencil, Eye, ChevronRight, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
-import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { NODE_IDS } from '../../../../lib/curriculumIds';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';

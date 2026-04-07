@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useSessionLogger } from '../../../../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import styles from './HowManySquaresEngines.module.css';
 import { LatexText } from '@/components/LatexText';
 import mascotImg from '../../../../../../../assets/mascot.png';

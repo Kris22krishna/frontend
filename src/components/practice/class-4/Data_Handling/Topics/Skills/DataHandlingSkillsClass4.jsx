@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SKILLS, LEARN_CONTENT, generateQuestionSets } from './skillsData';
 import '../../data-handling.css';
-import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 const SKILL_NODE_IDS = {
     1: 'a4041014-0001-0000-0000-000000000000',

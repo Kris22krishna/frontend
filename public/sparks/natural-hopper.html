@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Natural Hopper</title>
+    <style>
+        body { margin: 0; padding: 20px; font-family: 'Inter', system-ui, sans-serif; background: transparent; color: #1e293b; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        .is-mini body { padding: 0; justify-content: flex-start; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .is-mini .header { display: none; }
+        .container { background: #fff; padding: 30px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 20px; border: 1px solid #e2e8f0; }
+        .is-mini .container { box-shadow: none; border: none; padding: 10px; max-width: 100%; }
+        
+        .controls { display: flex; gap: 20px; align-items: center; justify-content: center; background: #f8fafc; padding: 16px; border-radius: 16px; border: 1px solid #f1f5f9; }
+        label { font-weight: 700; font-size: 15px; color: #475569; }
+        input[type="range"] { flex: 1; max-width: 200px; accent-color: #10b981; }
+        .val-display { font-weight: 900; font-size: 20px; color: #10b981; min-width: 40px; text-align: center; }
+        
+        button { background: #10b981; color: white; border: none; padding: 10px 24px; border-radius: 10px; font-weight: 800; font-size: 16px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); }
+        button:hover { background: #059669; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(16, 185, 129, 0.4); }
+        button:active { transform: translateY(0); }
+        button.reset { background: #f1f5f9; color: #64748b; box-shadow: none; }
+        button.reset:hover { background: #e2e8f0; color: #475569; }
+
+        .viewport { position: relative; width: 100%; height: 180px; background: #e0f2fe; border-radius: 16px; overflow: hidden; border: 2px solid #bae6fd; }
+        .number-line { position: absolute; bottom: 40px; left: 0; height: 4px; background: #7dd3fc; width: 3000px; transition: transform 0.3s ease; }
+        
+        .tick { position: absolute; bottom: -8px; width: 4px; height: 20px; background: #38bdf8; border-radius: 2px; }
+        .tick-label { position: absolute; bottom: -35px; width: 40px; text-align: center; margin-left: -18px; font-weight: 800; color: #0284c7; }
+        
+        .frog { position: absolute; bottom: 44px; width: 40px; height: 40px; margin-left: -20px; font-size: 32px; transition: left 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 10; display: flex; justify-content: center; align-items: flex-end; }
+        .frog.jumping { animation: bounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        
+        .arc { position: absolute; border: 3px dashed rgba(16, 185, 129, 0.5); border-bottom: none; border-radius: 100px 100px 0 0; bottom: 44px; pointer-events: none; opacity: 0; animation: fadeIn 0.3s forwards; }
+
+        .equation-display { text-align: center; font-size: 24px; font-weight: 900; color: #334155; height: 35px; display: flex; justify-content: center; gap: 8px; align-items: center; }
+        .highlight { color: #10b981; }
+
+        @keyframes bounce { 0% { transform: translateY(0); } 50% { transform: translateY(-60px); } 100% { transform: translateY(0); } }
+        @keyframes fadeIn { to { opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 style="margin: 0 0 10px; font-weight: 900; font-size: 32px; color: #0f172a;">Natural Number Hopper</h1>
+        <p style="margin: 0; color: #64748b; font-size: 16px;">Explore counting, addition, and multiplication through repeated jumps.</p>
+    </div>
+
+    <div class="container">
+        <div class="controls">
+            <label>Jump Size:</label>
+            <input type="range" id="jumpSize" min="1" max="5" value="2" oninput="updateJumpSize()">
+            <div class="val-display" id="jumpVal">+2</div>
+            <button onclick="jump()">Hop!</button>
+            <button class="reset" onclick="reset()">Reset</button>
+        </div>
+
+        <div class="equation-display" id="eqDisplay">
+            Start at <span class="highlight">0</span>
+        </div>
+
+        <div class="viewport" id="viewport">
+            <div class="number-line" id="numberLine">
+                <!-- Ticks injected here -->
+            </div>
+            <!-- Frog relies on numberLine transform to scroll, but the frog is inside numberLine so it moves with it! Wait, if frog is inside numberLine, it scrolls with it. Let's put frog in numberLine! -->
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('mini') === 'true') { document.documentElement.classList.add('is-mini'); }
+
+        const numberLine = document.getElementById('numberLine');
+        const jumpValDisplay = document.getElementById('jumpVal');
+        const jumpSizeInput = document.getElementById('jumpSize');
+        const eqDisplay = document.getElementById('eqDisplay');
+        const viewport = document.getElementById('viewport');
+
+        let currentPos = 0;
+        let jumpCount = 0;
+        const tickSpacing = 60; 
+
+        // Generate ticks
+        for(let i=0; i<=50; i++) {
+            const tick = document.createElement('div');
+            tick.className = 'tick';
+            tick.style.left = (i * tickSpacing) + 'px';
+            
+            const label = document.createElement('div');
+            label.className = 'tick-label';
+            label.style.left = (i * tickSpacing) + 'px';
+            label.innerText = i;
+            
+            numberLine.appendChild(tick);
+            numberLine.appendChild(label);
+        }
+
+        const frog = document.createElement('div');
+        frog.className = 'frog';
+        frog.innerText = '🐸';
+        frog.style.left = '0px';
+        numberLine.appendChild(frog);
+
+        function updateJumpSize() {
+            jumpValDisplay.innerText = '+' + jumpSizeInput.value;
+        }
+
+        function jump() {
+            const size = parseInt(jumpSizeInput.value);
+            const startPos = currentPos;
+            currentPos += size;
+            jumpCount++;
+
+            // Create arc
+            const arc = document.createElement('div');
+            arc.className = 'arc';
+            const width = size * tickSpacing;
+            arc.style.width = width + 'px';
+            arc.style.height = Math.min(width * 0.4, 80) + 'px';
+            arc.style.left = (startPos * tickSpacing) + 'px';
+            numberLine.appendChild(arc);
+
+            // Animate frog
+            frog.classList.remove('jumping');
+            void frog.offsetWidth; // trigger reflow
+            frog.classList.add('jumping');
+            frog.style.left = (currentPos * tickSpacing) + 'px';
+
+            // Center camera if needed
+            const viewportWidth = viewport.offsetWidth;
+            const frogTargetX = currentPos * tickSpacing;
+            if (frogTargetX > viewportWidth * 0.6) {
+                numberLine.style.transform = `translateX(-${frogTargetX - viewportWidth * 0.4}px)`;
+            }
+
+            eqDisplay.innerHTML = `<span class="highlight">${size}</span> × ${jumpCount} hops = <span class="highlight">${currentPos}</span>`;
+        }
+
+        function reset() {
+            currentPos = 0;
+            jumpCount = 0;
+            frog.style.left = '0px';
+            numberLine.style.transform = 'translateX(0)';
+            document.querySelectorAll('.arc').forEach(a => a.remove());
+            eqDisplay.innerHTML = `Start at <span class="highlight">0</span>`;
+        }
+    </script>
+</body>
+</html>
