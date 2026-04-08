@@ -772,9 +772,13 @@ const DiagnosisTestRunner = () => {
                             <span className="text-xs sm:text-sm font-black text-indigo-600 uppercase tracking-widest px-2 sm:px-4 py-1 sm:py-2 bg-indigo-50 rounded-lg">
                                 Question {currentIndex + 1} / {questions.length}
                             </span>
-                            <span className="text-slate-400 font-medium text-xs sm:text-sm">
-                                {q.type}
-                            </span>
+                            <div className="flex items-center gap-3">
+                                {q.topic && (
+                                    <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest px-2 sm:px-3 py-1 bg-slate-100 text-slate-500 rounded-md">
+                                        {q.topic}
+                                    </span>
+                                )}
+                            </div>
                         </div>
                         <div className="text-lg sm:text-3xl font-bold text-slate-800 leading-snug">
                             <MathRenderer text={q.question} />
@@ -832,8 +836,8 @@ const DiagnosisTestRunner = () => {
                                                 return p;
                                             };
                                             return (
-                                                <div key={rowIdx} className="flex items-center gap-2 p-3 sm:p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all group animate-in fade-in slide-in-from-bottom-2 duration-500">
-                                                    <div className="flex-1 flex items-center justify-center gap-1 sm:gap-4 flex-wrap">
+                                                <div key={rowIdx} className="flex items-center justify-center gap-2 p-3 sm:p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all group animate-in fade-in slide-in-from-bottom-2 duration-500">
+                                                    <div className="flex items-center justify-center gap-1 sm:gap-4 flex-wrap">
                                                         {row.left !== undefined ? (
                                                             <>
                                                                 {/* Operand 1 */}
@@ -854,7 +858,7 @@ const DiagnosisTestRunner = () => {
                                                                 </div>
                                                             </>
                                                         ) : (
-                                                            <div className="flex-1 p-2 text-2xl font-bold text-slate-700">
+                                                            <div className="p-2 text-2xl font-bold text-slate-700">
                                                                 <MathRenderer text={row.text} />
                                                             </div>
                                                         )}
@@ -864,7 +868,7 @@ const DiagnosisTestRunner = () => {
                                                             {q.variant === 'fraction' ? (
                                                                 <div className="flex flex-col items-center gap-2 bg-slate-50 p-3 rounded-2xl border-2 border-slate-100 group-hover:border-indigo-100 transition-all">
                                                                     <input
-                                                                        type="number"
+                                                                        type="text" inputMode="numeric"
                                                                         className="w-14 sm:w-16 p-2 border-2 border-transparent rounded-lg focus:border-indigo-600 focus:bg-white focus:outline-none transition-all font-black text-lg text-center placeholder:text-slate-300"
                                                                         placeholder="N"
                                                                         value={answers[q.id]?.[rowIdx]?.num || ''}
@@ -872,7 +876,7 @@ const DiagnosisTestRunner = () => {
                                                                     />
                                                                     <div className="h-1 bg-slate-300 w-full rounded-full opacity-50" />
                                                                     <input
-                                                                        type="number"
+                                                                        type="text" inputMode="numeric"
                                                                         className="w-14 sm:w-16 p-2 border-2 border-transparent rounded-lg focus:border-indigo-600 focus:bg-white focus:outline-none transition-all font-black text-lg text-center placeholder:text-slate-300"
                                                                         placeholder="D"
                                                                         value={answers[q.id]?.[rowIdx]?.den || ''}
@@ -902,7 +906,7 @@ const DiagnosisTestRunner = () => {
                                                             ) : (
                                                                 <div className="relative group/input">
                                                                     <input
-                                                                        type="number"
+                                                                        type="text" inputMode="numeric"
                                                                         className="w-24 sm:w-32 p-3 sm:p-4 border-3 border-slate-100 rounded-xl focus:border-indigo-600 focus:outline-none transition-all font-black text-xl text-center bg-white shadow-inner group-hover:shadow-md"
                                                                         placeholder="?"
                                                                         value={answers[q.id]?.[rowIdx]?.["0"] || ''}
@@ -919,13 +923,15 @@ const DiagnosisTestRunner = () => {
                                 ) : (
                                     <div className="overflow-x-auto pb-6">
                                         <table className="w-full border-collapse bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100">
-                                            <thead>
-                                                <tr className="bg-slate-50 text-slate-500 uppercase text-xs font-black tracking-widest">
-                                                    {q.headers?.map((header, i) => (
-                                                        <th key={i} className="p-5 text-left border-b border-slate-100">{header}</th>
-                                                    ))}
-                                                </tr>
-                                            </thead>
+                                            {q.headers && q.headers.length > 0 && !q.headers.every(h => ['expression', 'result'].includes(h.toLowerCase())) && (
+                                                <thead>
+                                                    <tr className="bg-slate-50 text-slate-500 uppercase text-[10px] font-black tracking-widest border-b border-slate-100">
+                                                        {q.headers.map((header, i) => (
+                                                            <th key={i} className="p-4 text-center">{header}</th>
+                                                        ))}
+                                                    </tr>
+                                                </thead>
+                                            )}
                                             <tbody>
                                                 {q.rows.map((row, rowIdx) => (
                                                     <tr key={rowIdx} className="hover:bg-slate-50/50 transition-colors">
@@ -963,14 +969,9 @@ const DiagnosisTestRunner = () => {
                                                         {(q.inputKeys || ["0"]).map((key, kIdx) => (
                                                             <td key={kIdx} className="p-5 border-b border-slate-50">
                                                                 <div className="flex flex-col gap-1">
-                                                                    {q.placeholders?.[kIdx] && (
-                                                                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter text-center">
-                                                                            {q.placeholders[kIdx]}
-                                                                        </span>
-                                                                    )}
                                                                     {row.inputType === 'select' ? (
                                                                         <select
-                                                                            className="w-full p-4 border-2 border-slate-100 rounded-xl focus:border-indigo-600 focus:outline-none transition-all font-bold text-xl text-center bg-white appearance-none cursor-pointer"
+                                                                            className="w-full max-w-[240px] mx-auto p-4 border-2 border-slate-100 rounded-xl focus:border-indigo-600 focus:outline-none transition-all font-bold text-lg sm:text-xl text-center bg-white appearance-none cursor-pointer"
                                                                             value={answers[q.id]?.[rowIdx]?.[key] || ''}
                                                                             onChange={(e) => handleTableInputChange(rowIdx, key, e.target.value)}
                                                                         >
@@ -1004,8 +1005,8 @@ const DiagnosisTestRunner = () => {
                                                                     ) : (
                                                                         <input
                                                                             type="text"
-                                                                            className="w-full p-4 border-2 border-slate-100 rounded-xl focus:border-indigo-600 focus:outline-none transition-all font-bold text-xl text-center placeholder:text-slate-200"
-                                                                            placeholder={q.placeholders?.[kIdx] || "0"}
+                                                                            className="w-full max-w-[160px] sm:max-w-[220px] mx-auto p-3 sm:p-4 border-2 border-slate-100 rounded-xl focus:border-indigo-600 focus:outline-none transition-all font-bold text-lg sm:text-xl text-center placeholder:text-slate-200"
+                                                                            placeholder={q.placeholders?.[kIdx] || (q.headers && q.headers[kIdx + 1] ? q.headers[kIdx + 1] : "0")}
                                                                             value={answers[q.id]?.[rowIdx]?.[key] || ''}
                                                                             onChange={(e) => handleTableInputChange(rowIdx, key, e.target.value)}
                                                                         />
@@ -1019,14 +1020,12 @@ const DiagnosisTestRunner = () => {
                                         </table>
                                     </div>
                                 )}
-                                <p className="mt-6 text-slate-400 font-medium italic text-center">Fill in each cell of the table to complete the question.</p>
                             </div>
                         ) : q.type === 'factorTree' ? (
                             <div className="mt-6 bg-white rounded-3xl p-8 border border-slate-100 shadow-sm overflow-x-auto overflow-y-visible">
                                 <svg width="100%" height="auto" viewBox="0 0 600 450" className="mx-auto overflow-visible max-w-[600px]">
                                     {renderFactorTree(q.tree, 300, 40, 0)}
                                 </svg>
-                                <p className="mt-8 text-slate-400 font-medium italic text-center border-t border-slate-50 pt-6">Fill in the missing numbers in the factor tree branches.</p>
                             </div>
                         ) : (
                             q.options && q.options.map((opt, idx) => {
