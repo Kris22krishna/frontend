@@ -75,7 +75,7 @@ export const SKILLS = [
             { 
                 type: 'text', 
                 question: 'Represent the set of all even prime numbers in roster form.', 
-                answer: '$\\{2\\}$',
+                answer: '{2}',
                 explanation: '2 is the only even prime number.'
             },
             { 
@@ -108,7 +108,7 @@ export const SKILLS = [
             { 
                 type: 'text', 
                 question: 'Convert the set $\\{x : x \\in \\mathbb{Z}, -3 < x < 2\\}$ into Roster form.', 
-                answer: '$\\{-2, -1, 0, 1\\}$',
+                answer: '{-2, -1, 0, 1}',
                 explanation: 'The integers between -3 and 2 are -2, -1, 0, and 1.'
             },
             { 
@@ -492,7 +492,7 @@ export const SKILLS = [
             { 
                 type: 'text', 
                 question: 'Represent $\\{x : x \\in \\mathbb{R}, -4 < x \\le 6\\}$ as an interval.', 
-                answer: '$(-4, 6]$',
+                answer: '(-4, 6]',
                 explanation: 'Strict inequality is open (round), non-strict is closed (square).'
             },
             { 
@@ -505,7 +505,7 @@ export const SKILLS = [
             { 
                 type: 'text', 
                 question: 'If $n(A) = m$, then $n(P(A)) = $?', 
-                answer: '$2^m$',
+                answer: '2^m',
                 explanation: 'Power set has as many elements as there are subsets.'
             },
             { 
@@ -626,7 +626,7 @@ export const SKILLS = [
             { 
                 type: 'text', 
                 question: "If $U = \\{ 1, 2, 3, 4, 5 \\}$ and $A = \\emptyset$, what is $A'$?", 
-                answer: "$\\{ 1, 2, 3, 4, 5 \\}$",
+                answer: '{1, 2, 3, 4, 5}',
                 explanation: 'Complement of empty set is the universal set.'
             },
             { 
@@ -646,7 +646,7 @@ export const SKILLS = [
             { 
                 type: 'text', 
                 question: "Find $A'$ if $U = \\{ x : x \\in \\mathbb{N}, x \\le 5 \\}$ and $A = \\{ x : x \\in \\mathbb{N}, x \\text{ is even} \\}$.", 
-                answer: "$\\{ 1, 3, 5 \\}$",
+                answer: '{1, 3, 5}',
                 explanation: "U = { 1, 2, 3, 4, 5 }, A = { 2, 4 }. A' = { 1, 3, 5 }."
             }
         ]
