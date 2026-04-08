@@ -7,6 +7,9 @@ import LatexContent from '../../../../LatexContent';
 import ExplanationModal from '../../../../ExplanationModal';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
 
+import { useSessionLogger } from '../../../../../hooks/useSessionLogger';
+
+const NODE_ID = 'a4041011-0012-0000-0000-000000000000';
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
 const CORRECT_MESSAGES = [
@@ -71,6 +74,14 @@ const DivisionWithRemainders = () => {
     // Logging states
     const [sessionId, setSessionId] = useState(null);
     const questionStartTime = useRef(Date.now());
+  const v4AnswersPayload = useRef([]);
+  const v4IsFinishedRef = useRef(false);
+  const { startSession, finishSession, abandonSession } = useSessionLogger();
+  useEffect(() => {
+    return () => { if (!v4IsFinishedRef.current) abandonSession(); };
+  }, []);
+
+
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
     const SKILL_ID = 1154;
@@ -83,7 +94,10 @@ const DivisionWithRemainders = () => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) {
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
-                if (sess && sess.session_id) setSessionId(sess.session_id);
+                if (sess && sess.session_id)
+      startSession({ nodeId: NODE_ID, sessionType: 'practice' });
+      v4AnswersPayload.current = [];
+      v4IsFinishedRef.current = false; setSessionId(sess.session_id);
             }).catch(err => console.error("Failed to start session", err));
         }
 
@@ -241,6 +255,11 @@ const DivisionWithRemainders = () => {
                 solution_text: String(question.solution || ''),
                 time_spent_seconds: seconds >= 0 ? seconds : 0
             });
+            v4AnswersPayload.current.push({
+              node_id: NODE_ID,
+              is_correct: isCorrect,
+              time_spent_ms: Date.now() - questionStartTime.current,
+            });
         } catch (e) {
             console.error("Failed to record attempt", e);
         }
@@ -277,6 +296,10 @@ const DivisionWithRemainders = () => {
                 } catch (err) {
                     console.error("Failed to create report", err);
                 }
+            }
+            if (!v4IsFinishedRef.current) {
+              v4IsFinishedRef.current = true;
+              finishSession({ answers_payload: v4AnswersPayload.current });
             }
             if (sessionId) await api.finishSession(sessionId).catch(console.error);
             setShowResults(true);
