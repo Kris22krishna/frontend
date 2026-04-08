@@ -153,7 +153,10 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 1243, skill_name: 'Lines and Angles: Master Hub', topic: 'Lines and Angles', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/lines-and-angles' },
 
                         // Linear Equations in Two Variables Hub
-                        { skill_id: 1244, skill_name: 'Linear Equations in Two Variables: Master Hub', topic: 'Linear Equations in Two Variables', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/linear-equations-two-variables' }
+                        { skill_id: 1244, skill_name: 'Linear Equations in Two Variables: Master Hub', topic: 'Linear Equations in Two Variables', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/linear-equations-two-variables' },
+
+                        // Euclid's Geometry Hub
+                        { skill_id: 1245, skill_name: 'Introduction to Euclid\'s Geometry: Master Hub', topic: 'Introduction to Euclid\'s Geometry', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/euclids-geometry' }
 
                     ]);
                 } else if (grade === '8') {
