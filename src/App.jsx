@@ -501,6 +501,13 @@ import CoordinateGeometry9 from './components/practice/class-9/coordinate_geomet
 import CoordinateGeometry9Intro from './components/practice/class-9/coordinate_geometry_9/Topics/Intro/CoordinateGeometry9Intro';
 import CoordinateGeometry9Terminology from './components/practice/class-9/coordinate_geometry_9/Topics/Terminology/CoordinateGeometry9Terminology';
 import CoordinateGeometry9Skills from './components/practice/class-9/coordinate_geometry_9/Topics/Skills/CoordinateGeometry9Skills';
+
+// Grade 9 Lines and Angles
+import LinesAndAngles9 from './components/practice/class-9/lines_and_angles_9/LinesAndAngles9';
+import LinesAndAngles9Intro from './components/practice/class-9/lines_and_angles_9/Topics/Intro/LinesAndAngles9Intro';
+import LinesAndAngles9Terminology from './components/practice/class-9/lines_and_angles_9/Topics/Terminology/LinesAndAngles9Terminology';
+import LinesAndAngles9Skills from './components/practice/class-9/lines_and_angles_9/Topics/Skills/LinesAndAngles9Skills';
+
 import RealNumberClassification from './components/practice/class-9/number_system/RealNumberClassification';
 import DecimalExpansion from './components/practice/class-9/number_system/DecimalExpansion';
 import OperationsOnSurds from './components/practice/class-9/number_system/OperationsOnSurds';
@@ -1610,6 +1617,12 @@ function App() {
           <Route path="practice/class-9/coordinate-geometry/intro" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometry9Intro /></ProtectedRoute>} />
           <Route path="practice/class-9/coordinate-geometry/terminology" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometry9Terminology /></ProtectedRoute>} />
           <Route path="practice/class-9/coordinate-geometry/skills" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometry9Skills /></ProtectedRoute>} />
+
+          {/* Class 9: Lines and Angles Routes */}
+          <Route path="practice/class-9/lines-and-angles" element={<ProtectedRoute redirectTo="/login"><LinesAndAngles9 /></ProtectedRoute>} />
+          <Route path="practice/class-9/lines-and-angles/intro" element={<ProtectedRoute redirectTo="/login"><LinesAndAngles9Intro /></ProtectedRoute>} />
+          <Route path="practice/class-9/lines-and-angles/terminology" element={<ProtectedRoute redirectTo="/login"><LinesAndAngles9Terminology /></ProtectedRoute>} />
+          <Route path="practice/class-9/lines-and-angles/skills" element={<ProtectedRoute redirectTo="/login"><LinesAndAngles9Skills /></ProtectedRoute>} />
 
           {/* Legacy Classification/Direct Routes */}
           <Route path="practice/class-9/number-system" element={<ProtectedRoute redirectTo="/login"><NumberSystem /></ProtectedRoute>} />
