@@ -14,6 +14,52 @@ import avatarImg from '../../../assets/avatar.png';
 import '../../../pages/juniors/class-1/Grade1Practice.css';
 
 const DynamicVisual = ({ type, data, isAnswered }) => {
+    if (type === 'comparison') {
+        const { n1, n2, color1, color2 } = data;
+        const renderBlocks = (num, color) => {
+            const tens = Math.floor(num / 10);
+            const ones = num % 10;
+            return (
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end', justifyContent: 'center', minHeight: '80px', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: '2px', flexWrap: 'wrap', justifyContent: 'center', maxWidth: '120px' }}>
+                        {Array.from({ length: tens }).map((_, i) => (
+                            <div key={i} style={{ display: 'flex', flexDirection: 'column-reverse', gap: '1px', background: color + '15', padding: '1.5px', borderRadius: '3px', border: `1px solid ${color}30` }}>
+                                {Array.from({ length: 10 }).map((_, j) => (
+                                    <div key={j} style={{ width: '10px', height: '4px', backgroundColor: color, borderRadius: '1px' }}></div>
+                                ))}
+                            </div>
+                        ))}
+                    </div>
+                    {ones > 0 && (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 10px)', gap: '2px', paddingBottom: '2px' }}>
+                            {Array.from({ length: ones }).map((_, i) => (
+                                <div key={i} style={{ width: '10px', height: '10px', backgroundColor: color, borderRadius: '2px', opacity: 0.9 }}></div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        return (
+            <div style={{ display: 'flex', gap: '20px', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-compare-item" style={{ textAlign: 'center', flex: 1 }}>
+                    <div style={{ fontSize: '1.4rem', fontWeight: 800, color: color1, marginBottom: '12px', fontFamily: 'Nunito' }}>
+                        Group A {isAnswered && <span style={{ fontSize: '1.1rem', opacity: 0.8 }}>({n1})</span>}
+                    </div>
+                    {renderBlocks(n1, color1)}
+                </motion.div>
+                <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#CBD5E1', fontFamily: 'Nunito' }}>VS</div>
+                <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-compare-item" style={{ textAlign: 'center', flex: 1 }}>
+                    <div style={{ fontSize: '1.4rem', fontWeight: 800, color: color2, marginBottom: '12px', fontFamily: 'Nunito' }}>
+                        Group B {isAnswered && <span style={{ fontSize: '1.1rem', opacity: 0.8 }}>({n2})</span>}
+                    </div>
+                    {renderBlocks(n2, color2)}
+                </motion.div>
+            </div>
+        );
+    }
+
     const { num, color, seq, step } = data;
 
     if (type === 'skip') {
@@ -218,6 +264,62 @@ const Numbers51to100 = () => {
             return o === 0 ? tens[t] : `${tens[t]} ${ones[o]}`;
         };
 
+        const makeOptions = (correct, isWords = false) => {
+            const opts = new Set([correct]);
+            const offsets = [1, -1, 10, -10, 5, -5, 2, -2];
+            
+            if (isWords) {
+                // Determine the numeric value of the correct answer for offset calculations
+                let correctNum;
+                if (typeof correct === 'number') correctNum = correct;
+                else {
+                    // Reverse lookup or just use random for words if we don't have the number
+                    // Actually, for writing/names, we know the number
+                }
+
+                for (const off of offsets) {
+                    if (opts.size >= 4) break;
+                    // Note: this assumes we know the numeric value elsewhere or pass it
+                }
+                // Simplified for this component's needs
+                while (opts.size < 4) {
+                    const v = Math.floor(Math.random() * 50) + 51;
+                    const word = numberWords(v);
+                    if (!opts.has(word)) opts.add(word);
+                }
+            } else {
+                for (const off of offsets) {
+                    if (opts.size >= 4) break;
+                    const v = correct + off;
+                    if (v >= 51 && v <= 100) opts.add(v);
+                }
+                while (opts.size < 4) {
+                    const v = Math.floor(Math.random() * 50) + 51;
+                    opts.add(v);
+                }
+            }
+            return [...opts].sort(() => 0.5 - Math.random());
+        };
+
+        // Create pools for unique numbers
+        const countPool = Array.from({ length: 50 }, (_, k) => k + 51).sort(() => 0.5 - Math.random());
+        const writePool = Array.from({ length: 50 }, (_, k) => k + 51).sort(() => 0.5 - Math.random());
+        const namesPool = Array.from({ length: 50 }, (_, k) => k + 51).sort(() => 0.5 - Math.random());
+        
+        // Create comparison pool (shuffled pairs)
+        const allPairs = [];
+        for (let a = 51; a <= 100; a++) {
+            for (let b = 51; b <= 100; b++) {
+                if (a !== b) allPairs.push([a, b]);
+            }
+        }
+        const comparisonPool = allPairs.sort(() => 0.5 - Math.random());
+
+        let countIdx = 0;
+        let writeIdx = 0;
+        let namesIdx = 0;
+        let comparisonIdx = 0;
+
         for (let i = 0; i < totalQuestions; i++) {
             let typeToGen = 'counting';
             if (isTest) {
@@ -239,64 +341,68 @@ const Numbers51to100 = () => {
 
             const color1 = colors[i % colors.length];
             if (typeToGen === 'counting') {
-                const num = Math.floor(Math.random() * 49) + 51;
+                const num = countPool[countIdx % countPool.length];
+                countIdx++;
                 questions.push({
-                    text: `How many blocks?`,
-                    options: [num, num + 10, num - 5].filter(v => v > 50 && v <= 100).sort(() => 0.5 - Math.random()),
+                    text: `How many ones are there in total?`,
+                    options: makeOptions(num),
                     correct: num,
                     type: 'counting',
                     visualData: { num, color: color1 },
-                    explanation: `${num} blocks.`
+                    explanation: `We count ${num} ones in total.`
                 });
             } else if (typeToGen === 'writing') {
-                const num = Math.floor(Math.random() * 49) + 51;
+                const num = writePool[writeIdx % writePool.length];
+                writeIdx++;
                 questions.push({
                     text: `How do you write ${num} in words?`,
-                    options: [numberWords(num), numberWords(num + 1), numberWords(num - 1)].sort(() => 0.5 - Math.random()),
+                    options: makeOptions(numberWords(num), true),
                     correct: numberWords(num),
                     type: 'writing',
                     visualData: { num, color: color1 },
                     explanation: `${num} is ${numberWords(num)}.`
                 });
             } else if (typeToGen === 'names') {
-                const num = Math.floor(Math.random() * 49) + 51;
+                const num = namesPool[namesIdx % namesPool.length];
+                namesIdx++;
                 questions.push({
                     text: `Which number is ${numberWords(num)}?`,
-                    options: [num, num + 1, num - 1].sort(() => 0.5 - Math.random()),
+                    options: makeOptions(num),
                     correct: num,
                     type: 'names',
                     visualData: { num, color: color1 },
-                    explanation: `${numberWords(num)} is ${num}.`
+                    explanation: `${numberWords(num)} is written as ${num}.`
                 });
             } else if (typeToGen === 'comparison') {
-                const n1 = Math.floor(Math.random() * 49) + 51;
-                const n2 = Math.floor(Math.random() * 49) + 51;
+                const pair = comparisonPool[comparisonIdx % comparisonPool.length];
+                comparisonIdx++;
+                const n1 = pair[0];
+                const n2 = pair[1];
                 const isGreater = Math.random() > 0.5;
-                const correct = isGreater ? (n1 > n2 ? n1 : n2) : (n1 < n2 ? n1 : n2);
+                const correct = isGreater ? (n1 > n2 ? 'Group A' : 'Group B') : (n1 < n2 ? 'Group A' : 'Group B');
                 questions.push({
-                    text: `Which number is ${isGreater ? 'larger' : 'smaller'}?`,
-                    options: [n1, n2],
+                    text: `Which group has ${isGreater ? 'MORE' : 'FEWER'} blocks?`,
+                    options: ['Group A', 'Group B'],
                     correct: correct,
                     type: 'comparison',
-                    visualData: { num: n1, color: color1 },
-                    explanation: `${correct} is the answer.`
+                    visualData: { n1, n2, color1: '#FF6B6B', color2: '#4ECDC4' },
+                    explanation: `${correct} is the answer because it has ${isGreater ? Math.max(n1, n2) : Math.min(n1, n2)} blocks.`
                 });
             } else if (typeToGen === 'skip') {
                 const steps = [2, 5, 10];
                 const step = steps[Math.floor(Math.random() * steps.length)];
-                const start = Math.floor(Math.random() * 20) + 50; 
-                const seq = [start, start + step, start + step * 2];
-                const correct = seq[2] + step;
-                const optionsSet = new Set([correct]);
-                while (optionsSet.size < 3) {
-                    const off = (Math.floor(Math.random() * 3) + 1) * step;
-                    const val = Math.random() > 0.5 ? correct + off : correct - off;
-                    if (val > 50 && val <= 100) optionsSet.add(val);
-                    else optionsSet.add(correct + (optionsSet.size * 5)); // ensure we populate
+                // Broaden the range for variety
+                const start = Math.floor(Math.random() * 40) + 51; 
+                let seq = [start, start + step, start + step * 2];
+                // Ensure the target is within bounds
+                while (seq[2] + step > 100) {
+                    const newStart = Math.floor(Math.random() * 40) + 51;
+                    seq = [newStart, newStart + step, newStart + step * 2];
                 }
+                const correct = seq[2] + step;
                 questions.push({
                     text: `Next number in pattern?`,
-                    options: Array.from(optionsSet).sort(() => 0.5 - Math.random()),
+                    options: makeOptions(correct),
                     correct,
                     type: 'skip',
                     visualData: { seq, step, color: color1 },

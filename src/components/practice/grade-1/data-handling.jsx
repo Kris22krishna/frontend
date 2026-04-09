@@ -66,7 +66,7 @@ const DynamicVisual = ({ type, data }) => {
     if (type === 'grouping') {
         const { g1, g2, color1, color2 } = data;
         return (
-            <div className="g1-grouping-areas" style={{ display: 'flex', gap: 'clamp(20px, 8vw, 40px)', justifyContent: 'center', width: '100%' }}>
+            <div className="g1-grouping-areas" style={{ display: 'flex', gap: 'clamp(10px, 5vw, 40px)', justifyContent: 'center', width: '100%', flexWrap: 'wrap' }}>
                 <motion.div initial={{ x: -30 }} animate={{ x: 0 }} className="g1-data-group" style={{ background: color1 + '10', borderColor: color1 }}>
                     <div className="g1-group-label" style={{ color: color1 }}>Group A</div>
                     <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
@@ -110,6 +110,64 @@ const SKILL_ID_MAP = {
     '903': NODE_IDS.g1MathDataHandlingCountingGrouping,
     '904': NODE_IDS.g1MathDataHandlingMixed,
 };
+
+const ITEM_CATEGORIES = [
+    {
+        name: 'Fruits',
+        items: [
+            { icon: '🍎', color: '#FF6B6B', label: 'Apples' },
+            { icon: '🍌', color: '#FFE66D', label: 'Bananas' },
+            { icon: '🍇', color: '#C9A9E9', label: 'Grapes' },
+            { icon: '🍓', color: '#FF8787', label: 'Strawberries' },
+            { icon: '🍊', color: '#FFA94D', label: 'Oranges' },
+            { icon: '🍍', color: '#FFD43B', label: 'Pineapples' }
+        ]
+    },
+    {
+        name: 'Animals',
+        items: [
+            { icon: '🐶', color: '#FF922B', label: 'Dogs' },
+            { icon: '🐱', color: '#FAB005', label: 'Cats' },
+            { icon: '🐭', color: '#ADB5BD', label: 'Mice' },
+            { icon: '🐹', color: '#FFD8A8', label: 'Hamsters' },
+            { icon: '🐰', color: '#E9ECEF', label: 'Rabbits' },
+            { icon: '🐻', color: '#A61E4D', label: 'Bears' }
+        ]
+    },
+    {
+        name: 'Nature',
+        items: [
+            { icon: '🌸', color: '#FF8787', label: 'Flowers' },
+            { icon: '🍀', color: '#69DB7C', label: 'Leaves' },
+            { icon: '🍄', color: '#FF6B6B', label: 'Mushrooms' },
+            { icon: '🌟', color: '#FFE66D', label: 'Stars' },
+            { icon: '🌙', color: '#FFF3BF', label: 'Moons' },
+            { icon: '☁️', color: '#E9ECEF', label: 'Clouds' }
+        ]
+    },
+    {
+        name: 'School',
+        items: [
+            { icon: '✏️', color: '#FFD43B', label: 'Pencils' },
+            { icon: '📚', color: '#4C6EF5', label: 'Books' },
+            { icon: '🎨', color: '#FF922B', label: 'Palettes' },
+            { icon: '🎒', color: '#FF6B6B', label: 'Backpacks' },
+            { icon: '🧩', color: '#20C997', label: 'Puzzles' },
+            { icon: '⚽', color: '#495057', label: 'Balls' }
+        ]
+    },
+    {
+        name: 'Vehicles',
+        items: [
+            { icon: '🚗', color: '#E03131', label: 'Cars' },
+            { icon: '🚌', color: '#FCC419', label: 'Buses' },
+            { icon: '🚑', color: '#F1F3F5', label: 'Ambulances' },
+            { icon: '🚲', color: '#495057', label: 'Bikes' },
+            { icon: '🚀', color: '#15AABF', label: 'Rockets' },
+            { icon: '🚁', color: '#339AF0', label: 'Helicopters' }
+        ]
+    }
+];
 
 const DataHandling = () => {
     const navigate = useNavigate();
@@ -172,6 +230,25 @@ const DataHandling = () => {
     const generateQuestions = (selectedSkill) => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
+
+        const makeOptions = (correct) => {
+            const opts = new Set([correct]);
+            const offsets = [1, -1, 2, -2, 5, -5];
+            for (const off of offsets) {
+                if (opts.size >= 4) break;
+                const v = correct + off;
+                if (v >= 0) opts.add(v);
+            }
+            while (opts.size < 4) {
+                const v = Math.floor(Math.random() * 10) + 1;
+                if (!opts.has(v)) opts.add(v);
+            }
+            return [...opts].sort(() => 0.5 - Math.random());
+        };
+        
+        // Shuffle categories to ensure variety across questions
+        const shuffledCategories = [...ITEM_CATEGORIES].sort(() => 0.5 - Math.random());
+        
         for (let i = 0; i < totalQuestions; i++) {
             let type;
             if (isTest) {
@@ -184,45 +261,64 @@ const DataHandling = () => {
                 else type = 'sorting';
             }
             let question = {};
+            
+            // Pick a category for this question, cycle if more questions than categories
+            const category = shuffledCategories[i % shuffledCategories.length];
+            const categoryItems = [...category.items].sort(() => 0.5 - Math.random());
+
             if (type === 'sorting') {
-                const fruits = ['🍎', '🍌', '🍇'];
-                const items = Array.from({ length: 12 }).map(() => fruits[Math.floor(Math.random() * 3)]);
-                const target = fruits[Math.floor(Math.random() * 3)];
-                const count = items.filter(f => f === target).length;
+                const subset = categoryItems.slice(0, 3);
+                const itemIcons = subset.map(it => it.icon);
+                const items = Array.from({ length: 12 }).map(() => itemIcons[Math.floor(Math.random() * 3)]);
+                const targetIdx = Math.floor(Math.random() * 3);
+                const target = subset[targetIdx];
+                const count = items.filter(f => f === target.icon).length;
+                
+                const colorMap = {};
+                subset.forEach(it => colorMap[it.icon] = it.color);
+
                 question = {
-                    text: `How many ${target} are there?`,
-                    options: [count, count + 1, count + 2].filter(v => v >= 0).sort(() => 0.5 - Math.random()),
+                    text: `How many ${target.icon} are there?`,
+                    options: makeOptions(count),
                     correct: count,
                     type: 'sorting',
-                    visualData: { items, colorMap: { '🍎': '#FF6B6B', '🍌': '#FFE66D', '🍇': '#C9A9E9' } },
-                    explanation: `There are exactly ${count} ${target}.`
+                    visualData: { items, colorMap },
+                    explanation: `There are exactly ${count} ${target.label} ${target.icon}.`
                 };
             } else if (type === 'pictograph') {
-                const items = [
-                    { label: 'Books', icon: '📚', count: Math.floor(Math.random() * 4) + 2 },
-                    { label: 'Pens', icon: '✏️', count: Math.floor(Math.random() * 4) + 2 },
-                ];
+                const subset = categoryItems.slice(0, 2);
+                const items = subset.map(it => ({
+                    label: it.label,
+                    icon: it.icon,
+                    count: Math.floor(Math.random() * 4) + 2
+                }));
                 const targetObj = items[Math.floor(Math.random() * 2)];
                 question = {
                     text: `How many ${targetObj.label} do we have?`,
-                    options: [targetObj.count, targetObj.count + 1, targetObj.count - 1].filter(v => v > 0).sort(() => 0.5 - Math.random()),
+                    options: makeOptions(targetObj.count),
                     correct: targetObj.count,
                     type: 'pictograph',
                     visualData: { chartData: items },
-                    explanation: `Count the icons: ${targetObj.count} ${targetObj.label}.`
+                    explanation: `Count the icons: ${targetObj.count} ${targetObj.label} ${targetObj.icon}.`
                 };
             } else if (type === 'counting') {
-                const pets = ['🐶', '🐱'];
-                const items = Array.from({ length: 6 }).map(() => pets[Math.floor(Math.random() * 2)]);
-                const target = pets[Math.floor(Math.random() * 2)];
-                const count = items.filter(p => p === target).length;
+                const subset = categoryItems.slice(0, 2);
+                const itemIcons = subset.map(it => it.icon);
+                const items = Array.from({ length: 6 }).map(() => itemIcons[Math.floor(Math.random() * 2)]);
+                const targetIdx = Math.floor(Math.random() * 2);
+                const target = subset[targetIdx];
+                const count = items.filter(p => p === target.icon).length;
+                
+                const colorMap = {};
+                subset.forEach(it => colorMap[it.icon] = it.color);
+
                 question = {
-                    text: `Count the ${target} pets!`,
-                    options: [count, count + 1, count - 1].filter(v => v >= 0).sort(() => 0.5 - Math.random()),
+                    text: `Count the ${target.label} ${target.icon}!`,
+                    options: makeOptions(count),
                     correct: count,
                     type: 'counting',
-                    visualData: { items, colorMap: { '🐶': '#4ECDC4', '🐱': '#FF6B6B' } },
-                    explanation: `There are ${count} ${target} pets.`
+                    visualData: { items, colorMap },
+                    explanation: `There are ${count} ${target.label} ${target.icon}.`
                 };
             } else if (type === 'grouping') {
                 const g1 = Math.floor(Math.random() * 5) + 3;
@@ -236,7 +332,7 @@ const DataHandling = () => {
                     correct: correct,
                     type: 'grouping',
                     visualData: { g1, g2, color1: colors[i % colors.length], color2: colors[(i + 1) % colors.length] },
-                    explanation: `${correct} is the right answer.`
+                    explanation: `${correct} has ${isMore ? Math.max(g1, g2) : Math.min(g1, g2)} bubbles, which is ${isMore ? 'more' : 'fewer'} than the other group's ${isMore ? Math.min(g1, g2) : Math.max(g1, g2)} bubbles.`
                 };
             }
             questions.push(question);
