@@ -251,7 +251,7 @@ const Grade2Template = () => {
             }
         }));
 
-        if (!isTest && !isCorrect) {
+        if (!isTest) {
             setShowExplanationModal(true);
         } else {
             setIsAutoAdvancing(true);
