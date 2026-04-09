@@ -1155,7 +1155,7 @@ export const generateNumberPattern = () => {
         type: "userInput",
         question: questionText,
         answer: answer,
-        topic: "Pattern Recognition",
+        topic: "Logical Thinking / Patterns",
         instructions: instructions, // Dynamic instructions
         format: "text",
         keypadMode: "multiplication"
@@ -1225,7 +1225,7 @@ export const generatePicturePattern = () => {
         type: "mcq",
         question: "Observe the pattern below. Which image comes next?",
         image: questionImage,
-        topic: "Pattern Recognition / Visual",
+        topic: "Logical Thinking / Patterns",
         options: optionsData,
         answer: correctOption.value,
         instructions: "Select the correct image."

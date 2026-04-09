@@ -119,9 +119,10 @@ export const SKILLS = [
                 explanation: '"Clever" is not well-defined.'
             },
             { 
-                type: 'text', 
+                type: 'mcq', 
                 question: 'If $A = \\{1, 2, 3, 4, 5, 6\\}$, insert symbols $\\in$ or $\\notin$ in: $5$...$A$', 
-                answer: '$\\in$',
+                options: ['$\\in$', '$\\notin$', '$\\subset$', '$\\supset$'],
+                correct: 0,
                 explanation: '5 is an element of A.'
             },
             { 
@@ -503,9 +504,10 @@ export const SKILLS = [
                 explanation: 'Definition of $P(A)$.'
             },
             { 
-                type: 'text', 
+                type: 'mcq', 
                 question: 'If $n(A) = m$, then $n(P(A)) = $?', 
-                answer: '2^m',
+                options: ['$m^2$', '$2m$', '$2^m$', '$m!$'],
+                correct: 2,
                 explanation: 'Power set has as many elements as there are subsets.'
             },
             { 
@@ -745,9 +747,10 @@ export const SKILLS = [
                 explanation: 'All standard operation results are correct.'
             },
             { 
-                type: 'text', 
+                type: 'mcq', 
                 question: 'Evaluate $A - A$.', 
-                answer: '$\\emptyset$',
+                options: ['$A$', '$\\emptyset$', '$U$', '$\\{A\\}$'],
+                correct: 1,
                 explanation: 'Removing all elements of a set from itself leaves nothing.'
             }
         ]
@@ -928,9 +931,10 @@ export const SKILLS = [
                 explanation: "Both represent the two parts of De Morgan's laws."
             },
             { 
-                type: 'text', 
+                type: 'mcq', 
                 question: 'Complete the law: $A \\cap (B \\cup C) = (A \\cap B) \\cup (...)$', 
-                answer: '$A \\cap C$',
+                options: ['$A \\cup C$', '$B \\cap C$', '$A \\cap C$', '$A \\cup B$'],
+                correct: 2,
                 explanation: 'Distributive law of intersection over union.'
             },
             { 
@@ -948,9 +952,10 @@ export const SKILLS = [
                 explanation: 'All are fundamental identity and domination laws.'
             },
             { 
-                type: 'text', 
+                type: 'mcq', 
                 question: "According to De Morgan's Law, $(A \\cup B)'$ is equal to?", 
-                answer: "$A' \\cap B'$",
+                options: ["$A' \\cup B'$", "$A' \\cap B'$", "$A \\cap B$", "$(A \\cap B)'$"],
+                correct: 1,
                 explanation: 'Complement of union is the intersection of complements.'
             }
         ]

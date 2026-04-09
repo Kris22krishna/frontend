@@ -52,12 +52,16 @@ const DynamicVisual = ({ type, data, isAnswered }) => {
         return (
             <div style={{ display: 'flex', gap: 'clamp(20px, 8vw, 40px)', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
                 <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-compare-item" style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '2.2rem', fontWeight: 600, color: color1, marginBottom: '12px', fontFamily: 'Nunito' }}>{n1}</div>
+                    <div style={{ fontSize: '1.8rem', fontWeight: 800, color: color1, marginBottom: '12px', fontFamily: 'Nunito' }}>
+                        Group A {isAnswered && <span style={{ fontSize: '1.4rem', opacity: 0.8 }}>({n1})</span>}
+                    </div>
                     {renderBlocks(n1, color1)}
                 </motion.div>
                 <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#CBD5E1', fontFamily: 'Nunito' }}>VS</div>
                 <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-compare-item" style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '2.2rem', fontWeight: 600, color: color2, marginBottom: '12px', fontFamily: 'Nunito' }}>{n2}</div>
+                    <div style={{ fontSize: '1.8rem', fontWeight: 800, color: color2, marginBottom: '12px', fontFamily: 'Nunito' }}>
+                        Group B {isAnswered && <span style={{ fontSize: '1.4rem', opacity: 0.8 }}>({n2})</span>}
+                    </div>
                     {renderBlocks(n2, color2)}
                 </motion.div>
             </div>
@@ -216,6 +220,33 @@ const Numbers21to50 = () => {
     const generateQuestions = useCallback((selectedSkill) => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
+        // Create pools for unique numbers
+        const countPool = Array.from({ length: 30 }, (_, k) => k + 21).sort(() => 0.5 - Math.random());
+        const tensPool = Array.from({ length: 30 }, (_, k) => k + 21).sort(() => 0.5 - Math.random());
+        
+        // Create comparison pool (shuffled pairs)
+        const allPairs = [];
+        for (let a = 21; a <= 50; a++) {
+            for (let b = 21; b <= 50; b++) {
+                if (a !== b) allPairs.push([a, b]);
+            }
+        }
+        const comparisonPool = allPairs.sort(() => 0.5 - Math.random());
+
+        let countIdx = 0;
+        let tensIdx = 0;
+        let comparisonIdx = 0;
+
+        // Create tens-ones options pool (all strings from 21 to 50)
+        const allTensOnes = Array.from({ length: 30 }, (_, k) => {
+            const n = k + 21;
+            const t = Math.floor(n / 10);
+            const o = n % 10;
+            return `${t} Tens, ${o} Ones`;
+        });
+        const tensOnesDistractorPool = [...allTensOnes].sort(() => 0.5 - Math.random());
+        let distractorIdx = 0;
+
         for (let i = 0; i < totalQuestions; i++) {
             let question = {};
             const color1 = colors[i % colors.length];
@@ -231,44 +262,65 @@ const Numbers21to50 = () => {
                 else typeToGen = 'comparison';
             }
             if (typeToGen === 'counting') {
-                const num = Math.floor(Math.random() * 30) + 21;
-                const optionsSet = new Set([num, num + 1, num - 1]);
-                while (optionsSet.size < 3) {
-                    optionsSet.add(Math.floor(Math.random() * 30) + 21);
-                }
+                const num = countPool[countIdx % countPool.length];
+                countIdx++;
+
+                const makeOptionsLocal = (correct) => {
+                    const opts = new Set([correct]);
+                    const offsets = [1, -1, 10, -10, 5, -5];
+                    for (const off of offsets) {
+                        if (opts.size >= 4) break;
+                        const v = correct + off;
+                        if (v >= 21 && v <= 50) opts.add(v);
+                    }
+                    while (opts.size < 4) {
+                        opts.add(Math.floor(Math.random() * 30) + 21);
+                    }
+                    return [...opts].sort(() => 0.5 - Math.random());
+                };
+
                 question = {
-                    text: "How many are shown in this table?",
-                    options: Array.from(optionsSet).sort(() => 0.5 - Math.random()),
+                    text: "How many ones are there in total?",
+                    options: makeOptionsLocal(num),
                     correct: num,
                     type: 'counting',
                     visualData: { num, color: color1 },
                     explanation: `Count the tens and ones. We have ${Math.floor(num/10)} tens and ${num%10} ones, which is ${num}.`
                 };
             } else if (typeToGen === 'tens-ones') {
-                const num = Math.floor(Math.random() * 30) + 21;
+                const num = tensPool[tensIdx % tensPool.length];
+                tensIdx++;
                 const tens = Math.floor(num / 10);
                 const ones = num % 10;
-                const optionsSet = new Set([`${tens} Tens, ${ones} Ones`]);
-                if (tens !== ones) {
-                    optionsSet.add(`${ones} Tens, ${tens} Ones`);
+                const correctStr = `${tens} Tens, ${ones} Ones`;
+                
+                const optionsSet = new Set([correctStr]);
+                let attempts = 0;
+                while (optionsSet.size < 4 && attempts < 30) {
+                    const candidate = tensOnesDistractorPool[distractorIdx % tensOnesDistractorPool.length];
+                    distractorIdx++;
+                    if (candidate !== correctStr) optionsSet.add(candidate);
+                    attempts++;
                 }
-                while (optionsSet.size < 3) {
-                    const rTens = Math.floor(Math.random() * 3) + 2; // 2, 3, 4
-                    const rOnes = Math.floor(Math.random() * 10);
-                    optionsSet.add(`${rTens} Tens, ${rOnes} Ones`);
+                while (optionsSet.size < 4) {
+                    const r = Math.floor(Math.random() * 30) + 21;
+                    optionsSet.add(`${Math.floor(r/10)} Tens, ${r%10} Ones`);
                 }
+
                 question = {
-                    text: `How many Tens and Ones make ${num}?`,
+                    text: `How many ones are there in total in ${num}?`,
                     options: Array.from(optionsSet).sort(() => 0.5 - Math.random()),
-                    correct: `${tens} Tens, ${ones} Ones`,
+                    correct: correctStr,
                     type: 'tens-ones',
                     visualData: { num, color: color1 },
                     explanation: `${num} is made of ${tens} groups of ten and ${ones} leftovers.`
                 };
-            } else {
-                const n1 = Math.floor(Math.random() * 30) + 21;
-                let n2 = Math.floor(Math.random() * 30) + 21;
-                if (n1 === n2) n2 = 35;
+            }
+ else {
+                const pair = comparisonPool[comparisonIdx % comparisonPool.length];
+                comparisonIdx++;
+                const n1 = pair[0];
+                const n2 = pair[1];
                 const isGreater = Math.random() > 0.5;
                 const correctAns = isGreater ? (n1 > n2 ? 'Group A' : 'Group B') : (n1 < n2 ? 'Group A' : 'Group B');
                 question = {
@@ -277,7 +329,7 @@ const Numbers21to50 = () => {
                     correct: correctAns,
                     type: 'comparison',
                     visualData: { n1, n2, color1, color2 },
-                    explanation: `Group A has ${n1} and Group B has ${n2}. ${correctAns} is ${isGreater ? 'larger' : 'smaller'}.`
+                    explanation: `Group A has ${n1} and Group B has ${n2}. ${correctAns} clearly has ${isGreater ? 'more' : 'fewer'} blocks.`
                 };
             }
             questions.push(question);

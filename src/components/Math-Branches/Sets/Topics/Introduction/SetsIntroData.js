@@ -1,8 +1,8 @@
 export const setsIntroData = {
     prerequisites: [
-        { title: 'Number Systems', desc: 'Familiarity with Natural, Whole, and Integer numbers.', icon: '🔢' },
+        { title: 'Number Systems', desc: 'Familiarity with Natural, Whole, and integers.', icon: '🔢' },
         { title: 'Basic Logic', desc: 'Understanding "True" vs "False" conditions.', icon: '🧠' },
-        { title: 'Collections', desc: 'Common sense idea of a "group" or "bunch" of items.', icon: '📦' }
+        { title: 'Collections', desc: 'Idea of a "group" or "bunch" of items.', icon: '📦' }
     ],
     cards5W1H: [
         {

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { setsIntroData } from './SetsIntroData';
 import '../../SetsBranch.css';
+import { LatexText } from '../../../../LatexText';
 
 /* ── Single card ─────────────────────────────────── */
 function W1HCard({ card }) {
@@ -61,7 +62,7 @@ function W1HCard({ card }) {
             {/* Expanded content */}
             {open && (
                 <div className="sets-intro-card-body">
-                    <p className="sets-intro-card-content">{card.content}</p>
+                    <p className="sets-intro-card-content"><LatexText text={card.content} /></p>
                     <div className="sets-intro-card-fact">
                         <span style={{ color: card.gradFrom, fontWeight: 800 }}>⭐ Fun Fact: </span>
                         {card.fact}
