@@ -272,7 +272,7 @@ export const generateBODMAS = () => {
 
     return {
         type: "tableInput",
-        topic: "BODMAS",
+        topic: "Arithmetic / BODMAS",
         inputKeys: ["0"],
         answer: JSON.stringify(answerObj),
         rows: rows
@@ -363,7 +363,7 @@ export const generatePerimeterAndArea = () => {
     return {
         type: "tableInput",
         variant: "double-input",
-        topic: "Perimeter and Area",
+        topic: "Mensuration / Perimeter and Area",
         headers: ["Shape", "Perimeter", "Area"], // Custom headers - images display in Shape column
         inputKeys: ["perimeter", "area"], // Ensure UI uses correct keys for validation
         answer: JSON.stringify(answerObj),
@@ -413,7 +413,7 @@ export const generateCommercialMath = () => {
         variant: "default",
         inputKeys: ["0"],
         question: "Calculate the missing values:",
-        topic: "Commercial Math",
+        topic: "Arithmetic / Commercial Math",
         answer: JSON.stringify(answerObj),
         rows: rows
     };
@@ -729,7 +729,7 @@ export const generateGrade7Algebra = () => {
         variant: "default",
         inputKeys: ["0"],
         question: "Solve the following algebra problems:",
-        topic: "Algebra",
+        topic: "Algebra / Mixed",
         headers: ["Problem", "Answer"],
         answer: JSON.stringify(answerObj),
         rows: rows
@@ -837,7 +837,7 @@ export const generateLinesAndAngles = () => {
         type: "mcq",
         question: question,
         image: lineSvg,
-        topic: "Lines and Angles",
+        topic: "Geometry / Lines and Angles",
         options: uniqueOptions,
         answer: answer
     };
@@ -888,7 +888,7 @@ export const generateTrianglesProperties = () => {
         type: "userInput",
         question: question + " (number only)",
         image: typeIdx === 0 ? isoSvg : rightSvg,
-        topic: "Triangles and Properties",
+        topic: "Geometry / Triangles",
         answer: answer
     };
 };
@@ -972,7 +972,7 @@ export const generateSolidShapesProperties = () => {
         type: "tableInput",
         variant: "triple-input", // Custom variant we added
         question: "Observe the shapes and identify the number of Faces, Vertices, and Edges.",
-        topic: "Visualizing Solid Shapes",
+        topic: "Geometry / Solid Shapes",
         headers: ["Shape", "Faces", "Vertices", "Edges"],
         inputKeys: ["faces", "vertices", "edges"],
         placeholders: ["Faces", "Vertices", "Edges"],
@@ -1032,7 +1032,7 @@ export const generateDataHandling = () => {
         headers: ["Problem", "Answer"],
         inputKeys: ["0"],
         answer: JSON.stringify(answerObj),
-        topic: "Data Handling",
+        topic: "Data Handling / Statistics",
         variant: "default"
     };
 };

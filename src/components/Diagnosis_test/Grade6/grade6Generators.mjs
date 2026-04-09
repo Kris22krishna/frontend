@@ -1100,7 +1100,7 @@ export const generateNumberPattern = () => {
         type: "userInput",
         question: questionText,
         answer: answer,
-        topic: "Pattern Recognition",
+        topic: "Logical Thinking / Patterns",
         instructions: instructions,
         format: "text",
         keypadMode: "multiplication"
@@ -1176,7 +1176,7 @@ export const generateAddSubMultipleSelect = () => {
         allowMultiple: true,
         question: `Select multiple expressions that equal ${target}.`,
         answer: answer,
-        topic: "Operations",
+        topic: "Arithmetic / Operations",
         options: options,
         instructions: "Select all correct options."
     };
