@@ -124,25 +124,42 @@ export default function LAScenarioPracticeEngine({ scenarios = [], title, color 
     };
 
     if (questions.length === 0) return null;
-
     if (finished) {
         const pct = Math.round((score / TOTAL_QUESTIONS) * 100);
-        const msg = pct >= 85 ? '🏆 Excellent!' : pct >= 65 ? '🌟 Well done!' : '💪 Keep practising!';
         return (
-            <div style={{ textAlign: 'center', padding: '40px 20px', fontFamily: 'Open Sans, sans-serif' }}>
-                <div style={{ width: 130, height: 130, borderRadius: '50%', background: `conic-gradient(${color} ${pct * 3.6}deg, #f1f5f9 0deg)`, margin: '0 auto 24px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '7px solid #fff', boxShadow: '0 8px 24px rgba(0,0,0,0.07)' }}>
-                    <div style={{ width: 94, height: 94, background: '#fff', borderRadius: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                        <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 36, fontWeight: 900, color: '#0f172a', lineHeight: 1 }}>{score}</div>
-                        <div style={{ fontSize: 12, color: '#64748b', fontWeight: 700 }}>of {TOTAL_QUESTIONS}</div>
+            <div style={{ textAlign: 'center', padding: '40px 20px', fontFamily: 'Outfit, sans-serif' }}>
+                <div style={{ marginBottom: 40 }}>
+                    <button onClick={onBack} style={{ background: 'transparent', border: 'none', color: '#2563eb', fontWeight: 700, fontSize: 16, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 6, fontFamily: 'Outfit, sans-serif' }}>
+                        ← Back to Skills
+                    </button>
+                </div>
+
+                <div style={{ width: 170, height: 170, borderRadius: '50%', background: `conic-gradient(#d97706 ${pct * 3.6}deg, #e2e8f0 0deg)`, margin: '0 auto 30px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{ width: 150, height: 150, background: '#fdfbf7', borderRadius: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 56, fontWeight: 900, color: '#0f172a', lineHeight: 1, marginBottom: 4 }}>{score}</div>
+                        <div style={{ fontSize: 15, color: '#64748b', fontWeight: 700 }}>out of {TOTAL_QUESTIONS}</div>
                     </div>
                 </div>
-                <div style={{ display: 'inline-block', padding: '6px 16px', background: `${color}15`, color, borderRadius: 50, fontSize: 14, fontWeight: 800, marginBottom: 16 }}>⏱️ {formatTime(timeTaken)}</div>
-                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 26, fontWeight: 900, color: '#0f172a', margin: '0 0 4px' }}>{msg}</h2>
-                <p style={{ color: '#64748b', fontSize: 14, margin: '0 0 24px' }}>Practice completed. Review the concepts or try taking the assessment!</p>
-                <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-                    <button className={styles['btn-primary']} style={{ background: color, border: 'none' }} onClick={handleRetry}>🔀 Try Again</button>
-                    <button className={styles['btn-secondary']} onClick={onBack}>Back to Skills</button>
+
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 24px', background: '#f1f5f9', color: '#334155', borderRadius: 50, fontSize: 16, fontWeight: 700, marginBottom: 40 }}>
+                    <span style={{ fontSize: 18 }}>⏱️</span> Time Taken: {formatTime(timeTaken)}
                 </div>
+
+                <div style={{ fontSize: 60, marginBottom: 16, lineHeight: 1 }}>
+                    {pct >= 85 ? '🏆' : pct >= 65 ? '🌟' : '💪'}
+                </div>
+
+                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 32, fontWeight: 900, color: '#0f172a', margin: '0 0 8px' }}>
+                    {pct >= 85 ? 'Excellent!' : pct >= 65 ? 'Well done!' : 'Keep Learning!'}
+                </h2>
+                
+                <p style={{ color: '#64748b', fontSize: 16, margin: '0 0 32px' }}>
+                    {pct >= 85 ? 'You have mastered this skill. Great job!' : 'Review the concepts and try again for 100%.'}
+                </p>
+
+                <button onClick={onBack} style={{ padding: '14px 40px', background: '#fff', border: '2px solid #d97706', color: '#d97706', borderRadius: 50, fontSize: 16, fontWeight: 800, cursor: 'pointer', fontFamily: 'Outfit, sans-serif', transition: 'all 0.2s' }}>
+                    Back to Skills
+                </button>
             </div>
         );
     }
