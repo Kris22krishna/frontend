@@ -5,8 +5,8 @@ import '../../SetsBranch.css';
 import MathRenderer from '../../../../MathRenderer';
 import { LatexText } from '../../../../LatexText';
 
-import QuizEngine from '../../../../Math-Branches/Algebra/Topics/Skills/Engines/QuizEngine';
-import AssessmentEngine from '../../../../Math-Branches/Algebra/Topics/Skills/Engines/AssessmentEngine';
+import QuizEngine from './Engines/QuizEngine';
+import AssessmentEngine from './Engines/AssessmentEngine';
 
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────
 export default function SetsSkills() {

@@ -215,7 +215,10 @@ export const SKILLS = [
             { 
                 type: 'mcq', 
                 question: 'Which of the following is an empty set?', 
-                options: ['Set of odd natural numbers divisible by 2', 'Set of even prime numbers', '$\\{x : x^2 - 2 = 0 \\text{ and } x \\text{ is rational}\\}$', '$\\{x : x \\text{ is a natural number, } x < 5 \\text{ and } x > 7\\}$'],
+
+
+
+                options: ['Set of odd natural numbers divisible by 2', 'Set of even prime numbers', '$\\{x : x^2 - 1 = 0 \\text{ and } x \\text{ is rational}\\}$', '$\\{x : x \\text{ is a natural number, } 2 < x < 5\\}$'],
                 correct: 0,
                 explanation: 'Odd numbers are by definition not divisible by 2.'
             },
@@ -249,9 +252,36 @@ export const SKILLS = [
             { 
                 type: 'msq', 
                 question: 'Which sets are Infinite?', 
-                options: ['Set of points on a circle', 'Set of concentic circles in a plane', 'Set of prime numbers < 100', 'Set of integers'],
+                options: ['Set of points on a circle', 'Set of concentric circles in a plane', 'Set of prime numbers < 100', 'Set of integers'],
                 correct: [0, 1, 3],
                 explanation: 'Prime numbers < 100 are limited, so it\'s finite.'
+            },
+            { 
+                type: 'mcq', 
+                question: 'What is the cardinality of the set $\\{\\emptyset\\}$?', 
+                options: ['0', '1', '2', 'Infinite'],
+                correct: 1,
+                explanation: '$\\{\\emptyset\\}$ has one element, namely the empty set.'
+            },
+            { 
+                type: 'text', 
+                question: 'Write the set of all even prime numbers in roster form.', 
+                answer: '{2}',
+                acceptedAnswers: ['$\\{2\\}$'],
+                explanation: 'The only even prime number is $2$, so the set is $\\{2\\}$.'
+            },
+            { 
+                type: 'msq', 
+                question: 'Which of the following are singleton sets?', 
+                options: ['$\\{0\\}$', '$\\{\\emptyset\\}$', 'Set of months in a year', '$\\emptyset$'],
+                correct: [0, 1],
+                explanation: '$\\{0\\}$ and $\\{\\emptyset\\}$ each contain exactly one element.'
+            },
+            { 
+                type: 'text', 
+                question: 'Find $n(A)$ if $A = \\{x : x \\in \\mathbb{Z}, |x| < 3\\}$.', 
+                answer: '5',
+                explanation: 'The elements are $\\{-2, -1, 0, 1, 2\\}$, so $n(A) = 5$.'
             },
             { 
                 type: 'text', 
@@ -453,19 +483,19 @@ export const SKILLS = [
                 question: 'Level 3: Which representation corresponds to $( -1, 4 ]$?',
                 options: ['$\\{x : -1 < x \\le 4\\}$', '$\\{x : -1 \\le x \\le 4\\}$', '$\\{x : -1 < x < 4\\}$', '$\\{x : -1 \\le x < 4\\}$'],
                 correct: 0,
-                explanation: 'Round bracket = strict inequality (<), square bracket = non-strict (\\le).'
+                explanation: 'Round bracket means strict inequality ($<$), while square bracket means non-strict inequality ($\\le$).'
             },
             {
-                question: 'Level 3: If A \\subseteq B and B \\subseteq C, then:',
+                question: 'Level 3: If $A \\subseteq B$ and $B \\subseteq C$, then:',
                 options: ['$A \\subseteq C$', '$C \\subseteq A$', '$A = C$', 'None'],
                 correct: 0,
-                explanation: 'Subset relationship is transitive.'
+                explanation: 'The subset relation is transitive: if $A \\subseteq B$ and $B \\subseteq C$, then $A \\subseteq C$.'
             },
             {
                 question: 'Level 3: The power set of $A = \\{1\\}$ is:',
                 options: ['$\\{1\\}$', '$\\{\\emptyset, 1\\}$', '$\\{\\emptyset, \\{1\\}\\}$', '$\\{\\{1\\}\\}$'],
                 correct: 2,
-                explanation: 'Power set contains all subsets.'
+                explanation: 'A power set contains every subset of $A$, including $\\emptyset$ and $A$ itself.'
             }
         ],
         assessment: [
@@ -487,12 +517,13 @@ export const SKILLS = [
                 question: 'Let $A = \\{1, 2, \\{3, 4\\}, 5\\}$. Which statements are correct?', 
                 options: ['$\\{3, 4\\} \\subset A$', '$\\{3, 4\\} \\in A$', '$\\{\\{3, 4\\}\\} \\subset A$', '$1 \\in A$'],
                 correct: [1, 2, 3],
-                explanation: '{3,4} is an element of A. So the set containing it is a subset.'
+                explanation: '$\\{3, 4\\}$ is an element of $A$, so $\\{\\{3, 4\\}\\}$ is a subset of $A$.'
             },
             { 
                 type: 'text', 
                 question: 'Represent $\\{x : x \\in \\mathbb{R}, -4 < x \\le 6\\}$ as an interval.', 
                 answer: '(-4, 6]',
+                acceptedAnswers: ['(-4,6]'],
                 explanation: 'Strict inequality is open (round), non-strict is closed (square).'
             },
             { 
@@ -511,9 +542,9 @@ export const SKILLS = [
             { 
                 type: 'msq', 
                 question: 'Which of the following are True?', 
-                options: ['$\\mathbb{N} \\subset \\mathbb{Z}$', '$\\mathbb{Q} \\subset \\mathbb{R}$', '$\\mathbb{T} \\subset \\mathbb{R}$', '$\\mathbb{Z} \\subset \\mathbb{N}$'],
+                options: ['$\\mathbb{N} \\subset \\mathbb{Z}$', '$\\mathbb{Q} \\subset \\mathbb{R}$', '$\\mathbb{R} \\setminus \\mathbb{Q} \\subset \\mathbb{R}$', '$\\mathbb{Z} \\subset \\mathbb{N}$'],
                 correct: [0, 1, 2],
-                explanation: 'Z is not subset of N.'
+                explanation: '$\\mathbb{Z}$ is not a subset of $\\mathbb{N}$.'
             },
             { 
                 type: 'mcq', 
@@ -540,7 +571,7 @@ export const SKILLS = [
                 question: 'If $P(A) = \\{\\emptyset, \\{1\\}, \\{2\\}, \\{1, 2\\}\\}$, what are the elements of A?', 
                 options: ['1', '2', '$\\{1\\}$', '$\\{1, 2\\}$'],
                 correct: [0, 1],
-                explanation: 'A is {1, 2}.'
+                explanation: '$A = \\{1, 2\\}$.'
             },
             { 
                 type: 'text', 
@@ -728,7 +759,7 @@ export const SKILLS = [
                 type: 'text', 
                 question: 'If $A = \\{ 1, 3, 5 \\}$ and $B = \\{ 1, 2, 3 \\}$, find $n(A \\cup B)$.', 
                 answer: '4',
-                explanation: 'A \\cup B = { 1, 2, 3, 5 }. Cardinality is 4.'
+                explanation: '$A \\cup B = \\{1, 2, 3, 5\\}$, so its cardinality is $4$.'
             },
             { 
                 type: 'mcq', 
