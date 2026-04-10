@@ -102,7 +102,7 @@ export function useSessionLogger() {
   }, []);
 
   /** ── finishSession ────────────────────────────────────────────────────── */
-  const finishSession = useCallback(async (params) => {
+  const finishSession = useCallback(async (params = {}) => {
     const {
       totalQuestions,
       total_questions,
