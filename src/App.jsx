@@ -508,6 +508,16 @@ import LinesAndAngles9Intro from './components/practice/class-9/lines_and_angles
 import LinesAndAngles9Terminology from './components/practice/class-9/lines_and_angles_9/Topics/Terminology/LinesAndAngles9Terminology';
 import LinesAndAngles9Skills from './components/practice/class-9/lines_and_angles_9/Topics/Skills/LinesAndAngles9Skills';
 
+import LinearEquations9 from './components/practice/class-9/linear_equations_two_variables/LinearEquations9';
+import LinearEquations9Intro from './components/practice/class-9/linear_equations_two_variables/Topics/Intro/LinearEquations9Intro';
+import LinearEquations9Terminology from './components/practice/class-9/linear_equations_two_variables/Topics/Terminology/LinearEquations9Terminology';
+import LinearEquations9Skills from './components/practice/class-9/linear_equations_two_variables/Topics/Skills/LinearEquations9Skills';
+
+import EuclidsGeometry9 from './components/practice/class-9/euclids_geometry_9/EuclidsGeometry9';
+import EuclidsGeometry9Intro from './components/practice/class-9/euclids_geometry_9/Topics/Intro/EuclidsGeometry9Intro';
+import EuclidsGeometry9Terminology from './components/practice/class-9/euclids_geometry_9/Topics/Terminology/EuclidsGeometry9Terminology';
+import EuclidsGeometry9Skills from './components/practice/class-9/euclids_geometry_9/Topics/Skills/EuclidsGeometry9Skills';
+
 import RealNumberClassification from './components/practice/class-9/number_system/RealNumberClassification';
 import DecimalExpansion from './components/practice/class-9/number_system/DecimalExpansion';
 import OperationsOnSurds from './components/practice/class-9/number_system/OperationsOnSurds';
@@ -1623,6 +1633,18 @@ function App() {
           <Route path="practice/class-9/lines-and-angles/intro" element={<ProtectedRoute redirectTo="/login"><LinesAndAngles9Intro /></ProtectedRoute>} />
           <Route path="practice/class-9/lines-and-angles/terminology" element={<ProtectedRoute redirectTo="/login"><LinesAndAngles9Terminology /></ProtectedRoute>} />
           <Route path="practice/class-9/lines-and-angles/skills" element={<ProtectedRoute redirectTo="/login"><LinesAndAngles9Skills /></ProtectedRoute>} />
+
+          {/* Class 9: Linear Equations in Two Variables Routes */}
+          <Route path="practice/class-9/linear-equations-two-variables" element={<ProtectedRoute redirectTo="/login"><LinearEquations9 /></ProtectedRoute>} />
+          <Route path="practice/class-9/linear-equations-two-variables/intro" element={<ProtectedRoute redirectTo="/login"><LinearEquations9Intro /></ProtectedRoute>} />
+          <Route path="practice/class-9/linear-equations-two-variables/terminology" element={<ProtectedRoute redirectTo="/login"><LinearEquations9Terminology /></ProtectedRoute>} />
+          <Route path="practice/class-9/linear-equations-two-variables/skills" element={<ProtectedRoute redirectTo="/login"><LinearEquations9Skills /></ProtectedRoute>} />
+
+          {/* Class 9: Euclid's Geometry Routes */}
+          <Route path="practice/class-9/euclids-geometry" element={<ProtectedRoute redirectTo="/login"><EuclidsGeometry9 /></ProtectedRoute>} />
+          <Route path="practice/class-9/euclids-geometry/intro" element={<ProtectedRoute redirectTo="/login"><EuclidsGeometry9Intro /></ProtectedRoute>} />
+          <Route path="practice/class-9/euclids-geometry/terminology" element={<ProtectedRoute redirectTo="/login"><EuclidsGeometry9Terminology /></ProtectedRoute>} />
+          <Route path="practice/class-9/euclids-geometry/skills" element={<ProtectedRoute redirectTo="/login"><EuclidsGeometry9Skills /></ProtectedRoute>} />
 
           {/* Legacy Classification/Direct Routes */}
           <Route path="practice/class-9/number-system" element={<ProtectedRoute redirectTo="/login"><NumberSystem /></ProtectedRoute>} />
