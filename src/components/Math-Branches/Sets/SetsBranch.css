@@ -775,8 +775,14 @@
 
 .sets-quiz-options {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  grid-template-columns: 1fr;
   gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .sets-quiz-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .sets-score-header {
