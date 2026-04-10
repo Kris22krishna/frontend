@@ -44,7 +44,7 @@ export const generateNaturalWholeNumbers = () => {
         placeholders: ["Ans"],
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Fundamental Operations on Natural and Whole Numbers'
+        topic: 'Arithmetic / Whole Numbers'
     };
 };
 
@@ -82,7 +82,7 @@ export const generateIntegers = () => {
         placeholders: ["Ans"],
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Fundamental Operations On Integers'
+        topic: 'Arithmetic / Integers'
     };
 };
 
@@ -175,7 +175,7 @@ export const generateFractions = () => {
         placeholders: ["N", "D"],
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Fractions'
+        topic: 'Arithmetic / Fractions'
     };
 };
 
@@ -218,7 +218,7 @@ export const generateDecimals = () => {
         placeholders: ["Ans"],
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Fundamental operations on decimals'
+        topic: 'Arithmetic / Decimals'
     };
 };
 
@@ -257,7 +257,7 @@ export const generateLCM = () => {
         placeholders: ["Ans"],
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Least Common Multiple'
+        topic: 'Number Theory / LCM'
     };
 };
 
@@ -298,7 +298,7 @@ export const generateHCF = () => {
         placeholders: ["Ans"],
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Highest Common Factor'
+        topic: 'Number Theory / HCF'
     };
 };
 
@@ -342,7 +342,7 @@ export const generateLCMandHCF = () => {
         placeholders: ["Ans"],
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'LCM and HCF'
+        topic: 'Number Theory / LCM & HCF'
     };
 };
 
@@ -378,7 +378,7 @@ export const generateRatioProportion = () => {
         placeholders: ["Ans"],
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Ratio and Proportion'
+        topic: 'Arithmetic / Ratio & Proportion'
     };
 };
 
@@ -420,7 +420,7 @@ export const generateSquareRoots = () => {
         placeholders: ["Ans"],
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Square and Square Roots'
+        topic: 'Arithmetic / Square Roots'
     };
 };
 
@@ -461,7 +461,7 @@ export const generateCubeRoots = () => {
         placeholders: ["Ans"],
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Cube and Cube Roots'
+        topic: 'Arithmetic / Cube Roots'
     };
 };
 
@@ -486,7 +486,7 @@ export const generateExponentsNegative = () => {
         { value: `$${-den}$`, label: `$${-den}$` },        // -4 or 8
         { value: wrongSignFraction, label: wrongSignFraction } // wrong sign fraction
     ]);
-    return { type: 'mcq', question, answer: answerStr, options, topic: 'Laws of Exponents' };
+    return { type: 'mcq', question, answer: answerStr, options, topic: 'Arithmetic / Exponents' };
 };
 
 // --- CAT11: BODMAS ---
@@ -524,7 +524,7 @@ export const generateBODMAS = () => {
         question: '',
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'BODMAS'
+        topic: 'Arithmetic / BODMAS'
     };
 };
 
@@ -608,7 +608,7 @@ export const generateAlgebraicAdditionSubtraction = () => {
         { value: wrap(d4), label: wrap(d4) }
     ]);
 
-    return { type: 'mcq', question, answer: wrap(ansStrFinal), options, topic: 'Algebraic Addition' };
+    return { type: 'mcq', question, answer: wrap(ansStrFinal), options, topic: 'Algebra / Addition' };
 };
 
 // --- CAT13: Algebraic Multiplication ---
@@ -663,7 +663,7 @@ export const generateAlgebraicMultiplication = () => {
         fo(`${term1}x^2${formatXY(Math.abs(term2) + 5)} - ${term3}y^2`)
     ]);
 
-    return { type: 'mcq', question, answer: `$${ansStr}$`, options, topic: 'Algebraic Multiplication' };
+    return { type: 'mcq', question, answer: `$${ansStr}$`, options, topic: 'Algebra / Multiplication' };
 };
 
 // --- CAT14: Algebraic Division ---
@@ -703,7 +703,7 @@ export const generateAlgebraicDivision = () => {
         question: '',
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Algebraic Division'
+        topic: 'Algebra / Division'
     };
 };
 
@@ -753,7 +753,7 @@ export const generateLinearEquationOneVar = () => {
         question: 'Find the value of x for the following equations:',
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Linear Equations in one Variable'
+        topic: 'Algebra / Linear Equations'
     };
 };
 
@@ -882,7 +882,7 @@ export const generateSimultaneousEquations = () => {
         question: `Solve Simultaneous Linear Equations in Two Variables: <br/> ${eqText}`,
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Simultaneous Equations'
+        topic: 'Algebra / Simultaneous Equations'
     };
 };
 
@@ -917,7 +917,7 @@ export const generateQuadraticEquation = () => {
         question: `Solve the following Quadratic Equation: <br/> ${eqText}`,
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Quadratic Equations'
+        topic: 'Algebra / Quadratic Equations'
     };
 };
 
@@ -980,7 +980,7 @@ export const generatePerimeter = () => {
         question: questionText + imgHtml,
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Perimeter of Plane Figures'
+        topic: 'Mensuration / Perimeter'
     };
 };
 
@@ -1021,7 +1021,7 @@ export const generateArea = () => {
         question: questionText,
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Area of Plane Figures'
+        topic: 'Mensuration / Area'
     };
 };
 
@@ -1073,7 +1073,7 @@ export const generateCartesianPoint = () => {
         question: 'Select the quadrant in which the following points are present:',
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Locating a point in a Cartesian Plane'
+        topic: 'Coordinate Geometry / Plotting'
     };
 };
 
@@ -1114,7 +1114,7 @@ export const generateCoordinateGeometry = () => {
         question: questionText,
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Coordinate Geometry'
+        topic: 'Coordinate Geometry / Basics'
     };
 };
 
@@ -1169,7 +1169,7 @@ export const generateSectionFormula = () => {
         question: questionText,
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Section Formula'
+        topic: 'Coordinate Geometry / Section Formula'
     };
 };
 
@@ -1249,7 +1249,7 @@ export const generateTrigonometry = () => {
         question: questionText,
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Trigonometry'
+        topic: 'Trigonometry / Basics'
     };
 };
 
@@ -1294,7 +1294,7 @@ export const generateTrigRatios = () => {
         question: 'Find the values of the following:',
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Trigonometric Ratios of Standard angles'
+        topic: 'Trigonometry / Ratios'
     };
 };
 
@@ -1368,7 +1368,7 @@ export const generatePythagoras = () => {
         question: questionText,
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Word Problems - Pythagorean Theorem'
+        topic: 'Geometry / Pythagoras'
     };
 };
 
@@ -1396,7 +1396,7 @@ export const generateClocks = () => {
         question: questionText,
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Clocks'
+        topic: 'Logical Thinking / Clocks'
     };
 };
 
@@ -1439,7 +1439,7 @@ export const generateProbability = () => {
         question: 'True or False',
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Miscellaneous'
+        topic: 'Algebra / Miscellaneous'
     };
 };
 
@@ -1514,7 +1514,7 @@ export const generateDiceProbability = () => {
         question: `Two dice are thrown at the same time. What is the probability that the sum of numbers on the dice is $${targetSum}$ ?`,
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Probability'
+        topic: 'Data Handling / Probability'
     };
 };
 
@@ -1566,7 +1566,7 @@ export const generateAgeProblem = () => {
         question: `Robert's father is $${M}$ times as old as Robert. After $${Y}$ years, father will be ${Mf === 2 ? 'twice' : Mf === 3 ? 'three times' : '$' + Mf + '$ times'} as old as Robert. Find their present ages.`,
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Linear Equations Word Problems'
+        topic: 'Algebra / Word Problems'
     };
 };
 
@@ -1594,7 +1594,7 @@ export const generateNumberSquareProblem = () => {
         question: `The sum of a positive number and its square is $${X}$. Find the number.`,
         answer: JSON.stringify(answerObj),
         rows: rows,
-        topic: 'Quadratic Equations Word Problems'
+        topic: 'Algebra / Word Problems'
     };
 };
 
@@ -1676,7 +1676,7 @@ export const generatePerimeterAndArea = () => {
     return {
         type: "tableInput",
         variant: "double-input",
-        topic: "Perimeter and Area",
+        topic: "Mensuration / Mixed",
         headers: ["Shape", "Perimeter", "Area"],
         inputKeys: ["perimeter", "area"],
         answer: JSON.stringify(answerObj),

@@ -133,6 +133,160 @@ const LampPostSVG = ({ height, color }) => (
     </svg>
 );
 
+const BucketSVG = ({ fill, waterColor = '#3498db' }) => (
+    <svg width="80" height="120" viewBox="0 0 100 120">
+        <defs>
+            <clipPath id="bucketClip">
+                <path d="M 20 20 L 80 20 L 70 110 L 30 110 Z" />
+            </clipPath>
+        </defs>
+        {/* Handle */}
+        <path d="M 20 30 Q 50 0 80 30" fill="none" stroke="#64748b" strokeWidth="4" />
+        {/* Fill */}
+        <rect x="0" y={110 - (fill * 0.9)} width="100" height="120" fill={waterColor} clipPath="url(#bucketClip)" />
+        {/* Outline */}
+        <path d="M 20 20 L 80 20 L 70 110 L 30 110 Z" fill="none" stroke="#64748b" strokeWidth="6" strokeLinejoin="round" />
+    </svg>
+);
+
+const MugSVG = ({ fill, waterColor = '#3498db' }) => (
+    <svg width="80" height="100" viewBox="0 0 100 100">
+        <defs>
+            <clipPath id="mugClip">
+                <rect x="25" y="25" width="50" height="65" rx="5" />
+            </clipPath>
+        </defs>
+        {/* Handle */}
+        <path d="M 75 40 Q 95 40 95 55 Q 95 70 75 70" fill="none" stroke="#64748b" strokeWidth="6" />
+        {/* Fill */}
+        <rect x="0" y={90 - (fill * 0.65)} width="100" height="100" fill={waterColor} clipPath="url(#mugClip)" />
+        {/* Outline */}
+        <rect x="25" y="25" width="50" height="65" rx="5" fill="none" stroke="#64748b" strokeWidth="6" />
+    </svg>
+);
+
+const JugSVG = ({ fill, waterColor = '#3498db' }) => (
+    <svg width="80" height="120" viewBox="0 0 100 120">
+        <defs>
+            <clipPath id="jugClip">
+                <path d="M 30 20 L 70 20 Q 85 20 85 40 L 85 95 Q 85 110 70 110 L 30 110 Q 15 110 15 95 L 15 40 Q 15 20 30 20" />
+            </clipPath>
+        </defs>
+        {/* Spout */}
+        <path d="M 30 20 L 10 15 L 15 35" fill="#64748b" />
+        {/* Handle */}
+        <path d="M 85 35 Q 105 35 105 65 Q 105 95 85 95" fill="none" stroke="#64748b" strokeWidth="6" />
+        {/* Fill */}
+        <rect x="0" y={110 - (fill * 0.9)} width="120" height="120" fill={waterColor} clipPath="url(#jugClip)" />
+        {/* Outline */}
+        <path d="M 30 20 L 70 20 Q 85 20 85 40 L 85 95 Q 85 110 70 110 L 30 110 Q 15 110 15 95 L 15 40 Q 15 20 30 20" fill="none" stroke="#64748b" strokeWidth="6" />
+    </svg>
+);
+
+const GlassSVG = ({ fill, waterColor = '#3498db' }) => (
+    <svg width="60" height="120" viewBox="0 0 60 120">
+        <defs>
+            <clipPath id="glassClip">
+                <path d="M 10 10 L 50 10 L 45 110 L 15 110 Z" />
+            </clipPath>
+        </defs>
+        {/* Fill */}
+        <rect x="0" y={110 - fill} width="60" height="120" fill={waterColor} clipPath="url(#glassClip)" />
+        {/* Outline */}
+        <path d="M 10 10 L 50 10 L 45 110 L 15 110 Z" fill="none" stroke="#64748b" strokeWidth="4" />
+    </svg>
+);
+
+const PotSVG = ({ fill, waterColor = '#3498db' }) => (
+    <svg width="100" height="100" viewBox="0 0 120 100">
+        <defs>
+            <clipPath id="potClip">
+                <rect x="20" y="30" width="80" height="50" rx="5" />
+            </clipPath>
+        </defs>
+        {/* Handles */}
+        <circle cx="15" cy="55" r="8" fill="none" stroke="#64748b" strokeWidth="4" />
+        <circle cx="105" cy="55" r="8" fill="none" stroke="#64748b" strokeWidth="4" />
+        {/* Fill */}
+        <rect x="0" y={80 - (fill * 0.5)} width="120" height="100" fill={waterColor} clipPath="url(#potClip)" />
+        {/* Outline */}
+        <rect x="20" y="30" width="80" height="50" rx="5" fill="none" stroke="#64748b" strokeWidth="6" />
+    </svg>
+);
+
+const BowlSVG = ({ fill, waterColor = '#3498db' }) => (
+    <svg width="100" height="80" viewBox="0 0 100 80">
+        <defs>
+            <clipPath id="bowlClip">
+                <path d="M 10 20 Q 50 80 90 20 L 90 20 Z" />
+            </clipPath>
+        </defs>
+        {/* Fill */}
+        <rect x="0" y={80 - (fill * 0.6)} width="100" height="80" fill={waterColor} clipPath="url(#bowlClip)" />
+        {/* Outline */}
+        <path d="M 10 20 Q 50 80 90 20" fill="none" stroke="#64748b" strokeWidth="6" strokeLinecap="round" />
+    </svg>
+);
+
+const BathtubSVG = ({ fill, waterColor = '#3498db' }) => (
+    <svg width="120" height="80" viewBox="0 0 150 100">
+        <defs>
+            <clipPath id="tubClip">
+                <path d="M 20 40 Q 20 80 50 80 L 100 80 Q 130 80 130 40 Z" />
+            </clipPath>
+        </defs>
+        {/* Faucet */}
+        <path d="M 25 20 L 25 35 M 20 25 L 30 25" stroke="#94a3b8" strokeWidth="4" />
+        {/* Fill */}
+        <rect x="0" y={80 - (fill * 0.4)} width="150" height="100" fill={waterColor} clipPath="url(#tubClip)" />
+        {/* Outline */}
+        <path d="M 10 40 L 140 40 M 20 40 Q 20 80 50 80 L 100 80 Q 130 80 130 40" fill="none" stroke="#64748b" strokeWidth="6" strokeLinecap="round" />
+    </svg>
+);
+
+const PoolSVG = ({ fill, waterColor = '#3498db' }) => (
+    <svg width="140" height="100" viewBox="0 0 160 120">
+        <rect x="10" y="20" width="140" height="80" fill="#f8fafc" stroke="#64748b" strokeWidth="4" />
+        <rect x="20" y="30" width="120" height="60" fill={waterColor} opacity={fill/100} />
+        {/* Ladder */}
+        <path d="M 120 10 L 120 40 M 130 10 L 130 40 M 120 20 L 130 20 M 120 30 L 130 30" stroke="#94a3b8" strokeWidth="2" />
+    </svg>
+);
+
+
+const SpoonSVG = ({ fill, waterColor = '#3498db' }) => (
+    <svg width="60" height="40" viewBox="0 0 60 40">
+        <defs>
+            <clipPath id="spoonClip">
+                <ellipse cx="20" cy="20" rx="15" ry="10" />
+            </clipPath>
+        </defs>
+        {/* Handle */}
+        <path d="M 35 20 L 55 20" fill="none" stroke="#64748b" strokeWidth="4" strokeLinecap="round" />
+        {/* Fill */}
+        <rect x="0" y={35 - (fill * 0.2)} width="60" height="40" fill={waterColor} clipPath="url(#spoonClip)" />
+        {/* Outline */}
+        <ellipse cx="20" cy="20" rx="15" ry="10" fill="none" stroke="#64748b" strokeWidth="3" />
+    </svg>
+);
+
+const BottleSVG = ({ fill, waterColor = '#3498db' }) => (
+    <svg width="60" height="120" viewBox="0 0 80 120">
+        <defs>
+            <clipPath id="bottleClip">
+                <path d="M 30 10 L 50 10 L 50 30 L 70 50 L 70 110 L 10 110 L 10 50 L 30 30 Z" />
+            </clipPath>
+        </defs>
+        {/* Cap */}
+        <rect x="30" y="5" width="20" height="5" fill="#64748b" rx="1" />
+        {/* Fill */}
+        <rect x="0" y={110 - (fill * 0.9)} width="80" height="120" fill={waterColor} clipPath="url(#bottleClip)" />
+        {/* Outline */}
+        <path d="M 30 10 L 50 10 L 50 30 L 70 50 L 70 110 L 10 110 L 10 50 L 30 30 Z" fill="none" stroke="#64748b" strokeWidth="4" strokeLinejoin="round" />
+    </svg>
+);
+
+
 const TreeSVG = ({ height }) => (
     <svg width="100" height={height} viewBox={`0 0 100 ${height}`}>
         <rect x="42" y={height / 2} width="16" height={height / 2} fill="#78350F" />
@@ -220,14 +374,37 @@ const DynamicVisual = ({ type, data }) => {
 
     if (type === 'capacity') {
         const { f1, f2, color1, color2, label1, label2, isAnswered } = data;
+
+        const renderCapacityObject = (label, fill, waterColor) => {
+            const name = label.toLowerCase();
+            if (name.includes('bucket')) return <BucketSVG fill={fill} waterColor={waterColor} />;
+            if (name.includes('mug') || name.includes('cup')) return <MugSVG fill={fill} waterColor={waterColor} />;
+            if (name.includes('jug')) return <JugSVG fill={fill} waterColor={waterColor} />;
+            if (name.includes('glass')) return <GlassSVG fill={fill} waterColor={waterColor} />;
+            if (name.includes('bowl')) return <BowlSVG fill={fill} waterColor={waterColor} />;
+            if (name.includes('pot')) return <PotSVG fill={fill} waterColor={waterColor} />;
+            if (name.includes('bathtub')) return <BathtubSVG fill={fill} waterColor={waterColor} />;
+            if (name.includes('pool')) return <PoolSVG fill={fill} waterColor={waterColor} />;
+            if (name.includes('bottle')) return <BottleSVG fill={fill} waterColor={waterColor} />;
+            if (name.includes('spoon')) return <SpoonSVG fill={fill} waterColor={waterColor} />;
+            if (name.includes('tank')) return <BucketSVG fill={fill} waterColor={waterColor} />; // Tank as large bucket
+
+            // Default beaker
+            return (
+                <div style={{ position: 'relative', width: '80px', height: '120px', border: '4px solid #64748b', borderTop: 'none', borderRadius: '0 0 20px 20px', overflow: 'hidden', background: '#f8fafc' }}>
+                    <motion.div initial={{ height: 0 }} animate={{ height: `${fill}%` }} style={{ position: 'absolute', bottom: 0, width: '100%', background: `linear-gradient(180deg, ${waterColor}aa, ${waterColor})`, borderTop: '2px solid white' }} />
+                </div>
+            );
+        };
+
         return (
-            <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} style={{ display: 'flex', gap: '60px', justifyContent: 'center', background: 'white', padding: '40px', borderRadius: '35px', boxShadow: '0 15px 35px rgba(0,0,0,0.06)' }}>
+            <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} style={{ display: 'flex', gap: '60px', alignItems: 'center', justifyContent: 'center', background: 'white', padding: '40px', borderRadius: '35px', boxShadow: '0 15px 35px rgba(0,0,0,0.06)', minHeight: '200px' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
-                    <div style={{ position: 'relative', width: '80px', height: '120px', border: '4px solid #64748b', borderTop: 'none', borderRadius: '0 0 20px 20px', overflow: 'hidden', background: '#f8fafc' }}>
-                        <motion.div initial={{ height: 0 }} animate={{ height: `${f1}%` }} style={{ position: 'absolute', bottom: 0, width: '100%', background: `linear-gradient(180deg, ${color1}aa, ${color1})`, borderTop: '2px solid white' }} />
+                    <div style={{ position: 'relative' }}>
+                        {renderCapacityObject(label1, f1, color1)}
                         <AnimatePresence>
                             {isAnswered && (
-                                <motion.div initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', fontWeight: 800, color: '#1e3a8a', fontSize: '1.4rem', textShadow: '0 0 10px white' }}>
+                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', fontWeight: 800, color: '#1e3a8a', fontSize: '1.2rem', textShadow: '0 0 10px white', pointerEvents: 'none' }}>
                                     {f1}%
                                 </motion.div>
                             )}
@@ -236,11 +413,11 @@ const DynamicVisual = ({ type, data }) => {
                     <span style={{ fontWeight: 700, color: '#31326F' }}>{label1}</span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
-                    <div style={{ position: 'relative', width: '80px', height: '120px', border: '4px solid #64748b', borderTop: 'none', borderRadius: '0 0 20px 20px', overflow: 'hidden', background: '#f8fafc' }}>
-                        <motion.div initial={{ height: 0 }} animate={{ height: `${f2}%` }} style={{ position: 'absolute', bottom: 0, width: '100%', background: `linear-gradient(180deg, ${color2}aa, ${color2})`, borderTop: '2px solid white' }} />
+                    <div style={{ position: 'relative' }}>
+                        {renderCapacityObject(label2, f2, color2)}
                         <AnimatePresence>
                             {isAnswered && (
-                                <motion.div initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', fontWeight: 800, color: '#1e3a8a', fontSize: '1.4rem', textShadow: '0 0 10px white' }}>
+                                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%, -50%)', fontWeight: 800, color: '#1e3a8a', fontSize: '1.2rem', textShadow: '0 0 10px white', pointerEvents: 'none' }}>
                                     {f2}%
                                 </motion.div>
                             )}

@@ -152,7 +152,7 @@ export const generateRationalNumbers = () => {
     return {
         type: "mcq",
         question: question,
-        topic: "Rational Numbers",
+        topic: "Number System / Rational Numbers",
         options: options,
         answer: answer
     };
@@ -174,7 +174,7 @@ export const generateExponentsGrade8 = () => {
     return {
         type: "mcq",
         question: question,
-        topic: "Exponents and Powers",
+        topic: "Arithmetic / Exponents",
         options: options,
         answer: answer
     };
@@ -203,7 +203,7 @@ export const generateSquaresCubes = () => {
     return {
         type: "tableInput",
         variant: "default",
-        topic: "Squares & Cubes",
+        topic: "Arithmetic / Squares and Cubes",
         headers: ["Problem", "Value"],
         answer: JSON.stringify(answerObj),
         rows: rows
@@ -261,7 +261,7 @@ export const generateAlgebraExpressions = () => {
     return {
         type: "mcq",
         question: question,
-        topic: "Algebraic Expressions",
+        topic: "Algebra / Expressions",
         options: shuffleArray(optionsArr),
         answer: answer
     };
@@ -309,7 +309,7 @@ export const generateFactorisation = () => {
     return {
         type: "mcq",
         question: question,
-        topic: "Factorisation",
+        topic: "Algebra / Factorisation",
         options: shuffleArray(uniqueOptions),
         answer: answer
     };
@@ -345,7 +345,7 @@ export const generateLinearEquationsGrade8 = () => {
     return {
         type: "tableInput",
         variant: "default",
-        topic: "Linear Equations",
+        topic: "Algebra / Linear Equations",
         headers: ["Equation", "Value of x"],
         answer: JSON.stringify(answerObj),
         rows: rows
@@ -379,7 +379,7 @@ export const generateMensuration = () => {
         type: "tableInput",
         variant: "default",
         question: "Observe the field dimensions given below:<br/>" + `<img src="${svg}" class="img-fluid" style="max-width:300px; display:block; margin:auto;"/>`,
-        topic: "Mensuration",
+        topic: "Mensuration / 2D",
         headers: ["Question", "Answer"],
         answer: JSON.stringify(answerObj),
         rows: rows
@@ -431,7 +431,7 @@ export const generateGraphs = () => {
     return {
         type: "tableInput",
         variant: "default",
-        topic: "Introduction to Graphs",
+        topic: "Data Handling / Graphs",
         headers: ["Point", "Quadrant"],
         answer: JSON.stringify(answerObj),
         rows: rows
@@ -493,7 +493,7 @@ export const generateProportion = () => {
     return {
         type: "userInput",
         question: question + (type === "Direct" ? " (number only, without ₹)" : " (number only, without days)"),
-        topic: "Direct & Inverse Proportion",
+        topic: "Arithmetic / Proportion",
         answer: String(val)
     };
 };
@@ -530,7 +530,7 @@ export const generateComparingQuantities = () => {
     return {
         type: "tableInput",
         variant: "default",
-        topic: "Comparing Quantities",
+        topic: "Arithmetic / Comparing Quantities",
         headers: ["Problem", "Value"],
         answer: JSON.stringify(answerObj),
         rows: rows
@@ -566,7 +566,7 @@ export const generateQuadrilateralsGrade8 = () => {
         type: "tableInput",
         variant: "default",
         question: "In the parallelogram ABCD given below, $\\angle A = " + angleA + "^\\circ$.<br/>" + `<img src="${svg}" class="img-fluid" style="max-width:300px; display:block; margin:auto;"/>`,
-        topic: "Understanding Quadrilaterals",
+        topic: "Geometry / Quadrilaterals",
         headers: ["Problem", "Angle Value"],
         answer: JSON.stringify(answerObj),
         rows: rows
@@ -591,7 +591,7 @@ export const generatePracticalGeometryGrade8 = () => {
         type: "tableInput",
         variant: "default",
         question: "Answer Yes or No for the following property checks:",
-        topic: "Practical Geometry",
+        topic: "Geometry / Practical Geometry",
         headers: ["Property Check", "Answer"],
         answer: JSON.stringify(answerObj),
         rows: rows
@@ -618,7 +618,7 @@ export const generateVisualizingSolidShapes = () => {
         type: "tableInput",
         variant: "default",
         question: "Observe the solid shape (Cuboid) below and verify Euler's Formula:<br/>" + `<img src="${svg}" class="img-fluid" style="max-width:250px; display:block; margin:auto;"/>`,
-        topic: "Visualising Solid Shapes",
+        topic: "Geometry / Solid Shapes",
         headers: ["Attribute", "Count"],
         answer: JSON.stringify(answerObj),
         rows: rows
@@ -659,7 +659,7 @@ export const generateDataHandling = () => {
         type: "tableInput",
         variant: "default",
         question: `Consider the data set: ${numbers.join(", ")}`,
-        topic: "Data Handling",
+        topic: "Data Handling / Statistics",
         headers: ["Statistic", "Value"],
         answer: JSON.stringify(answerObj),
         rows: rows
@@ -749,7 +749,7 @@ export const generateAlgebraIdentities = () => {
     return {
         type: "mcq",
         question: question,
-        topic: "Algebraic Identities",
+        topic: "Algebra / Identities",
         options: shuffleArray(optionsArr),
         answer: answer
     };
@@ -798,7 +798,7 @@ export const generatePlayingWithNumbers = () => {
     return {
         type: "mcq",
         question: question,
-        topic: "Playing with Numbers",
+        topic: "Number System / Number Play",
         options: shuffleArray(optionsArr),
         answer: answer
     };
@@ -864,7 +864,7 @@ export const generateQuadrilateralPropertiesAdvanced = () => {
 
 export const generateMensurationGrade8 = () => {
     // Replaced by the specialized SVG version above
-    return generateMensuration();
+    return { ...generateMensuration(), topic: "Mensuration / 3D" };
 };
 
 export const generateDirectInverseVariation = () => {
@@ -964,7 +964,7 @@ export const generateMensuration3D = () => {
     return {
         type: "userInput",
         question: question,
-        topic: "Mensuration 3D",
+        topic: "Mensuration / 3D",
         answer: answer
     };
 };
@@ -1045,7 +1045,7 @@ export const generateCommercialMath = () => {
     return {
         type: "userInput",
         question: `Find S.P. if C.P. = ₹${cp} and Profit% = ${profitPct}%.`,
-        topic: "Commercial Math",
+        topic: "Arithmetic / Commercial Math",
         answer: String(sp)
     };
 };

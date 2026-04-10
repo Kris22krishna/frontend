@@ -34,19 +34,19 @@ export default function LCMTerminology() {
                     <button className={styles.arithIntroNavLink} onClick={() => navigate('/arithmetic/lcm/skills')}>🎯 Skills</button>
                 </div>
             </nav>
-            <div style={{ maxWidth: 1100, margin: '40px auto 20px', padding: '0 24px' }}>
+            <div className={styles.arithTermContainer}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 20 }}>
                     <h1 style={{ fontFamily: '"Outfit", sans-serif', fontSize: '2.8rem', fontWeight: 900, color: '#0f172a', margin: '0 0 8px' }}>LCM <span style={{ background: 'linear-gradient(135deg, #0ea5e9, #38bdf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Vocabulary</span></h1>
                     <div style={{ fontSize: 16, fontWeight: 700, color: '#64748b', letterSpacing: 0.5 }}>{activeTab === 'quiz' ? 'Test your knowledge!' : `Select any ${activeTab === 'terms' ? 'term' : 'method'} below.`}</div>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 16 }}>
+                <div className={styles.arithTabSwitcher}>
                     {[['terms', '📚 Terminology'], ['rules', '⚡ Methods'], ['quiz', '🧪 Vocab Check']].map(([key, label]) => (
                         <button key={key} style={{ padding: '8px 16px', borderRadius: 100, border: 'none', background: activeTab === key ? accentColor : '#e2e8f0', color: activeTab === key ? '#fff' : '#475569', fontWeight: 700, cursor: 'pointer' }} onClick={() => setActiveTab(key)}>{label}</button>
                     ))}
                 </div>
                 {activeTab !== 'quiz' ? (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 360px) 1fr', gap: 16, alignItems: 'start' }}>
-                        <aside style={{ background: 'rgba(255,255,255,0.7)', padding: '14px', borderRadius: 20, border: '1px solid rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: 10, backdropFilter: 'blur(10px)' }}>
+                    <div className={styles.arithTermLayout}>
+                        <aside className={styles.arithTermPanel} style={{ background: 'rgba(255,255,255,0.7)', padding: '14px', borderRadius: 20, border: '1px solid rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: 10, backdropFilter: 'blur(10px)' }}>
                             {(activeTab === 'terms' ? TERMS : FIVE_RULES).map((item, i) => {
                                 const isActive = activeTab === 'terms' ? selectedIdx === i : selectedRuleIdx === i;
                                 return (
@@ -108,7 +108,7 @@ export default function LCMTerminology() {
                         </main>
                     </div>
                 ) : (
-                    <div style={{ maxWidth: 700, margin: '0 auto', background: '#fff', borderRadius: 24, padding: '32px 40px', boxShadow: '0 15px 40px rgba(0,0,0,0.04)', border: '1px solid #e2e8f0' }}>
+                    <div className={styles.arithQuizPanel}>
                         <h2 style={{ textAlign: 'center', margin: '0 0 32px 0', color: '#0f172a' }}>Quick Knowledge Check</h2>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
                             {VOCAB_QUIZ.map(q => (
@@ -133,7 +133,7 @@ export default function LCMTerminology() {
                             ) : (
                                 <div>
                                     <div style={{ fontSize: 24, fontWeight: 700, color: '#0f172a', marginBottom: 16 }}>You scored {Object.entries(quizAnswers).filter(([qId, ans]) => VOCAB_QUIZ.find(q => q.id === parseInt(qId)).correct === ans).length} out of {VOCAB_QUIZ.length}! 🎉</div>
-                                    <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
+                                    <div className={styles.arithActionRow}>
                                         <button onClick={handleRetry} style={{ padding: '12px 24px', background: '#fff', color: '#475569', border: '1.5px solid #e2e8f0', borderRadius: 100, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>Try Again</button>
                                         <button onClick={() => navigate('/arithmetic/lcm/skills')} style={{ padding: '12px 24px', background: accentColor, color: '#fff', border: 'none', borderRadius: 100, fontSize: 15, fontWeight: 700, cursor: 'pointer' }}>Go to Skills →</button>
                                     </div>
