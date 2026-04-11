@@ -13,6 +13,27 @@ import mascotImg from '../../../../assets/mascot.png';
 import avatarImg from '../../../../assets/avatar.png';
 import '../../../../pages/juniors/class-1/Grade1Practice.css';
 
+const WholeWatermelon = ({ size = 80 }) => (
+    <div style={{ width: size, height: size, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <svg viewBox="0 0 100 100" width={size} height={size} style={{ filter: 'drop-shadow(0 5px 15px rgba(22, 101, 52, 0.2))' }}>
+            <defs>
+                <radialGradient id="watermelonGrad" cx="50%" cy="50%" r="50%" fx="30%" fy="30%">
+                    <stop offset="0%" style={{ stopColor: '#bbf7d0' }} />
+                    <stop offset="60%" style={{ stopColor: '#22c55e' }} />
+                    <stop offset="100%" style={{ stopColor: '#166534' }} />
+                </radialGradient>
+            </defs>
+            <ellipse cx="50" cy="50" rx="46" ry="34" fill="url(#watermelonGrad)" stroke="#166534" strokeWidth="2" />
+            <path d="M30 32 Q 38 50 30 68" stroke="#166534" strokeWidth="5" fill="none" strokeLinecap="round" opacity="0.4" />
+            <path d="M45 26 Q 52 50 45 74" stroke="#166534" strokeWidth="5" fill="none" strokeLinecap="round" opacity="0.4" />
+            <path d="M60 26 Q 68 50 60 74" stroke="#166534" strokeWidth="5" fill="none" strokeLinecap="round" opacity="0.4" />
+            <path d="M75 32 Q 82 50 75 68" stroke="#166534" strokeWidth="5" fill="none" strokeLinecap="round" opacity="0.4" />
+            {/* Shine */}
+            <ellipse cx="35" cy="35" rx="12" ry="6" fill="white" opacity="0.3" transform="rotate(-25, 35, 35)" />
+        </svg>
+    </div>
+);
+
 const DynamicVisual = ({ type, data }) => {
     if (type === 'compare') {
         const { objectA, objectB } = data;
@@ -20,14 +41,14 @@ const DynamicVisual = ({ type, data }) => {
             <div style={{ display: 'flex', justifyContent: 'center', gap: '80px', width: '100%', padding: '40px', background: 'white', borderRadius: '30px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }}>
                 <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
                     <div style={{ fontSize: '70px', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }}>
-                        {objectA.emoji}
+                        {objectA.name === 'Watermelon' ? <WholeWatermelon size={80} /> : objectA.emoji}
                     </div>
                     <span style={{ fontWeight: 900, color: '#31326F', fontSize: '1.2rem' }}>{objectA.name}</span>
                 </motion.div>
                 <div style={{ display: 'flex', alignItems: 'center', fontSize: '2rem', color: '#94a3b8', fontWeight: 900 }}>VS</div>
                 <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}>
                     <div style={{ fontSize: '70px', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }}>
-                        {objectB.emoji}
+                        {objectB.name === 'Watermelon' ? <WholeWatermelon size={80} /> : objectB.emoji}
                     </div>
                     <span style={{ fontWeight: 900, color: '#31326F', fontSize: '1.2rem' }}>{objectB.name}</span>
                 </motion.div>
@@ -43,7 +64,7 @@ const DynamicVisual = ({ type, data }) => {
                     {obj1 && (
                         <>
                             <div style={{ fontSize: '70px', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }}>
-                                {obj1.emoji}
+                                {obj1.name === 'Watermelon' ? <WholeWatermelon size={80} /> : obj1.emoji}
                             </div>
                             <span style={{ fontWeight: 900, color: '#31326F', fontSize: '1.2rem' }}>{obj1.name}</span>
                         </>
@@ -57,7 +78,7 @@ const DynamicVisual = ({ type, data }) => {
                     {obj2 && (
                         <>
                             <div style={{ fontSize: '70px', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }}>
-                                {obj2.emoji}
+                                {obj2.name === 'Watermelon' ? <WholeWatermelon size={80} /> : obj2.emoji}
                             </div>
                             <span style={{ fontWeight: 900, color: '#31326F', fontSize: '1.2rem' }}>{obj2.name}</span>
                         </>
@@ -78,7 +99,7 @@ const DynamicVisual = ({ type, data }) => {
                     initial={{ rotate: -5 }} animate={{ rotate: 5 }} transition={{ repeat: Infinity, repeatType: 'reverse', duration: 2 }}
                     style={{ filter: 'drop-shadow(0 15px 15px rgba(251, 146, 60, 0.2))', fontSize: '80px' }}
                 >
-                    {emoji}
+                    {objectType === 'Watermelon' ? <WholeWatermelon size={90} /> : emoji}
                 </motion.div>
             </div>
         );
@@ -412,10 +433,8 @@ const Grade2HowMuchCanYouCarry = () => {
             }
         }));
 
-        if (!isTest && !isCorrect) {
+        if (!isTest) {
             setShowExplanationModal(true);
-        } else if (isTest) {
-            handleNext();
         } else {
             setIsAutoAdvancing(true);
             setTimeout(() => {
