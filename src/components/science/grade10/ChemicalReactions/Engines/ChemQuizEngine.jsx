@@ -224,36 +224,39 @@ export default function ChemQuizEngine({ questions, title, onBack, onSecondaryBa
         <div className={`${prefix}-quiz-active ${prefix}-quiz-container`}>
             {/* Header */}
             <div style={{ marginBottom: 20 }}>
-                <div className={`${prefix}-score-header`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                {/* Row 1: Title (left) + Exit (right) */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
                     <div>
                         <div style={{ fontSize: 11, fontWeight: 800, color: color, textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 4 }}>Skill Verification</div>
                         <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 22, fontWeight: 800, color: `var(--${prefix}-text, #1e293b)`, margin: 0 }}>{title}</h3>
                     </div>
-                    <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '8px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                            <div style={{ fontSize: 13, color: color, fontWeight: 800, background: `${color}15`, padding: '4px 10px', borderRadius: 8, display: 'inline-block' }}>
-                                ⏱️ {formatTime(timeTaken)}
-                            </div>
-                            <button
-                                onClick={onBack}
-                                style={{
-                                    display: 'flex', alignItems: 'center', gap: '6px',
-                                    background: '#fee2e2', color: '#ef4444',
-                                    border: '1px solid #fca5a5', padding: '4px 12px',
-                                    borderRadius: '8px', fontSize: '13px', fontWeight: '700',
-                                    cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 2px 4px rgba(239,68,68,0.1)'
-                                }}
-                                onMouseOver={(e) => { e.currentTarget.style.background = '#fecaca'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 6px rgba(239,68,68,0.15)'; }}
-                                onMouseOut={(e) => { e.currentTarget.style.background = '#fee2e2'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(239,68,68,0.1)'; }}
-                            >
-                                ✕ Exit
-                            </button>
-                        </div>
-                        <div style={{ fontSize: 13, color: `var(--${prefix}-muted, #64748b)`, fontWeight: 700 }}>
-                            Question <span style={{ color: color }}>{current + 1}</span> / {questionSet.length}
-                        </div>
-                    </div>
+                    <button
+                        onClick={onBack}
+                        style={{
+                            display: 'flex', alignItems: 'center', gap: '6px',
+                            background: '#fee2e2', color: '#ef4444',
+                            border: '1px solid #fca5a5', padding: '6px 14px',
+                            borderRadius: '8px', fontSize: '13px', fontWeight: '700',
+                            cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 2px 4px rgba(239,68,68,0.1)',
+                            flexShrink: 0, marginLeft: 12
+                        }}
+                        onMouseOver={(e) => { e.currentTarget.style.background = '#fecaca'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+                        onMouseOut={(e) => { e.currentTarget.style.background = '#fee2e2'; e.currentTarget.style.transform = 'translateY(0)'; }}
+                    >
+                        ✕ Exit
+                    </button>
                 </div>
+                {/* Row 2: Timer (left) | Question X/Y (center) | spacer (right) */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                    <div style={{ fontSize: 13, color: color, fontWeight: 800, background: `${color}15`, padding: '4px 10px', borderRadius: 8 }}>
+                        ⏱️ {formatTime(timeTaken)}
+                    </div>
+                    <div style={{ fontSize: 13, color: `var(--${prefix}-muted, #64748b)`, fontWeight: 700, textAlign: 'center' }}>
+                        Question <span style={{ color: color, fontWeight: 900 }}>{current + 1}</span> / {questionSet.length}
+                    </div>
+                    <div style={{ width: 70 }} />
+                </div>
+                {/* Progress bar */}
                 <div style={{ background: '#f1f5f9', borderRadius: 10, height: 6, overflow: 'hidden' }}>
                     <div style={{ height: '100%', width: `${progress}%`, background: color, borderRadius: 10, transition: 'width 0.4s ease' }} />
                 </div>
@@ -261,14 +264,6 @@ export default function ChemQuizEngine({ questions, title, onBack, onSecondaryBa
 
             {/* Question Card */}
             <div className={`${prefix}-quiz-card`}>
-                <div style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 6,
-                    background: `${color}15`, padding: '6px 16px', borderRadius: 10,
-                    fontSize: 11, fontWeight: 900, color: color, marginBottom: 20,
-                    textTransform: 'uppercase', letterSpacing: 1
-                }}>
-                    QUESTION {current + 1}
-                </div>
                 <div className={`${prefix}-quiz-question-text`} style={{ fontSize: 18, fontWeight: 600, color: `var(--${prefix}-text, #1e293b)`, lineHeight: 1.6, marginBottom: 24 }}>
                     {q.image && (
                         <div style={{ marginBottom: 20, borderRadius: 16, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
@@ -316,7 +311,7 @@ export default function ChemQuizEngine({ questions, title, onBack, onSecondaryBa
                                 className={`${prefix}-quiz-option`}
                                 style={{
                                     display: 'flex', alignItems: 'flex-start', gap: 12,
-                                    padding: '14px 16px', borderRadius: 16,
+                                    padding: '12px 16px', borderRadius: 12,
                                     border: `2.5px solid ${borderColor}`,
                                     background: bgColor, cursor: answered ? 'default' : 'pointer',
                                     fontSize: 14, color: textColor, textAlign: 'left',
@@ -324,8 +319,8 @@ export default function ChemQuizEngine({ questions, title, onBack, onSecondaryBa
                                     fontWeight: selected === oi ? 700 : 500,
                                     boxShadow: selected === oi && !answered ? '0 4px 12px rgba(0,0,0,0.05)' : 'none',
                                     width: '100%',
-                                    minHeight: 78,
-                                    lineHeight: 1.55
+                                    minHeight: 52,
+                                    lineHeight: 1.4
                                 }}
                             >
                                 <div style={{
