@@ -510,7 +510,7 @@ const Grade2Footprints = () => {
             }
         }));
 
-        if (!isTest && !isRight) {
+        if (!isTest) {
             setShowExplanationModal(true);
         } else {
             setIsAutoAdvancing(true);

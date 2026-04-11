@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import styles from '../../../../coordinate_geometry_9/coordinate_geometry_9.module.css'; // Standardized styles
+import styles from '../../../euclids_geometry_9.module.css';
 import { LatexText } from '../../../../../../LatexText';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
-import { LAGraphMini } from '../../components/LAGraphMini';
+import { EGGraphMini } from '../../components/EGGraphMini';
 
-export default function LAScenarioPracticeEngine({ scenarios = [], title, color = "#0f4c81", onBack, nodeId }) {
-    const TOTAL_QUESTIONS = 20;
+export default function EGScenarioPracticeEngine({ scenarios = [], title, color = "#0f4c81", onBack, nodeId }) {
+    const TOTAL_QUESTIONS = 10;
 
     const [questions, setQuestions] = useState([]);
     useEffect(() => {
@@ -19,9 +19,7 @@ export default function LAScenarioPracticeEngine({ scenarios = [], title, color 
 
     const [qIndex, setQIndex] = useState(0);
     const [answers, setAnswers] = useState({});
-    
     const [selectedOpt, setSelectedOpt] = useState(null);
-    const [userAngle, setUserAngle] = useState(0); 
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
@@ -31,7 +29,7 @@ export default function LAScenarioPracticeEngine({ scenarios = [], title, color 
     const isFinishedRef = useRef(false);
 
     useEffect(() => {
-        startSession({ nodeId: nodeId || 'la9-skill-practice', sessionType: 'practice' });
+        startSession({ nodeId: nodeId || 'eg9-skill-practice', sessionType: 'practice' });
     }, []); // eslint-disable-line
 
     useEffect(() => {
@@ -50,11 +48,9 @@ export default function LAScenarioPracticeEngine({ scenarios = [], title, color 
         const past = answers[qIndex];
         if (past) {
             setSelectedOpt(past.selectedOpt);
-            setUserAngle(past.userAngle || 0);
             setIsSubmitted(true);
         } else {
             setSelectedOpt(null);
-            setUserAngle(0);
             setIsSubmitted(false);
         }
     }, [qIndex, answers]);
@@ -62,29 +58,19 @@ export default function LAScenarioPracticeEngine({ scenarios = [], title, color 
     const handleCheckAnswer = () => {
         if (isSubmitted) return;
         const cq = questions[qIndex];
-        if (!cq) return;
+        if (!cq || selectedOpt === null) return;
 
-        let isCorrect = false;
-        if (cq.type === 'mcq') {
-            if (selectedOpt === null) return;
-            isCorrect = selectedOpt === cq.ans;
-        } else if (cq.type === 'protractor') {
-            isCorrect = Math.abs(userAngle - cq.ans) <= 2;
-        }
-
+        const isCorrect = selectedOpt === cq.ans;
         if (isCorrect) setScore(s => s + 1);
 
         setAnswers(prev => ({
             ...prev,
-            [qIndex]: { selectedOpt, userAngle, isCorrect }
+            [qIndex]: { selectedOpt, isCorrect }
         }));
 
         logAnswer({
             question_index: qIndex,
-            answer_json: { 
-                selected: cq.type === 'mcq' ? selectedOpt : userAngle, 
-                correct_answer: cq.ans 
-            },
+            answer_json: { selected: selectedOpt, correct_answer: cq.ans },
             is_correct: isCorrect,
             marks_awarded: isCorrect ? 1 : 0,
             marks_possible: 1,
@@ -94,11 +80,7 @@ export default function LAScenarioPracticeEngine({ scenarios = [], title, color 
         setIsSubmitted(true);
     };
 
-    const handlePrev = () => {
-        if (qIndex > 0) {
-            setQIndex(qIndex - 1);
-        }
-    };
+    const handlePrev = () => { if (qIndex > 0) setQIndex(qIndex - 1); };
 
     const handleNext = async () => {
         if (qIndex < TOTAL_QUESTIONS - 1) {
@@ -112,15 +94,9 @@ export default function LAScenarioPracticeEngine({ scenarios = [], title, color 
 
     const handleRetry = () => {
         isFinishedRef.current = false;
-        startSession({ nodeId: nodeId || 'la9-skill-practice', sessionType: 'practice' });
-        setQIndex(0);
-        setAnswers({});
-        setSelectedOpt(null);
-        setUserAngle(0);
-        setIsSubmitted(false);
-        setScore(0);
-        setFinished(false);
-        setTimeTaken(0);
+        startSession({ nodeId: nodeId || 'eg9-skill-practice', sessionType: 'practice' });
+        setQIndex(0); setAnswers({}); setSelectedOpt(null);
+        setIsSubmitted(false); setScore(0); setFinished(false); setTimeTaken(0);
     };
 
     if (questions.length === 0) return null;
@@ -168,11 +144,8 @@ export default function LAScenarioPracticeEngine({ scenarios = [], title, color 
     const progress = (qIndex / TOTAL_QUESTIONS) * 100;
     const past = answers[qIndex] || {};
 
-    const canSubmit = cq.type === 'protractor' || selectedOpt !== null;
-
     return (
         <div className={styles['quiz-container']}>
-            {/* Header */}
             <div style={{ marginBottom: 20 }}>
                 <div className={styles['score-header']}>
                     <div>
@@ -198,43 +171,29 @@ export default function LAScenarioPracticeEngine({ scenarios = [], title, color 
                     <LatexText text={cq.q} />
                 </div>
 
-                {/* SVG Visualizations / Interactive Protractor */}
                 {cq.svg && (
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 24 }}>
-                        <LAGraphMini 
-                            config={cq.svg} 
-                            onProtractorChange={(val) => { if (!isSubmitted) setUserAngle(val); }} 
-                        />
-                        {cq.type === 'protractor' && (
-                            <div style={{ marginTop: 12, textAlign: 'center' }}>
-                                <div style={{ fontSize: 18, fontWeight: 900, color: '#0f172a' }}>Your Angle: <span style={{ color }}>{userAngle}°</span></div>
-                                <div style={{ fontSize: 12, color: '#64748b', marginTop: 4 }}>Drag the red handle to match the grey angle drawing.</div>
-                            </div>
-                        )}
+                        <EGGraphMini config={cq.svg} />
                     </div>
                 )}
 
-                {/* MCQ Options */}
-                {cq.type === 'mcq' && (
-                    <div className={styles['quiz-options']}>
-                        {cq.opts.map((opt, oi) => {
-                            let border = 'rgba(0,0,0,0.06)', bg = '#fff', txtColor = '#0f172a', dot = '#f1f5f9';
-                            if (isSubmitted) {
-                                if (oi === cq.ans) { border = '#10b981'; bg = 'rgba(16,185,129,0.05)'; txtColor = '#059669'; dot = '#10b981'; }
-                                else if (oi === selectedOpt) { border = '#ef4444'; bg = 'rgba(239,68,68,0.05)'; txtColor = '#ef4444'; dot = '#ef4444'; }
-                            } else if (selectedOpt === oi) { border = color; bg = `${color}05`; dot = color; }
-                            return (
-                                <button key={oi} onClick={() => !isSubmitted && setSelectedOpt(oi)} disabled={isSubmitted}
-                                    style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderRadius: 12, border: `2.5px solid ${border}`, background: bg, cursor: isSubmitted ? 'default' : 'pointer', fontSize: 15, color: txtColor, textAlign: 'left', transition: 'all 0.2s', fontWeight: selectedOpt === oi ? 700 : 500, fontFamily: 'Open Sans, sans-serif' }}>
-                                    <div style={{ width: 10, height: 10, borderRadius: '50%', background: dot, flexShrink: 0 }} />
-                                    <span><LatexText text={opt} /></span>
-                                </button>
-                            );
-                        })}
-                    </div>
-                )}
+                <div className={styles['quiz-options']}>
+                    {cq.opts.map((opt, oi) => {
+                        let border = 'rgba(0,0,0,0.06)', bg = '#fff', txtColor = '#0f172a', dot = '#f1f5f9';
+                        if (isSubmitted) {
+                            if (oi === cq.ans) { border = '#10b981'; bg = 'rgba(16,185,129,0.05)'; txtColor = '#059669'; dot = '#10b981'; }
+                            else if (oi === selectedOpt) { border = '#ef4444'; bg = 'rgba(239,68,68,0.05)'; txtColor = '#ef4444'; dot = '#ef4444'; }
+                        } else if (selectedOpt === oi) { border = color; bg = `${color}05`; dot = color; }
+                        return (
+                            <button key={oi} onClick={() => !isSubmitted && setSelectedOpt(oi)} disabled={isSubmitted}
+                                style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderRadius: 12, border: `2.5px solid ${border}`, background: bg, cursor: isSubmitted ? 'default' : 'pointer', fontSize: 15, color: txtColor, textAlign: 'left', transition: 'all 0.2s', fontWeight: selectedOpt === oi ? 700 : 500, fontFamily: 'Open Sans, sans-serif' }}>
+                                <div style={{ width: 10, height: 10, borderRadius: '50%', background: dot, flexShrink: 0 }} />
+                                <span><LatexText text={opt} /></span>
+                            </button>
+                        );
+                    })}
+                </div>
 
-                {/* Feedback & Explanation */}
                 {isSubmitted && (
                     <div style={{ marginTop: 24, padding: '16px 20px', borderRadius: 14, background: past.isCorrect ? 'rgba(16,185,129,0.08)' : 'rgba(239,68,68,0.08)', border: `1.5px solid ${past.isCorrect ? 'rgba(16,185,129,0.2)' : 'rgba(239,68,68,0.2)'}` }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
@@ -243,11 +202,6 @@ export default function LAScenarioPracticeEngine({ scenarios = [], title, color 
                                 {past.isCorrect ? 'Excellent job!' : 'Not quite right.'}
                             </h4>
                         </div>
-                        {!past.isCorrect && cq.type === 'protractor' && (
-                            <div style={{ fontSize: 15, color: '#0f172a', marginBottom: 12, fontWeight: 600 }}>
-                                <LatexText text={`The correct angle was **$ ${cq.ans}^{\\circ} $**. You answered **$ ${userAngle}^{\\circ} $**.`} />
-                            </div>
-                        )}
                         <div style={{ fontSize: 14, color: '#334155', lineHeight: 1.65, marginTop: 8, paddingTop: 12, borderTop: '1px solid rgba(0,0,0,0.05)' }}>
                             <strong style={{ color: '#0f172a' }}>Explanation: </strong>
                             <LatexText text={cq.expl} />
@@ -256,15 +210,14 @@ export default function LAScenarioPracticeEngine({ scenarios = [], title, color 
                 )}
             </div>
 
-            {/* Actions */}
             <div style={{ display: 'flex', justifyContent: 'center', gap: 16, marginTop: 16 }}>
                 <button onClick={handlePrev} disabled={qIndex === 0}
                     style={{ padding: '12px 24px', background: 'transparent', color: qIndex === 0 ? '#cbd5e1' : '#64748b', cursor: qIndex === 0 ? 'not-allowed' : 'pointer', border: `2px solid ${qIndex === 0 ? '#e2e8f0' : '#cbd5e1'}`, borderRadius: 100, fontSize: 14, fontWeight: 800, transition: 'all 0.2s', fontFamily: 'Open Sans, sans-serif' }}>
                     ← Prev
                 </button>
                 {!isSubmitted ? (
-                    <button onClick={handleCheckAnswer} disabled={!canSubmit}
-                        style={{ padding: '12px 40px', background: canSubmit ? color : '#f1f5f9', color: canSubmit ? '#fff' : '#94a3b8', cursor: canSubmit ? 'pointer' : 'not-allowed', border: 'none', borderRadius: 100, fontSize: 15, fontWeight: 800, boxShadow: canSubmit ? `0 8px 20px ${color}30` : 'none', transition: 'all 0.2s', fontFamily: 'Open Sans, sans-serif' }}>
+                    <button onClick={handleCheckAnswer} disabled={selectedOpt === null}
+                        style={{ padding: '12px 40px', background: selectedOpt !== null ? color : '#f1f5f9', color: selectedOpt !== null ? '#fff' : '#94a3b8', cursor: selectedOpt !== null ? 'pointer' : 'not-allowed', border: 'none', borderRadius: 100, fontSize: 15, fontWeight: 800, boxShadow: selectedOpt !== null ? `0 8px 20px ${color}30` : 'none', transition: 'all 0.2s', fontFamily: 'Open Sans, sans-serif' }}>
                         Check Answer ✓
                     </button>
                 ) : (
