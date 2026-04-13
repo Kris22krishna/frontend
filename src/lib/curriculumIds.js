@@ -103,17 +103,7 @@ export const NODE_IDS = {
   g4MathShapesTerminologyQuiz: 'a4041005-0010-0000-0000-000000000000',
 
   // ── GRADE 3: WHAT'S IN A NAME? (CHAPTER 1) ───────────────────────────────
-  g3MathWIN:                 'a3031000-0000-0000-0000-000000000001',
-  g3MathWINTallyReading:     'a4031000-0001-0000-0000-000000000000',
-  g3MathWINTallyMaking:      'a4031000-0002-0000-0000-000000000000',
-  g3MathWINTallyMissing:     'a4031000-0003-0000-0000-000000000000',
-  g3MathWINCountingLetters:  'a4031000-0004-0000-0000-000000000000',
-  g3MathWINLongestShortest:  'a4031000-0005-0000-0000-000000000000',
-  g3MathWINNumberNames:      'a4031000-0006-0000-0000-000000000000',
-  g3MathWINNumberPuzzles:    'a4031000-0007-0000-0000-000000000000',
-  g3MathWINGrouping:         'a4031000-0008-0000-0000-000000000000',
-  g3MathWINDataCollection:   'a4031000-0009-0000-0000-000000000000',
-  g3MathWINTest:             'a4031000-0010-0000-0000-000000000000',
+ 
 
   // ── GRADE 3: TOY-JOY (CHAPTER 1) ──────────────────────────────────────────
   g3MathToyJoy:        'a3031001-0000-0000-0000-000000000001',
