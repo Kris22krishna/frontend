@@ -235,7 +235,7 @@ export default function Triangles9Skills() {
     }
 
     return (
-        <div className={styles['page']} style={window.innerWidth > 900 ? { height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' } : { display: 'flex', flexDirection: 'column' }}>
+        <div className={styles['page']} style={{ minHeight: 'calc(100vh - 80px)', display: 'flex', flexDirection: 'column' }}>
             <nav className={styles['nav']} style={{ position: 'sticky', top: 0, zIndex: 100 }}>
                 <button className={styles['nav-back']} onClick={() => navigate('/practice/class-9/triangles')}>← Back to Module</button>
                 <div className={styles['nav-links']}>
@@ -244,7 +244,7 @@ export default function Triangles9Skills() {
                     <button className={`${styles['nav-link']} ${styles['nav-link--active']}`}>🎯 Skills</button>
                 </div>
             </nav>
-            <div style={{ flex: 1, overflowY: 'auto', paddingBottom: 40 }}>
+            <div style={{ flex: 1, paddingBottom: 40 }}>
                 <div style={{ maxWidth: 1100, margin: '20px auto 24px', padding: '0 24px' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 20 }}>
                         <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 'clamp(1.8rem, 4vw, 2.4rem)', fontWeight: 900, color: '#0f172a', margin: '0 0 8px' }}>

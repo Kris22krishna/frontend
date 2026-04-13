@@ -1,87 +1,114 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from '../../triangles_9.module.css';
+import styles from '../../quadrilaterals_9.module.css';
 import { LatexText } from '../../../../../LatexText';
-import { SASChart, SSSChart, ASAChart, RHSChart, CongruenceChart, CPCTChart, IsoscelesChart, EquilateralChart } from '../components/TrianglesDynamicCharts';
+import { QuadrilateralChart, ParallelogramChart, RectangleChart, RhombusChart, SquareChart, TrapeziumChart, KiteChart, MidPointTheoremChart } from '../components/QuadrilateralsDynamicCharts';
 
 // ─── TERMS DATA ──────────────────────────────────────────────────────────────
 const TERMS = [
     {
-        name: 'Congruence of Triangles',
+        name: 'Quadrilateral',
         icon: '📐',
         color: '#0f4c81',
-        chart: CongruenceChart,
-        def: 'Two triangles are congruent if and only if one of them can be made to superpose on the other so as to cover it exactly.\n\n• They have the exact same shape and size.\n• All corresponding sides are equal.\n• All corresponding angles are equal.',
-        example: 'If $\\triangle ABC \\cong \\triangle PQR$, then side $AB = PQ$, $BC = QR$, $AC = PR$ and $\\angle A = \\angle P$, $\\angle B = \\angle Q$, $\\angle C = \\angle R$.',
-        realWorld: 'Two copies of the exact same photograph printed at 4x6 dimensions.',
+        chart: QuadrilateralChart,
+        def: 'A closed geometric figure bounded by four straight sides.\n\n• It has 4 vertices and 4 angles.\n• Angle Sum Property: the sum of the interior angles of a quadrilateral is $360^{\\circ}$.',
+        example: 'If three angles of a quadrilateral are $60^{\\circ}, 100^{\\circ},$ and $120^{\\circ}$, the fourth angle is $360^{\\circ} - (60^{\\circ} + 100^{\\circ} + 120^{\\circ}) = 80^{\\circ}$.',
+        realWorld: 'A piece of paper, a computer monitor, or a tabletop.',
     },
     {
-        name: 'CPCT',
-        icon: '🔗',
-        color: '#1a237e',
-        chart: CPCTChart,
-        def: 'CPCT stands for "Corresponding Parts of Congruent Triangles".\n\n• Once two triangles are proven congruent, their remaining matching parts automatically become equal.\n• We use CPCT in proofs to state that an unknown side or measuring angle is equal to its pair.',
-        example: 'If you prove $\\triangle XYZ \\cong \\triangle LMN$ using just SAS, you can then say $\\angle Y = \\angle M$ by CPCT.',
-        realWorld: 'If two cars are exactly the same model (congruent), their steering wheels (corresponding parts) must be identical.',
+        name: 'Parallelogram',
+        icon: '▱',
+        color: '#059669',
+        chart: ParallelogramChart,
+        def: 'A quadrilateral in which both pairs of opposite sides are parallel.\n\n• Opposite sides are equal.\n• Opposite angles are equal.\n• Diagonals bisect each other.\n• A diagonal divides it into two congruent triangles.',
+        example: 'In parallelogram ABCD, if $\\angle A = 70^{\\circ}$, then opposite angle $\\angle C = 70^{\\circ}$ and adjacent angle $\\angle B = 110^{\\circ}$ (since they add to $180^{\\circ}$).',
+        realWorld: 'An eraser slanted diagonally, or stairs viewed from the side profile.',
     },
     {
-        name: 'Isosceles Triangle Properties',
-        icon: '🔺',
-        color: '#b71c1c',
-        chart: IsoscelesChart,
-        def: 'An isosceles triangle has two sides of equal length.\n\n• Theorem 7.2: Angles opposite to equal sides of an isosceles triangle are equal.\n• Theorem 7.3 (Converse): The sides opposite to equal angles of a triangle are equal.',
-        example: 'If in $\\triangle ABC$, $AB = AC$, then $\\angle B = \\angle C$.',
-        realWorld: 'A standard roof truss forms an isosceles triangle to evenly distribute the weight to the walls.',
+        name: 'Rectangle',
+        icon: '▭',
+        color: '#2563eb',
+        chart: RectangleChart,
+        def: 'A parallelogram in which one angle is a right angle ($90^{\\circ}$).\n\n• Because opposite angles are equal, all four angles become $90^{\\circ}$.\n• The diagonals are equal in length.\n• The diagonals bisect each other.',
+        example: 'If diagonal AC of a rectangle is $10\\text{ cm}$, diagonal BD is also exactly $10\\text{ cm}$.',
+        realWorld: 'A standard smartphone screen or a book cover.',
     },
     {
-        name: 'Equilateral Triangle Properties',
-        icon: '💠',
-        color: '#6a1b9a',
-        chart: EquilateralChart,
-        def: 'A triangle where all three sides are equal.\n\n• All three internal angles are also equal.\n• Since the sum of angles is $180^{\\circ}$, each angle strictly measures $60^{\\circ}$.',
-        example: 'Every angle in an equilateral triangle is exactly $60^{\\circ}$.',
-        realWorld: 'A classic "Yield" traffic sign.',
+        name: 'Rhombus',
+        icon: '◇',
+        color: '#d97706',
+        chart: RhombusChart,
+        def: 'A parallelogram in which all four sides are equal.\n\n• It has all the properties of a parallelogram.\n• The diagonals bisect each other strictly at right angles ($90^{\\circ}$).',
+        example: 'If you connect the mid-points of the sides of a rectangle, the shape formed inside is a rhombus.',
+        realWorld: 'A diamond shape on a playing card.',
+    },
+    {
+        name: 'Square',
+        icon: '⏹',
+        color: '#7c3aed',
+        chart: SquareChart,
+        def: 'A square is both a rectangle and a rhombus. It has all equal sides and all $90^{\\circ}$ angles.\n\n• Diagonals are equal (from rectangle property).\n• Diagonals bisect each other at right angles (from rhombus property).',
+        example: 'A square has the highest symmetry of all quadrilaterals.',
+        realWorld: 'A chess board.',
+    },
+    {
+        name: 'Trapezium',
+        icon: '⏢',
+        color: '#0891b2',
+        chart: TrapeziumChart,
+        def: 'A quadrilateral in which exactly ONE pair of opposite sides is parallel.\n\n• The parallel sides are called "bases".\n• If the non-parallel sides are equal, it\'s called an "isosceles trapezium".',
+        example: 'The top half of a triangle cut horizontally yields a trapezium at the bottom.',
+        realWorld: 'The side profile of a lamp shade.',
+    },
+    {
+        name: 'Kite',
+        icon: '🪁',
+        color: '#db2777',
+        chart: KiteChart,
+        def: 'A quadrilateral with two distinct pairs of equal adjacent sides.\n\n• Diagonals intersect at right angles.\n• Only one pair of opposite angles is equal.',
+        example: 'In kite ABCD, $AB = AD$ and $BC = DC$.',
+        realWorld: 'A traditional flying kite!',
     }
 ];
 
 // ─── KEY IDEAS DATA ──────────────────────────────────────────────────────────
 const KEY_IDEAS = [
     {
-        title: 'Congruence Criteria',
-        icon: '📏',
+        title: 'Core Theorems',
+        icon: '📜',
         color: '#0f766e',
         rules: [
             {
-                title: 'SAS Axiom',
-                chart: SASChart,
-                f: '$\\text{Side - Angle - Side}$',
-                d: 'Two triangles are congruent if two sides and the included angle of one triangle are equal to the two sides and the included angle of the other triangle.',
-                tip: 'The angle MUST be sandwiched directly between the two known equal sides!',
-                ex: 'In $\\triangle ABC$ and $\\triangle DEF$, if $AB = DE$, $\\angle B = \\angle E$, and $BC = EF$, then $\\triangle ABC \\cong \\triangle DEF$.'
+                title: 'Diagonal Theorem (8.1)',
+                chart: QuadrilateralChart,
+                f: '$\\triangle ABC \\cong \\triangle CDA$',
+                d: 'A diagonal of a parallelogram divides it into two exact congruent triangles. This is proven using ASA criteria based on alternate interior angles from parallel lines.',
+                tip: 'This is the foundational theorem. Most other properties of parallelograms (equal sides, equal angles) are just CPCT from this theorem!',
+                ex: 'Draw diagonal AC in parallelogram ABCD. Since $\\triangle ABC \\cong \\triangle CDA$, we know $AB = DC$ and $AD = BC$.'
             },
             {
-                title: 'ASA/AAS Theorem',
-                chart: ASAChart,
-                f: '$\\text{Angle - Side - Angle}$',
-                d: 'Two triangles are congruent if two angles and the included side of one triangle are equal to two angles and the included side of the other.',
-                tip: 'AAS (Angle-Angle-Side) also works because if two angles are equal, the third angle matches automatically due to the $180^{\\circ}$ rule.',
-                ex: 'In $\\triangle ABC$ and $\\triangle DEF$, if $\\angle B = \\angle E$, $BC = EF$, and $\\angle C = \\angle F$, they are congruent (ASA).'
+                title: 'Diagonals Bisect (8.6)',
+                chart: ParallelogramChart,
+                f: '$OA = OC, OB = OD$',
+                d: 'The diagonals of a parallelogram bisect each other. This means they cut each other exactly in half.',
+                tip: 'The converse (Theorem 8.7) is also a fantastic tool: If the diagonals of ANY quadrilateral bisect each other, it MUST be a parallelogram.',
+                ex: 'If diagonal AC is 12cm and BD is 16cm, they intersect at point O down the middle, so OA is 6cm and OB is 8cm.'
             },
             {
-                title: 'SSS Theorem',
-                chart: SSSChart,
-                f: '$\\text{Side - Side - Side}$',
-                d: 'If three sides of one triangle are equal to the three sides of another triangle, then the two triangles are congruent.',
-                tip: 'You do not need to know a single angle measurement if all three side lengths match!',
-                ex: 'If $AB=PQ$, $BC=QR$, and $AC=PR$, then $\\triangle ABC \\cong \\triangle PQR$.'
+                title: 'Mid-point Theorem (8.8)',
+                chart: MidPointTheoremChart,
+                f: '$EF \\parallel BC \\text{ and } EF = \\frac{1}{2}BC$',
+                d: 'The line segment joining the mid-points of two sides of a triangle is parallel to the third side AND is half of it.',
+                tip: 'Think about triangles shrinking. If you connect the midpoints, you get a miniature, half-scaled version mapping the bottom side.',
+                ex: 'In $\\triangle ABC$, E is the mid-point of AB, and F is the mid-point of AC. If the base BC is $20\\text{ cm}$, the line EF is exactly $10\\text{ cm}$ and perfectly parallel to BC.'
             },
             {
-                title: 'RHS Theorem',
-                chart: RHSChart,
-                f: '$\\text{Right Angle - Hypotenuse - Side}$',
-                d: 'If in two right triangles the hypotenuse and one side of one triangle are equal to the hypotenuse and one side of the other triangle, then the two triangles are congruent.',
-                tip: 'RHS only applies to triangles containing a $90^{\\circ}$ angle.',
-                ex: 'In right triangles $\\triangle ABC$ and $\\triangle DEF$ (right angled at B and E), if hypotenuse $AC = DF$ and side $AB = DE$, they are congruent.'
+                title: 'Converse Mid-point (8.9)',
+                chart: MidPointTheoremChart,
+                f: '$\\text{Pass through mid-point} \\rightarrow \\text{Parallels bisect}$',
+                d: 'The line drawn through the mid-point of one side of a triangle, perfectly parallel to another side, will automatically bisect the third side.',
+                tip: 'Here you start with parallel lines, instead of proving them.',
+                ex: 'In $\\triangle XYZ$, M is the mid-point of XY. If you shoot a laser from M parallel to YZ, it will hit XZ exactly at its mid-point N.'
             }
         ]
     }
@@ -90,34 +117,34 @@ const KEY_IDEAS = [
 // ─── QUIZ (Test Prep) ────────────────────────────────────────────────────────
 const QUIZ_QUESTIONS = [
     {
-        q: 'Which of the following is NOT a valid congruence criterion for triangles?',
-        opts: ['SAS', 'ASA', 'SSA', 'SSS'],
-        ans: 2,
-        exp: 'SSA (Side-Side-Angle) is not a guaranteed congruence criterion because it can create two totally different triangles (the ambiguous case).'
-    },
-    {
-        q: 'In $\\triangle ABC$, if $AB = AC$, which property is true?',
-        opts: ['$\\angle A = \\angle B$', '$\\angle B = \\angle C$', '$\\angle C = \\angle A$', 'All angles are $60^{\\circ}$'],
+        q: 'The sum of all interior angles of a quadrilateral is:',
+        opts: ['$180^{\\circ}$', '$360^{\\circ}$', '$540^{\\circ}$', '$720^{\\circ}$'],
         ans: 1,
-        exp: 'By Theorem 7.2, angles opposite to equal sides of an isosceles triangle are equal.'
+        exp: 'Drawing a diagonal forms 2 triangles, and $2 \\times 180^{\\circ} = 360^{\\circ}$.'
     },
     {
-        q: 'If $\\triangle ABC \\cong \\triangle PQR$, what does CPCT allow us to conclude?',
-        opts: ['Only the sides are equal', '$\\angle A = \\angle R$', '$\\angle B = \\angle Q$', 'They have different areas'],
+        q: 'Which of the following is NOT a property of a parallelogram?',
+        opts: ['Opposite sides are equal', 'Opposite angles are equal', 'Diagonals are equal', 'Diagonals bisect each other'],
         ans: 2,
-        exp: 'CPCT means corresponding parts are equal. The second letter in ABC corresponds to the second letter in PQR, so $\\angle B = \\angle Q$.'
+        exp: 'Diagonals of a regular parallelogram are usually different lengths. They are only equal in a rectangle or square.'
     },
     {
-        q: 'What does RHS stand for in congruence?',
-        opts: ['Right-Hand-Side', 'Right angle-Hypotenuse-Side', 'Ratio-Height-Side', 'Rectangle-Hypotenuse-Side'],
+        q: 'If the diagonals of a quadrilateral bisect each other at right angles, it must be a:',
+        opts: ['Rectangle', 'Trapezium', 'Rhombus', 'Kite'],
+        ans: 2,
+        exp: 'A rhombus is defined as a parallelogram whose diagonals intersect at $90^{\\circ}$. (A square works too, but a square is a special rhombus).'
+    },
+    {
+        q: 'In $\\triangle PQR$, A and B are mid-points of sides PQ and PR respectively. If QR is $14\\text{ cm}$, the length of AB is:',
+        opts: ['$14\\text{ cm}$', '$28\\text{ cm}$', '$7\\text{ cm}$', 'Cannot be determined'],
+        ans: 2,
+        exp: 'By the Mid-point theorem, the line joining mid-points is half the length of the third side. Therefore $14 / 2 = 7\\text{ cm}$.'
+    },
+    {
+        q: 'The quadrilateral formed by joining the mid-points of the sides of a quadrilateral PQRS, taken in order, is a:',
+        opts: ['Rectangle', 'Parallelogram', 'Square', 'Rhombus'],
         ans: 1,
-        exp: 'RHS requires a Right angle, an equal Hypotenuse, and one equal Side.'
-    },
-    {
-        q: 'Can two equilateral triangles of different sizes be congruent?',
-        opts: ['Yes, always', 'No, never', 'Only if they share a vertex', 'Only if their side lengths are equal'],
-        ans: 3,
-        exp: 'All equilateral triangles have equal angles ($60^{\\circ}$), but to be congruent (same size and shape), their side lengths must also be strictly equal (SSS).'
+        exp: 'By applying the Mid-point theorem to the triangles formed by the diagonals of PQRS, the resulting inner shape is always a parallelogram.'
     }
 ];
 
@@ -172,7 +199,7 @@ function QuizEngine({ onBack }) {
                 </div>
                 <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 28, fontWeight: 900, color: '#0f172a', margin: '0 0 8px' }}>{msg}</h2>
                 <p style={{ color: '#64748b', fontSize: 15, margin: '0 0 32px' }}>
-                    {pct >= 75 ? 'Great understanding of Triangles vocabulary!' : 'Review the terms and try again for a higher score.'}
+                    {pct >= 75 ? 'Great understanding of Quadrilaterals vocabulary!' : 'Review the terms and try again for a higher score.'}
                 </p>
                 <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
                     <button className={styles['btn-primary']} onClick={() => { quizAnswersRef.current = []; setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false); }} style={{ padding: '14px 32px', fontSize: 16, background: '#4F46E5', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
@@ -239,7 +266,7 @@ function QuizEngine({ onBack }) {
 }
 
 // ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
-export default function Triangles9Terminology() {
+export default function Quadrilaterals9Terminology() {
     const navigate = useNavigate();
     const [tab, setTab] = useState('terms');
     const [activeTerm, setActiveTerm] = useState(0);
@@ -258,13 +285,13 @@ export default function Triangles9Terminology() {
         <div className={styles['page']} style={{ minHeight: 'calc(100vh - 80px)', display: 'flex', flexDirection: 'column' }}>
             {/* ── TOP NAV ─────────────────────────────────── */}
             <nav className={styles['nav']} style={{ position: 'sticky', top: 0, zIndex: 100 }}>
-                <button className={styles['nav-back']} onClick={() => navigate('/practice/class-9/triangles')}>
+                <button className={styles['nav-back']} onClick={() => navigate('/practice/class-9/quadrilaterals')}>
                     ← Back to Module
                 </button>
                 <div className={styles['nav-links']}>
-                    <button className={styles['nav-link']} onClick={() => navigate('/practice/class-9/triangles/intro')}>🌟 Introduction</button>
+                    <button className={styles['nav-link']} onClick={() => navigate('/practice/class-9/quadrilaterals/intro')}>🌟 Introduction</button>
                     <button className={`${styles['nav-link']} ${styles['nav-link--active']}`}>📖 Terminology</button>
-                    <button className={styles['nav-link']} onClick={() => navigate('/practice/class-9/triangles/skills')}>🎯 Skills</button>
+                    <button className={styles['nav-link']} onClick={() => navigate('/practice/class-9/quadrilaterals/skills')}>🎯 Skills</button>
                 </div>
             </nav>
 
@@ -272,7 +299,7 @@ export default function Triangles9Terminology() {
                 {/* ── HEADER ──────────────────────────────────── */}
                 <div style={{ padding: '10px 12px 10px', textAlign: 'center' }}>
                     <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 900, color: '#0f172a', margin: '0 0 10px' }}>
-                        Triangles{' '}
+                        Quadrilaterals{' '}
                         <span style={{ background: 'linear-gradient(90deg,#0f4c81,#6a1b9a)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Vocabulary</span>
                     </h1>
                 </div>

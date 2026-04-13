@@ -159,7 +159,10 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 1245, skill_name: 'Introduction to Euclid\'s Geometry: Master Hub', topic: 'Introduction to Euclid\'s Geometry', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/euclids-geometry' },
 
                         // Triangles Hub
-                        { skill_id: 1246, skill_name: 'Triangles: Master Hub', topic: 'Triangles', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/triangles' }
+                        { skill_id: 1246, skill_name: 'Triangles: Master Hub', topic: 'Triangles', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/triangles' },
+
+                        // Quadrilaterals Hub
+                        { skill_id: 1247, skill_name: 'Quadrilaterals: Master Hub', topic: 'Quadrilaterals', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/quadrilaterals' }
 
                     ]);
                 } else if (grade === '8') {
@@ -624,6 +627,32 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Percentages, Profit & Loss, Interest',
                 isLocal: true,
                 path: '/senior/grade/8/comparing-quantities'
+            }
+        ];
+
+        // Triangles Syllabus
+        skillsByTopic['Triangles'] = [
+            {
+                skill_id: 1246,
+                skill_name: 'Triangles Hub',
+                topic: 'Triangles',
+                subtopic: 'Interactive Learning',
+                points: 0,
+                progress: 0,
+                path: '/practice/class-9/triangles'
+            }
+        ];
+
+        // Quadrilaterals Syllabus
+        skillsByTopic['Quadrilaterals'] = [
+            {
+                skill_id: 1247,
+                skill_name: 'Quadrilaterals Hub',
+                topic: 'Quadrilaterals',
+                subtopic: 'Interactive Learning',
+                points: 0,
+                progress: 0,
+                path: '/practice/class-9/quadrilaterals'
             }
         ];
 

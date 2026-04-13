@@ -514,6 +514,11 @@ import Triangles9Intro from './components/practice/class-9/triangles_9/Topics/In
 import Triangles9Terminology from './components/practice/class-9/triangles_9/Topics/Terminology/Triangles9Terminology';
 import Triangles9Skills from './components/practice/class-9/triangles_9/Topics/Skills/Triangles9Skills';
 
+import Quadrilaterals9 from './components/practice/class-9/quadrilaterals_9/Quadrilaterals9';
+import Quadrilaterals9Intro from './components/practice/class-9/quadrilaterals_9/Topics/Intro/Quadrilaterals9Intro';
+import Quadrilaterals9Terminology from './components/practice/class-9/quadrilaterals_9/Topics/Terminology/Quadrilaterals9Terminology';
+import Quadrilaterals9Skills from './components/practice/class-9/quadrilaterals_9/Topics/Skills/Quadrilaterals9Skills';
+
 import LinearEquations9 from './components/practice/class-9/linear_equations_two_variables/LinearEquations9';
 import LinearEquations9Intro from './components/practice/class-9/linear_equations_two_variables/Topics/Intro/LinearEquations9Intro';
 import LinearEquations9Terminology from './components/practice/class-9/linear_equations_two_variables/Topics/Terminology/LinearEquations9Terminology';
@@ -1645,6 +1650,11 @@ function App() {
           <Route path="practice/class-9/triangles/intro" element={<ProtectedRoute redirectTo="/login"><Triangles9Intro /></ProtectedRoute>} />
           <Route path="practice/class-9/triangles/terminology" element={<ProtectedRoute redirectTo="/login"><Triangles9Terminology /></ProtectedRoute>} />
           <Route path="practice/class-9/triangles/skills" element={<ProtectedRoute redirectTo="/login"><Triangles9Skills /></ProtectedRoute>} />
+          
+          <Route path="practice/class-9/quadrilaterals" element={<ProtectedRoute redirectTo="/login"><Quadrilaterals9 /></ProtectedRoute>} />
+          <Route path="practice/class-9/quadrilaterals/intro" element={<ProtectedRoute redirectTo="/login"><Quadrilaterals9Intro /></ProtectedRoute>} />
+          <Route path="practice/class-9/quadrilaterals/terminology" element={<ProtectedRoute redirectTo="/login"><Quadrilaterals9Terminology /></ProtectedRoute>} />
+          <Route path="practice/class-9/quadrilaterals/skills" element={<ProtectedRoute redirectTo="/login"><Quadrilaterals9Skills /></ProtectedRoute>} />
 
           {/* Class 9: Linear Equations in Two Variables Routes */}
           <Route path="practice/class-9/linear-equations-two-variables" element={<ProtectedRoute redirectTo="/login"><LinearEquations9 /></ProtectedRoute>} />
