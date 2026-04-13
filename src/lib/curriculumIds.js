@@ -41,6 +41,19 @@ export const NODE_IDS = {
   g4MathShapesCircles: 'a4041005-0004-0000-0000-000000000000',
   g4MathShapesTerminologyQuiz: 'a4041005-0010-0000-0000-000000000000',
 
+  // ── GRADE 3: WHAT'S IN A NAME? (CHAPTER 1) ───────────────────────────────
+  g3MathWIN:                 'a3031000-0000-0000-0000-000000000001',
+  g3MathWINTallyReading:     'a4031000-0001-0000-0000-000000000000',
+  g3MathWINTallyMaking:      'a4031000-0002-0000-0000-000000000000',
+  g3MathWINTallyMissing:     'a4031000-0003-0000-0000-000000000000',
+  g3MathWINCountingLetters:  'a4031000-0004-0000-0000-000000000000',
+  g3MathWINLongestShortest:  'a4031000-0005-0000-0000-000000000000',
+  g3MathWINNumberNames:      'a4031000-0006-0000-0000-000000000000',
+  g3MathWINNumberPuzzles:    'a4031000-0007-0000-0000-000000000000',
+  g3MathWINGrouping:         'a4031000-0008-0000-0000-000000000000',
+  g3MathWINDataCollection:   'a4031000-0009-0000-0000-000000000000',
+  g3MathWINTest:             'a4031000-0010-0000-0000-000000000000',
+
   // ── GRADE 3: TOY-JOY (CHAPTER 1) ──────────────────────────────────────────
   g3MathToyJoy:        'a3031001-0000-0000-0000-000000000001',
   g3MathToyJoyIdentifying3D: 'a4031001-0001-0000-0000-000000000000',
@@ -587,6 +600,18 @@ export const SLUG_TO_NODE_ID = {
   'g4-math-shapes-angles': NODE_IDS.g4MathShapesAngles,
   'g4-math-shapes-circles': NODE_IDS.g4MathShapesCircles,
   'g4-math-shapes-terminology': NODE_IDS.g4MathShapesTerminologyQuiz,
+
+  // GRADE 3: WHAT'S IN A NAME
+  'g3-math-win-tally-reading':    NODE_IDS.g3MathWINTallyReading,
+  'g3-math-win-tally-making':     NODE_IDS.g3MathWINTallyMaking,
+  'g3-math-win-tally-missing':    NODE_IDS.g3MathWINTallyMissing,
+  'g3-math-win-counting-letters': NODE_IDS.g3MathWINCountingLetters,
+  'g3-math-win-longest-shortest': NODE_IDS.g3MathWINLongestShortest,
+  'g3-math-win-number-names':     NODE_IDS.g3MathWINNumberNames,
+  'g3-math-win-number-puzzles':   NODE_IDS.g3MathWINNumberPuzzles,
+  'g3-math-win-grouping':         NODE_IDS.g3MathWINGrouping,
+  'g3-math-win-data-collection':  NODE_IDS.g3MathWINDataCollection,
+  'g3-math-win-test':             NODE_IDS.g3MathWINTest,
 
   // GRADE 3: TOY-JOY
   'g3-math-toy-joy-identifying-3d': NODE_IDS.g3MathToyJoyIdentifying3D,

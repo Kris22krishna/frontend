@@ -158,6 +158,18 @@ export const TOPIC_CONFIGS = {
         ]
     },
     '3': {
+        "What's in a Name?": [
+            { id: "WIN-01", name: "Reading Tally Marks",          route: "whats-in-a-name/reading-tally-marks" },
+            { id: "WIN-02", name: "Making Tally Marks",           route: "whats-in-a-name/making-tally-marks" },
+            { id: "WIN-03", name: "Missing from Tallies",         route: "whats-in-a-name/missing-from-tallies" },
+            { id: "WIN-04", name: "Counting Letters in Names",    route: "whats-in-a-name/counting-letters" },
+            { id: "WIN-05", name: "Longest and Shortest Names",   route: "whats-in-a-name/longest-shortest-name" },
+            { id: "WIN-06", name: "Number Names & Letter Count",  route: "whats-in-a-name/number-names-letter-count" },
+            { id: "WIN-07", name: "Number Name Puzzles",          route: "whats-in-a-name/number-name-puzzles" },
+            { id: "WIN-08", name: "Sorting and Grouping",         route: "whats-in-a-name/sorting-grouping" },
+            { id: "WIN-09", name: "Data Collection and Tables",   route: "whats-in-a-name/data-collection" },
+            { id: "WIN-TEST", name: "Chapter Test",               route: "whats-in-a-name/chapter-test" },
+        ],
         'Raksha Bandhan': [
             { id: "RB-01", name: "Conceptual questions" },
             { id: "RB-02", name: "Multiplication" },
