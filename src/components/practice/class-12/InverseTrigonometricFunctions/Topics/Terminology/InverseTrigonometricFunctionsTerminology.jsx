@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import "../../InverseTrigonometricFunctions.css";
 import MathRenderer from "../../../../../MathRenderer";
 import InverseTrigonometricFunctionsTopNav from "../../InverseTrigonometricFunctionsTopNav";
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 const TERMS = [
   { name: "Inverse Function", color: "#6366f1", icon: "INV", def: "An inverse reverses a function and exists only when the original function is one-one and onto.", examples: ["Password to account access", "Roll number to student identity", "Barcode to product"], inUse: "If outputs repeat for different inputs, the inverse cannot be unique.", memory: "Reverse mapping needs one output to trace back to one input." },
@@ -47,6 +49,8 @@ export default function InverseTrigonometricFunctionsTerminology() {
   const [quizAnswered, setQuizAnswered] = useState(false);
   const [quizTotalScore, setQuizTotalScore] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
+  const quizPayload = React.useRef([]);
+  const { startSession, logAnswer, finishSession } = useSessionLogger();
 
   const activeTerm = TERMS[selectedIdx];
   const activeRule = RULES[selectedRuleIdx];
@@ -58,13 +62,31 @@ export default function InverseTrigonometricFunctionsTerminology() {
     setQuizAnswered(false);
     setQuizTotalScore(0);
     setQuizFinished(false);
+    quizPayload.current = [];
+    startSession({ nodeId: NODE_IDS.g12MathITFTerminologyQuiz, sessionType: 'practice' });
   };
 
   const handleQuizSelect = (optIdx) => {
     if (quizAnswered) return;
     setQuizSelected(optIdx);
     setQuizAnswered(true);
-    if (optIdx === activeQuiz.correct) setQuizTotalScore((score) => score + 1);
+    const correct = optIdx === activeQuiz.correct;
+    if (correct) setQuizTotalScore((score) => score + 1);
+
+    const answerData = {
+      question_index: quizIdx + 1,
+      answer_json: { selected: optIdx, text: activeQuiz.options[optIdx] },
+      is_correct: correct ? 1.0 : 0.0,
+      marks_awarded: correct ? 1 : 0,
+      marks_possible: 1
+    };
+    quizPayload.current.push(answerData);
+
+    logAnswer({
+      questionIndex: answerData.question_index,
+      answerJson: answerData.answer_json,
+      isCorrect: answerData.is_correct
+    });
   };
 
   const nextQuiz = () => {
@@ -74,6 +96,11 @@ export default function InverseTrigonometricFunctionsTerminology() {
       setQuizAnswered(false);
     } else {
       setQuizFinished(true);
+      finishSession({
+        totalQuestions: QUIZ.length,
+        questionsAnswered: quizIdx + 1,
+        answersPayload: quizPayload.current
+      });
     }
   };
 
@@ -123,7 +150,7 @@ export default function InverseTrigonometricFunctionsTerminology() {
         <div className="itf-tab-row">
           <button className={`itf-tab ${activeTab === "terms" ? "active" : ""}`} onClick={() => setActiveTab("terms")}>Terminology</button>
           <button className={`itf-tab ${activeTab === "rules" ? "active" : ""}`} onClick={() => setActiveTab("rules")}>Crucial Rules</button>
-          <button className={`itf-tab ${activeTab === "quiz" ? "active" : ""}`} onClick={() => setActiveTab("quiz")}>Vocab Check</button>
+          <button className={`itf-tab ${activeTab === "quiz" ? "active" : ""}`} onClick={() => { setActiveTab("quiz"); resetQuiz(); }}>Vocab Check</button>
         </div>
 
         {activeTab !== "quiz" ? (

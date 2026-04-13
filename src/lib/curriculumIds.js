@@ -889,7 +889,51 @@ export const NODE_IDS = {
   g9MathPolyZeroes:                        'a4091002-0002-0000-0000-000000000000',
   g9MathPolyFactorisation:                 'a4091002-0003-0000-0000-000000000000',
   g9MathPolyIdentities:                    'a4091002-0004-0000-0000-000000000000',
-  g9MathPolyTerminologyQuiz:               'a4091002-0010-0000-0000-000000000000',
+  // ── GRADE 12 MATH: RELATIONS ──────────────────────────────────────────────
+  g12MathRelations:                      'a3121001-0000-0000-0000-000000000001',
+  g12MathRelationsCartesian:             'a4121001-0001-0000-0000-000000000000',
+  g12MathRelationsDomainRange:           'a4121001-0002-0000-0000-000000000000',
+  g12MathRelationsCounting:              'a4121001-0003-0000-0000-000000000000',
+  g12MathRelationsEquivalence:           'a4121001-0004-0000-0000-000000000000',
+  g12MathRelationsTerminologyQuiz:       'a4121001-0010-0000-0000-000000000000',
+
+  // ── GRADE 12 MATH: FUNCTIONS ──────────────────────────────────────────────
+  g12MathFunctions:                      'a3121002-0000-0000-0000-000000000001',
+  g12MathFunctionsConcept:               'a4121002-0001-0000-0000-000000000000',
+  g12MathFunctionsTypes:                 'a4121002-0002-0000-0000-000000000000',
+  g12MathFunctionsAlgebra:               'a4121002-0003-0000-0000-000000000000',
+  g12MathFunctionsEquations:             'a4121002-0004-0000-0000-000000000000',
+  g12MathFunctionsDomainRange:           'a4121002-0005-0000-0000-000000000000',
+  g12MathFunctionsTerminologyQuiz:       'a4121002-0010-0000-0000-000000000000',
+
+  // ── GRADE 12 MATH: MATRICES ───────────────────────────────────────────────
+  g12MathMatrices:                       'a3121003-0000-0000-0000-000000000001',
+  g12MathMatricesOrder:                  'a4121003-0001-0000-0000-000000000000',
+  g12MathMatricesTypes:                  'a4121003-0002-0000-0000-000000000000',
+  g12MathMatricesOperations:             'a4121003-0003-0000-0000-000000000000',
+  g12MathMatricesMultiplication:         'a4121003-0004-0000-0000-000000000000',
+  g12MathMatricesTranspose:              'a4121003-0005-0000-0000-000000000000',
+  g12MathMatricesInverse:                'a4121003-0006-0000-0000-000000000000',
+  g12MathMatricesTerminologyQuiz:        'a4121003-0010-0000-0000-000000000000',
+
+  // ── GRADE 12 MATH: DETERMINANTS ───────────────────────────────────────────
+  g12MathDeterminants:                   'a3121004-0000-0000-0000-000000000001',
+  g12MathDeterminantsFundamentals:       'a4121004-0001-0000-0000-000000000000',
+  g12MathDeterminantsProperties:         'a4121004-0002-0000-0000-000000000000',
+  g12MathDeterminantsArea:               'a4121004-0003-0000-0000-000000000000',
+  g12MathDeterminantsMinorsCofactors:    'a4121004-0004-0000-0000-000000000000',
+  g12MathDeterminantsAdjointInverse:     'a4121004-0005-0000-0000-000000000000',
+  g12MathDeterminantsApplications:       'a4121004-0006-0000-0000-000000000000',
+  g12MathDeterminantsTerminologyQuiz:    'a4121004-0010-0000-0000-000000000000',
+
+  // ── GRADE 12 MATH: INVERSE TRIGONOMETRIC FUNCTIONS ────────────────────────
+  g12MathITF:                            'a3121005-0000-0000-0000-000000000001',
+  g12MathITFConcept:                     'a4121005-0001-0000-0000-000000000000',
+  g12MathITFDefinitions:                 'a4121005-0002-0000-0000-000000000000',
+  g12MathITFProperties:                  'a4121005-0003-0000-0000-000000000000',
+  g12MathITFPrincipal:                   'a4121005-0004-0000-0000-000000000000',
+  g12MathITFSimplification:              'a4121005-0005-0000-0000-000000000000',
+  g12MathITFTerminologyQuiz:             'a4121005-0010-0000-0000-000000000000',
 };
 
 /**

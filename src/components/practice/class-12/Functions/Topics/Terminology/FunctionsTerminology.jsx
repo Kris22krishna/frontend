@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import "../../Functions.css";
 import MathRenderer from "../../../../../MathRenderer";
 import FunctionsTopNav from "../../FunctionsTopNav";
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 const TERMS = [
   {
@@ -178,6 +180,8 @@ export default function FunctionsTerminology() {
   const [quizAnswered, setQuizAnswered] = useState(false);
   const [quizTotalScore, setQuizTotalScore] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
+  const quizPayload = React.useRef([]);
+  const { startSession, logAnswer, finishSession } = useSessionLogger();
 
   const activeTerm = TERMS[selectedIdx];
   const activeRule = SIX_RULES[selectedRuleIdx];
@@ -189,13 +193,31 @@ export default function FunctionsTerminology() {
     setQuizAnswered(false);
     setQuizTotalScore(0);
     setQuizFinished(false);
+    quizPayload.current = [];
+    startSession({ nodeId: NODE_IDS.g12MathFunctionsTerminologyQuiz, sessionType: 'practice' });
   };
 
   const handleQuizSelect = (optIdx) => {
     if (quizAnswered) return;
     setQuizSelected(optIdx);
     setQuizAnswered(true);
-    if (optIdx === activeQuiz.correct) setQuizTotalScore((score) => score + 1);
+    const correct = optIdx === activeQuiz.correct;
+    if (correct) setQuizTotalScore((score) => score + 1);
+
+    const answerData = {
+      question_index: quizIdx + 1,
+      answer_json: { selected: optIdx, text: activeQuiz.options[optIdx] },
+      is_correct: correct ? 1.0 : 0.0,
+      marks_awarded: correct ? 1 : 0,
+      marks_possible: 1
+    };
+    quizPayload.current.push(answerData);
+
+    logAnswer({
+      questionIndex: answerData.question_index,
+      answerJson: answerData.answer_json,
+      isCorrect: answerData.is_correct
+    });
   };
 
   const nextQuiz = () => {
@@ -205,6 +227,11 @@ export default function FunctionsTerminology() {
       setQuizAnswered(false);
     } else {
       setQuizFinished(true);
+      finishSession({
+        totalQuestions: VOCAB_QUIZ.length,
+        questionsAnswered: quizIdx + 1,
+        answersPayload: quizPayload.current
+      });
     }
   };
 
@@ -290,7 +317,7 @@ export default function FunctionsTerminology() {
         <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 16 }}>
           <button className={`rel-tab ${activeTab === "terms" ? "active" : ""}`} onClick={() => setActiveTab("terms")}>Terminology</button>
           <button className={`rel-tab ${activeTab === "rules" ? "active" : ""}`} onClick={() => setActiveTab("rules")}>Crucial Rules</button>
-          <button className={`rel-tab ${activeTab === "quiz" ? "active" : ""}`} onClick={() => setActiveTab("quiz")}>Vocab Check</button>
+          <button className={`rel-tab ${activeTab === "quiz" ? "active" : ""}`} onClick={() => { setActiveTab("quiz"); resetQuiz(); }}>Vocab Check</button>
         </div>
 
         {activeTab !== "quiz" ? (
