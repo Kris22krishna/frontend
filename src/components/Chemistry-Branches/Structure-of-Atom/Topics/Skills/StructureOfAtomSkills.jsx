@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { STRUCTURE_OF_ATOM_SKILLS } from './StructureOfAtomSkillsData.jsx';
 import '../../StructureOfAtomBranch.css';
 import MathRenderer from '../../../../MathRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 /* ═══════════════════════════════════════════════════════════════
    SHUFFLE UTILITIES
@@ -334,13 +336,31 @@ function LearnMode({ skill, onBack }) {
 /* ═══════════════════════════════════════════════════════════════
    PRACTICE MODE
    ═══════════════════════════════════════════════════════════════ */
-function PracticeMode({ skill, onBack, onAssess }) {
+function PracticeMode({ skill, onBack, onAssess, nodeId }) {
     const questions = useShuffledQuestions(skill.practice, skill.practice.length);
 
     const [qIdx, setQIdx] = useState(0);
     const [answersMap, setAnswersMap] = useState({});
     const [finished, setFinished] = useState(false);
     const startTime = useRef(Date.now());
+
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
+
+    useEffect(() => { isFinishedRef.current = finished; }, [finished]);
+
+    useEffect(() => {
+        if (!nodeId || !questions || questions.length === 0) return;
+        startSession({ nodeId, sessionType: 'practice' });
+        answersPayload.current = [];
+        return () => {
+            if (!isFinishedRef.current && answersPayload.current.length > 0) {
+                abandonSession({ answersPayload: answersPayload.current, totalQuestions: questions.length });
+            }
+        };
+    }, [nodeId, questions.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
     if (!questions || questions.length === 0) return <div>Loading...</div>;
 
@@ -350,15 +370,44 @@ function PracticeMode({ skill, onBack, onAssess }) {
     const isCorrect = currentAnswer?.isCorrect ?? false;
     const selectedOpt = currentAnswer?.selectedOpt ?? null;
 
-    const handleAnswer = (val) => {
+    const handleAnswer = async (val) => {
         if (answered) return;
         const correct = val === q.answer;
         setAnswersMap(prev => ({ ...prev, [qIdx]: { selectedOpt: val, isCorrect: correct } }));
+
+        // v4 Log answer
+        if (nodeId) {
+            const answerData = {
+                question_index: qIdx + 1,
+                answer_json: { selected: val, text: q.options[val] },
+                is_correct: correct ? 1.0 : 0.0,
+                marks_awarded: correct ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0
+            };
+            answersPayload.current.push(answerData);
+            await logAnswer({
+                questionIndex: answerData.question_index,
+                answerJson: answerData.answer_json,
+                isCorrect: answerData.is_correct
+            });
+        }
     };
 
-    const nextQ = () => {
-        if (qIdx + 1 < questions.length) setQIdx(qIdx + 1);
-        else setFinished(true);
+    const nextQ = async () => {
+        if (qIdx + 1 < questions.length) {
+            setQIdx(qIdx + 1);
+        } else {
+            setFinished(true);
+            // v4 Finish session
+            if (nodeId) {
+                await finishSession({
+                    totalQuestions: questions.length,
+                    questionsAnswered: answersPayload.current.length,
+                    answersPayload: answersPayload.current
+                });
+            }
+        }
     };
     const prevQ = () => { if (qIdx > 0) setQIdx(qIdx - 1); };
 
@@ -417,7 +466,7 @@ function PracticeMode({ skill, onBack, onAssess }) {
 /* ═══════════════════════════════════════════════════════════════
    ASSESS MODE
    ═══════════════════════════════════════════════════════════════ */
-function AssessMode({ skill, onBack }) {
+function AssessMode({ skill, onBack, nodeId }) {
     const questions = useShuffledQuestions(skill.assess, skill.assess.length);
 
     const [qIdx, setQIdx] = useState(0);
@@ -430,6 +479,27 @@ function AssessMode({ skill, onBack }) {
     const qStartRef = useRef(Date.now());
     const [qTimes, setQTimes] = useState({});
 
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
+
+    useEffect(() => { isFinishedRef.current = finished; }, [finished]);
+
+    useEffect(() => {
+        if (!nodeId || !questions || questions.length === 0) return;
+        startSession({ nodeId, sessionType: 'assessment' });
+        answersPayload.current = Array(questions.length).fill(null);
+        return () => {
+            if (!isFinishedRef.current && answersPayload.current.some(a => a !== null)) {
+                abandonSession({
+                    answersPayload: answersPayload.current.filter(Boolean),
+                    totalQuestions: questions.length
+                });
+            }
+        };
+    }, [nodeId, questions.length]); // eslint-disable-line react-hooks/exhaustive-deps
+
     // Timer tick
     useEffect(() => {
         if (finished) return;
@@ -441,12 +511,31 @@ function AssessMode({ skill, onBack }) {
 
     const q = questions[qIdx];
 
-    const handleAnswer = (val) => {
+    const handleAnswer = async (val) => {
         const now = Date.now();
         const timeSpent = now - qStartRef.current;
         setAnswersMap(prev => ({ ...prev, [qIdx]: val }));
         setQTimes(prev => ({ ...prev, [qIdx]: (prev[qIdx] || 0) + timeSpent }));
         qStartRef.current = now;
+
+        // v4 Log answer
+        if (nodeId) {
+            const correct = val === q.answer;
+            const answerData = {
+                question_index: qIdx + 1,
+                answer_json: { selected: val, text: q.options[val] },
+                is_correct: correct ? 1.0 : 0.0,
+                marks_awarded: correct ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: timeSpent
+            };
+            answersPayload.current[qIdx] = answerData;
+            await logAnswer({
+                questionIndex: answerData.question_index,
+                answerJson: answerData.answer_json,
+                isCorrect: answerData.is_correct
+            });
+        }
     };
 
     const goTo = (idx) => {
@@ -458,10 +547,20 @@ function AssessMode({ skill, onBack }) {
 
     const toggleMark = () => setMarked(prev => ({ ...prev, [qIdx]: !prev[qIdx] }));
 
-    const submitAssessment = () => {
+    const submitAssessment = async () => {
         const now = Date.now();
         setQTimes(prev => ({ ...prev, [qIdx]: (prev[qIdx] || 0) + (now - qStartRef.current) }));
         setFinished(true);
+
+        // v4 Finish session
+        if (nodeId) {
+            const fPayload = answersPayload.current.filter(Boolean);
+            await finishSession({
+                totalQuestions: questions.length,
+                questionsAnswered: fPayload.length,
+                answersPayload: fPayload
+            });
+        }
     };
 
     if (finished) {
@@ -651,6 +750,19 @@ function AssessMode({ skill, onBack }) {
 /* ═══════════════════════════════════════════════════════════════
    MAIN COMPONENT
    ═══════════════════════════════════════════════════════════════ */
+// Canonical NODE_ID mapping keyed by skill id
+const SKILL_NODE_ID_MAP = {
+    'skill-1': NODE_IDS.g11ChemSOASubAtomicParticles,
+    'skill-2': NODE_IDS.g11ChemSOAAtomicModels,
+    'skill-3': NODE_IDS.g11ChemSOABohrModel,
+    'skill-4': NODE_IDS.g11ChemSOAHydrogenSpectrum,
+    'skill-5': NODE_IDS.g11ChemSOADualNature,
+    'skill-6': NODE_IDS.g11ChemSOAHeisenberg,
+    'skill-7': NODE_IDS.g11ChemSOAQuantumNumbers,
+    'skill-8': NODE_IDS.g11ChemSOAShapesOfOrbitals,
+    'skill-9': NODE_IDS.g11ChemSOAElectronicConfig,
+};
+
 export default function StructureOfAtomSkills() {
     const navigate = useNavigate();
     const [view, setView] = useState('list');
@@ -661,6 +773,7 @@ export default function StructureOfAtomSkills() {
     }, [view]);
 
     const activeSkill = STRUCTURE_OF_ATOM_SKILLS.find(s => s.id === activeSkillId);
+    const activeNodeId = activeSkillId ? SKILL_NODE_ID_MAP[activeSkillId] : null;
 
     const openMode = (skill, mode) => {
         setActiveSkillId(skill.id);
@@ -711,8 +824,8 @@ export default function StructureOfAtomSkills() {
                 )}
 
                 {view === 'learn' && <LearnMode skill={activeSkill} onBack={() => setView('list')} />}
-                {view === 'practice' && <PracticeMode skill={activeSkill} onBack={() => setView('list')} onAssess={() => openMode(activeSkill, 'assess')} />}
-                {view === 'assess' && <AssessMode skill={activeSkill} onBack={() => setView('list')} />}
+                {view === 'practice' && <PracticeMode skill={activeSkill} onBack={() => setView('list')} onAssess={() => openMode(activeSkill, 'assess')} nodeId={activeNodeId} />}
+                {view === 'assess' && <AssessMode skill={activeSkill} onBack={() => setView('list')} nodeId={activeNodeId} />}
             </div>
         </div>
     );

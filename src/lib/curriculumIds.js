@@ -31,6 +31,7 @@ export const NODE_IDS = {
   grade8:  'a2000000-0000-0000-0000-000000000008',
   grade9:  'a2000000-0000-0000-0000-000000000009',
   grade10: 'a2000000-0000-0000-0000-000000000010',
+  grade11: 'a2000000-0000-0000-0000-000000000011',
 
   // ── GRADE 4: ELEPHANTS, TIGERS AND LEOPARDS (CHAPTER 3) ───────────────────
   g4MathElephantsChapter:          'a3041003-0000-0000-0000-000000000001',
@@ -887,6 +888,28 @@ export const NODE_IDS = {
   g9MathPolyFactorisation:                 'a4091002-0003-0000-0000-000000000000',
   g9MathPolyIdentities:                    'a4091002-0004-0000-0000-000000000000',
   g9MathPolyTerminologyQuiz:               'a4091002-0010-0000-0000-000000000000',
+
+  // ── 7. GRADE 11 CHEMISTRY ─────────────────────────────────────────────────
+  // Subject prefix: b = Science/Chemistry
+  // Format: b3[Grade][Subject][Chapter#] for chapters, b4[Grade][Subject][Chapter#][Skill#] for skills
+  // Grade 11 Chemistry (b, grade 11, chemistry subject 14):
+
+  // Ch 1: Structure of Atom
+  g11ChemistryStructureOfAtom:             'b3111401-0000-0000-0000-000000000001',
+
+  // Skills (9 skills)
+  g11ChemSOASubAtomicParticles:            'b4111401-0001-0000-0000-000000000000',
+  g11ChemSOAAtomicModels:                  'b4111401-0002-0000-0000-000000000000',
+  g11ChemSOABohrModel:                     'b4111401-0003-0000-0000-000000000000',
+  g11ChemSOAHydrogenSpectrum:              'b4111401-0004-0000-0000-000000000000',
+  g11ChemSOADualNature:                    'b4111401-0005-0000-0000-000000000000',
+  g11ChemSOAHeisenberg:                    'b4111401-0006-0000-0000-000000000000',
+  g11ChemSOAQuantumNumbers:                'b4111401-0007-0000-0000-000000000000',
+  g11ChemSOAShapesOfOrbitals:              'b4111401-0008-0000-0000-000000000000',
+  g11ChemSOAElectronicConfig:              'b4111401-0009-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11ChemSOATerminologyQuiz:               'b4111401-0010-0000-0000-000000000000',
 };
 
 /**
@@ -986,6 +1009,19 @@ export const SLUG_TO_NODE_ID = {
   'g8-science-eis-measurements':       NODE_IDS.g8ScienceInvestigativeMeasurements,
   'g8-science-eis-analysis':           NODE_IDS.g8ScienceInvestigativeAnalysis,
   'g8-science-eis-terminology':         NODE_IDS.g8ScienceInvestigativeTerminologyQuiz,
+
+  // Grade 11 Chemistry: Structure of Atom
+  'g11-chem-structure-of-atom':                NODE_IDS.g11ChemistryStructureOfAtom,
+  'g11-chem-soa-sub-atomic-particles':         NODE_IDS.g11ChemSOASubAtomicParticles,
+  'g11-chem-soa-atomic-models':                NODE_IDS.g11ChemSOAAtomicModels,
+  'g11-chem-soa-bohr-model':                   NODE_IDS.g11ChemSOABohrModel,
+  'g11-chem-soa-hydrogen-spectrum':            NODE_IDS.g11ChemSOAHydrogenSpectrum,
+  'g11-chem-soa-dual-nature':                  NODE_IDS.g11ChemSOADualNature,
+  'g11-chem-soa-heisenberg':                   NODE_IDS.g11ChemSOAHeisenberg,
+  'g11-chem-soa-quantum-numbers':              NODE_IDS.g11ChemSOAQuantumNumbers,
+  'g11-chem-soa-shapes-of-orbitals':           NODE_IDS.g11ChemSOAShapesOfOrbitals,
+  'g11-chem-soa-electronic-config':            NODE_IDS.g11ChemSOAElectronicConfig,
+  'g11-chem-soa-terminology':                  NODE_IDS.g11ChemSOATerminologyQuiz,
 
   // Grade 9 Math: Polynomials
   'g9-math-polynomials':                NODE_IDS.g9MathPolynomials,
