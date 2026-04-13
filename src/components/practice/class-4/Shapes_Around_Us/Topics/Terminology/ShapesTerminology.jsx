@@ -50,6 +50,14 @@ const TERMS = [
         character: '🐪'
     },
     {
+        name: 'Angle', color: '#9333ea', icon: '📐',
+        def: 'An angle is formed when two straight lines meet at a point.',
+        scene: { angle: 'Angle', looksLike: 'Two lines meeting at a point' },
+        tryIt: { q: 'Do the hands of a clock form an angle?', answer: 'yes', isText: true, hint: 'The two hands meet at the center!' },
+        funFact: '🕐 Every time you open a book or a door, you are making an angle!',
+        character: '📖'
+    },
+    {
         name: 'Right Angle', color: '#be185d', icon: '📐',
         def: 'A perfect "L" shape corner (90 degrees).',
         scene: { angle: 'Right Angle', looksLike: 'Corner of a square' },
@@ -183,9 +191,9 @@ function ShapeScene({ scene, color }) {
     }
     if (scene.angle) {
         return (
-            <div style={{ textAlign: 'center', padding: 20 }}>
-                <div style={{ fontSize: 48, marginBottom: 16 }}>
-                    {scene.angle === 'Right Angle' ? '📐' : scene.angle === 'Acute Angle' ? '📌' : '👐'}
+                <div style={{ textAlign: 'center', padding: 20 }}>
+                    <div style={{ fontSize: 48, marginBottom: 16 }}>
+                    {scene.angle === 'Angle' ? '📏' : scene.angle === 'Right Angle' ? '📐' : scene.angle === 'Acute Angle' ? '🍕' : '👐'}
                 </div>
                 <div style={{ fontSize: 20, fontWeight: 'bold', color }}>{scene.looksLike}</div>
             </div>

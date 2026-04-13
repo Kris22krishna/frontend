@@ -6,7 +6,7 @@ import { LatexText } from '../../../LatexText';
 import mascotImg from '../../../../assets/mascot.png';
 import ExplanationModal from '../../../ExplanationModal';
 import PracticeReportModal from '../../PracticeReportModal';
-import { useSessionLogger } from "@/hooks/useSessionLogger";
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { NODE_IDS } from "@/lib/curriculumIds";
 import '../TenthPracticeSession.css';
 
@@ -25,8 +25,13 @@ const RootsByFactorisation = () => {
 
     const { startSession, logAnswer, finishSession } = useSessionLogger();
     const nodeId = NODE_IDS.g10MathQuadraticFactorisation;
+    const SKILL_ID = 1123;
     const sessionType = "practice";
     const [answers, setAnswers] = useState({});
+
+    // Time tracking refs
+    const questionStartTime = useRef(Date.now());
+    const accumulatedTime = useRef(0);
 
     const generateQuestions = () => {
         const newQuestions = [];

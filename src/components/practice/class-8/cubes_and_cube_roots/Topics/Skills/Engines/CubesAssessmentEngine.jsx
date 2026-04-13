@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { LatexText } from '@/components/LatexText';
 import styles from '../../../cubes_and_cube_roots.module.css';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 function shuffle(arr) {
     const c = [...arr];
@@ -29,7 +30,10 @@ function interleaved(pool, n) {
     return result.slice(0, n);
 }
 
-export default function CubesAssessmentEngine({ questionPool, sampleSize = 10, title, color, onBack }) {
+export default function CubesAssessmentEngine({ questionPool, sampleSize = 10, title, color, onBack, nodeId }) {
+    const { startSession, finishSession } = useSessionLogger();
+    const isFinishedRef = useRef(false);
+
     const safeQuestionPool = Array.isArray(questionPool) ? questionPool : [];
     const [questions] = useState(() => {
         const validQuestion = (q) =>
@@ -47,6 +51,25 @@ export default function CubesAssessmentEngine({ questionPool, sampleSize = 10, t
     const [finished, setFinished] = useState(false);
 
     const finish = useCallback(() => setFinished(true), []);
+
+    useEffect(() => {
+        if (!nodeId) return;
+        startSession({ nodeId, sessionType: 'assessment' });
+    }, [nodeId]);
+
+    useEffect(() => {
+        if (!finished || !nodeId || isFinishedRef.current) return;
+        isFinishedRef.current = true;
+        const payload = questions.map((q, i) => ({
+            question_index: i,
+            answer_json: { selected: answers[i] ?? null, correct_answer: q.correct ?? null },
+            is_correct: answers[i] === q.correct,
+            marks_awarded: answers[i] === q.correct ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0,
+        }));
+        finishSession({ answers_payload: payload });
+    }, [finished]);
 
     const toggleReview = () => {
         const next = [...reviewed];

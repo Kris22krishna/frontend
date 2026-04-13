@@ -454,6 +454,7 @@ const generateRouteTrackingQuestions = () => {
 export const SKILLS = [
     {
         id: 'myw-01',
+        nodeId: 'a4051008-0001-0000-0000-000000000000',
         title: 'Maps & Directions',
         subtitle: 'Compass Basics',
         icon: '🧭',
@@ -483,6 +484,7 @@ export const SKILLS = [
     },
     {
         id: 'myw-02',
+        nodeId: 'a4051008-0002-0000-0000-000000000000',
         title: 'Reading Simple Maps',
         subtitle: 'Visual Tracking',
         icon: '🗺️',
@@ -512,6 +514,7 @@ export const SKILLS = [
     },
     {
         id: 'myw-03',
+        nodeId: 'a4051008-0003-0000-0000-000000000000',
         title: 'Grid References',
         subtitle: 'Coordinates',
         icon: '🔲',

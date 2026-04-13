@@ -542,8 +542,8 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
                                             display: 'flex',
                                             alignItems: 'flex-start',
                                             gap: 12,
-                                            padding: '14px 16px',
-                                            borderRadius: 16,
+                                            padding: '12px 16px',
+                                            borderRadius: 12,
                                             border: `2.5px solid ${isSelected ? color : 'rgba(0,0,0,0.04)'}`,
                                             background: isSelected ? `${color}05` : '#fff',
                                             cursor: 'pointer',
@@ -553,8 +553,8 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
                                             fontWeight: isSelected ? 700 : 500,
                                             color: `var(--${prefix}-text, #1e293b)`,
                                             width: '100%',
-                                            minHeight: 78,
-                                            lineHeight: 1.55
+                                            minHeight: 52,
+                                            lineHeight: 1.4
                                         }}
                                     >
                                         <div

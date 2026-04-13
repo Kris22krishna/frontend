@@ -12,6 +12,7 @@ import {
 export const SKILLS = [
     {
         id: 'elements-of-triangle',
+        nodeId: 'a4071006-0001-0000-0000-000000000000',
         title: 'Elements of a Triangle',
         subtitle: 'Main Topic 1',
         icon: '📐',
@@ -30,6 +31,7 @@ export const SKILLS = [
     },
     {
         id: 'classify-by-sides',
+        nodeId: 'a4071006-0002-0000-0000-000000000000',
         title: 'Classification by Sides',
         subtitle: 'Main Topic 1',
         icon: '📏',
@@ -48,6 +50,7 @@ export const SKILLS = [
     },
     {
         id: 'classify-by-angles',
+        nodeId: 'a4071006-0003-0000-0000-000000000000',
         title: 'Classification by Angles',
         subtitle: 'Main Topic 1',
         icon: '📐',
@@ -66,6 +69,7 @@ export const SKILLS = [
     },
     {
         id: 'medians-altitudes',
+        nodeId: 'a4071006-0004-0000-0000-000000000000',
         title: 'Medians & Altitudes',
         subtitle: 'Main Topic 2 & 3',
         icon: '📍',
@@ -84,6 +88,7 @@ export const SKILLS = [
     },
     {
         id: 'exterior-angle',
+        nodeId: 'a4071006-0005-0000-0000-000000000000',
         title: 'Exterior Angle Property',
         subtitle: 'Main Topic 4',
         icon: '↗️',
@@ -100,6 +105,7 @@ export const SKILLS = [
     },
     {
         id: 'angle-sum',
+        nodeId: 'a4071006-0006-0000-0000-000000000000',
         title: 'Angle Sum Property',
         subtitle: 'Main Topic 5',
         icon: '🔺',
@@ -116,6 +122,7 @@ export const SKILLS = [
     },
     {
         id: 'find-unknown-x',
+        nodeId: 'a4071006-0007-0000-0000-000000000000',
         title: 'Find the Unknown Angle',
         subtitle: 'Main Topic 5',
         icon: '❓',
@@ -132,6 +139,7 @@ export const SKILLS = [
     },
     {
         id: 'triangle-inequality',
+        nodeId: 'a4071006-0008-0000-0000-000000000000',
         title: 'Triangle Inequality',
         subtitle: 'Main Topic 6',
         icon: '⚖️',

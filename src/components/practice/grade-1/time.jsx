@@ -4,40 +4,204 @@ import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { NODE_IDS } from '@/lib/curriculumIds';
-import Navbar from '../../Navbar';
-import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
-import { LatexText } from '../../LatexText';
-import ExplanationModal from '../../ExplanationModal';
-import StickerExit from '../../StickerExit';
-import mascotImg from '../../../assets/mascot.png';
-import avatarImg from '../../../assets/avatar.png';
-import '../../../pages/juniors/class-1/Grade1Practice.css';
+import Navbar from '@/components/Navbar';
+import { TOPIC_CONFIGS } from '@/lib/topicConfig';
+import { LatexText } from '@/components/LatexText';
+import ExplanationModal from '@/components/ExplanationModal';
+import StickerExit from '@/components/StickerExit';
+import mascotImg from '@/assets/mascot.png';
+import avatarImg from '@/assets/avatar.png';
+import '@/pages/juniors/class-1/Grade1Practice.css';
 
 const DynamicVisual = ({ type, data }) => {
     if (type === 'day-night') {
-        const { scenario } = data;
+        const { scenario, visualType } = data;
         return (
-            <motion.div initial={{ scale: 0.8, rotate: -5 }} animate={{ scale: 1, rotate: 0 }} className="g1-time-visual">
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="g1-time-visual">
                 <div style={{
-                    width: 'clamp(120px, 40vw, 180px)', height: 'clamp(120px, 40vw, 180px)', borderRadius: '50%',
-                    background: scenario === 'Day' ? 'linear-gradient(135deg, #FFD700, #FFA500)' : 'linear-gradient(135deg, #1a1a2e, #16213e)',
+                    width: 'clamp(140px, 45vw, 200px)', height: 'clamp(140px, 45vw, 200px)', borderRadius: '40px',
+                    background: scenario === 'Day' ? 'linear-gradient(135deg, #87CEEB, #BAE6FD)' : 'linear-gradient(135deg, #1E1B4B, #312E81)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
-                    position: 'relative', overflow: 'hidden'
+                    boxShadow: '0 15px 35px rgba(0,0,0,0.1)',
+                    position: 'relative', overflow: 'hidden', border: '4px solid white'
                 }}>
-                    {scenario === 'Day' ? (
-                        <>
-                            <motion.div animate={{ rotate: 360 }} transition={{ duration: 10, repeat: Infinity, ease: "linear" }} style={{ position: 'absolute' }}>
-                                <Star color="#fff" fill="#fff" size={'clamp(60px, 20vw, 100px)'} opacity={0.2} />
-                            </motion.div>
-                            <span style={{ fontSize: 'clamp(40px, 15vw, 60px)' }}>☀️</span>
-                        </>
-                    ) : (
-                        <>
-                            <div style={{ position: 'absolute', top: '20px', left: '30px', fontSize: '14px' }}>✨</div>
-                            <div style={{ position: 'absolute', bottom: '30px', right: '40px', fontSize: '10px' }}>⭐</div>
-                            <span style={{ fontSize: '60px' }}>🌙</span>
-                        </>
+                    {visualType === 'sun' && (
+                        <svg width="80%" height="80%" viewBox="0 0 100 100">
+                            <defs>
+                                <radialGradient id="sunGradient" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" stopColor="#FFF7ED" />
+                                    <stop offset="60%" stopColor="#FBBF24" />
+                                    <stop offset="100%" stopColor="#EA580C" />
+                                </radialGradient>
+                            </defs>
+                            <motion.g animate={{ rotate: 360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} style={{ transformOrigin: 'center' }}>
+                                {[...Array(12)].map((_, i) => (
+                                    <path 
+                                        key={i} 
+                                        d="M 50 10 L 55 25 L 45 25 Z" 
+                                        fill="#FDE047" 
+                                        transform={`rotate(${i * 30}, 50, 50)`} 
+                                    />
+                                ))}
+                            </motion.g>
+                            <circle cx="50" cy="50" r="28" fill="url(#sunGradient)" filter="drop-shadow(0 0 10px rgba(251, 191, 36, 0.6))" />
+                            {/* Face */}
+                            <circle cx="42" cy="45" r="2.5" fill="#3E2C1E" />
+                            <circle cx="58" cy="45" r="2.5" fill="#3E2C1E" />
+                            <path d="M 42 58 Q 50 65 58 58" fill="none" stroke="#3E2C1E" strokeWidth="2" strokeLinecap="round" />
+                        </svg>
+                    )}
+
+                    {visualType === 'moon' && (
+                        <svg width="80%" height="80%" viewBox="0 0 100 100">
+                            <defs>
+                                <filter id="moonGlow">
+                                    <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
+                                    <feOffset dx="0" dy="0" result="offsetblur" />
+                                    <feComponentTransfer><feFuncA type="linear" slope="0.5"/></feComponentTransfer>
+                                    <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+                                </filter>
+                                <radialGradient id="moonGrad" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" style={{ stopColor: '#F8FAFC', stopOpacity: 1 }} />
+                                    <stop offset="100%" style={{ stopColor: '#CBD5E1', stopOpacity: 1 }} />
+                                </radialGradient>
+                            </defs>
+                            {[...Array(8)].map((_, i) => (
+                                <motion.circle 
+                                    key={i} 
+                                    cx={10 + (Math.sin(i) * 40 + 40)} 
+                                    cy={10 + (Math.cos(i) * 40 + 40)} 
+                                    r={Math.random() * 1.5 + 0.5} 
+                                    fill="white" 
+                                    animate={{ opacity: [0.2, 1, 0.2] }} 
+                                    transition={{ duration: 2 + i % 2, repeat: Infinity, delay: i * 0.3 }} 
+                                />
+                            ))}
+                            <g transform="rotate(-15, 50, 50)">
+                                <path 
+                                    d="M 65 30 A 35 35 0 1 0 65 70 A 28 28 0 1 1 65 30 Z" 
+                                    fill="url(#moonGrad)" 
+                                    filter="url(#moonGlow)" 
+                                />
+                                {/* Craters */}
+                                <circle cx="45" cy="45" r="3" fill="#94A3B8" opacity="0.3" />
+                                <circle cx="50" cy="65" r="5" fill="#94A3B8" opacity="0.2" />
+                                <circle cx="35" cy="55" r="2" fill="#94A3B8" opacity="0.3" />
+                            </g>
+                        </svg>
+                    )}
+
+                    {visualType === 'breakfast' && (
+                        <svg width="90%" height="90%" viewBox="0 0 120 120">
+                            {/* Plate */}
+                            <circle cx="60" cy="65" r="45" fill="#F1F5F9" stroke="#E2E8F0" strokeWidth="2" />
+                            <circle cx="60" cy="65" r="35" fill="#FFFFFF" stroke="#F1F5F9" strokeWidth="1" />
+                            
+                            {/* Toast */}
+                            <rect x="35" y="55" width="25" height="25" rx="3" fill="#B45309" /> {/* Crust */}
+                            <rect x="37" y="57" width="21" height="21" rx="2" fill="#FDE68A" /> {/* Bread */}
+                            <path d="M 42 62 Q 48 58 53 65" fill="none" stroke="#F59E0B" strokeWidth="2" opacity="0.5" />
+                            
+                            {/* Egg */}
+                            <path d="M 65 60 Q 75 50 85 65 Q 90 80 75 85 Q 60 80 65 60" fill="white" />
+                            <circle cx="75" cy="72" r="8" fill="#FBBF24" /> {/* Yolk */}
+                            <circle cx="72" cy="70" r="2" fill="white" opacity="0.6" /> {/* Highlight */}
+                            
+                            {/* Steaming Mug */}
+                            <path d="M 90 40 L 110 40 L 108 65 L 92 65 Z" fill="#6366F1" rx="3" />
+                            <path d="M 110 45 Q 118 45 118 52 Q 118 60 110 60" fill="none" stroke="#6366F1" strokeWidth="3" />
+                            <motion.path 
+                                d="M 95 32 Q 97 27 95 22" 
+                                fill="none" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round"
+                                animate={{ y: [0, -8], opacity: [0, 0.6, 0] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                            />
+                            <motion.path 
+                                d="M 103 32 Q 105 27 103 22" 
+                                fill="none" stroke="#94A3B8" strokeWidth="2" strokeLinecap="round"
+                                animate={{ y: [0, -8], opacity: [0, 0.6, 0] }}
+                                transition={{ duration: 2, delay: 0.5, repeat: Infinity }}
+                            />
+                        </svg>
+                    )}
+
+                    {visualType === 'sleep' && (
+                        <svg width="90%" height="90%" viewBox="0 0 120 120">
+                            <defs>
+                                <linearGradient id="bedGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style={{ stopColor: '#818CF8', stopOpacity: 1 }} />
+                                    <stop offset="100%" style={{ stopColor: '#4F46E5', stopOpacity: 1 }} />
+                                </linearGradient>
+                            </defs>
+                            {/* Window with Moon */}
+                            <rect x="70" y="20" width="30" height="40" rx="5" fill="#312E81" stroke="#E2E8F0" strokeWidth="2" />
+                            <path d="M 85 20 L 85 60 M 70 40 L 100 40" stroke="#E2E8F0" strokeWidth="1" opacity="0.3" />
+                            <circle cx="88" cy="32" r="4" fill="#FDE047" />
+                            
+                            {/* Bed Body */}
+                            <rect x="15" y="75" width="90" height="25" rx="4" fill="#4B382A" /> {/* Bed Base */}
+                            <rect x="10" y="65" width="10" height="40" rx="2" fill="#3E2C1E" /> {/* Headboard Left */}
+                            <rect x="100" y="85" width="10" height="20" rx="2" fill="#3E2C1E" /> {/* Footboard Right */}
+                            
+                            {/* Mattress & Blanket */}
+                            <rect x="15" y="65" width="85" height="15" rx="3" fill="#F8FAFC" /> {/* Mattress */}
+                            <path d="M 35 60 L 100 60 Q 105 60 105 65 L 105 80 L 35 80 Z" fill="url(#bedGrad)" /> {/* Blanket */}
+                            
+                            {/* Blanket Pattern (Stars) */}
+                            {[...Array(5)].map((_, i) => (
+                                <circle key={i} cx={45 + i * 12} cy={70 + (i % 2) * 4} r="1.5" fill="#A5B4FC" opacity="0.6" />
+                            ))}
+
+                            {/* Pillow */}
+                            <rect x="18" y="55" width="22" height="12" rx="5" fill="white" stroke="#E2E8F0" strokeWidth="1" />
+                            
+                            {/* Floating Zzzs */}
+                            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                                {[...Array(3)].map((_, i) => (
+                                    <motion.text
+                                        key={i}
+                                        x={25 + i * 8} y={45 - i * 10}
+                                        fontSize={10 + i * 4}
+                                        fill="#E2E8F0"
+                                        fontWeight="bold"
+                                        style={{ fontFamily: 'Arial' }}
+                                        animate={{ 
+                                            y: [45 - i * 10, 25 - i * 10], 
+                                            opacity: [0, 1, 0],
+                                            scale: [0.8, 1.2, 0.8]
+                                        }}
+                                        transition={{ 
+                                            duration: 3, 
+                                            repeat: Infinity, 
+                                            delay: i * 0.8,
+                                            ease: "easeInOut"
+                                        }}
+                                    >Z</motion.text>
+                                ))}
+                            </motion.g>
+                        </svg>
+                    )}
+
+                    {visualType === 'breakfast' && (
+                        <svg width="80%" height="80%" viewBox="0 0 100 100">
+                            <circle cx="50" cy="65" r="30" fill="#F1F5F9" stroke="#E2E8F0" strokeWidth="2" />
+                            <circle cx="50" cy="65" r="22" fill="#FFFFFF" stroke="#F1F5F9" strokeWidth="1" />
+                            <rect x="38" y="55" width="24" height="20" fill="#FDE68A" rx="2" transform="rotate(-5, 50, 65)" />
+                            <path d="M 65 45 L 85 45 L 83 65 L 67 65 Z" fill="#FF6B6B" rx="3" />
+                            <path d="M 85 50 Q 92 50 92 57 Q 92 64 85 64" fill="none" stroke="#FF6B6B" strokeWidth="3" />
+                            <motion.path 
+                                d="M 70 40 Q 72 35 70 30" 
+                                fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"
+                                animate={{ y: [0, -10], opacity: [0, 0.8, 0] }}
+                                transition={{ duration: 2, repeat: Infinity }}
+                            />
+                            <motion.path 
+                                d="M 78 40 Q 80 35 78 30" 
+                                fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"
+                                animate={{ y: [0, -10], opacity: [0, 0.8, 0] }}
+                                transition={{ duration: 2, delay: 0.5, repeat: Infinity }}
+                            />
+                        </svg>
                     )}
                 </div>
             </motion.div>
@@ -144,20 +308,20 @@ const DynamicVisual = ({ type, data }) => {
                                 <motion.div
                                     whileHover={{ scale: 1.05 }}
                                     style={{
-                                        background: d === day ? (label === 'ORDER' ? '#4C51BF' : '#FF6B6B') : '#F8FAFC',
-                                        color: d === day ? 'white' : '#475569',
+                                        background: (d === day && label !== 'ORDER') ? (label === 'ORDER' ? '#4C51BF' : '#FF6B6B') : '#F8FAFC',
+                                        color: (d === day && label !== 'ORDER') ? 'white' : '#475569',
                                         padding: '12px 5px',
                                         borderRadius: '12px',
                                         fontSize: '0.75rem',
                                         fontWeight: 400,
-                                        border: d === day ? 'none' : '2px solid #E2E8F0',
+                                        border: (d === day && label !== 'ORDER') ? 'none' : '2px solid #E2E8F0',
                                         display: 'flex',
                                         flexDirection: 'column',
                                         alignItems: 'center',
                                         gap: '5px',
                                         minHeight: '60px',
                                         justifyContent: 'center',
-                                        boxShadow: d === day ? '0 8px 15px rgba(0,0,0,0.1)' : 'none'
+                                        boxShadow: (d === day && label !== 'ORDER') ? '0 8px 15px rgba(0,0,0,0.1)' : 'none'
                                     }}
                                 >
                                     <span style={{ fontSize: '1rem' }}>
@@ -258,6 +422,30 @@ const Time = () => {
     const generateQuestions = (selectedSkill) => {
         const questions = [];
         const types = ['day-night', 'days-week', 'clock'];
+
+        // Create pools for unique questions
+        const scenarios = [
+            { q: 'When can we see the big yellow Sun?', a: 'Day', vt: 'sun' },
+            { q: 'When do we see the silver Moon?', a: 'Night', vt: 'moon' },
+            { q: 'When is it time to put on our sleeping clothes and go to bed? 😴', a: 'Night', vt: 'sleep' },
+            { q: 'When do we have yummy breakfast? 🥞', a: 'Day', vt: 'breakfast' },
+            { q: 'When do we see the beautiful twinkling stars in the sky? ✨', a: 'Night', vt: 'moon' },
+            { q: 'When is the best time to play at the park with friends? 🛝', a: 'Day', vt: 'sun' },
+            { q: 'When do we put on our pajamas and read a story? 📖', a: 'Night', vt: 'sleep' },
+            { q: 'When do we get dressed and grab our school bag? 🎒', a: 'Day', vt: 'sun' }
+        ];
+        const dayNightPool = [...scenarios].sort(() => 0.5 - Math.random());
+        const daysOrderPool = Array.from({ length: 7 }, (_, k) => k).sort(() => 0.5 - Math.random());
+        const beforeAfterPool = [];
+        for (let d = 0; d < 7; d++) {
+            beforeAfterPool.push({ dayIdx: d, isAfter: true });
+            beforeAfterPool.push({ dayIdx: d, isAfter: false });
+        }
+        beforeAfterPool.sort(() => 0.5 - Math.random());
+        const clockPool = Array.from({ length: 12 }, (_, k) => k + 1).sort(() => 0.5 - Math.random());
+
+        let dnIdx = 0, ordIdx = 0, baIdx = 0, clkIdx = 0;
+
         for (let i = 0; i < totalQuestions; i++) {
             let type = '';
             if (isTest) {
@@ -274,25 +462,21 @@ const Time = () => {
             }
             let question = {};
             if (type === 'day-night') {
-                const scenarios = [
-                    { q: 'When can we see the big yellow Sun?', a: 'Day' },
-                    { q: 'When do we see the silver Moon and Stars?', a: 'Night' },
-                    { q: 'When is it time to put on PJs and sleep? 😴', a: 'Night' },
-                    { q: 'When do we have yummy breakfast? 🥞', a: 'Day' }
-                ];
-                const item = scenarios[Math.floor(Math.random() * scenarios.length)];
+                const item = dayNightPool[dnIdx % dayNightPool.length];
+                dnIdx++;
                 question = {
                     text: item.q,
                     options: ['Day', 'Night'].sort(() => 0.5 - Math.random()),
                     correct: item.a,
                     type: 'day-night',
-                    visualData: { scenario: item.a },
+                    visualData: { scenario: item.a, visualType: item.vt },
                     explanation: `We usually associate this activity or visual with the ${item.a.toUpperCase()} time.`
                 };
             } else if (type === 'days-week') {
                 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
                 const orderText = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh'];
-                const idx = Math.floor(Math.random() * 7);
+                const idx = daysOrderPool[ordIdx % daysOrderPool.length];
+                ordIdx++;
                 question = {
                     text: `If Sunday is the first day, which day is the ${orderText[idx]} day of the week?`,
                     options: [days[idx], days[(idx + 2) % 7], days[(idx + 4) % 7], days[(idx + 5) % 7]].sort(() => 0.5 - Math.random()),
@@ -303,8 +487,9 @@ const Time = () => {
                 };
             } else if (type === 'before-after') {
                 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-                const dayIdx = Math.floor(Math.random() * days.length);
-                const isAfter = Math.random() > 0.5;
+                const item = beforeAfterPool[baIdx % beforeAfterPool.length];
+                baIdx++;
+                const { dayIdx, isAfter } = item;
                 const targetIdx = isAfter ? (dayIdx + 1) % 7 : (dayIdx - 1 + 7) % 7;
                 question = {
                     text: `Which day comes ${isAfter ? 'AFTER' : 'BEFORE'} ${days[dayIdx]}?`,
@@ -315,7 +500,8 @@ const Time = () => {
                     explanation: `The day ${isAfter ? 'after' : 'before'} ${days[dayIdx]} is ${days[targetIdx]}.`
                 };
             } else {
-                const hour = Math.floor(Math.random() * 12) + 1;
+                const hour = clockPool[clkIdx % clockPool.length];
+                clkIdx++;
                 question = {
                     text: `Look at the clock! What hour is the little hand showing?`,
                     options: [`${hour} o'clock`, `${(hour % 12) + 1} o'clock`, `${(hour + 10) % 12 + 1} o'clock`, `${(hour + 9) % 12 + 1} o'clock`].sort(() => 0.5 - Math.random()),
@@ -413,7 +599,7 @@ const Time = () => {
     const handleSkip = () => {
         if (isAnswered) return;
         const currentQ = sessionQuestions[qIndex];
-        
+
         logAnswer({
             question_index: qIndex,
             answer_json: { question_text: currentQ.text, selected: 'Skipped', correct: currentQ.correct, isCorrect: false },

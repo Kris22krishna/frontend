@@ -99,6 +99,7 @@ export default function DoesItLookSameSkills() {
                             sampleSize={20}
                             title={skill.title}
                             color={skill.color}
+                            nodeId={skill.nodeId}
                             onBack={() => setView('list')}
                         />
                     ) : (
@@ -106,6 +107,7 @@ export default function DoesItLookSameSkills() {
                             questions={skill.assessment()}
                             title={skill.title}
                             color={skill.color}
+                            nodeId={skill.nodeId}
                             onBack={() => setView('list')}
                             onSecondaryBack={() => navigate('/middle/grade/5/does-it-look-same')}
                         />

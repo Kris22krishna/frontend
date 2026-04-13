@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Check, Eye, ChevronRight, ChevronLeft, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '../../../../lib/curriculumIds';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import Class8PracticeReportModal from '../Class8PracticeReportModal';
@@ -34,9 +36,15 @@ const VolumeAndCapacityComponent = () => {
     const TOTAL_QUESTIONS = 10;
     const [answers, setAnswers] = useState({});
 
+    // v4 session logging
+    const { startSession, logAnswer, finishSession: finishSessionV4 } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
+
     useEffect(() => {
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId && !sessionId) { api.createPracticeSession(userId, SKILL_ID).then(sess => { if (sess && sess.session_id) setSessionId(sess.session_id); }).catch(console.error); }
+        startSession({ nodeId: NODE_IDS.g8MathMensVolCapacity, sessionType: 'practice' });
         const timer = setInterval(() => setTimeElapsed(prev => prev + 1), 1000);
         const hvc = () => { if (document.hidden) { accumulatedTime.current += Date.now() - questionStartTime.current; isTabActive.current = false; } else { questionStartTime.current = Date.now(); isTabActive.current = true; } };
         document.addEventListener("visibilitychange", hvc);
@@ -88,9 +96,19 @@ const VolumeAndCapacityComponent = () => {
     const real = () => { const n = randomInt(2, 6); const cap = randomInt(200, 500); const total = n * cap; const totalL = total / 1000; return { text: `<div class='question-container'><p>${n} identical glasses each hold $${cap}$ mL. Total capacity in litres?</p></div>`, correctAnswer: `$${totalL}$ L`, solution: `Total $= ${n}\\times${cap} = ${total}$ mL $= ${totalL}$ L`, options: [`$${totalL}$ L`, `$${total}$ L`, `$${parseFloat((totalL + 0.5).toFixed(1))}$ L`, `$${cap / 1000}$ L`] }; };
 
     const formatTime = (s) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
-    const recordAttempt = async (q, sel, ic) => { const uid = sessionStorage.getItem('userId') || localStorage.getItem('userId'); if (!uid) return; let ts = accumulatedTime.current; if (isTabActive.current) ts += Date.now() - questionStartTime.current; try { await api.recordAttempt({ user_id: parseInt(uid, 10), session_id: sessionId, skill_id: SKILL_ID, template_id: null, difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard', question_text: String(q.text || ''), correct_answer: String(q.correctAnswer || ''), student_answer: String(sel || ''), is_correct: ic, solution_text: String(q.solution || ''), time_spent_seconds: Math.max(0, Math.round(ts / 1000)) }); } catch (e) { console.error(e); } };
+    const recordAttempt = async (q, sel, ic) => {
+        const uid = sessionStorage.getItem('userId') || localStorage.getItem('userId'); if (!uid) return;
+        let ts = accumulatedTime.current; if (isTabActive.current) ts += Date.now() - questionStartTime.current;
+        const v4Entry = { question_index: qIndex, answer_json: { selected: sel }, is_correct: ic === true, marks_awarded: ic === true ? 1 : 0, marks_possible: 1, time_taken_ms: ts || 0 };
+        answersPayload.current[qIndex] = v4Entry; logAnswer(v4Entry);
+        try { await api.recordAttempt({ user_id: parseInt(uid, 10), session_id: sessionId, skill_id: SKILL_ID, template_id: null, difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard', question_text: String(q.text || ''), correct_answer: String(q.correctAnswer || ''), student_answer: String(sel || ''), is_correct: ic, solution_text: String(q.solution || ''), time_spent_seconds: Math.max(0, Math.round(ts / 1000)) }); } catch (e) { console.error(e); }
+    };
     const handleCheck = () => { if (!selectedOption || !currentQuestion) return; const ir = selectedOption === currentQuestion.correctAnswer; setIsCorrect(ir); setIsSubmitted(true); setAnswers(p => ({ ...p, [qIndex]: ir })); if (ir) setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]); else setShowExplanationModal(true); recordAttempt(currentQuestion, selectedOption, ir); };
-    const handleNext = async () => { if (history.current[qIndex]) history.current[qIndex] = { ...history.current[qIndex], selectedOption, isSubmitted, isCorrect }; if (qIndex < TOTAL_QUESTIONS - 1) { setQIndex(p => p + 1); setShowExplanationModal(false); setSelectedOption(null); setIsSubmitted(false); setIsCorrect(false); accumulatedTime.current = 0; questionStartTime.current = Date.now(); } else { if (sessionId) await api.finishSession(sessionId).catch(console.error); const uid = sessionStorage.getItem('userId') || localStorage.getItem('userId'); if (uid) { const tc = Object.values(answers).filter(v => v === true).length; try { await api.createReport({ title: SKILL_NAME, type: 'practice', score: (tc / TOTAL_QUESTIONS) * 100, parameters: { skill_id: SKILL_ID, skill_name: SKILL_NAME, total_questions: TOTAL_QUESTIONS, correct_answers: tc, timestamp: new Date().toISOString(), time_taken_seconds: timeElapsed }, user_id: parseInt(uid, 10) }); } catch (e) { console.error(e); } } setShowReportModal(true); } };
+    const handleNext = async () => {
+        if (history.current[qIndex]) history.current[qIndex] = { ...history.current[qIndex], selectedOption, isSubmitted, isCorrect };
+        if (qIndex < TOTAL_QUESTIONS - 1) { setQIndex(p => p + 1); setShowExplanationModal(false); setSelectedOption(null); setIsSubmitted(false); setIsCorrect(false); accumulatedTime.current = 0; questionStartTime.current = Date.now(); }
+        else { if (sessionId) await api.finishSession(sessionId).catch(console.error); if (!isFinishedRef.current) { isFinishedRef.current = true; await finishSessionV4({ answers_payload: answersPayload.current.filter(Boolean) }); } const uid = sessionStorage.getItem('userId') || localStorage.getItem('userId'); if (uid) { const tc = Object.values(answers).filter(v => v === true).length; try { await api.createReport({ title: SKILL_NAME, type: 'practice', score: (tc / TOTAL_QUESTIONS) * 100, parameters: { skill_id: SKILL_ID, skill_name: SKILL_NAME, total_questions: TOTAL_QUESTIONS, correct_answers: tc, timestamp: new Date().toISOString(), time_taken_seconds: timeElapsed }, user_id: parseInt(uid, 10) }); } catch (e) { console.error(e); } } setShowReportModal(true); }
+    };
     const handlePrevious = () => { if (history.current[qIndex]) history.current[qIndex] = { ...history.current[qIndex], selectedOption, isSubmitted, isCorrect }; if (qIndex > 0) { setQIndex(p => p - 1); setShowExplanationModal(false); setSelectedOption(null); setIsSubmitted(false); setIsCorrect(false); } };
     if (!currentQuestion) return <div>Loading...</div>;
 

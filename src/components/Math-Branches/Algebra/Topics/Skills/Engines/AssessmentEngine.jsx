@@ -19,6 +19,7 @@ export default function AssessmentEngine({
     };
 
     const normalizeTextAnswer = (value) => String(value ?? '')
+        .replace(/[\$\\]/g, '')
         .replace(/\s+/g, ' ')
         .trim()
         .toLowerCase();

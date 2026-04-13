@@ -4,14 +4,14 @@ import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { NODE_IDS } from '@/lib/curriculumIds';
-import Navbar from '../../Navbar';
-import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
-import { LatexText } from '../../LatexText';
-import ExplanationModal from '../../ExplanationModal';
-import StickerExit from '../../StickerExit';
-import mascotImg from '../../../assets/mascot.png';
-import avatarImg from '../../../assets/avatar.png';
-import '../../../pages/juniors/class-1/Grade1Practice.css';
+import Navbar from '@/components/Navbar';
+import { TOPIC_CONFIGS } from '@/lib/topicConfig';
+import { LatexText } from '@/components/LatexText';
+import ExplanationModal from '@/components/ExplanationModal';
+import StickerExit from '@/components/StickerExit';
+import mascotImg from '@/assets/mascot.png';
+import avatarImg from '@/assets/avatar.png';
+import '@/pages/juniors/class-1/Grade1Practice.css';
 
 const DynamicVisual = ({ type, data, isAnswered }) => {
     const { num, color } = data;
@@ -21,32 +21,48 @@ const DynamicVisual = ({ type, data, isAnswered }) => {
 
     if (type === 'comparison') {
         const { n1, n2, color1, color2 } = data;
+        
+        const renderBlocks = (num, color) => {
+            const tens = Math.floor(num / 10);
+            const ones = num % 10;
+            return (
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end', justifyContent: 'center', minHeight: '80px' }}>
+                    {/* Tens Columns */}
+                    <div style={{ display: 'flex', gap: '4px' }}>
+                        {Array.from({ length: tens }).map((_, i) => (
+                            <div key={i} style={{ display: 'flex', flexDirection: 'column-reverse', gap: '2px', background: color + '20', padding: '2px', borderRadius: '4px' }}>
+                                {Array.from({ length: 10 }).map((_, j) => (
+                                    <div key={j} style={{ width: '15px', height: '6px', backgroundColor: color, borderRadius: '1px' }}></div>
+                                ))}
+                            </div>
+                        ))}
+                    </div>
+                    {/* Ones Blocks */}
+                    {ones > 0 && (
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 12px)', gap: '4px', paddingBottom: '2px' }}>
+                            {Array.from({ length: ones }).map((_, i) => (
+                                <div key={i} style={{ width: '12px', height: '12px', backgroundColor: color, borderRadius: '2px', opacity: 0.9 }}></div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
         return (
-            <div style={{ display: 'flex', gap: 'clamp(20px, 8vw, 40px)', alignItems: 'center', justifyContent: 'center' }}>
-                <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-compare-item">
-                    <div style={{ fontSize: '2rem', fontWeight: 400, color: color1, marginBottom: '8px' }}>{n1}</div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 15px)', gap: '4px' }}>
-                        {Array.from({ length: Math.floor(n1 / 10) }).map((_, i) => (
-                            <div key={i} style={{ display: 'flex', flexDirection: 'column-reverse', gap: '2px', background: color1 + '20', padding: '2px', borderRadius: '4px' }}>
-                                {Array.from({ length: 10 }).map((_, j) => (
-                                    <div key={j} style={{ width: '15px', height: '6px', backgroundColor: color1, borderRadius: '1px' }}></div>
-                                ))}
-                            </div>
-                        ))}
+            <div style={{ display: 'flex', gap: 'clamp(20px, 8vw, 40px)', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-compare-item" style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '1.8rem', fontWeight: 800, color: color1, marginBottom: '12px', fontFamily: 'Nunito' }}>
+                        Group A {isAnswered && <span style={{ fontSize: '1.4rem', opacity: 0.8 }}>({n1})</span>}
                     </div>
+                    {renderBlocks(n1, color1)}
                 </motion.div>
-                <div style={{ fontSize: '1.5rem', fontWeight: 400, color: '#666' }}>VS</div>
-                <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-compare-item">
-                    <div style={{ fontSize: '2rem', fontWeight: 400, color: color2, marginBottom: '8px' }}>{n2}</div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 15px)', gap: '4px' }}>
-                        {Array.from({ length: Math.floor(n2 / 10) }).map((_, i) => (
-                            <div key={i} style={{ display: 'flex', flexDirection: 'column-reverse', gap: '2px', background: color2 + '20', padding: '2px', borderRadius: '4px' }}>
-                                {Array.from({ length: 10 }).map((_, j) => (
-                                    <div key={j} style={{ width: '15px', height: '6px', backgroundColor: color2, borderRadius: '1px' }}></div>
-                                ))}
-                            </div>
-                        ))}
+                <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#CBD5E1', fontFamily: 'Nunito' }}>VS</div>
+                <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-compare-item" style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '1.8rem', fontWeight: 800, color: color2, marginBottom: '12px', fontFamily: 'Nunito' }}>
+                        Group B {isAnswered && <span style={{ fontSize: '1.4rem', opacity: 0.8 }}>({n2})</span>}
                     </div>
+                    {renderBlocks(n2, color2)}
                 </motion.div>
             </div>
         );
@@ -204,6 +220,33 @@ const Numbers21to50 = () => {
     const generateQuestions = useCallback((selectedSkill) => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
+        // Create pools for unique numbers
+        const countPool = Array.from({ length: 30 }, (_, k) => k + 21).sort(() => 0.5 - Math.random());
+        const tensPool = Array.from({ length: 30 }, (_, k) => k + 21).sort(() => 0.5 - Math.random());
+        
+        // Create comparison pool (shuffled pairs)
+        const allPairs = [];
+        for (let a = 21; a <= 50; a++) {
+            for (let b = 21; b <= 50; b++) {
+                if (a !== b) allPairs.push([a, b]);
+            }
+        }
+        const comparisonPool = allPairs.sort(() => 0.5 - Math.random());
+
+        let countIdx = 0;
+        let tensIdx = 0;
+        let comparisonIdx = 0;
+
+        // Create tens-ones options pool (all strings from 21 to 50)
+        const allTensOnes = Array.from({ length: 30 }, (_, k) => {
+            const n = k + 21;
+            const t = Math.floor(n / 10);
+            const o = n % 10;
+            return `${t} Tens, ${o} Ones`;
+        });
+        const tensOnesDistractorPool = [...allTensOnes].sort(() => 0.5 - Math.random());
+        let distractorIdx = 0;
+
         for (let i = 0; i < totalQuestions; i++) {
             let question = {};
             const color1 = colors[i % colors.length];
@@ -219,31 +262,65 @@ const Numbers21to50 = () => {
                 else typeToGen = 'comparison';
             }
             if (typeToGen === 'counting') {
-                const num = Math.floor(Math.random() * 30) + 21;
+                const num = countPool[countIdx % countPool.length];
+                countIdx++;
+
+                const makeOptionsLocal = (correct) => {
+                    const opts = new Set([correct]);
+                    const offsets = [1, -1, 10, -10, 5, -5];
+                    for (const off of offsets) {
+                        if (opts.size >= 4) break;
+                        const v = correct + off;
+                        if (v >= 21 && v <= 50) opts.add(v);
+                    }
+                    while (opts.size < 4) {
+                        opts.add(Math.floor(Math.random() * 30) + 21);
+                    }
+                    return [...opts].sort(() => 0.5 - Math.random());
+                };
+
                 question = {
-                    text: "What number is shown in this place value table?",
-                    options: [num, num + 1, num - 1].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
+                    text: "How many ones are there in total?",
+                    options: makeOptionsLocal(num),
                     correct: num,
                     type: 'counting',
                     visualData: { num, color: color1 },
                     explanation: `Count the tens and ones. We have ${Math.floor(num/10)} tens and ${num%10} ones, which is ${num}.`
                 };
             } else if (typeToGen === 'tens-ones') {
-                const num = Math.floor(Math.random() * 30) + 21;
+                const num = tensPool[tensIdx % tensPool.length];
+                tensIdx++;
                 const tens = Math.floor(num / 10);
                 const ones = num % 10;
+                const correctStr = `${tens} Tens, ${ones} Ones`;
+                
+                const optionsSet = new Set([correctStr]);
+                let attempts = 0;
+                while (optionsSet.size < 4 && attempts < 30) {
+                    const candidate = tensOnesDistractorPool[distractorIdx % tensOnesDistractorPool.length];
+                    distractorIdx++;
+                    if (candidate !== correctStr) optionsSet.add(candidate);
+                    attempts++;
+                }
+                while (optionsSet.size < 4) {
+                    const r = Math.floor(Math.random() * 30) + 21;
+                    optionsSet.add(`${Math.floor(r/10)} Tens, ${r%10} Ones`);
+                }
+
                 question = {
-                    text: `How many tens and ones are in ${num}?`,
-                    options: [`${tens} Tens, ${ones} Ones`, `${ones} Tens, ${tens} Ones`, `${tens-1} Tens, ${ones+10} Ones`].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
-                    correct: `${tens} Tens, ${ones} Ones`,
+                    text: `How many ones are there in total in ${num}?`,
+                    options: Array.from(optionsSet).sort(() => 0.5 - Math.random()),
+                    correct: correctStr,
                     type: 'tens-ones',
                     visualData: { num, color: color1 },
                     explanation: `${num} is made of ${tens} groups of ten and ${ones} leftovers.`
                 };
-            } else {
-                const n1 = Math.floor(Math.random() * 30) + 21;
-                let n2 = Math.floor(Math.random() * 30) + 21;
-                if (n1 === n2) n2 = 35;
+            }
+ else {
+                const pair = comparisonPool[comparisonIdx % comparisonPool.length];
+                comparisonIdx++;
+                const n1 = pair[0];
+                const n2 = pair[1];
                 const isGreater = Math.random() > 0.5;
                 const correctAns = isGreater ? (n1 > n2 ? 'Group A' : 'Group B') : (n1 < n2 ? 'Group A' : 'Group B');
                 question = {
@@ -252,7 +329,7 @@ const Numbers21to50 = () => {
                     correct: correctAns,
                     type: 'comparison',
                     visualData: { n1, n2, color1, color2 },
-                    explanation: `Group A has ${n1} and Group B has ${n2}. ${correctAns} is ${isGreater ? 'larger' : 'smaller'}.`
+                    explanation: `Group A has ${n1} and Group B has ${n2}. ${correctAns} clearly has ${isGreater ? 'more' : 'fewer'} blocks.`
                 };
             }
             questions.push(question);

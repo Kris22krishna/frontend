@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../MathRenderer';
 import ProtractorInteractive from './Topics/Skills/ProtractorInteractive.jsx';
 import GeometryDrawInteractive from './Topics/Skills/GeometryDrawInteractive.jsx';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
-export default function AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'alg' }) {
+export default function AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'alg' , nodeId }) {
     const getQuestionType = (question) => {
         if (question?.type === 'text') return 'text';
         if (question?.type === 'msq') return 'msq';
@@ -106,6 +107,17 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
     const [answers, setAnswers] = useState(Array(questionSet.length).fill(null));
     const [markedForReview, setMarkedForReview] = useState(Array(questionSet.length).fill(false));
     const [finished, setFinished] = useState(false);
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const v4IsFinished = useRef(false);
+
+
+    useEffect(() => {
+        if (!nodeId) return;
+        v4IsFinished.current = false;
+        startSession({ nodeId, sessionType: 'assessment' });
+        return () => { if (!v4IsFinished.current) abandonSession(); };
+    }, [nodeId]);
+
     const [paletteOpen, setPaletteOpen] = useState(false);
     const topRef = useRef(null);
     const [questionTimes, setQuestionTimes] = useState(Array(questionSet.length).fill(0));
@@ -148,6 +160,24 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         }, 1000);
         return () => clearInterval(timer);
     }, [timeLeft, finished]);
+
+    useEffect(() => {
+        if (!finished || !nodeId || v4IsFinished.current) return;
+        v4IsFinished.current = true;
+        const payload = questionSet.map((question, index) => {
+            const userAns = answers[index];
+            const correct = isAnswerCorrect ? isAnswerCorrect(question, userAns) : false;
+            return {
+                question_index: index,
+                answer_json: JSON.stringify({ answer: userAns }),
+                is_correct: correct,
+                marks_awarded: correct ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0,
+            };
+        });
+        finishSession({ answers_payload: payload });
+    }, [finished]);
 
     const formatTime = (seconds) => {
         const m = Math.floor(seconds / 60);
@@ -211,11 +241,24 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         });
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (questionSet.some((question, index) => !isAnswerComplete(question, answers[index]))) {
             if (!window.confirm('You have unanswered questions. Are you sure you want to submit?')) return;
         }
         recordCurrentQuestionTime();
+        if (nodeId && !v4IsFinished.current) {
+            v4IsFinished.current = true;
+            await finishSession({
+                answers_payload: answers.map((ans, idx) => ({
+                    question_index: idx,
+                    answer_json: JSON.stringify({ selected: ans }),
+                    is_correct: isAnswerCorrect(questionSet[idx], ans),
+                    marks_awarded: isAnswerCorrect(questionSet[idx], ans) ? 1 : 0,
+                    marks_possible: 1,
+                    time_taken_ms: 0,
+                }))
+            });
+        }
         setFinished(true);
         setPaletteOpen(false);
     };

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fractions are just sharing! — Skill100</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #FFF9F0;
+    --card: #FFFFFF;
+    --green: #3B8C4E;
+    --green-light: #D6F0DC;
+    --green-mid: #7EC893;
+    --amber: #F59E0B;
+    --amber-light: #FEF3C7;
+    --red: #EF4444;
+    --red-light: #FEE2E2;
+    --blue: #3B82F6;
+    --blue-light: #DBEAFE;
+    --purple: #8B5CF6;
+    --purple-light: #EDE9FE;
+    --text: #1C1917;
+    --text-muted: #78716C;
+    --border: #E7E5E4;
+    --shadow: 0 4px 24px rgba(0,0,0,0.08);
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+
+  /* background dots pattern */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(circle, #D4C5A9 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+
+  /* header */
+  .header { text-align: center; margin-bottom: 2rem; }
+  .badge {
+    display: inline-block;
+    background: var(--amber);
+    color: #fff;
+    font-family: 'Fredoka One', cursive;
+    font-size: 13px;
+    letter-spacing: 1px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(32px, 7vw, 48px);
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .header h1 span { color: var(--green); }
+  .header p {
+    font-size: 16px;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  /* card */
+  .card {
+    background: var(--card);
+    border-radius: 24px;
+    padding: 1.75rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 1.25rem;
+    border: 1.5px solid var(--border);
+  }
+
+  .card-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 18px;
+    color: var(--text);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .icon {
+    width: 32px; height: 32px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .icon-green { background: var(--green-light); }
+  .icon-amber { background: var(--amber-light); }
+  .icon-purple { background: var(--purple-light); }
+
+  /* food picker */
+  .food-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .food-btn {
+    flex: 1; min-width: 100px;
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    padding: 10px 8px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    background: #fff;
+    color: var(--text-muted);
+    transition: all 0.18s;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .food-btn .food-emoji { font-size: 26px; }
+  .food-btn:hover { border-color: var(--green-mid); color: var(--green); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+  .food-btn.active {
+    border-color: var(--green);
+    background: var(--green-light);
+    color: var(--green);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* visual area */
+  .visual-area {
+    background: var(--bg);
+    border-radius: 18px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    min-height: 100px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    border: 1.5px dashed var(--border);
+  }
+
+  .slice {
+    width: 54px; height: 54px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .slice.eaten {
+    background: var(--green-light);
+    border-color: var(--green);
+    transform: scale(1.05);
+  }
+  .slice.eaten::after {
+    content: '✓';
+    position: absolute;
+    top: -6px; right: -6px;
+    background: var(--green);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 900;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .slice.left {
+    background: #F5F5F4;
+    border-color: var(--border);
+  }
+
+  /* fraction display */
+  .fraction-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+  }
+
+  .fraction-visual {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+  .frac-top {
+    font-family: 'Fredoka One', cursive;
+    font-size: 52px;
+    color: var(--green);
+    line-height: 1;
+  }
+  .frac-bar {
+    width: 70px; height: 4px;
+    background: var(--text);
+    border-radius: 2px;
+  }
+  .frac-bot {
+    font-family: 'Fredoka One', cursive;
+    font-size: 52px;
+    color: var(--text);
+    line-height: 1;
+  }
+  .frac-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 700;
+    text-align: center;
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .message-bubble {
+    background: var(--amber-light);
+    border: 2px solid var(--amber);
+    border-radius: 18px;
+    padding: 14px 18px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #92400E;
+    text-align: center;
+    max-width: 220px;
+    line-height: 1.4;
+  }
+
+  /* sliders */
+  .slider-group { display: flex; flex-direction: column; gap: 14px; margin-top: 1rem; }
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .slider-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    min-width: 120px;
+  }
+  input[type=range] {
+    -webkit-appearance: none;
+    appearance: none;
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--green);
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 2px var(--green);
+    cursor: pointer;
+  }
+  input[type=range]#eaten-slider::-webkit-slider-thumb {
+    background: var(--amber);
+    box-shadow: 0 0 0 2px var(--amber);
+  }
+  .slider-val {
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px;
+    min-width: 28px;
+    text-align: right;
+    color: var(--text);
+  }
+
+  /* fact cards */
+  .fact-row { display: flex; gap: 10px; margin-top: 0; }
+  .fact-card {
+    flex: 1;
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 14px 10px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .fact-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 4px; }
+  .fact-val { font-family: 'Fredoka One', cursive; font-size: 28px; color: var(--text); }
+  .fact-sub { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+  .fact-card.green .fact-val { color: var(--green); }
+  .fact-card.amber .fact-val { color: #D97706; }
+
+  /* quiz */
+  .quiz-q {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+  .quiz-opts { display: flex; gap: 10px; flex-wrap: wrap; }
+  .quiz-btn {
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    background: #fff;
+    color: var(--text);
+    transition: all 0.15s;
+  }
+  .quiz-btn:hover { border-color: var(--purple); color: var(--purple); transform: translateY(-1px); }
+  .quiz-btn.correct { background: var(--green-light); border-color: var(--green); color: var(--green); }
+  .quiz-btn.wrong { background: var(--red-light); border-color: var(--red); color: var(--red); }
+  .quiz-feedback {
+    margin-top: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    min-height: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .quiz-feedback.good { color: var(--green); }
+  .quiz-feedback.bad { color: var(--red); }
+
+  .next-btn {
+    margin-top: 12px;
+    display: none;
+    border: none;
+    background: var(--purple);
+    color: #fff;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.15s;
+  }
+  .next-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  /* score */
+  .score-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .score-pill {
+    background: var(--purple-light);
+    color: var(--purple);
+    font-weight: 800;
+    font-size: 14px;
+    padding: 6px 14px;
+    border-radius: 999px;
+  }
+
+  /* footer */
+  .footer {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-top: 2rem;
+  }
+  .footer span { color: var(--green); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="badge">Skill Spark</div>
+    <h1>Fractions are just <span>sharing!</span></h1>
+    <p>Pick a food, slice it up, and eat some pieces</p>
+  </div>
+
+  <!-- food picker -->
+  <div class="card">
+    <div class="card-title">
+      <div class="icon icon-amber">🍽️</div>
+      Choose your food
+    </div>
+    <div class="food-row">
+      <button class="food-btn active" onclick="setFood('pizza', this)">
+        <span class="food-emoji">🍕</span> Pizza
+      </button>
+      <button class="food-btn" onclick="setFood('cookie', this)">
+        <span class="food-emoji">🍪</span> Cookie
+      </button>
+      <button class="food-btn" onclick="setFood('apple', this)">
+        <span class="food-emoji">🍎</span> Apple
+      </button>
+      <button class="food-btn" onclick="setFood('cake', this)">
+        <span class="food-emoji">🎂</span> Cake
+      </button>
+    </div>
+  </div>
+
+  <!-- interactive explorer -->
+  <div class="card">
+    <div class="card-title">
+      <div class="icon icon-green">✂️</div>
+      Slice it &amp; eat it
+    </div>
+
+    <div class="visual-area" id="slices"></div>
+
+    <div class="fraction-row">
+      <div class="fraction-visual">
+        <div class="frac-top" id="frac-top">1</div>
+        <div class="frac-bar"></div>
+        <div class="frac-bot" id="frac-bot">4</div>
+        <div class="frac-label">the fraction</div>
+      </div>
+      <div class="message-bubble" id="msg-bubble">
+        You ate 1 out of 4 slices!
+      </div>
+    </div>
+
+    <div class="slider-group">
+      <div class="slider-row">
+        <span class="slider-label">Total pieces</span>
+        <input type="range" id="total-slider" min="1" max="10" step="1" value="4" oninput="updateAll()">
+        <span class="slider-val" id="total-val">4</span>
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Pieces eaten</span>
+        <input type="range" id="eaten-slider" min="0" max="10" step="1" value="1" oninput="updateAll()">
+        <span class="slider-val" id="eaten-val">1</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- fact cards -->
+  <div class="fact-row">
+    <div class="fact-card green">
+      <div class="fact-label">Top number</div>
+      <div class="fact-val" id="fc-top">1</div>
+      <div class="fact-sub">pieces eaten</div>
+    </div>
+    <div class="fact-card">
+      <div class="fact-label">Bottom number</div>
+      <div class="fact-val" id="fc-bot">4</div>
+      <div class="fact-sub">total pieces</div>
+    </div>
+    <div class="fact-card amber">
+      <div class="fact-label">Left over</div>
+      <div class="fact-val" id="fc-left">3</div>
+      <div class="fact-sub">still there</div>
+    </div>
+  </div>
+
+  <!-- quiz -->
+  <div class="card" style="margin-top: 1.25rem;">
+    <div class="score-row">
+      <div class="card-title" style="margin-bottom:0;">
+        <div class="icon icon-purple">🧠</div>
+        Quick quiz!
+      </div>
+      <div class="score-pill">Score: <span id="score">0</span> / <span id="total-q">0</span></div>
+    </div>
+    <div class="quiz-q" id="quiz-q">Loading question...</div>
+    <div class="quiz-opts" id="quiz-opts"></div>
+    <div class="quiz-feedback" id="quiz-feedback"></div>
+    <button class="next-btn" id="next-btn" onclick="newQuiz()">Next question →</button>
+  </div>
+
+  <div class="footer">Made with ❤️ by <span>Skill100</span></div>
+</div>
+
+<script>
+  const foods = {
+    pizza:  { emoji: '🍕', name: 'pizza' },
+    cookie: { emoji: '🍪', name: 'cookie' },
+    apple:  { emoji: '🍎', name: 'apple' },
+    cake:   { emoji: '🎂', name: 'cake' }
+  };
+
+  let currentFood = 'pizza';
+  let score = 0;
+  let totalQ = 0;
+  let answered = false;
+
+  function setFood(f, btn) {
+    currentFood = f;
+    document.querySelectorAll('.food-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    updateAll();
+  }
+
+  function updateAll() {
+    const totalSlider = document.getElementById('total-slider');
+    const eatenSlider = document.getElementById('eaten-slider');
+    let total = parseInt(totalSlider.value);
+    let eaten = parseInt(eatenSlider.value);
+
+    eatenSlider.max = total;
+    if (eaten > total) { eaten = total; eatenSlider.value = total; }
+
+    const left = total - eaten;
+    const food = foods[currentFood];
+
+    document.getElementById('total-val').textContent = total;
+    document.getElementById('eaten-val').textContent = eaten;
+    document.getElementById('frac-top').textContent = eaten;
+    document.getElementById('frac-bot').textContent = total;
+    document.getElementById('fc-top').textContent = eaten;
+    document.getElementById('fc-bot').textContent = total;
+    document.getElementById('fc-left').textContent = left;
+
+    let msg = '';
+    if (eaten === 0) msg = "You haven't eaten any yet! 😮";
+    else if (eaten === total) msg = "You ate the WHOLE thing! That's 1 whole! 🎉";
+    else msg = `You ate ${eaten} out of ${total} pieces!`;
+    document.getElementById('msg-bubble').textContent = msg;
+
+    const slicesDiv = document.getElementById('slices');
+    slicesDiv.innerHTML = '';
+    for (let i = 0; i < total; i++) {
+      const div = document.createElement('div');
+      div.className = 'slice ' + (i < eaten ? 'eaten' : 'left');
+      div.textContent = food.emoji;
+      slicesDiv.appendChild(div);
+    }
+  }
+
+  const quizPool = [
+    { q: "If a cookie is cut into 2 pieces and you eat 1, what fraction did you eat?", opts: ["1/2", "1/3", "2/1", "1/4"], ans: "1/2" },
+    { q: "A pizza has 4 slices. You eat 3. What fraction did you eat?", opts: ["1/4", "3/4", "4/3", "2/4"], ans: "3/4" },
+    { q: "You cut a cake into 5 pieces and eat 2. What fraction is LEFT?", opts: ["2/5", "3/5", "1/5", "5/2"], ans: "3/5" },
+    { q: "An apple is cut into 3 pieces. You eat all 3. What fraction is that?", opts: ["3/3", "1/3", "2/3", "0/3"], ans: "3/3" },
+    { q: "You have 6 cookies. You eat 1. What fraction did you eat?", opts: ["1/6", "6/1", "1/5", "2/6"], ans: "1/6" },
+    { q: "A pizza is cut into 8 slices. You eat 4. What fraction is that?", opts: ["4/8", "8/4", "1/4", "3/8"], ans: "4/8" },
+    { q: "You cut a cake into 10 pieces. You eat 7. What fraction did you eat?", opts: ["7/10", "3/10", "10/7", "7/3"], ans: "7/10" },
+  ];
+
+  let currentQuiz = null;
+
+  function newQuiz() {
+    answered = false;
+    document.getElementById('quiz-feedback').textContent = '';
+    document.getElementById('quiz-feedback').className = 'quiz-feedback';
+    document.getElementById('next-btn').style.display = 'none';
+    const q = quizPool[Math.floor(Math.random() * quizPool.length)];
+    currentQuiz = q;
+    document.getElementById('quiz-q').textContent = q.q;
+    const optsDiv = document.getElementById('quiz-opts');
+    optsDiv.innerHTML = '';
+    q.opts.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-btn';
+      btn.textContent = opt;
+      btn.onclick = () => checkAns(opt, btn);
+      optsDiv.appendChild(btn);
+    });
+  }
+
+  function checkAns(ans, btn) {
+    if (answered) return;
+    answered = true;
+    totalQ++;
+    document.getElementById('total-q').textContent = totalQ;
+
+    const fb = document.getElementById('quiz-feedback');
+    if (ans === currentQuiz.ans) {
+      score++;
+      document.getElementById('score').textContent = score;
+      fb.textContent = '🎉 Yes! That\'s correct! Great job!';
+      fb.className = 'quiz-feedback good';
+      btn.classList.add('correct');
+    } else {
+      fb.textContent = '❌ Not quite! The answer was ' + currentQuiz.ans;
+      fb.className = 'quiz-feedback bad';
+      btn.classList.add('wrong');
+      document.querySelectorAll('.quiz-btn').forEach(b => {
+        if (b.textContent === currentQuiz.ans) b.classList.add('correct');
+      });
+    }
+    document.getElementById('next-btn').style.display = 'inline-block';
+  }
+
+  updateAll();
+  newQuiz();
+</script>
+</body>
+</html>

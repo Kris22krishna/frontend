@@ -4,16 +4,16 @@ import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { NODE_IDS } from '@/lib/curriculumIds';
-import Navbar from '../../Navbar';
-import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
-import { LatexText } from '../../LatexText';
-import ExplanationModal from '../../ExplanationModal';
-import StickerExit from '../../StickerExit';
-import mascotImg from '../../../assets/mascot.png';
-import avatarImg from '../../../assets/avatar.png';
-import '../../../pages/juniors/class-1/Grade1Practice.css';
+import Navbar from '@/components/Navbar';
+import { TOPIC_CONFIGS } from '@/lib/topicConfig';
+import { LatexText } from '@/components/LatexText';
+import ExplanationModal from '@/components/ExplanationModal';
+import StickerExit from '@/components/StickerExit';
+import mascotImg from '@/assets/mascot.png';
+import avatarImg from '@/assets/avatar.png';
+import '@/pages/juniors/class-1/Grade1Practice.css';
 
-const DynamicVisual = ({ type, data }) => {
+const DynamicVisual = ({ type, data, isAnswered }) => {
     if (type === 'counting' || type === 'names' || type === 'tens-ones') {
         const { num, color } = data;
         const tens = Math.floor(num / 10);
@@ -55,7 +55,9 @@ const DynamicVisual = ({ type, data }) => {
         return (
             <div style={{ display: 'flex', gap: 'clamp(20px, 8vw, 50px)', alignItems: 'center', justifyContent: 'center' }}>
                 <div className="g1-compare-box" style={{ background: color1 + '15', padding: '25px', borderRadius: '30px', textAlign: 'center' }}>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 700, color: color1, marginBottom: '15px', fontFamily: 'Nunito, sans-serif' }}>Group A</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: color1, marginBottom: '15px', fontFamily: 'Nunito, sans-serif' }}>
+                        Group A {isAnswered && <span style={{ fontSize: '1.1rem', opacity: 0.8 }}>({n1})</span>}
+                    </div>
                     <div style={{ display: 'flex', gap: '4px' }}>
                         <div style={{ display: 'flex', flexDirection: 'column-reverse', gap: '2px' }}>
                             {Array.from({ length: 10 }).map((_, i) => (
@@ -71,7 +73,9 @@ const DynamicVisual = ({ type, data }) => {
                 </div>
                 <div style={{ fontSize: '2.5rem', fontWeight: 400, color: '#CBD5E0' }}>VS</div>
                 <div className="g1-compare-box" style={{ background: color2 + '15', padding: '25px', borderRadius: '30px', textAlign: 'center' }}>
-                    <div style={{ fontSize: '1.5rem', fontWeight: 700, color: color2, marginBottom: '15px', fontFamily: 'Nunito, sans-serif' }}>Group B</div>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: color2, marginBottom: '15px', fontFamily: 'Nunito, sans-serif' }}>
+                        Group B {isAnswered && <span style={{ fontSize: '1.1rem', opacity: 0.8 }}>({n2})</span>}
+                    </div>
                     <div style={{ display: 'flex', gap: '4px' }}>
                         <div style={{ display: 'flex', flexDirection: 'column-reverse', gap: '2px' }}>
                             {Array.from({ length: 10 }).map((_, i) => (
@@ -161,6 +165,33 @@ const Numbers10to20 = () => {
         const questions = [];
         const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
         const names = { 10: 'Ten', 11: 'Eleven', 12: 'Twelve', 13: 'Thirteen', 14: 'Fourteen', 15: 'Fifteen', 16: 'Sixteen', 17: 'Seventeen', 18: 'Eighteen', 19: 'Nineteen', 20: 'Twenty' };
+        // Create pools for unique numbers
+        const countPool = Array.from({ length: 11 }, (_, k) => k + 10).sort(() => 0.5 - Math.random());
+        const tensPool = Array.from({ length: 11 }, (_, k) => k + 10).sort(() => 0.5 - Math.random());
+        
+        // Create comparison pool (shuffled pairs)
+        const allPairs = [];
+        for (let a = 10; a <= 20; a++) {
+            for (let b = 10; b <= 20; b++) {
+                if (a !== b) allPairs.push([a, b]);
+            }
+        }
+        const comparisonPool = allPairs.sort(() => 0.5 - Math.random());
+        
+        let countIdx = 0;
+        let tensIdx = 0;
+        let comparisonIdx = 0;
+
+        // Create tens-ones options pool (all strings from 10 to 20)
+        const allTensOnes = Array.from({ length: 11 }, (_, k) => {
+            const n = k + 10;
+            const t = Math.floor(n / 10);
+            const o = n % 10;
+            return `${t} Ten, ${o} Ones`;
+        });
+        const tensOnesDistractorPool = [...allTensOnes].sort(() => 0.5 - Math.random());
+        let distractorIdx = 0;
+
         for (let i = 0; i < totalQuestions; i++) {
             let question = {};
             const color1 = colors[i % colors.length];
@@ -176,32 +207,73 @@ const Numbers10to20 = () => {
                 else typeToGen = 'comparison';
             }
             if (typeToGen === 'counting') {
-                const count = Math.floor(Math.random() * 11) + 10;
+                const count = countPool[countIdx % countPool.length];
+                countIdx++;
                 const isWord = Math.random() > 0.5;
+                
+                const makeOptionsLocal = (correct, isWords = false) => {
+                    const opts = new Set([correct]);
+                    const offsets = [1, -1, 5, -5, 2, -2];
+                    if (isWords) {
+                        while (opts.size < 4) {
+                            const val = Math.floor(Math.random() * 11) + 10;
+                            opts.add(names[val]);
+                        }
+                    } else {
+                        for (const off of offsets) {
+                            if (opts.size >= 4) break;
+                            const v = correct + off;
+                            if (v >= 10 && v <= 20) opts.add(v);
+                        }
+                        while (opts.size < 4) {
+                            opts.add(Math.floor(Math.random() * 11) + 10);
+                        }
+                    }
+                    return [...opts].sort(() => 0.5 - Math.random());
+                };
+
                 question = {
-                    text: isWord ? "Can you pick the name for this number?" : "What number is shown here?",
-                    options: isWord ? [names[count], names[(count + 1) % 11 + 10], names[(count - 1) % 11 + 10]].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()) : [count, count + 1, count - 1].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
+                    text: isWord ? "What is the number name for this number?" : "How many ones are there in total?",
+                    options: makeOptionsLocal(isWord ? names[count] : count, isWord),
                     correct: isWord ? names[count] : count,
                     type: 'counting',
                     visualData: { num: count, color: color1 },
                     explanation: `Count one ten-bar and then the single blocks. This gives us ${count}.`
                 };
             } else if (typeToGen === 'tens-ones') {
-                const num = Math.floor(Math.random() * 11) + 10;
+                const num = tensPool[tensIdx % tensPool.length];
+                tensIdx++;
                 const tens = Math.floor(num / 10);
                 const ones = num % 10;
+                const correctStr = `${tens} Ten, ${ones} Ones`;
+                
+                const optionsSet = new Set([correctStr]);
+                let attempts = 0;
+                while (optionsSet.size < 4 && attempts < 20) {
+                    const candidate = tensOnesDistractorPool[distractorIdx % tensOnesDistractorPool.length];
+                    distractorIdx++;
+                    if (candidate !== correctStr) optionsSet.add(candidate);
+                    attempts++;
+                }
+                while (optionsSet.size < 4) {
+                    const r = Math.floor(Math.random() * 11) + 10;
+                    optionsSet.add(`${Math.floor(r/10)} Ten, ${r%10} Ones`);
+                }
+
                 question = {
-                    text: `How many tens and ones in ${num}?`,
-                    options: [`${tens} Ten, ${ones} Ones`, `${ones} Ten, ${tens} Ones`, `${tens + 1} Ten, ${ones} Ones`].filter((v, idx, s) => s.indexOf(v) === idx).sort(() => 0.5 - Math.random()),
-                    correct: `${tens} Ten, ${ones} Ones`,
+                    text: `How many ones are there in total in ${num}?`,
+                    options: Array.from(optionsSet).sort(() => 0.5 - Math.random()),
+                    correct: correctStr,
                     type: 'tens-ones',
                     visualData: { num, color: color1 },
                     explanation: `${num} is made of ${tens} group of ten and ${ones} single blocks.`
                 };
-            } else {
-                const n1 = Math.floor(Math.random() * 11) + 10;
-                let n2 = Math.floor(Math.random() * 11) + 10;
-                if (n1 === n2) n2 = 15;
+            }
+ else {
+                const pair = comparisonPool[comparisonIdx % comparisonPool.length];
+                comparisonIdx++;
+                const n1 = pair[0];
+                const n2 = pair[1];
                 const isGreater = Math.random() > 0.5;
                 const correctAns = isGreater ? (n1 > n2 ? 'Group A' : 'Group B') : (n1 < n2 ? 'Group A' : 'Group B');
                 question = {
@@ -575,7 +647,7 @@ const Numbers10to20 = () => {
                     <h2 className="g1-question-text"><LatexText text={currentQ.text} /></h2>
                     <div className="g1-content-split">
                         <div className="g1-visual-area">
-                            <DynamicVisual type={currentQ.type} data={currentQ.visualData} />
+                            <DynamicVisual type={currentQ.type} data={currentQ.visualData} isAnswered={isAnswered} />
                         </div>
 
                         <div className="g1-quiz-side">

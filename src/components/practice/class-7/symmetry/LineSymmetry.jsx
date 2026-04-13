@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Check, X, Eye, ChevronRight, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import mascotImg from '../../../../assets/mascot.png';
@@ -145,6 +146,9 @@ const LineSymmetry = () => {
     const isTabActive = useRef(true);
 
     const SKILL_ID = 1084;
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const v4AnswersPayload = useRef([]);
+    const v4IsFinishedRef = useRef(false);
     const SKILL_NAME = "Class 7 - Symmetry - Line Symmetry";
 
     /* ─── Helper: pick N random items from an array ─── */
@@ -195,6 +199,9 @@ const LineSymmetry = () => {
     useEffect(() => {
         const uid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (uid && !sessionId) api.createPracticeSession(uid, SKILL_ID).then(s => s && setSessionId(s.session_id)).catch(console.error);
+        startSession({ nodeId: 'a4071014-0001-0000-0000-000000000000', sessionType: 'practice' });
+        v4AnswersPayload.current = [];
+        v4IsFinishedRef.current = false;
         const timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
         const hv = () => { if (document.hidden) { accumulatedTime.current += Date.now() - questionStartTime.current; isTabActive.current = false; } else { questionStartTime.current = Date.now(); isTabActive.current = true; } };
         document.addEventListener("visibilitychange", hv);
@@ -205,7 +212,16 @@ const LineSymmetry = () => {
         const uid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (!uid) return;
         let t = accumulatedTime.current; if (isTabActive.current) t += Date.now() - questionStartTime.current;
-        try { await api.recordAttempt({ user_id: parseInt(uid), session_id: sessionId, skill_id: SKILL_ID, difficulty_level: 'Medium', question_text: String(q.text), correct_answer: String(q.correctAnswer), student_answer: String(sel), is_correct: cor, solution_text: String(q.solution), time_spent_seconds: Math.max(0, Math.round(t / 1000)) }); } catch (e) { console.error(e); }
+        try { await api.recordAttempt({ user_id: parseInt(uid), session_id: sessionId, skill_id: SKILL_ID, difficulty_level: 'Medium', question_text: String(q.text), correct_answer: String(q.correctAnswer), student_answer: String(sel), is_correct: cor, solution_text: String(q.solution), time_spent_seconds: Math.max(0, Math.round(t / 1000)) });
+        const _v4t = Date.now() - questionStartTime.current;
+        v4AnswersPayload.current.push({
+            question_index: typeof qIndex !== 'undefined' ? qIndex : 0,
+            answer_json: JSON.stringify({ selected: selectedOption }),
+            is_correct: isRight !== undefined ? isRight : (typeof isCorrect !== 'undefined' ? isCorrect : false),
+            marks_awarded: (isRight !== undefined ? isRight : false) ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: _v4t > 0 ? _v4t : 0,
+        }); } catch (e) { console.error(e); }
     };
 
     const handleCheck = () => {
@@ -223,6 +239,10 @@ const LineSymmetry = () => {
             setQIndex(prev => prev + 1);
             accumulatedTime.current = 0; questionStartTime.current = Date.now();
         } else {
+            if (!v4IsFinishedRef.current) {
+                v4IsFinishedRef.current = true;
+                finishSession({ answers_payload: v4AnswersPayload.current });
+            }
             if (sessionId) await api.finishSession(sessionId).catch(console.error);
             const uid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
             if (uid) {

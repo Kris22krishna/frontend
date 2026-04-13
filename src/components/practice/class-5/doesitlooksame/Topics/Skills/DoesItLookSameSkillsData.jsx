@@ -8,6 +8,7 @@ import tajMahalImg from '@/assets/class-5/doesitlooksame/tajmahal.png';
 export const SKILLS = [
     {
         id: 'visual-symmetry',
+        nodeId: 'a4051005-0001-0000-0000-000000000000',
         title: 'Visual Symmetry Recognition',
         subtitle: 'Mirror Images',
         icon: '🦋',
@@ -50,6 +51,7 @@ export const SKILLS = [
     },
     {
         id: 'pattern-observation',
+        nodeId: 'a4051005-0002-0000-0000-000000000000',
         title: 'Pattern Observation',
         subtitle: 'Repeated Designs',
         icon: '🎨',
@@ -96,6 +98,7 @@ export const SKILLS = [
     },
     {
         id: 'geometric-reasoning',
+        nodeId: 'a4051005-0003-0000-0000-000000000000',
         title: 'Geometric Reasoning',
         subtitle: 'Logic & Rotation',
         icon: '🧩',

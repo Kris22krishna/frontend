@@ -2,7 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { RefreshCw, ArrowLeft, Check, X, Pencil, Eye, ChevronRight, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useSessionLogger } from "@/hooks/useSessionLogger";
+import { LatexText } from '../../../LatexText';
+import mascotImg from '../../../../assets/mascot.png';
+import ExplanationModal from '../../../ExplanationModal';
+import PracticeReportModal from '../../PracticeReportModal';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { NODE_IDS } from "@/lib/curriculumIds";
 import '../TenthPracticeSession.css';
 
@@ -21,8 +25,13 @@ const IdentifyingQuadratic = () => {
 
     const { startSession, logAnswer, finishSession } = useSessionLogger();
     const nodeId = NODE_IDS.g10MathQuadraticIdentifying;
+    const SKILL_ID = 1122;
     const sessionType = "practice";
     const [answers, setAnswers] = useState({});
+
+    // Time tracking refs
+    const questionStartTime = useRef(Date.now());
+    const accumulatedTime = useRef(0);
 
     const generateQuestions = () => {
         const newQuestions = [];

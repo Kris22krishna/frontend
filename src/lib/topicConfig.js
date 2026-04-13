@@ -44,7 +44,7 @@ export const TOPIC_CONFIGS = {
             { id: "703", name: "Comparing capacities (more/less)", route: "measurement" },
             { id: "704", name: "Chapter Test - Measurement", route: "measurement" }
         ],
-        'Numbers from Twenty-One to Fifty': [
+        'Numbers from Twenty One to Fifty': [
             { id: "801", name: "Counting 21–50", route: "numbers-from-twenty-one-to-fifty" },
             { id: "802", name: "Number names 21–50", route: "numbers-from-twenty-one-to-fifty" },
             { id: "803", name: "Place value (tens and ones – basic introduction)", route: "numbers-from-twenty-one-to-fifty" },

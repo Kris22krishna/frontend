@@ -96,6 +96,7 @@ export const generatePatternQuestions = () => {
 export const SKILLS = [
     {
         id: 'hms-01',
+        nodeId: 'a4051003-0001-0000-0000-000000000000',
         title: 'Identifying Squares',
         subtitle: 'Spatial Reasoning',
         icon: '📊',
@@ -118,6 +119,7 @@ export const SKILLS = [
     },
     {
         id: 'hms-02',
+        nodeId: 'a4051003-0002-0000-0000-000000000000',
         title: 'Overlapping Squares',
         subtitle: 'Visual Counting Strategies',
         icon: '🔍',
@@ -140,6 +142,7 @@ export const SKILLS = [
     },
     {
         id: 'hms-03',
+        nodeId: 'a4051003-0003-0000-0000-000000000000',
         title: 'Shape Patterns',
         subtitle: 'Pattern Recognition',
         icon: '💠',

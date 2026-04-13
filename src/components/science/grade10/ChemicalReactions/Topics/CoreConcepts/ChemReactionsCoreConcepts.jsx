@@ -280,9 +280,9 @@ export default function ChemReactionsCoreConcepts() {
     /* ── PRACTICE VIEW (Uses Algebra Engine) ───────────────────────── */
     if (view === 'practice' && skill) {
         return (
-            <div className={`skills-page chem-skills-stage`} style={{ background: '#f8fafc', minHeight: '100vh', paddingBottom: '60px' }}>
+            <div style={{ background: '#f8fafc', minHeight: '100vh', overflowY: 'auto' }}>
                 {NAV}
-                <div style={{ maxWidth: 900, margin: '40px auto', padding: '0 24px 60px' }}>
+                <div className="chemtest-practice-shell" style={{ maxWidth: 860, margin: '0 auto', padding: '24px 16px 80px' }}>
                     <QuizEngine
                         questions={skill.practice}
                         title={`Practice: ${skill.title}`}

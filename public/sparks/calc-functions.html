@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Functions — Skill100 Skill Spark</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#F5F0FF;--card:#fff;--purple:#534AB7;--purple-light:#EEEDFE;--purple-dark:#3C3489;--blue:#185FA5;--blue-light:#E6F1FB;--coral:#993C1D;--coral-light:#FAECE7;--green:#3B6D11;--green-light:#EAF3DE;--green-dark:#27500A;--amber:#BA7517;--amber-light:#FAEEDA;--text:#1C1917;--muted:#78716C;--border:#E7E5E4;--sh:0 4px 24px rgba(0,0,0,0.08)}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem 1rem 4rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#AFA9EC 1px,transparent 1px);background-size:28px 28px;opacity:0.3;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:660px;margin:0 auto}
+.header{text-align:center;margin-bottom:2rem}
+.badge{display:inline-block;background:var(--purple);color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:4px 14px;border-radius:999px;margin-bottom:12px;text-transform:uppercase}
+.header h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,7vw,44px);line-height:1.1;margin-bottom:8px}
+.header h1 span{color:var(--purple)}
+.header p{font-size:16px;color:var(--muted);font-weight:600}
+.card{background:var(--card);border-radius:20px;padding:1.75rem;box-shadow:var(--sh);margin-bottom:1.25rem;border:1.5px solid var(--border)}
+.card-title{font-family:'Fredoka One',cursive;font-size:18px;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.story{background:var(--amber-light);border:2px solid var(--amber);border-radius:14px;padding:14px 18px;font-size:15px;font-weight:700;color:#412402;line-height:1.5;margin-bottom:1.25rem}
+.fn-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+.fn-btn{border:2px solid var(--border);border-radius:12px;padding:9px 16px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer;background:#fff;color:var(--muted);transition:all .18s}
+.fn-btn:hover{border-color:var(--purple);color:var(--purple)}
+.fn-btn.active{background:var(--purple-light);border-color:var(--purple);color:var(--purple-dark)}
+.machine{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin:1rem 0;padding:1rem;background:var(--bg);border-radius:14px}
+.mbox{border-radius:12px;padding:12px 20px;text-align:center;font-size:15px;font-weight:700}
+.mbox.in{background:var(--blue-light);border:2px solid var(--blue);color:#0C447C;min-width:80px}
+.mbox.fn{background:var(--purple-light);border:2px solid var(--purple);color:var(--purple-dark);min-width:130px;font-size:17px}
+.mbox.out{background:var(--green-light);border:2px solid var(--green);color:var(--green-dark);min-width:80px}
+.arrow{font-size:22px;color:var(--muted)}
+.slider-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.slider-row label{font-size:13px;font-weight:700;color:var(--muted);min-width:56px}
+.slider-row input[type=range]{-webkit-appearance:none;flex:1;height:6px;border-radius:3px;background:var(--border);outline:none;cursor:pointer}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--purple);border:3px solid #fff;box-shadow:0 0 0 2px var(--purple);cursor:pointer}
+.slider-row span{font-family:'Fredoka One',cursive;font-size:22px;min-width:30px;text-align:right;color:var(--text)}
+.canvas-wrap{background:var(--bg);border-radius:12px;padding:8px;margin:.5rem 0 1rem;border:1.5px dashed var(--border)}
+canvas{display:block;width:100%;border-radius:8px}
+.io-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-top:.5rem}
+.io-card{background:var(--bg);border-radius:10px;padding:10px 6px;text-align:center;border:1.5px solid var(--border)}
+.io-in{font-size:12px;color:var(--muted);font-weight:700}
+.io-out{font-size:18px;font-weight:800;color:var(--purple)}
+.score-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.score-pill{background:var(--purple-light);color:var(--purple);font-size:14px;font-weight:800;padding:6px 14px;border-radius:999px}
+.quiz-q{font-size:15px;font-weight:700;margin-bottom:14px;line-height:1.4}
+.quiz-opts{display:flex;gap:10px;flex-wrap:wrap}
+.qbtn{border:2px solid var(--border);border-radius:12px;padding:10px 20px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;background:#fff;color:var(--text);transition:all .15s}
+.qbtn:hover{border-color:var(--purple);color:var(--purple);transform:translateY(-1px)}
+.qbtn.ok{background:var(--green-light);border-color:var(--green);color:var(--green-dark)}
+.qbtn.no{background:#FCEBEB;border-color:#A32D2D;color:#791F1F}
+.qfb{margin-top:12px;font-size:15px;font-weight:700;min-height:22px}
+.qfb.g{color:var(--green)} .qfb.b{color:#A32D2D}
+.nxt{display:none;margin-top:10px;background:var(--purple);color:#fff;border:none;border-radius:12px;padding:10px 22px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer}
+.nxt:hover{opacity:.88}
+.footer{text-align:center;font-size:13px;font-weight:700;color:var(--muted);margin-top:2rem}
+.footer span{color:var(--purple)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="badge">Skill Spark · 1 of 4</div>
+    <h1>Functions — the <span>input/output</span> machine!</h1>
+    <p>Put a number in, get a number out — every time!</p>
+  </div>
+
+  <div class="story" id="story">A function is like a machine. You put a number IN, it does something to it, and gives you a number OUT. Always the same rule, every time!</div>
+
+  <div class="card">
+    <div class="card-title"><div class="icon" style="background:#EEEDFE">⚙️</div> Pick a function</div>
+    <div class="fn-row">
+      <button class="fn-btn active" onclick="setFn('double',this)">Double it &nbsp;×2</button>
+      <button class="fn-btn" onclick="setFn('square',this)">Square it &nbsp;x²</button>
+      <button class="fn-btn" onclick="setFn('add3',this)">Add 3 &nbsp;x+3</button>
+      <button class="fn-btn" onclick="setFn('negate',this)">Flip it &nbsp;−x</button>
+    </div>
+    <div class="machine">
+      <div class="mbox in">x = <span id="in-val">3</span></div>
+      <div class="arrow">→</div>
+      <div class="mbox fn" id="fn-label">f(x) = 2x</div>
+      <div class="arrow">→</div>
+      <div class="mbox out">= <span id="out-val">6</span></div>
+    </div>
+    <div class="slider-row">
+      <label>Input x</label>
+      <input type="range" min="-5" max="5" step="1" value="3" id="xslider" oninput="updateMachine()">
+      <span id="xval">3</span>
+    </div>
+    <div class="canvas-wrap"><canvas id="fnCanvas" height="180"></canvas></div>
+    <div style="font-size:13px;font-weight:700;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Every x from −5 to 5</div>
+    <div class="io-grid" id="io-grid"></div>
+  </div>
+
+  <div class="card">
+    <div class="score-row">
+      <div class="card-title" style="margin-bottom:0"><div class="icon" style="background:#EEEDFE">🧠</div> Quick quiz!</div>
+      <div class="score-pill">Score: <span id="sc">0</span>/<span id="tq">0</span></div>
+    </div>
+    <div class="quiz-q" id="qq">Loading...</div>
+    <div class="quiz-opts" id="qopts"></div>
+    <div class="qfb" id="qfb"></div>
+    <button class="nxt" id="nxt" onclick="newQuiz()">Next question →</button>
+  </div>
+  <div class="footer">Made with ❤️ by <span>Skill100</span></div>
+</div>
+<script>
+const fns={
+  double:{label:'f(x) = 2x',rule:x=>2*x,story:'Doubling machine! Put in 3, get 6. Put in 5, get 10. It always multiplies by 2.'},
+  square:{label:'f(x) = x²',rule:x=>x*x,story:'Squaring machine! Put in 3, get 9. Put in 4, get 16. It multiplies the number by itself!'},
+  add3:{label:'f(x) = x+3',rule:x=>x+3,story:'Adding machine! Put in 2, get 5. Put in 7, get 10. It always adds 3.'},
+  negate:{label:'f(x) = −x',rule:x=>-x,story:'Flipping machine! Put in 4, get −4. Put in −2, get 2. It flips the sign!'},
+};
+let cur='double';
+function setFn(k,btn){cur=k;document.querySelectorAll('.fn-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('story').textContent=fns[k].story;document.getElementById('fn-label').textContent=fns[k].label;updateMachine();}
+function updateMachine(){
+  const x=parseInt(document.getElementById('xslider').value);
+  const out=fns[cur].rule(x);
+  document.getElementById('xval').textContent=x;document.getElementById('in-val').textContent=x;document.getElementById('out-val').textContent=out;
+  drawGraph();buildTable();
+}
+function drawGraph(){
+  const canvas=document.getElementById('fnCanvas');
+  canvas.width=canvas.offsetWidth*devicePixelRatio||560;canvas.height=180*devicePixelRatio;
+  const ctx=canvas.getContext('2d');ctx.scale(devicePixelRatio,devicePixelRatio);
+  const W=canvas.offsetWidth||560,H=180,cx=W/2,cy=H/2,scx=W/12,scy=H/20;
+  ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle='rgba(128,128,128,0.25)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(W,cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H);ctx.stroke();
+  ctx.fillStyle='rgba(128,128,128,0.8)';ctx.font='10px Nunito';ctx.textAlign='center';ctx.textBaseline='top';
+  for(let i=-20;i<=20;i++){if(i===0)continue;const px=cx+i*scx;if(px>0&&px<W){ctx.beginPath();ctx.moveTo(px,cy-3);ctx.lineTo(px,cy+3);ctx.stroke();if(scx>20||i%2===0)ctx.fillText(i,px,cy+6);}}
+  ctx.textAlign='right';ctx.textBaseline='middle';
+  for(let i=-20;i<=20;i++){if(i===0)continue;const py=cy-i*scy;if(py>0&&py<H){ctx.beginPath();ctx.moveTo(cx-3,py);ctx.lineTo(cx+3,py);ctx.stroke();if(scy>20||i%2===0)ctx.fillText(i,cx-6,py);}}
+  ctx.strokeStyle='#534AB7';ctx.lineWidth=2.5;ctx.beginPath();
+  for(let px=0;px<W;px++){const x=(px-cx)/scx,y=fns[cur].rule(x),py=cy-y*scy;px===0?ctx.moveTo(px,py):ctx.lineTo(px,py);}
+  ctx.stroke();
+  const x0=parseInt(document.getElementById('xslider').value),y0=fns[cur].rule(x0);
+  const dotX=cx+x0*scx,dotY=cy-y0*scy;
+  ctx.fillStyle='#D85A30';ctx.beginPath();ctx.arc(dotX,dotY,6,0,Math.PI*2);ctx.fill();
+}
+function buildTable(){
+  const g=document.getElementById('io-grid');g.innerHTML='';
+  for(let x=-5;x<=5;x++){const y=fns[cur].rule(x);const d=document.createElement('div');d.className='io-card';d.innerHTML=`<div class="io-in">x = ${x}</div><div class="io-out">${y}</div>`;g.appendChild(d);}
+}
+const quizPool=[
+  {q:'If f(x) = 2x, what is f(4)?',opts:['6','8','16','4'],ans:'8'},
+  {q:'If f(x) = x², what is f(3)?',opts:['6','9','12','3'],ans:'9'},
+  {q:'If f(x) = x+3, what is f(7)?',opts:['10','21','4','73'],ans:'10'},
+  {q:'If f(x) = −x, what is f(5)?',opts:['5','−5','0','25'],ans:'−5'},
+  {q:'If f(x) = 2x, what is f(0)?',opts:['2','1','0','−2'],ans:'0'},
+  {q:'If f(x) = x², what is f(−2)?',opts:['−4','4','−2','2'],ans:'4'},
+  {q:'If f(x) = x+3, what is f(−1)?',opts:['4','2','−4','3'],ans:'2'},
+];
+let sc=0,tq=0,answered=false,cq=null;
+function newQuiz(){answered=false;document.getElementById('qfb').textContent='';document.getElementById('qfb').className='qfb';document.getElementById('nxt').style.display='none';cq=quizPool[Math.floor(Math.random()*quizPool.length)];document.getElementById('qq').textContent=cq.q;const el=document.getElementById('qopts');el.innerHTML='';cq.opts.forEach(o=>{const b=document.createElement('button');b.className='qbtn';b.textContent=o;b.onclick=()=>checkQ(o,b);el.appendChild(b);});}
+function checkQ(ans,btn){if(answered)return;answered=true;tq++;document.getElementById('tq').textContent=tq;const fb=document.getElementById('qfb');if(ans===cq.ans){sc++;document.getElementById('sc').textContent=sc;fb.textContent='🎉 Correct!';fb.className='qfb g';btn.classList.add('ok');}else{fb.textContent='Not quite — answer is '+cq.ans;fb.className='qfb b';btn.classList.add('no');document.querySelectorAll('.qbtn').forEach(b=>{if(b.textContent===cq.ans)b.classList.add('ok');});}document.getElementById('nxt').style.display='inline-block';}
+updateMachine();newQuiz();window.addEventListener('resize',drawGraph);
+</script>
+</body>
+</html>

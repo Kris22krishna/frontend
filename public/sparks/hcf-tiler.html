@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Euclidean Tiler (HCF)</title>
+    <style>
+        body { margin: 0; padding: 20px; font-family: 'Inter', system-ui, sans-serif; background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; overflow-x: hidden; }
+        .is-mini body { padding: 0; justify-content: flex-start; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .is-mini .header { display: none; }
+        .container { background: #fff; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 100%; max-width: 900px; border: 1px solid #e2e8f0; overflow: hidden; display: flex; flex-direction: column; }
+        .is-mini .container { box-shadow: none; border: none; max-width: 100%; height: 450px; }
+        
+        .controls { display: flex; padding: 20px 30px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; gap: 30px; justify-content: center; align-items: center; }
+        
+        .input-group { display: flex; align-items: center; gap: 10px; }
+        label { font-weight: 800; color: #475569; }
+        input[type="number"] { width: 60px; padding: 8px; border: 2px solid #cbd5e1; border-radius: 8px; font-weight: 700; font-size: 16px; outline: none; }
+        input[type="number"]:focus { border-color: #0ea5e9; }
+
+        button { background: #0ea5e9; color: white; border: none; padding: 10px 24px; border-radius: 10px; font-weight: 800; font-size: 16px; cursor: pointer; transition: transform 0.2s; box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3); }
+        button:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(14, 165, 233, 0.4); }
+        button:active { transform: translateY(0); }
+
+        .board-wrapper { flex: 1; padding: 30px; display: flex; align-items: center; justify-content: center; background: #f0f9ff; min-height: 250px; overflow: hidden;}
+        
+        .grid-container { position: relative; background: #e0f2fe; border: 4px solid #0284c7; overflow: hidden; box-shadow: 0 10px 25px rgba(2, 132, 199, 0.2); }
+        
+        .tile { position: absolute; border: 1px solid rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; font-weight: 800; color: white; opacity: 0; transform: scale(0.8); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); box-sizing: border-box; }
+
+        .status { padding: 15px; text-align: center; font-size: 18px; font-weight: 700; color: #475569; background: #fff; border-top: 1px solid #e2e8f0; height: 30px;}
+        .status .highlight { color: #0284c7; font-weight: 900; font-size: 24px; }
+        
+        /* Vibrant Colors for tiles */
+        .color-0 { background: #3b82f6; }
+        .color-1 { background: #ec4899; }
+        .color-2 { background: #10b981; }
+        .color-3 { background: #f59e0b; }
+        .color-4 { background: #8b5cf6; }
+        .color-5 { background: #06b6d4; }
+
+        @media (max-width: 768px) {
+            body {
+                min-height: 100dvh;
+                height: auto;
+                padding: 14px 12px 24px;
+                justify-content: flex-start;
+                overflow-y: auto;
+            }
+
+            .page {
+                width: 100%;
+            }
+
+            .header {
+                margin-bottom: 14px;
+            }
+
+            .header h1 {
+                font-size: clamp(24px, 8vw, 32px) !important;
+            }
+
+            .header p {
+                font-size: 14px;
+                line-height: 1.45;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .controls {
+                flex-direction: column;
+                gap: 14px;
+                padding: 16px;
+            }
+
+            .board-wrapper {
+                padding: 16px;
+                min-height: 220px;
+            }
+
+            .grid-container {
+                max-width: 100%;
+            }
+
+            .status {
+                height: auto;
+                min-height: 30px;
+                font-size: 16px;
+            }
+
+            .status .highlight {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 style="margin: 0 0 10px; font-weight: 900; font-size: 32px; color: #0f172a;">Euclidean Tiler (HCF)</h1>
+        <p style="margin: 0; color: #64748b; font-size: 16px;">Tile the grid with the largest possible perfect squares.</p>
+    </div>
+
+    <div class="container">
+        <div class="controls">
+            <div class="input-group">
+                <label>Width (A):</label>
+                <input type="number" id="widthIn" value="24" min="1" max="100">
+            </div>
+            <span style="font-weight: 800; color:#94a3b8;">×</span>
+            <div class="input-group">
+                <label>Height (B):</label>
+                <input type="number" id="heightIn" value="16" min="1" max="100">
+            </div>
+
+            <button onclick="startTiling()" id="btnStart">Tile It!</button>
+        </div>
+
+        <div class="board-wrapper">
+            <div class="grid-container" id="gridContainer"></div>
+        </div>
+
+        <div class="status" id="statusText">
+            Enter dimensions to find HCF.
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('mini') === 'true') { document.documentElement.classList.add('is-mini'); }
+
+        const wIn = document.getElementById('widthIn');
+        const hIn = document.getElementById('heightIn');
+        const grid = document.getElementById('gridContainer');
+        const statusText = document.getElementById('statusText');
+        const btnStart = document.getElementById('btnStart');
+
+        const MAX_GRID_SIZE = 300; // pixels
+
+        let isAnimating = false;
+
+        async function startTiling() {
+            if(isAnimating) return;
+            isAnimating = true;
+            btnStart.disabled = true;
+            btnStart.style.opacity = '0.5';
+
+            let W = parseInt(wIn.value);
+            let H = parseInt(hIn.value);
+
+            if(isNaN(W) || isNaN(H) || W <= 0 || H <= 0) {
+                alert("Please enter positive integers.");
+                isAnimating = false;
+                btnStart.disabled = false;
+                btnStart.style.opacity = '1';
+                return;
+            }
+
+            // Setup scaling
+            const maxDim = Math.max(W, H);
+            const scale = MAX_GRID_SIZE / maxDim;
+
+            grid.style.width = (W * scale) + 'px';
+            grid.style.height = (H * scale) + 'px';
+            grid.innerHTML = '';
+            
+            statusText.innerHTML = `Starting with <span class="highlight">${W}</span> × <span class="highlight">${H}</span>...`;
+
+            // Euclid logic with visual steps
+            let currentX = 0;
+            let currentY = 0;
+            let currentW = W;
+            let currentH = H;
+            let colorIdx = 0;
+
+            const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+            while(currentW > 0 && currentH > 0) {
+                let sqSize = Math.min(currentW, currentH);
+                
+                // Draw square
+                const tile = document.createElement('div');
+                tile.className = `tile color-${colorIdx % 6}`;
+                tile.style.left = (currentX * scale) + 'px';
+                tile.style.top = (currentY * scale) + 'px';
+                tile.style.width = (sqSize * scale) + 'px';
+                tile.style.height = (sqSize * scale) + 'px';
+                tile.innerText = sqSize;
+                
+                grid.appendChild(tile);
+
+                // Animate entry
+                await sleep(50);
+                tile.style.opacity = '1';
+                tile.style.transform = 'scale(1)';
+
+                statusText.innerHTML = `Placed a <span class="highlight">${sqSize}</span>×<span class="highlight">${sqSize}</span> square.`;
+                await sleep(600);
+
+                if(currentW === currentH) {
+                    // Match found! This is the HCF
+                    statusText.innerHTML = `Fully tiled! The HCF is <span class="highlight">${sqSize}</span>`;
+                    break;
+                }
+
+                // Adjust remaining rect
+                if(currentW > currentH) {
+                    currentX += sqSize;
+                    currentW -= sqSize;
+                } else {
+                    currentY += sqSize;
+                    currentH -= sqSize;
+                }
+                
+                // Change color if we swapped direction (i.e. we couldn't fit another sqSize in the same strip without going out of bounds)
+                // Wait, Euclid's is just filling the short side repeatedly. We change color every time we switch the short side.
+                // Easiest is just to increment colorIdx every tile. Let's do that, looks cool and distinct.
+                colorIdx++;
+            }
+
+            // Finish
+             isAnimating = false;
+             btnStart.disabled = false;
+             btnStart.style.opacity = '1';
+             btnStart.innerText = "Restart";
+        }
+    </script>
+</body>
+</html>

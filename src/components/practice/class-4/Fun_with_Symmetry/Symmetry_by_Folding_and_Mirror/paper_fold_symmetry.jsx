@@ -7,6 +7,9 @@ import ExplanationModal from '../../../../ExplanationModal';
 import FunWithSymmetryReportModal from '../FunWithSymmetryReportModal';
 import '../FunWithSymmetry.css';
 
+import { useSessionLogger } from '../../../../../hooks/useSessionLogger';
+
+const NODE_ID = 'a4041006-0003-0000-0000-000000000000';
 const CORRECT_MESSAGES = [
     "✨ You have a great imagination! ✨",
     "🌟 Perfect! You can see the symmetry! 🌟",
@@ -260,6 +263,14 @@ const PaperFoldSymmetry = () => {
     // Logging
     const [sessionId, setSessionId] = useState(null);
     const questionStartTime = useRef(Date.now());
+  const v4AnswersPayload = useRef([]);
+  const v4IsFinishedRef = useRef(false);
+  const { startSession, finishSession, abandonSession } = useSessionLogger();
+  useEffect(() => {
+    return () => { if (!v4IsFinishedRef.current) abandonSession(); };
+  }, []);
+
+
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
     const SKILL_ID = 1201; // Adjust as needed
@@ -274,6 +285,9 @@ const PaperFoldSymmetry = () => {
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             }).catch(err => console.error("Failed to start session", err));
+            startSession({ nodeId: NODE_ID, sessionType: 'practice' });
+            v4AnswersPayload.current = [];
+            v4IsFinishedRef.current = false;
         }
 
         const handleVisibilityChange = () => {
@@ -359,6 +373,11 @@ const PaperFoldSymmetry = () => {
             solution_text: currentQuestion.solution,
             time_spent_seconds: Math.round(timeSpent / 1000)
         }).catch(console.error);
+        v4AnswersPayload.current.push({
+          node_id: NODE_ID,
+          is_correct: isRight,
+          time_spent_ms: Date.now() - questionStartTime.current,
+        });
     };
 
     const handleNext = async () => {
@@ -382,6 +401,10 @@ const PaperFoldSymmetry = () => {
                         parameters: { skill_id: SKILL_ID, total_questions: TOTAL_QUESTIONS, correct_answers: totalCorrect, timestamp: new Date().toISOString(), time_taken_seconds: timeElapsed },
                         user_id: parseInt(userId, 10)
                     });
+                    if (!v4IsFinishedRef.current) {
+                      v4IsFinishedRef.current = true;
+                      finishSession({ answers_payload: v4AnswersPayload.current });
+                    }
                     await api.finishSession(sessionId);
                 }
             } catch (error) {

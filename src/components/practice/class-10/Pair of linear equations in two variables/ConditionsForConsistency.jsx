@@ -44,9 +44,9 @@ const ConditionsForConsistency = () => {
         newQuestions.push(createQuestion(
             1,
             "The pair of linear equations has a unique solution if:",
-            [`$\\dfrac{a_1}{a_2} \\neq \\dfrac{b_1}{b_2}$`, `$\\dfrac{a_1}{a_2} = \\dfrac{b_1}{b_2}$`, `$\\dfrac{a_1}{a_2} = \\dfrac{b_1}{b_2} \\neq \\dfrac{c_1}{c_2}$`, `$\\dfrac{a_1}{a_2} = \\dfrac{b_1}{b_2} = \\dfrac{c_1}{c_2}$`],
-            `$\\dfrac{a_1}{a_2} \\neq \\dfrac{b_1}{b_2}$`,
-            "For a unique solution (intersecting lines), the ratio of coefficients of x and y must not be equal: $\\dfrac{a_1}{a_2} \\neq \\dfrac{b_1}{b_2}$."
+            [`$\\dfrac{a_1}{a_2} ≠ \\dfrac{b_1}{b_2}$`, `$\\dfrac{a_1}{a_2} = \\dfrac{b_1}{b_2}$`, `$\\dfrac{a_1}{a_2} = \\dfrac{b_1}{b_2} ≠ \\dfrac{c_1}{c_2}$`, `$\\dfrac{a_1}{a_2} = \\dfrac{b_1}{b_2} = \\dfrac{c_1}{c_2}$`],
+            `$\\dfrac{a_1}{a_2} ≠ \\dfrac{b_1}{b_2}$`,
+            "For a unique solution (intersecting lines), the ratio of coefficients of x and y must not be equal: $\\dfrac{a_1}{a_2} ≠ \\dfrac{b_1}{b_2}$."
         ));
 
         // EASY 2: Parallel lines (No solution)
@@ -72,10 +72,10 @@ const ConditionsForConsistency = () => {
         let k_val = 6;
         newQuestions.push(createQuestion(
             4,
-            `Find the value of $k$ for which $kx + 2y = 5$ and $3x + y = 1$ has a unique solution.`,
-            [`$k \\neq 6$`, `$k = 6$`, `$k \\neq 3$`, `$k = 0$`],
-            `$k \\neq 6$`,
-            `Unique solution condition: $\\dfrac{k}{3} \\neq \\dfrac{2}{1} \\Rightarrow k \\neq 6$.`
+            `Find the condition for $k$ such that the system of equations $kx + 2y = 5$ and $3x + y = 1$ has a unique solution.`,
+            [`$k ≠ 6$`, `$k = 6$`, `$k > 6$`, `$k < 6$`],
+            `$k ≠ 6$`,
+            `Unique solution condition: $\\dfrac{k}{3} ≠ \\dfrac{2}{1} \\Rightarrow k ≠ 6$.`
         ));
 
         // HARD 1: Find k for Infinite Solutions (Coincident)

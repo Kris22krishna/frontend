@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Check, Eye, ChevronRight, ChevronLeft, X, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import './polynomials.css';
@@ -47,7 +48,10 @@ const PlayingWithDigits = () => {
     const questionStartTime = useRef(Date.now());
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
-    const SKILL_ID = 6304; // ID for Number Play - Playing with Digits
+    const SKILL_ID = 6304;
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const v4AnswersPayload = useRef([]);
+    const v4IsFinishedRef = useRef(false); // ID for Number Play - Playing with Digits
     const SKILL_NAME = "Number Play - Playing with Digits";
 
     const TOTAL_QUESTIONS = 10;
@@ -78,6 +82,9 @@ const PlayingWithDigits = () => {
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             }).catch(err => console.error("Failed to start session", err));
+            startSession({ nodeId: 'a4061003-0005-0000-0000-000000000000', sessionType: 'practice' });
+            v4AnswersPayload.current = [];
+            v4IsFinishedRef.current = false;
         }
 
         const timer = setInterval(() => {
@@ -430,6 +437,15 @@ const PlayingWithDigits = () => {
                 solution_text: String(question.solution || ''),
                 time_spent_seconds: seconds >= 0 ? seconds : 0
             });
+        const _v4t = Date.now() - questionStartTime.current;
+        v4AnswersPayload.current.push({
+            question_index: typeof qIndex !== 'undefined' ? qIndex : 0,
+            answer_json: JSON.stringify({ answer: typeof userAnswer !== 'undefined' ? userAnswer : selectedOption }),
+            is_correct: typeof isRight !== 'undefined' ? isRight : (typeof isCorrect !== 'undefined' ? isCorrect : false),
+            marks_awarded: (typeof isRight !== 'undefined' ? isRight : false) ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: _v4t > 0 ? _v4t : 0,
+        });
         } catch (e) {
             console.error("Failed to record attempt", e);
         }
@@ -496,6 +512,10 @@ const PlayingWithDigits = () => {
             questionStartTime.current = Date.now();
         } else {
             if (sessionId) {
+                if (!v4IsFinishedRef.current) {
+                    v4IsFinishedRef.current = true;
+                    finishSession({ answers_payload: v4AnswersPayload.current });
+                }
                 await api.finishSession(sessionId).catch(console.error);
             }
 

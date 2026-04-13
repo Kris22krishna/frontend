@@ -98,6 +98,7 @@ export default function MappingYourWaySkills() {
                             sampleSize={20}
                             title={skill.title}
                             color={skill.color}
+                            nodeId={skill.nodeId}
                             onBack={() => setView('list')}
                         />
                     ) : (
@@ -105,6 +106,7 @@ export default function MappingYourWaySkills() {
                             questions={skill.assessment}
                             title={skill.title}
                             color={skill.color}
+                            nodeId={skill.nodeId}
                             onBack={() => setView('list')}
                             onSecondaryBack={() => navigate('/middle/grade/5/mapping-your-way')}
                         />

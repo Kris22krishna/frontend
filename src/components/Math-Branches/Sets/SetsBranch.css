@@ -775,8 +775,14 @@
 
 .sets-quiz-options {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .sets-quiz-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .sets-score-header {
@@ -809,6 +815,21 @@
   transition: all 0.2s;
   text-align: left;
   width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.sets-quiz-option .katex,
+.sets-summary-item .katex,
+.sets-quiz-question-text .katex {
+  max-width: 100%;
+}
+
+.sets-quiz-option .katex-display,
+.sets-summary-item .katex-display {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .sets-quiz-option:hover:not(:disabled) {
@@ -982,6 +1003,8 @@
 
 .sets-summary-item {
   flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .sets-summary-item.user-ans {

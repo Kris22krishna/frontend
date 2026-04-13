@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { RefreshCw, Check, Eye, ChevronRight, X, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
@@ -33,7 +34,10 @@ const RegularPolygonPractice = () => {
     const answers = useRef(getSessionData(`${storageKey}_answers`, {}));
 
     const TOTAL_QUESTIONS = 10;
-    const SKILL_ID = 6003; // Assign a unique skill ID for this topic
+    const SKILL_ID = 6003;
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const v4AnswersPayload = useRef([]);
+    const v4IsFinishedRef = useRef(false); // Assign a unique skill ID for this topic
 
     const CORRECT_MESSAGES = [
         "✨ Excellent! You found the right answer! ✨",
@@ -58,6 +62,9 @@ const RegularPolygonPractice = () => {
             api.createPracticeSession(userId, SKILL_ID).then(sess => {
                 if (sess && sess.session_id) sessionId.current = sess.session_id;
             }).catch(err => console.error("Failed to start session", err));
+            startSession({ nodeId: 'a4061006-0004-0000-0000-000000000000', sessionType: 'practice' });
+            v4AnswersPayload.current = [];
+            v4IsFinishedRef.current = false;
         }
 
         const timer = setInterval(() => setTimeElapsed(prev => prev + 1), 1000);
@@ -153,6 +160,15 @@ const RegularPolygonPractice = () => {
                 time_spent_seconds: Math.round(timeTaken)
             });
         }
+            const _v4t = Date.now() - questionStartTime.current;
+            v4AnswersPayload.current.push({
+                question_index: qIndex,
+                answer_json: JSON.stringify({ answer: typeof userAnswer !== 'undefined' ? userAnswer : '' }),
+                is_correct: isRight,
+                marks_awarded: isRight ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: _v4t > 0 ? _v4t : 0,
+            });
     };
 
     const handleNext = async () => {
@@ -161,6 +177,10 @@ const RegularPolygonPractice = () => {
         } else {
             // Finish session
             if (sessionId.current) {
+                if (!v4IsFinishedRef.current) {
+                    v4IsFinishedRef.current = true;
+                    finishSession({ answers_payload: v4AnswersPayload.current });
+                }
                 await api.finishSession(sessionId.current);
             }
             clearProgress(); navigate(-1);

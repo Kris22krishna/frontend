@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { RefreshCw, Check, Eye, ChevronRight, ChevronLeft, X, Star } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../../services/api';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import LatexContent from '../../../../LatexContent';
 import ExplanationModal from '../../../../ExplanationModal';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
@@ -33,6 +34,9 @@ const LargeNumbersRealLife = () => {
     const isTabActive = useRef(true);
     const SKILL_ID = "FT-01";
     const SKILL_NAME = "Large numbers in real-life situations";
+    const { startSession, finishSession } = useSessionLogger();
+    const v4AnswersPayload = useRef([]);
+    const v4IsFinishedRef = useRef(false);
     const TOTAL_QUESTIONS = 10;
     const [sessionQuestions, setSessionQuestions] = useState([]);
     const [answers, setAnswers] = useState({});
@@ -108,6 +112,10 @@ const LargeNumbersRealLife = () => {
     };
 
     useEffect(() => {
+        startSession({ nodeId: 'a4051001-0008-0000-0000-000000000000', sessionType: 'practice' });
+        v4AnswersPayload.current = [];
+        v4IsFinishedRef.current = false;
+
         const handleVisibilityChange = () => {
             if (document.hidden) {
                 accumulatedTime.current += Date.now() - questionStartTime.current;
@@ -168,6 +176,10 @@ const LargeNumbersRealLife = () => {
             accumulatedTime.current = 0;
             questionStartTime.current = Date.now();
         } else {
+            if (!v4IsFinishedRef.current) {
+                v4IsFinishedRef.current = true;
+                finishSession({ answers_payload: v4AnswersPayload.current });
+            }
             setShowResults(true);
         }
     };
@@ -178,7 +190,15 @@ const LargeNumbersRealLife = () => {
         setIsCorrect(isRight);
         setIsSubmitted(true);
         setAnswers(prev => ({ ...prev, [qIndex]: { isCorrect: isRight, selected: selectedOption } }));
-
+        const _v4t = Date.now() - questionStartTime.current;
+        v4AnswersPayload.current.push({
+            question_index: qIndex,
+            answer_json: JSON.stringify({ answer: selectedOption }),
+            is_correct: isRight,
+            marks_awarded: isRight ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: _v4t > 0 ? _v4t : 0,
+        });
         if (isRight) {
             setFeedbackMessage(CORRECT_MESSAGES[Math.floor(Math.random() * CORRECT_MESSAGES.length)]);
         } else {

@@ -437,7 +437,7 @@ export const generateStatistics = () => {
     return {
         type: "tableInput",
         question: "",
-        topic: "Statistics",
+        topic: "Data Handling / Statistics",
         answer: JSON.stringify(answerObj),
         rows: rows
     };
@@ -471,7 +471,7 @@ export const generateProbability = () => {
         type: "tableInput",
         variant: "fraction",
         question: "",
-        topic: "Probability",
+        topic: "Data Handling / Probability",
         answer: JSON.stringify(answerObj),
         rows: rows
     };

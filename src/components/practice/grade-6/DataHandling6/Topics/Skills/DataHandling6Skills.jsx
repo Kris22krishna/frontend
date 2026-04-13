@@ -111,6 +111,8 @@ export default function DataHandling6Skills() {
                         </div>
                     ) : view === 'practice' ? (
                         <QuizEngine
+                        nodeId={skill.nodeId}
+                        sessionType="practice"
                             questions={skill.practice}
                             title={`Practice: ${skill.title}`}
                             color={skill.color}
@@ -119,6 +121,8 @@ export default function DataHandling6Skills() {
                         />
                     ) : (
                         <AssessmentEngine
+                        nodeId={skill.nodeId}
+                        sessionType="assessment"
                             questions={skill.assessment}
                             title={skill.title}
                             color={skill.color}
