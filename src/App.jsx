@@ -330,6 +330,18 @@ import ClockTime from './components/practice/class-3/Time-Goes-On/clock-time';
 import TimeDurations from './components/practice/class-3/Time-Goes-On/time-durations';
 import TimeGoesOnTest from './components/practice/class-3/Time-Goes-On/TimeGoesOnTest';
 
+// What's in a Name?
+import ReadingTallyMarks from './components/practice/class-3/Whats-in-a-Name/ReadingTallyMarks';
+import MakingTallyMarks from './components/practice/class-3/Whats-in-a-Name/MakingTallyMarks';
+import MissingFromTallies from './components/practice/class-3/Whats-in-a-Name/MissingFromTallies';
+import CountingLetters from './components/practice/class-3/Whats-in-a-Name/CountingLetters';
+import LongestShortestName from './components/practice/class-3/Whats-in-a-Name/LongestShortestName';
+import NumberNamesLetterCount from './components/practice/class-3/Whats-in-a-Name/NumberNamesLetterCount';
+import NumberNamePuzzles from './components/practice/class-3/Whats-in-a-Name/NumberNamePuzzles';
+import SortingGrouping from './components/practice/class-3/Whats-in-a-Name/SortingGrouping';
+import DataCollection from './components/practice/class-3/Whats-in-a-Name/DataCollection';
+import WINTest from './components/practice/class-3/Whats-in-a-Name/WINTest';
+
 // Toy Joy
 import Identifying3DShapes from './components/practice/class-3/Toy-Joy/Identifying3DShapes';
 import CountingShapes from './components/practice/class-3/Toy-Joy/CountingShapes';
@@ -1900,6 +1912,18 @@ function App() {
         <Route path="/junior/grade/:grade/time-goes-on/clock-time" element={<ProtectedRoute redirectTo="/login"><ClockTime /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/time-goes-on/time-durations" element={<ProtectedRoute redirectTo="/login"><TimeDurations /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/time-goes-on/chapter-test" element={<ProtectedRoute redirectTo="/login"><TimeGoesOnTest /></ProtectedRoute>} />
+
+        {/* What's in a Name? Routes */}
+        <Route path="/junior/grade/:grade/whats-in-a-name/reading-tally-marks" element={<ProtectedRoute redirectTo="/login"><ReadingTallyMarks /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/whats-in-a-name/making-tally-marks" element={<ProtectedRoute redirectTo="/login"><MakingTallyMarks /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/whats-in-a-name/missing-from-tallies" element={<ProtectedRoute redirectTo="/login"><MissingFromTallies /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/whats-in-a-name/counting-letters" element={<ProtectedRoute redirectTo="/login"><CountingLetters /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/whats-in-a-name/longest-shortest-name" element={<ProtectedRoute redirectTo="/login"><LongestShortestName /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/whats-in-a-name/number-names-letter-count" element={<ProtectedRoute redirectTo="/login"><NumberNamesLetterCount /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/whats-in-a-name/number-name-puzzles" element={<ProtectedRoute redirectTo="/login"><NumberNamePuzzles /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/whats-in-a-name/sorting-grouping" element={<ProtectedRoute redirectTo="/login"><SortingGrouping /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/whats-in-a-name/data-collection" element={<ProtectedRoute redirectTo="/login"><DataCollection /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/whats-in-a-name/chapter-test" element={<ProtectedRoute redirectTo="/login"><WINTest /></ProtectedRoute>} />
 
         {/* Toy Joy Routes */}
         <Route path="/junior/grade/:grade/toy-joy/identifying-3d-shapes" element={<ProtectedRoute redirectTo="/login"><Identifying3DShapes /></ProtectedRoute>} />
