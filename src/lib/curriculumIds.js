@@ -102,6 +102,9 @@ export const NODE_IDS = {
   g4MathShapesCircles: 'a4041005-0004-0000-0000-000000000000',
   g4MathShapesTerminologyQuiz: 'a4041005-0010-0000-0000-000000000000',
 
+  // ── GRADE 3: WHAT'S IN A NAME? (CHAPTER 1) ───────────────────────────────
+ 
+
   // ── GRADE 3: TOY-JOY (CHAPTER 1) ──────────────────────────────────────────
   g3MathToyJoy:        'a3031001-0000-0000-0000-000000000001',
   g3MathToyJoyIdentifying3D: 'a4031001-0001-0000-0000-000000000000',
@@ -1012,6 +1015,8 @@ export const SLUG_TO_NODE_ID = {
   'g4-math-shapes-angles': NODE_IDS.g4MathShapesAngles,
   'g4-math-shapes-circles': NODE_IDS.g4MathShapesCircles,
   'g4-math-shapes-terminology': NODE_IDS.g4MathShapesTerminologyQuiz,
+
+ 
 
   // GRADE 3: TOY-JOY
   'g3-math-toy-joy-identifying-3d': NODE_IDS.g3MathToyJoyIdentifying3D,
