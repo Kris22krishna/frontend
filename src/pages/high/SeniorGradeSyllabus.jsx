@@ -165,7 +165,10 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 1247, skill_name: 'Quadrilaterals: Master Hub', topic: 'Quadrilaterals', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/quadrilaterals' },
                         
                         // Circles Hub
-                        { skill_id: 1248, skill_name: 'Circles: Master Hub', topic: 'Circles', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/circles' }
+                        { skill_id: 1248, skill_name: 'Circles: Master Hub', topic: 'Circles', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/circles' },
+                        
+                        // Heron's Formula Hub
+                        { skill_id: 1249, skill_name: 'Heron\'s Formula: Master Hub', topic: 'Heron\'s Formula', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/herons-formula' }
 
                     ]);
                 } else if (grade === '8') {
