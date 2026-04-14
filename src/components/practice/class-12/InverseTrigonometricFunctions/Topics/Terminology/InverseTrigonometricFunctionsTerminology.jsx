@@ -50,6 +50,7 @@ export default function InverseTrigonometricFunctionsTerminology() {
   const [quizTotalScore, setQuizTotalScore] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
   const quizPayload = React.useRef([]);
+  const isFinishingRef = React.useRef(false);
   const { startSession, logAnswer, finishSession } = useSessionLogger();
 
   const activeTerm = TERMS[selectedIdx];
@@ -63,6 +64,7 @@ export default function InverseTrigonometricFunctionsTerminology() {
     setQuizTotalScore(0);
     setQuizFinished(false);
     quizPayload.current = [];
+    isFinishingRef.current = false;
     startSession({ nodeId: NODE_IDS.g12MathITFTerminologyQuiz, sessionType: 'practice' });
   };
 
@@ -95,6 +97,8 @@ export default function InverseTrigonometricFunctionsTerminology() {
       setQuizSelected(null);
       setQuizAnswered(false);
     } else {
+      if (isFinishingRef.current) return;
+      isFinishingRef.current = true;
       setQuizFinished(true);
       finishSession({
         totalQuestions: QUIZ.length,
@@ -150,7 +154,12 @@ export default function InverseTrigonometricFunctionsTerminology() {
         <div className="itf-tab-row">
           <button className={`itf-tab ${activeTab === "terms" ? "active" : ""}`} onClick={() => setActiveTab("terms")}>Terminology</button>
           <button className={`itf-tab ${activeTab === "rules" ? "active" : ""}`} onClick={() => setActiveTab("rules")}>Crucial Rules</button>
-          <button className={`itf-tab ${activeTab === "quiz" ? "active" : ""}`} onClick={() => { setActiveTab("quiz"); resetQuiz(); }}>Vocab Check</button>
+          <button className={`itf-tab ${activeTab === "quiz" ? "active" : ""}`} onClick={() => { 
+            if (activeTab !== "quiz") {
+              setActiveTab("quiz"); 
+              resetQuiz(); 
+            }
+          }}>Vocab Check</button>
         </div>
 
         {activeTab !== "quiz" ? (

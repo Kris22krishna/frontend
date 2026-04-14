@@ -302,6 +302,7 @@ export default function RelationsTerminology() {
     const [quizTotalScore, setQuizTotalScore] = useState(0);
     const [quizFinished, setQuizFinished] = useState(false);
     const quizPayload = React.useRef([]);
+    const isFinishingRef = React.useRef(false);
     const { startSession, logAnswer, finishSession } = useSessionLogger();
 
     const activeTerm = TERMS[selectedIdx];
@@ -315,6 +316,7 @@ export default function RelationsTerminology() {
         setQuizTotalScore(0);
         setQuizFinished(false);
         quizPayload.current = [];
+        isFinishingRef.current = false;
         startSession({ nodeId: NODE_IDS.g12MathRelationsTerminologyQuiz, sessionType: 'practice' });
     };
 
@@ -349,6 +351,8 @@ export default function RelationsTerminology() {
             setQuizSelected(null);
             setQuizAnswered(false);
         } else {
+            if (isFinishingRef.current) return;
+            isFinishingRef.current = true;
             setQuizFinished(true);
             finishSession({
               totalQuestions: VOCAB_QUIZ.length,
@@ -529,8 +533,10 @@ export default function RelationsTerminology() {
                     <button
                         className={`rel-tab ${activeTab === "quiz" ? "active" : ""}`}
                         onClick={() => {
-                          setActiveTab("quiz");
-                          resetQuiz();
+                          if (activeTab !== "quiz") {
+                            setActiveTab("quiz");
+                            resetQuiz();
+                          }
                         }}
                     >
                         Test Prep

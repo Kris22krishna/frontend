@@ -181,6 +181,7 @@ export default function FunctionsTerminology() {
   const [quizTotalScore, setQuizTotalScore] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
   const quizPayload = React.useRef([]);
+  const isFinishingRef = React.useRef(false);
   const { startSession, logAnswer, finishSession } = useSessionLogger();
 
   const activeTerm = TERMS[selectedIdx];
@@ -194,6 +195,7 @@ export default function FunctionsTerminology() {
     setQuizTotalScore(0);
     setQuizFinished(false);
     quizPayload.current = [];
+    isFinishingRef.current = false;
     startSession({ nodeId: NODE_IDS.g12MathFunctionsTerminologyQuiz, sessionType: 'practice' });
   };
 
@@ -226,6 +228,8 @@ export default function FunctionsTerminology() {
       setQuizSelected(null);
       setQuizAnswered(false);
     } else {
+      if (isFinishingRef.current) return;
+      isFinishingRef.current = true;
       setQuizFinished(true);
       finishSession({
         totalQuestions: VOCAB_QUIZ.length,
@@ -317,7 +321,12 @@ export default function FunctionsTerminology() {
         <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 16 }}>
           <button className={`rel-tab ${activeTab === "terms" ? "active" : ""}`} onClick={() => setActiveTab("terms")}>Terminology</button>
           <button className={`rel-tab ${activeTab === "rules" ? "active" : ""}`} onClick={() => setActiveTab("rules")}>Crucial Rules</button>
-          <button className={`rel-tab ${activeTab === "quiz" ? "active" : ""}`} onClick={() => { setActiveTab("quiz"); resetQuiz(); }}>Vocab Check</button>
+          <button className={`rel-tab ${activeTab === "quiz" ? "active" : ""}`} onClick={() => { 
+            if (activeTab !== "quiz") {
+              setActiveTab("quiz"); 
+              resetQuiz(); 
+            }
+          }}>Vocab Check</button>
         </div>
 
         {activeTab !== "quiz" ? (

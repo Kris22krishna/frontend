@@ -360,6 +360,7 @@ export default function MatricesTerminology() {
   const [quizTotalScore, setQuizTotalScore] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
   const quizPayload = React.useRef([]);
+  const isFinishingRef = React.useRef(false);
   const { startSession, logAnswer, finishSession } = useSessionLogger();
 
   useEffect(() => {
@@ -377,6 +378,7 @@ export default function MatricesTerminology() {
     setQuizTotalScore(0);
     setQuizFinished(false);
     quizPayload.current = [];
+    isFinishingRef.current = false;
     startSession({ nodeId: NODE_IDS.g12MathMatricesTerminologyQuiz, sessionType: 'practice' });
   };
 
@@ -411,6 +413,8 @@ export default function MatricesTerminology() {
       setQuizSelected(null);
       setQuizAnswered(false);
     } else {
+      if (isFinishingRef.current) return;
+      isFinishingRef.current = true;
       setQuizFinished(true);
       finishSession({
         totalQuestions: VOCAB_QUIZ.length,
@@ -550,8 +554,10 @@ export default function MatricesTerminology() {
           <button
             className={`mat-tab ${activeTab === "quiz" ? "active" : ""}`}
             onClick={() => {
-              setActiveTab("quiz");
-              resetQuiz();
+              if (activeTab !== "quiz") {
+                setActiveTab("quiz");
+                resetQuiz();
+              }
             }}
           >
             🧪 Test Prep

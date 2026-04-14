@@ -302,6 +302,7 @@ export default function DeterminantsTerminology() {
   const [quizTotalScore, setQuizTotalScore] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
   const quizPayload = React.useRef([]);
+  const isFinishingRef = React.useRef(false);
   const { startSession, logAnswer, finishSession } = useSessionLogger();
 
   const activeTerm = TERMS[selectedIdx];
@@ -315,6 +316,7 @@ export default function DeterminantsTerminology() {
     setQuizTotalScore(0);
     setQuizFinished(false);
     quizPayload.current = [];
+    isFinishingRef.current = false;
     startSession({ nodeId: NODE_IDS.g12MathDeterminantsTerminologyQuiz, sessionType: 'practice' });
   };
 
@@ -349,6 +351,8 @@ export default function DeterminantsTerminology() {
       setQuizSelected(null);
       setQuizAnswered(false);
     } else {
+      if (isFinishingRef.current) return;
+      isFinishingRef.current = true;
       setQuizFinished(true);
       finishSession({
         totalQuestions: VOCAB_QUIZ.length,
@@ -478,8 +482,10 @@ export default function DeterminantsTerminology() {
           <button
             className={`det-tab ${activeTab === "quiz" ? "active" : ""}`}
             onClick={() => {
-              setActiveTab("quiz");
-              resetQuiz();
+              if (activeTab !== "quiz") {
+                setActiveTab("quiz");
+                resetQuiz();
+              }
             }}
           >
             🧪 Test Prep
