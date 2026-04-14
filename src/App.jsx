@@ -508,6 +508,12 @@ import LinesAndAngles9Intro from './components/practice/class-9/lines_and_angles
 import LinesAndAngles9Terminology from './components/practice/class-9/lines_and_angles_9/Topics/Terminology/LinesAndAngles9Terminology';
 import LinesAndAngles9Skills from './components/practice/class-9/lines_and_angles_9/Topics/Skills/LinesAndAngles9Skills';
 
+// Class 9 - Circles
+import Circles9 from './components/practice/class-9/circles_9/Circles9';
+import Circles9Intro from './components/practice/class-9/circles_9/Topics/Intro/Circles9Intro';
+import Circles9Terminology from './components/practice/class-9/circles_9/Topics/Terminology/Circles9Terminology';
+import Circles9Skills from './components/practice/class-9/circles_9/Topics/Skills/Circles9Skills';
+
 // Grade 9 Triangles
 import Triangles9 from './components/practice/class-9/triangles_9/Triangles9';
 import Triangles9Intro from './components/practice/class-9/triangles_9/Topics/Intro/Triangles9Intro';
@@ -1644,6 +1650,12 @@ function App() {
           <Route path="practice/class-9/lines-and-angles/intro" element={<ProtectedRoute redirectTo="/login"><LinesAndAngles9Intro /></ProtectedRoute>} />
           <Route path="practice/class-9/lines-and-angles/terminology" element={<ProtectedRoute redirectTo="/login"><LinesAndAngles9Terminology /></ProtectedRoute>} />
           <Route path="practice/class-9/lines-and-angles/skills" element={<ProtectedRoute redirectTo="/login"><LinesAndAngles9Skills /></ProtectedRoute>} />
+
+          {/* Circles 9 */}
+          <Route path="practice/class-9/circles" element={<ProtectedRoute redirectTo="/login"><Circles9 /></ProtectedRoute>} />
+          <Route path="practice/class-9/circles/intro" element={<ProtectedRoute redirectTo="/login"><Circles9Intro /></ProtectedRoute>} />
+          <Route path="practice/class-9/circles/terminology" element={<ProtectedRoute redirectTo="/login"><Circles9Terminology /></ProtectedRoute>} />
+          <Route path="practice/class-9/circles/skills" element={<ProtectedRoute redirectTo="/login"><Circles9Skills /></ProtectedRoute>} />
 
           {/* Class 9: Triangles Routes */}
           <Route path="practice/class-9/triangles" element={<ProtectedRoute redirectTo="/login"><Triangles9 /></ProtectedRoute>} />

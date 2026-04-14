@@ -1,95 +1,172 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from '../../lines_and_angles_9.module.css';
+import styles from '../../circles_9.module.css';
 import { LatexText } from '../../../../../LatexText';
-import { AngleTypesChart, CompSuppChart, LinearPairChart, VOAChart, ParallelLinesChart, BasicEntitiesChart, AdjacentAnglesChart } from '../components/LADynamicCharts';
+
+// SVGs for Terminology
+const RadiusSVG = () => (
+    <svg viewBox="0 0 200 200" width="100%" height="200px">
+        <circle cx="100" cy="100" r="80" fill="none" stroke="#e2e8f0" strokeWidth="4" />
+        <circle cx="100" cy="100" r="4" fill="#3b82f6" />
+        <line x1="100" y1="100" x2="169.28" y2="60" stroke="#3b82f6" strokeWidth="4" />
+        <text x="130" y="70" fill="#3b82f6" fontSize="16" fontWeight="bold">Radius</text>
+        <text x="85" y="115" fill="#64748b" fontSize="14" fontWeight="bold">Center</text>
+    </svg>
+);
+
+const DiameterSVG = () => (
+    <svg viewBox="0 0 200 200" width="100%" height="200px">
+        <circle cx="100" cy="100" r="80" fill="none" stroke="#e2e8f0" strokeWidth="4" />
+        <circle cx="100" cy="100" r="4" fill="#64748b" />
+        <line x1="20" y1="100" x2="180" y2="100" stroke="#f59e0b" strokeWidth="4" />
+        <text x="75" y="90" fill="#f59e0b" fontSize="16" fontWeight="bold">Diameter</text>
+    </svg>
+);
+
+const ChordSVG = () => (
+    <svg viewBox="0 0 200 200" width="100%" height="200px">
+        <circle cx="100" cy="100" r="80" fill="none" stroke="#e2e8f0" strokeWidth="4" />
+        <circle cx="100" cy="100" r="4" fill="#64748b" />
+        <line x1="30" y1="60" x2="170" y2="60" stroke="#10b981" strokeWidth="4" />
+        <text x="100" y="50" fill="#10b981" fontSize="16" fontWeight="bold" textAnchor="middle">Chord</text>
+    </svg>
+);
+
+const ArcSVG = () => (
+    <svg viewBox="0 0 200 200" width="100%" height="200px">
+        <circle cx="100" cy="100" r="80" fill="none" stroke="#f1f5f9" strokeWidth="4" />
+        <path d="M 43.43 43.43 A 80 80 0 0 1 156.57 43.43" fill="none" stroke="#8b5cf6" strokeWidth="6" />
+        <text x="100" y="25" fill="#8b5cf6" fontSize="16" fontWeight="bold" textAnchor="middle">Minor Arc</text>
+        <path d="M 156.57 43.43 A 80 80 0 1 1 43.43 43.43" fill="none" stroke="#ec4899" strokeWidth="6" />
+        <text x="100" y="195" fill="#ec4899" fontSize="16" fontWeight="bold" textAnchor="middle">Major Arc</text>
+    </svg>
+);
+
+const SegmentSVG = () => (
+    <svg viewBox="0 0 200 200" width="100%" height="200px">
+        <circle cx="100" cy="100" r="80" fill="#fce7f3" stroke="#e2e8f0" strokeWidth="4" />
+        <path d="M 30 60 A 80 80 0 0 1 170 60 Z" fill="#d8b4fe" />
+        <line x1="30" y1="60" x2="170" y2="60" stroke="#8b5cf6" strokeWidth="4" />
+        <text x="100" y="45" fill="#581c87" fontSize="14" fontWeight="bold" textAnchor="middle">Minor Segment</text>
+        <text x="100" y="130" fill="#9d174d" fontSize="16" fontWeight="bold" textAnchor="middle">Major Segment</text>
+    </svg>
+);
+
+const SectorSVG = () => (
+    <svg viewBox="0 0 200 200" width="100%" height="200px">
+        <circle cx="100" cy="100" r="80" fill="#fef3c7" stroke="#e2e8f0" strokeWidth="4" />
+        <path d="M 100 100 L 43.43 43.43 A 80 80 0 0 1 156.57 43.43 Z" fill="#bbf7d0" />
+        <text x="100" y="65" fill="#166534" fontSize="14" fontWeight="bold" textAnchor="middle">Minor Sector</text>
+        <text x="100" y="150" fill="#92400e" fontSize="16" fontWeight="bold" textAnchor="middle">Major Sector</text>
+    </svg>
+);
+
+const SubtendedAngleSVG = () => (
+    <svg viewBox="0 0 200 200" width="100%" height="200px">
+        <circle cx="100" cy="100" r="80" fill="none" stroke="#e2e8f0" strokeWidth="4" />
+        <circle cx="100" cy="100" r="4" fill="#64748b" />
+        {/* Chord */}
+        <line x1="30" y1="134.64" x2="170" y2="134.64" stroke="#64748b" strokeWidth="2" strokeDasharray="4 4" />
+        {/* Subtended to center */}
+        <line x1="100" y1="100" x2="30" y2="134.64" stroke="#3b82f6" strokeWidth="3" />
+        <line x1="100" y1="100" x2="170" y2="134.64" stroke="#3b82f6" strokeWidth="3" />
+        {/* Angle arc */}
+        <path d="M 90 105 A 15 15 0 0 0 110 105" fill="none" stroke="#3b82f6" strokeWidth="2" />
+        <text x="100" y="85" fill="#3b82f6" fontSize="12" fontWeight="bold" textAnchor="middle">Angle Subtended</text>
+        <text x="100" y="150" fill="#64748b" fontSize="12" fontWeight="bold" textAnchor="middle">by Chord</text>
+    </svg>
+);
+
+const CyclicQuadSVG = () => (
+    <svg viewBox="0 0 200 200" width="100%" height="200px">
+        <circle cx="100" cy="100" r="80" fill="none" stroke="#e2e8f0" strokeWidth="4" />
+        {/* Points on circle */}
+        <polygon points="40,47 160,47 175,127 60,169" fill="#fef3c7" stroke="#f59e0b" strokeWidth="3" />
+        <circle cx="40" cy="47" r="4" fill="#d97706" />
+        <circle cx="160" cy="47" r="4" fill="#d97706" />
+        <circle cx="175" cy="127" r="4" fill="#d97706" />
+        <circle cx="60" cy="169" r="4" fill="#d97706" />
+    </svg>
+);
 
 // ─── TERMS DATA ──────────────────────────────────────────────────────────────
-const TERMS = [
+const KEY_TERMS = [
     {
-        name: 'Line, Ray & Segment',
+        name: 'Radius & Center',
         icon: '📏',
         color: '#0f4c81',
-        chart: BasicEntitiesChart,
-        def: 'The fundamental 1D building blocks of geometry.\n\n• Line: Extends infinitely in both directions $\\overleftrightarrow{AB}$\n• Ray: Starts at a point and extends infinitely $\\overrightarrow{AB}$\n• Segment: Has two fixed endpoints $\\overline{AB}$',
-        example: 'A laser beam is a real-world ray.',
-        realWorld: 'A continuous road could be seen as a line, while the distance between two toll booths is a segment.',
+        chart: RadiusSVG,
+        def: 'The distance from the center of the circle to any point on its boundary.\n\n• Center: The fixed point in the middle.\n• Radius: A line segment from the center to the boundary.',
+        example: 'If the radius is $5\\text{ cm}$, any line from the center to the edge is $5\\text{ cm}$.',
+        realWorld: 'The spokes on a bicycle wheel or a tetherball attached to a pole.',
     },
     {
-        name: 'Types of Angles',
-        icon: '📐',
+        name: 'Diameter & Chord',
+        icon: '➖',
         color: '#1a237e',
-        chart: AngleTypesChart,
-        def: 'Angles are classified by their degree measurement.\n\n• Acute: $0^{\\circ} < x < 90^{\\circ}$\n• Right: Exactly $90^{\\circ}$\n• Obtuse: $90^{\\circ} < x < 180^{\\circ}$\n• Straight: Exactly $180^{\\circ}$\n• Reflex: $180^{\\circ} < x < 360^{\\circ}$',
-        example: 'An angle measuring $45^\\circ$ is acute, while $135^\\circ$ is obtuse.',
-        realWorld: 'A pizza slice is often an acute angle, while the corner of a rectangular room is a right angle.',
+        chart: DiameterSVG,
+        def: 'Line segments connecting two points on the circle.\n\n• Chord: A segment whose endpoints lie on the circle.\n• Diameter: The longest chord, which passes exactly through the center. $d = 2r$.',
+        example: 'A circle with radius $3\\text{ cm}$ has a diameter of $6\\text{ cm}$.',
+        realWorld: 'Cutting a pizza straight down the middle represents the diameter.',
     },
     {
-        name: 'Angle Pair Relationships',
-        icon: '🔄',
+        name: 'Arc',
+        icon: '🌈',
         color: '#b71c1c',
-        chart: CompSuppChart,
-        def: 'Pairs of angles whose measures add up to a specific sum.\n\n• Complementary: Two angles summing to $90^{\\circ}$\n• Supplementary: Two angles summing to $180^{\\circ}$\nAngles do not need to be adjacent to be complementary/supplementary.',
-        example: 'If an angle is $30^\\circ$, its complement is $60^\\circ$. If an angle is $100^\\circ$, its supplement is $80^\\circ$.',
-        realWorld: 'Cutting a rectangular sandwich into two triangles divides a $90^\\circ$ angle into complementary angles.',
+        chart: ArcSVG,
+        def: 'A continuous piece of the circle\'s boundary.\n\n• Minor Arc: The shorter distance between two points on the boundary.\n• Major Arc: The longer distance around the boundary.',
+        example: 'A semi-circle is an arc that is exactly half of the circle.',
+        realWorld: 'A rainbow forms the shape of an arc.',
     },
     {
-        name: 'Adjacent Angles',
-        icon: '🤝',
+        name: 'Segment',
+        icon: '🧀',
         color: '#6a1b9a',
-        chart: AdjacentAnglesChart,
-        def: 'Neighboring angles that share roots but do not overlap.\n\n• Must have: A common vertex\n• Must have: A common arm separating them\n• Must NOT have: Overlapping interior areas',
-        example: 'Two slices of a pie next to each other sharing a common cut line.',
-        realWorld: 'The adjacent sides of a picture frame.',
+        chart: SegmentSVG,
+        def: 'The region bounded by a chord and an arc.\n\n• Minor Segment: The smaller area cut off by a chord.\n• Major Segment: The larger remaining area.',
+        example: 'Cutting across a circular cake without going through the middle produces a minor and major segment.',
+        realWorld: 'A crescent moon resembles a curved segment.',
     },
     {
-        name: 'Linear Pair',
-        icon: '↔️',
+        name: 'Sector',
+        icon: '🍕',
         color: '#e65100',
-        chart: LinearPairChart,
-        def: 'Adjacent angles whose non-common arms form a straight line.\n\n• If a ray stands on a line, the sum of adjacent angles is $180^{\\circ}$ (Axiom 6.1)\n• Therefore, a Linear Pair is always supplementary.',
-        example: 'Angles measuring $120^\\circ$ and $60^\\circ$ side-by-side to make a flat straight line.',
-        realWorld: 'A pendulum forming two angles with a horizontal surface.',
-    },
-    {
-        name: 'Vertically Opposite Angles (VOA)',
-        icon: '✂️',
-        color: '#0f766e',
-        chart: VOAChart,
-        def: 'Angles opposite each other when two lines intersect.\n\n• They share a vertex but no arms.\n• Theorem 6.1: If two lines intersect, vertically opposite angles are equal.',
-        example: 'If two intersecting lines create a $40^\\circ$ angle, the angle directly opposite to it is also $40^\\circ$.',
-        realWorld: 'An open pair of scissors creates equal vertically opposite angles.',
+        chart: SectorSVG,
+        def: 'The region bounded by two radii and an arc.\n\n• Minor Sector: The smaller "slice".\n• Major Sector: The rest of the circle.',
+        example: 'A $90^{\\circ}$ angle at the center creates a sector that is $1/4$ of the circle.',
+        realWorld: 'A standard slice of pizza or pie is a sector.',
     }
 ];
 
 // ─── KEY IDEAS DATA ──────────────────────────────────────────────────────────
 const KEY_IDEAS = [
     {
-        title: 'Axioms vs Theorems',
-        icon: '🏛️',
-        color: '#0f4c81',
+        title: 'Angles & Chords',
+        icon: '📐',
+        color: '#0f766e',
         rules: [
             {
-                title: 'Definitions',
-                f: '$\\text{Axiom } \\neq \\text{ Theorem}$',
-                d: 'An Axiom is a basic fact we assume to be true without proof. A Theorem is a statement derived and proven using logic and axioms.',
-                tip: 'Think of Axioms as the rules of a game, and Theorems as the strategies proven to work.',
-                ex: 'Axiom: Linear Pair Axiom (Axiom 6.1)\nTheorem: VOA Theorem (Theorem 6.1)'
+                title: 'Angle Subtended by a Chord',
+                chart: SubtendedAngleSVG,
+                f: '$\\text{Equal chords subtend equal angles at the center}$',
+                d: 'When you draw lines from the ends of a chord to a specific point (like the center), the angle formed is the "subtended" angle.\nIf two chords are equal in length, they will subtend the exact same angle at the center of the circle.',
+                tip: 'Always trace the lines back from the angle vertex to see which chord or arc created it.',
+                ex: 'If chord $AB = 5\\text{ cm}$ and chord $CD = 5\\text{ cm}$, the angle they make at the center will be identical.'
             }
         ]
     },
     {
-        title: 'Parallel Lines & Transversal',
-        icon: '📏',
+        title: 'Cyclic Quadrilaterals',
+        icon: '🔳',
         color: '#b71c1c',
         rules: [
             {
-                title: 'Transversal Angles',
-                chart: ParallelLinesChart,
-                f: '$\\text{Parallel lines crossed by a transversal}$',
-                d: 'A transversal is a line that intersects two or more lines at distinct points.\n• Corresponding Angles: Same relative position (Equal)\n• Alternate Interior: Opposite sides, between lines (Equal)\n• Co-interior Angles: Same side, between lines (Sum to $180^{\\circ}$)',
-                tip: 'Look for F (Corresponding), Z (Alternate), and C (Co-interior) letter shapes.',
-                ex: 'If two parallel lines are crossed by a transversal and one interior angle is $50^\\circ$, its alternate interior angle is also $50^\\circ$.'
+                title: 'Opposite Angles Sum',
+                chart: CyclicQuadSVG,
+                f: '$\\angle A + \\angle C = 180^{\\circ}$',
+                d: 'A cyclic quadrilateral is a 4-sided shape where all 4 corners touch the boundary of the same circle.\nThe sum of either pair of opposite angles is always $180^{\\circ}$.',
+                tip: 'If it doesn\'t touch the boundary at all 4 points, it\'s NOT a cyclic quadrilateral!',
+                ex: 'If the bottom-left angle is $60^{\\circ}$, the top-right opposite angle must be $120^{\\circ}$.'
             }
         ]
     }
@@ -98,34 +175,34 @@ const KEY_IDEAS = [
 // ─── QUIZ (Test Prep) ────────────────────────────────────────────────────────
 const QUIZ_QUESTIONS = [
     {
-        q: 'If two angles sum to $90^{\\circ}$, what are they called?',
-        opts: ['Supplementary', 'Complementary', 'Reflex', 'Adjacent'],
+        q: 'What is the longest chord of a circle?',
+        opts: ['Radius', 'Diameter', 'Arc', 'Sector'],
         ans: 1,
-        exp: 'Complementary angles add up to exactly $90^{\\circ}$.'
+        exp: 'The diameter is a chord that passes through the center, making it the longest possible chord.'
     },
     {
-        q: 'What is the measure of a straight angle?',
-        opts: ['$90^{\\circ}$', '$180^{\\circ}$', '$360^{\\circ}$', '$270^{\\circ}$'],
+        q: 'The region bounded by two radii and an arc is called a...',
+        opts: ['Sector', 'Segment', 'Chord', 'Semicircle'],
+        ans: 0,
+        exp: 'Like a slice of pizza, a region bounded by two radii and an arc is a Sector.'
+    },
+    {
+        q: 'If the radius of a circle is $7\\text{ cm}$, what is its diameter?',
+        opts: ['$3.5\\text{ cm}$', '$14\\text{ cm}$', '$21\\text{ cm}$', '$49\\text{ cm}$'],
         ans: 1,
-        exp: 'A straight line forms an angle of $180^{\\circ}$.'
+        exp: 'The diameter is exactly twice the radius ($d = 2r = 2 \\times 7 = 14$).'
     },
     {
-        q: 'Theorem 6.1 states that if two lines intersect, the vertically opposite angles are...',
-        opts: ['Complementary', 'Supplementary', 'Equal', 'Unequal'],
-        ans: 2,
-        exp: 'Vertically opposite angles in intersecting lines are always equal to each other.'
-    },
-    {
-        q: 'Two co-interior angles on the same side of a transversal are $x$ and $2x$. What is $x$ if the lines are parallel?',
-        opts: ['$45^{\\circ}$', '$60^{\\circ}$', '$90^{\\circ}$', '$120^{\\circ}$'],
+        q: 'What is the sum of opposite angles in a cyclic quadrilateral?',
+        opts: ['$90^{\\circ}$', '$180^{\\circ}$', '$270^{\\circ}$', '$360^{\\circ}$'],
         ans: 1,
-        exp: 'Co-interior angles are supplementary ($180^{\\circ}$). So $x + 2x = 180 \\implies 3x = 180 \\implies x = 60^{\\circ}$.'
+        exp: 'In a cyclic quadrilateral, the sum of either pair of opposite angles is ALWAYS $180^{\\circ}$.'
     },
     {
-        q: 'An angle measures $120^{\\circ}$. What type of angle is it?',
-        opts: ['Acute', 'Right', 'Obtuse', 'Reflex'],
-        ans: 2,
-        exp: 'An obtuse angle is greater than $90^{\\circ}$ but less than $180^{\\circ}$.'
+        q: 'A continuous piece of the circle\'s boundary is called an...',
+        opts: ['Arc', 'Area', 'Angle', 'Axiom'],
+        ans: 0,
+        exp: 'An arc is a part of the circumference (the outer boundary) of a circle.'
     }
 ];
 
@@ -180,7 +257,7 @@ function QuizEngine({ onBack }) {
                 </div>
                 <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 28, fontWeight: 900, color: '#0f172a', margin: '0 0 8px' }}>{msg}</h2>
                 <p style={{ color: '#64748b', fontSize: 15, margin: '0 0 32px' }}>
-                    {pct >= 75 ? 'Great understanding of Lines and Angles vocabulary!' : 'Review the terms and try again for a higher score.'}
+                    {pct >= 75 ? 'Great understanding of Circles vocabulary!' : 'Review the terms and try again for a higher score.'}
                 </p>
                 <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
                     <button className={styles['btn-primary']} onClick={() => { quizAnswersRef.current = []; setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false); }}>
@@ -247,7 +324,7 @@ function QuizEngine({ onBack }) {
 }
 
 // ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
-export default function LinesAndAngles9Terminology() {
+export default function Circles9Terminology() {
     const navigate = useNavigate();
     const [tab, setTab] = useState('terms');
     const [activeTerm, setActiveTerm] = useState(0);
@@ -263,16 +340,16 @@ export default function LinesAndAngles9Terminology() {
     ];
 
     return (
-        <div className={styles['page']} style={window.innerWidth > 900 ? { height: 'calc(100vh - 140px)', display: 'flex', flexDirection: 'column', overflow: 'hidden' } : { display: 'flex', flexDirection: 'column' }}>
+        <div className={styles['page']}>
             {/* ── TOP NAV ─────────────────────────────────── */}
             <nav className={styles['nav']} style={{ position: 'sticky', top: 0, zIndex: 100 }}>
-                <button className={styles['nav-back']} onClick={() => navigate('/practice/class-9/lines-and-angles')}>
+                <button className={styles['nav-back']} onClick={() => navigate('/practice/class-9/circles')}>
                     ← Back to Module
                 </button>
                 <div className={styles['nav-links']}>
-                    <button className={styles['nav-link']} onClick={() => navigate('/practice/class-9/lines-and-angles/intro')}>🌟 Introduction</button>
+                    <button className={styles['nav-link']} onClick={() => navigate('/practice/class-9/circles/intro')}>🌟 Introduction</button>
                     <button className={`${styles['nav-link']} ${styles['nav-link--active']}`}>📖 Terminology</button>
-                    <button className={styles['nav-link']} onClick={() => navigate('/practice/class-9/lines-and-angles/skills')}>🎯 Skills</button>
+                    <button className={styles['nav-link']} onClick={() => navigate('/practice/class-9/circles/skills')}>🎯 Skills</button>
                 </div>
             </nav>
 
@@ -280,7 +357,7 @@ export default function LinesAndAngles9Terminology() {
                 {/* ── HEADER ──────────────────────────────────── */}
                 <div style={{ padding: '10px 12px 10px', textAlign: 'center' }}>
                     <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 900, color: '#0f172a', margin: '0 0 10px' }}>
-                        Lines & Angles{' '}
+                        Circles{' '}
                         <span style={{ background: 'linear-gradient(90deg,#0f4c81,#6a1b9a)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Vocabulary</span>
                     </h1>
                 </div>
@@ -300,7 +377,7 @@ export default function LinesAndAngles9Terminology() {
                     <div className={styles['section']}>
                         <div className={styles['learn-grid']}>
                             <aside className={styles['learn-sidebar']}>
-                                {TERMS.map((t, i) => (
+                                {KEY_TERMS.map((t, i) => (
                                     <button key={i} onClick={() => setActiveTerm(i)}
                                         className={`${styles['sidebar-btn']} ${activeTerm === i ? styles['active'] : ''}`}
                                         style={{ '--skill-color': t.color }}>
@@ -310,25 +387,25 @@ export default function LinesAndAngles9Terminology() {
                                 ))}
                             </aside>
 
-                            <main key={activeTerm} className={`${styles['details-window']} ${styles['details-window-anim']}`} style={{ border: `2px solid ${TERMS[activeTerm].color}15` }}>
+                            <main key={activeTerm} className={`${styles['details-window']} ${styles['details-window-anim']}`} style={{ border: `2px solid ${KEY_TERMS[activeTerm].color}15` }}>
                                 <div className={styles['learn-header-row']}>
                                     <div>
-                                        <h3 style={{ margin: '0 0 4px', fontSize: 26, fontWeight: 900, color: TERMS[activeTerm].color }}>{TERMS[activeTerm].name}</h3>
-                                        <div style={{ fontSize: 13, fontWeight: 700, color: '#64748b' }}>TERM {activeTerm + 1} OF {TERMS.length}</div>
+                                        <h3 style={{ margin: '0 0 4px', fontSize: 26, fontWeight: 900, color: KEY_TERMS[activeTerm].color }}>{KEY_TERMS[activeTerm].name}</h3>
+                                        <div style={{ fontSize: 13, fontWeight: 700, color: '#64748b' }}>TERM {activeTerm + 1} OF {KEY_TERMS.length}</div>
                                     </div>
-                                    <div style={{ fontSize: 36 }}>{TERMS[activeTerm].icon}</div>
+                                    <div style={{ fontSize: 36 }}>{KEY_TERMS[activeTerm].icon}</div>
                                 </div>
 
-                                <div style={{ background: `${TERMS[activeTerm].color}05`, padding: 24, borderRadius: 16, border: `2px solid ${TERMS[activeTerm].color}15`, marginBottom: 24 }}>
+                                <div style={{ background: `${KEY_TERMS[activeTerm].color}05`, padding: 24, borderRadius: 16, border: `2px solid ${KEY_TERMS[activeTerm].color}15`, marginBottom: 24 }}>
                                     <div style={{ margin: 0, fontSize: 15.5, lineHeight: 1.75, color: '#0f172a', whiteSpace: 'pre-line' }}>
-                                        <LatexText text={TERMS[activeTerm].def} />
+                                        <LatexText text={KEY_TERMS[activeTerm].def} />
                                     </div>
                                 </div>
 
                                 {/* Animated Chart Illustration */}
-                                {TERMS[activeTerm].chart && (
+                                {KEY_TERMS[activeTerm].chart && (
                                     <div style={{ marginBottom: 24, padding: 16, background: '#f8fafc', borderRadius: 16, display: 'flex', justifyContent: 'center' }}>
-                                        {React.createElement(TERMS[activeTerm].chart)}
+                                        {React.createElement(KEY_TERMS[activeTerm].chart)}
                                     </div>
                                 )}
 
@@ -337,24 +414,24 @@ export default function LinesAndAngles9Terminology() {
                                         <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: '#64748b', marginBottom: 10 }}>Example</h4>
                                         <div style={{ background: '#f8fafc', padding: 20, borderRadius: 16, border: '1px solid rgba(0,0,0,0.04)' }}>
                                             <div style={{ margin: 0, fontSize: 15, lineHeight: 1.65, color: '#0f172a', whiteSpace: 'pre-line' }}>
-                                                <LatexText text={TERMS[activeTerm].example} />
+                                                <LatexText text={KEY_TERMS[activeTerm].example} />
                                             </div>
                                         </div>
                                     </div>
                                     <div>
-                                        <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: TERMS[activeTerm].color, marginBottom: 10 }}>Real World</h4>
-                                        <div style={{ background: `${TERMS[activeTerm].color}05`, padding: 20, borderRadius: 16, border: `2px solid ${TERMS[activeTerm].color}15` }}>
+                                        <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: KEY_TERMS[activeTerm].color, marginBottom: 10 }}>Real World</h4>
+                                        <div style={{ background: `${KEY_TERMS[activeTerm].color}05`, padding: 20, borderRadius: 16, border: `2px solid ${KEY_TERMS[activeTerm].color}15` }}>
                                             <div style={{ margin: 0, fontSize: 15, lineHeight: 1.65, color: '#0f172a' }}>
-                                                <LatexText text={TERMS[activeTerm].realWorld} />
+                                                <LatexText text={KEY_TERMS[activeTerm].realWorld} />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className={styles['learn-footer']}>
-                                    <button className={styles['btn-primary']} onClick={() => setTab('quiz')}>Ready for the Quiz? →</button>
-                                    <button className={styles['nav-back']} onClick={() => setActiveTerm((activeTerm + 1) % TERMS.length)}>
-                                        Next: {TERMS[(activeTerm + 1) % TERMS.length].name}
+                                    <button className={styles['btn-primary']} onClick={() => setTab('ideas')}>Ready for Key Ideas? →</button>
+                                    <button className={styles['nav-back']} onClick={() => setActiveTerm((activeTerm + 1) % KEY_TERMS.length)}>
+                                        Next: {KEY_TERMS[(activeTerm + 1) % KEY_TERMS.length].name}
                                     </button>
                                 </div>
                             </main>

@@ -162,7 +162,10 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 1246, skill_name: 'Triangles: Master Hub', topic: 'Triangles', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/triangles' },
 
                         // Quadrilaterals Hub
-                        { skill_id: 1247, skill_name: 'Quadrilaterals: Master Hub', topic: 'Quadrilaterals', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/quadrilaterals' }
+                        { skill_id: 1247, skill_name: 'Quadrilaterals: Master Hub', topic: 'Quadrilaterals', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/quadrilaterals' },
+                        
+                        // Circles Hub
+                        { skill_id: 1248, skill_name: 'Circles: Master Hub', topic: 'Circles', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/circles' }
 
                     ]);
                 } else if (grade === '8') {
