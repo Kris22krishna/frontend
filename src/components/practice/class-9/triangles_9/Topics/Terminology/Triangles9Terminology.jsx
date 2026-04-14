@@ -1,95 +1,87 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from '../../lines_and_angles_9.module.css';
+import styles from '../../triangles_9.module.css';
 import { LatexText } from '../../../../../LatexText';
-import { AngleTypesChart, CompSuppChart, LinearPairChart, VOAChart, ParallelLinesChart, BasicEntitiesChart, AdjacentAnglesChart } from '../components/LADynamicCharts';
+import { SASChart, SSSChart, ASAChart, RHSChart, CongruenceChart, CPCTChart, IsoscelesChart, EquilateralChart } from '../components/TrianglesDynamicCharts';
 
 // ─── TERMS DATA ──────────────────────────────────────────────────────────────
 const TERMS = [
     {
-        name: 'Line, Ray & Segment',
-        icon: '📏',
-        color: '#0f4c81',
-        chart: BasicEntitiesChart,
-        def: 'The fundamental 1D building blocks of geometry.\n\n• Line: Extends infinitely in both directions $\\overleftrightarrow{AB}$\n• Ray: Starts at a point and extends infinitely $\\overrightarrow{AB}$\n• Segment: Has two fixed endpoints $\\overline{AB}$',
-        example: 'A laser beam is a real-world ray.',
-        realWorld: 'A continuous road could be seen as a line, while the distance between two toll booths is a segment.',
-    },
-    {
-        name: 'Types of Angles',
+        name: 'Congruence of Triangles',
         icon: '📐',
+        color: '#0f4c81',
+        chart: CongruenceChart,
+        def: 'Two triangles are congruent if and only if one of them can be made to superpose on the other so as to cover it exactly.\n\n• They have the exact same shape and size.\n• All corresponding sides are equal.\n• All corresponding angles are equal.',
+        example: 'If $\\triangle ABC \\cong \\triangle PQR$, then side $AB = PQ$, $BC = QR$, $AC = PR$ and $\\angle A = \\angle P$, $\\angle B = \\angle Q$, $\\angle C = \\angle R$.',
+        realWorld: 'Two copies of the exact same photograph printed at 4x6 dimensions.',
+    },
+    {
+        name: 'CPCT',
+        icon: '🔗',
         color: '#1a237e',
-        chart: AngleTypesChart,
-        def: 'Angles are classified by their degree measurement.\n\n• Acute: $0^{\\circ} < x < 90^{\\circ}$\n• Right: Exactly $90^{\\circ}$\n• Obtuse: $90^{\\circ} < x < 180^{\\circ}$\n• Straight: Exactly $180^{\\circ}$\n• Reflex: $180^{\\circ} < x < 360^{\\circ}$',
-        example: 'An angle measuring $45^\\circ$ is acute, while $135^\\circ$ is obtuse.',
-        realWorld: 'A pizza slice is often an acute angle, while the corner of a rectangular room is a right angle.',
+        chart: CPCTChart,
+        def: 'CPCT stands for "Corresponding Parts of Congruent Triangles".\n\n• Once two triangles are proven congruent, their remaining matching parts automatically become equal.\n• We use CPCT in proofs to state that an unknown side or measuring angle is equal to its pair.',
+        example: 'If you prove $\\triangle XYZ \\cong \\triangle LMN$ using just SAS, you can then say $\\angle Y = \\angle M$ by CPCT.',
+        realWorld: 'If two cars are exactly the same model (congruent), their steering wheels (corresponding parts) must be identical.',
     },
     {
-        name: 'Angle Pair Relationships',
-        icon: '🔄',
+        name: 'Isosceles Triangle Properties',
+        icon: '🔺',
         color: '#b71c1c',
-        chart: CompSuppChart,
-        def: 'Pairs of angles whose measures add up to a specific sum.\n\n• Complementary: Two angles summing to $90^{\\circ}$\n• Supplementary: Two angles summing to $180^{\\circ}$\nAngles do not need to be adjacent to be complementary/supplementary.',
-        example: 'If an angle is $30^\\circ$, its complement is $60^\\circ$. If an angle is $100^\\circ$, its supplement is $80^\\circ$.',
-        realWorld: 'Cutting a rectangular sandwich into two triangles divides a $90^\\circ$ angle into complementary angles.',
+        chart: IsoscelesChart,
+        def: 'An isosceles triangle has two sides of equal length.\n\n• Theorem 7.2: Angles opposite to equal sides of an isosceles triangle are equal.\n• Theorem 7.3 (Converse): The sides opposite to equal angles of a triangle are equal.',
+        example: 'If in $\\triangle ABC$, $AB = AC$, then $\\angle B = \\angle C$.',
+        realWorld: 'A standard roof truss forms an isosceles triangle to evenly distribute the weight to the walls.',
     },
     {
-        name: 'Adjacent Angles',
-        icon: '🤝',
+        name: 'Equilateral Triangle Properties',
+        icon: '💠',
         color: '#6a1b9a',
-        chart: AdjacentAnglesChart,
-        def: 'Neighboring angles that share roots but do not overlap.\n\n• Must have: A common vertex\n• Must have: A common arm separating them\n• Must NOT have: Overlapping interior areas',
-        example: 'Two slices of a pie next to each other sharing a common cut line.',
-        realWorld: 'The adjacent sides of a picture frame.',
-    },
-    {
-        name: 'Linear Pair',
-        icon: '↔️',
-        color: '#e65100',
-        chart: LinearPairChart,
-        def: 'Adjacent angles whose non-common arms form a straight line.\n\n• If a ray stands on a line, the sum of adjacent angles is $180^{\\circ}$ (Axiom 6.1)\n• Therefore, a Linear Pair is always supplementary.',
-        example: 'Angles measuring $120^\\circ$ and $60^\\circ$ side-by-side to make a flat straight line.',
-        realWorld: 'A pendulum forming two angles with a horizontal surface.',
-    },
-    {
-        name: 'Vertically Opposite Angles (VOA)',
-        icon: '✂️',
-        color: '#0f766e',
-        chart: VOAChart,
-        def: 'Angles opposite each other when two lines intersect.\n\n• They share a vertex but no arms.\n• Theorem 6.1: If two lines intersect, vertically opposite angles are equal.',
-        example: 'If two intersecting lines create a $40^\\circ$ angle, the angle directly opposite to it is also $40^\\circ$.',
-        realWorld: 'An open pair of scissors creates equal vertically opposite angles.',
+        chart: EquilateralChart,
+        def: 'A triangle where all three sides are equal.\n\n• All three internal angles are also equal.\n• Since the sum of angles is $180^{\\circ}$, each angle strictly measures $60^{\\circ}$.',
+        example: 'Every angle in an equilateral triangle is exactly $60^{\\circ}$.',
+        realWorld: 'A classic "Yield" traffic sign.',
     }
 ];
 
 // ─── KEY IDEAS DATA ──────────────────────────────────────────────────────────
 const KEY_IDEAS = [
     {
-        title: 'Axioms vs Theorems',
-        icon: '🏛️',
-        color: '#0f4c81',
-        rules: [
-            {
-                title: 'Definitions',
-                f: '$\\text{Axiom } \\neq \\text{ Theorem}$',
-                d: 'An Axiom is a basic fact we assume to be true without proof. A Theorem is a statement derived and proven using logic and axioms.',
-                tip: 'Think of Axioms as the rules of a game, and Theorems as the strategies proven to work.',
-                ex: 'Axiom: Linear Pair Axiom (Axiom 6.1)\nTheorem: VOA Theorem (Theorem 6.1)'
-            }
-        ]
-    },
-    {
-        title: 'Parallel Lines & Transversal',
+        title: 'Congruence Criteria',
         icon: '📏',
-        color: '#b71c1c',
+        color: '#0f766e',
         rules: [
             {
-                title: 'Transversal Angles',
-                chart: ParallelLinesChart,
-                f: '$\\text{Parallel lines crossed by a transversal}$',
-                d: 'A transversal is a line that intersects two or more lines at distinct points.\n• Corresponding Angles: Same relative position (Equal)\n• Alternate Interior: Opposite sides, between lines (Equal)\n• Co-interior Angles: Same side, between lines (Sum to $180^{\\circ}$)',
-                tip: 'Look for F (Corresponding), Z (Alternate), and C (Co-interior) letter shapes.',
-                ex: 'If two parallel lines are crossed by a transversal and one interior angle is $50^\\circ$, its alternate interior angle is also $50^\\circ$.'
+                title: 'SAS Axiom',
+                chart: SASChart,
+                f: '$\\text{Side - Angle - Side}$',
+                d: 'Two triangles are congruent if two sides and the included angle of one triangle are equal to the two sides and the included angle of the other triangle.',
+                tip: 'The angle MUST be sandwiched directly between the two known equal sides!',
+                ex: 'In $\\triangle ABC$ and $\\triangle DEF$, if $AB = DE$, $\\angle B = \\angle E$, and $BC = EF$, then $\\triangle ABC \\cong \\triangle DEF$.'
+            },
+            {
+                title: 'ASA/AAS Theorem',
+                chart: ASAChart,
+                f: '$\\text{Angle - Side - Angle}$',
+                d: 'Two triangles are congruent if two angles and the included side of one triangle are equal to two angles and the included side of the other.',
+                tip: 'AAS (Angle-Angle-Side) also works because if two angles are equal, the third angle matches automatically due to the $180^{\\circ}$ rule.',
+                ex: 'In $\\triangle ABC$ and $\\triangle DEF$, if $\\angle B = \\angle E$, $BC = EF$, and $\\angle C = \\angle F$, they are congruent (ASA).'
+            },
+            {
+                title: 'SSS Theorem',
+                chart: SSSChart,
+                f: '$\\text{Side - Side - Side}$',
+                d: 'If three sides of one triangle are equal to the three sides of another triangle, then the two triangles are congruent.',
+                tip: 'You do not need to know a single angle measurement if all three side lengths match!',
+                ex: 'If $AB=PQ$, $BC=QR$, and $AC=PR$, then $\\triangle ABC \\cong \\triangle PQR$.'
+            },
+            {
+                title: 'RHS Theorem',
+                chart: RHSChart,
+                f: '$\\text{Right Angle - Hypotenuse - Side}$',
+                d: 'If in two right triangles the hypotenuse and one side of one triangle are equal to the hypotenuse and one side of the other triangle, then the two triangles are congruent.',
+                tip: 'RHS only applies to triangles containing a $90^{\\circ}$ angle.',
+                ex: 'In right triangles $\\triangle ABC$ and $\\triangle DEF$ (right angled at B and E), if hypotenuse $AC = DF$ and side $AB = DE$, they are congruent.'
             }
         ]
     }
@@ -98,34 +90,34 @@ const KEY_IDEAS = [
 // ─── QUIZ (Test Prep) ────────────────────────────────────────────────────────
 const QUIZ_QUESTIONS = [
     {
-        q: 'If two angles sum to $90^{\\circ}$, what are they called?',
-        opts: ['Supplementary', 'Complementary', 'Reflex', 'Adjacent'],
-        ans: 1,
-        exp: 'Complementary angles add up to exactly $90^{\\circ}$.'
-    },
-    {
-        q: 'What is the measure of a straight angle?',
-        opts: ['$90^{\\circ}$', '$180^{\\circ}$', '$360^{\\circ}$', '$270^{\\circ}$'],
-        ans: 1,
-        exp: 'A straight line forms an angle of $180^{\\circ}$.'
-    },
-    {
-        q: 'Theorem 6.1 states that if two lines intersect, the vertically opposite angles are...',
-        opts: ['Complementary', 'Supplementary', 'Equal', 'Unequal'],
+        q: 'Which of the following is NOT a valid congruence criterion for triangles?',
+        opts: ['SAS', 'ASA', 'SSA', 'SSS'],
         ans: 2,
-        exp: 'Vertically opposite angles in intersecting lines are always equal to each other.'
+        exp: 'SSA (Side-Side-Angle) is not a guaranteed congruence criterion because it can create two totally different triangles (the ambiguous case).'
     },
     {
-        q: 'Two co-interior angles on the same side of a transversal are $x$ and $2x$. What is $x$ if the lines are parallel?',
-        opts: ['$45^{\\circ}$', '$60^{\\circ}$', '$90^{\\circ}$', '$120^{\\circ}$'],
+        q: 'In $\\triangle ABC$, if $AB = AC$, which property is true?',
+        opts: ['$\\angle A = \\angle B$', '$\\angle B = \\angle C$', '$\\angle C = \\angle A$', 'All angles are $60^{\\circ}$'],
         ans: 1,
-        exp: 'Co-interior angles are supplementary ($180^{\\circ}$). So $x + 2x = 180 \\implies 3x = 180 \\implies x = 60^{\\circ}$.'
+        exp: 'By Theorem 7.2, angles opposite to equal sides of an isosceles triangle are equal.'
     },
     {
-        q: 'An angle measures $120^{\\circ}$. What type of angle is it?',
-        opts: ['Acute', 'Right', 'Obtuse', 'Reflex'],
+        q: 'If $\\triangle ABC \\cong \\triangle PQR$, what does CPCT allow us to conclude?',
+        opts: ['Only the sides are equal', '$\\angle A = \\angle R$', '$\\angle B = \\angle Q$', 'They have different areas'],
         ans: 2,
-        exp: 'An obtuse angle is greater than $90^{\\circ}$ but less than $180^{\\circ}$.'
+        exp: 'CPCT means corresponding parts are equal. The second letter in ABC corresponds to the second letter in PQR, so $\\angle B = \\angle Q$.'
+    },
+    {
+        q: 'What does RHS stand for in congruence?',
+        opts: ['Right-Hand-Side', 'Right angle-Hypotenuse-Side', 'Ratio-Height-Side', 'Rectangle-Hypotenuse-Side'],
+        ans: 1,
+        exp: 'RHS requires a Right angle, an equal Hypotenuse, and one equal Side.'
+    },
+    {
+        q: 'Can two equilateral triangles of different sizes be congruent?',
+        opts: ['Yes, always', 'No, never', 'Only if they share a vertex', 'Only if their side lengths are equal'],
+        ans: 3,
+        exp: 'All equilateral triangles have equal angles ($60^{\\circ}$), but to be congruent (same size and shape), their side lengths must also be strictly equal (SSS).'
     }
 ];
 
@@ -180,10 +172,10 @@ function QuizEngine({ onBack }) {
                 </div>
                 <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 28, fontWeight: 900, color: '#0f172a', margin: '0 0 8px' }}>{msg}</h2>
                 <p style={{ color: '#64748b', fontSize: 15, margin: '0 0 32px' }}>
-                    {pct >= 75 ? 'Great understanding of Lines and Angles vocabulary!' : 'Review the terms and try again for a higher score.'}
+                    {pct >= 75 ? 'Great understanding of Triangles vocabulary!' : 'Review the terms and try again for a higher score.'}
                 </p>
                 <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-                    <button className={styles['btn-primary']} onClick={() => { quizAnswersRef.current = []; setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false); }}>
+                    <button className={styles['btn-primary']} onClick={() => { quizAnswersRef.current = []; setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false); }} style={{ padding: '14px 32px', fontSize: 16, background: '#4F46E5', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
                         Try Again
                     </button>
                     <button className={styles['nav-back']} onClick={onBack}>Return to Terminology</button>
@@ -238,7 +230,7 @@ function QuizEngine({ onBack }) {
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <button onClick={handleNext} disabled={!answered} className={styles['btn-primary']}
-                    style={{ padding: '12px 40px', opacity: answered ? 1 : 0.4, cursor: answered ? 'pointer' : 'not-allowed' }}>
+                    style={{ padding: '12px 40px', opacity: answered ? 1 : 0.4, cursor: answered ? 'pointer' : 'not-allowed', background: '#4F46E5', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold' }}>
                     {current + 1 >= QUIZ_QUESTIONS.length ? 'See Final Score' : 'Next Question'}
                 </button>
             </div>
@@ -247,7 +239,7 @@ function QuizEngine({ onBack }) {
 }
 
 // ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
-export default function LinesAndAngles9Terminology() {
+export default function Triangles9Terminology() {
     const navigate = useNavigate();
     const [tab, setTab] = useState('terms');
     const [activeTerm, setActiveTerm] = useState(0);
@@ -263,24 +255,24 @@ export default function LinesAndAngles9Terminology() {
     ];
 
     return (
-        <div className={styles['page']} style={window.innerWidth > 900 ? { height: 'calc(100vh - 140px)', display: 'flex', flexDirection: 'column', overflow: 'hidden' } : { display: 'flex', flexDirection: 'column' }}>
+        <div className={styles['page']} style={{ minHeight: 'calc(100vh - 80px)', display: 'flex', flexDirection: 'column' }}>
             {/* ── TOP NAV ─────────────────────────────────── */}
             <nav className={styles['nav']} style={{ position: 'sticky', top: 0, zIndex: 100 }}>
-                <button className={styles['nav-back']} onClick={() => navigate('/practice/class-9/lines-and-angles')}>
+                <button className={styles['nav-back']} onClick={() => navigate('/practice/class-9/triangles')}>
                     ← Back to Module
                 </button>
                 <div className={styles['nav-links']}>
-                    <button className={styles['nav-link']} onClick={() => navigate('/practice/class-9/lines-and-angles/intro')}>🌟 Introduction</button>
+                    <button className={styles['nav-link']} onClick={() => navigate('/practice/class-9/triangles/intro')}>🌟 Introduction</button>
                     <button className={`${styles['nav-link']} ${styles['nav-link--active']}`}>📖 Terminology</button>
-                    <button className={styles['nav-link']} onClick={() => navigate('/practice/class-9/lines-and-angles/skills')}>🎯 Skills</button>
+                    <button className={styles['nav-link']} onClick={() => navigate('/practice/class-9/triangles/skills')}>🎯 Skills</button>
                 </div>
             </nav>
 
-            <div style={{ flex: 1, overflowY: 'auto' }}>
+            <div style={{ flex: 1, paddingBottom: '40px' }}>
                 {/* ── HEADER ──────────────────────────────────── */}
                 <div style={{ padding: '10px 12px 10px', textAlign: 'center' }}>
                     <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 900, color: '#0f172a', margin: '0 0 10px' }}>
-                        Lines & Angles{' '}
+                        Triangles{' '}
                         <span style={{ background: 'linear-gradient(90deg,#0f4c81,#6a1b9a)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Vocabulary</span>
                     </h1>
                 </div>
@@ -352,7 +344,7 @@ export default function LinesAndAngles9Terminology() {
                                 </div>
 
                                 <div className={styles['learn-footer']}>
-                                    <button className={styles['btn-primary']} onClick={() => setTab('quiz')}>Ready for the Quiz? →</button>
+                                    <button className={styles['btn-primary']} onClick={() => setTab('quiz')} style={{ padding: '14px 32px', fontSize: 16, background: '#4F46E5', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>Ready for the Quiz? →</button>
                                     <button className={styles['nav-back']} onClick={() => setActiveTerm((activeTerm + 1) % TERMS.length)}>
                                         Next: {TERMS[(activeTerm + 1) % TERMS.length].name}
                                     </button>
@@ -432,7 +424,7 @@ export default function LinesAndAngles9Terminology() {
                                 </div>
 
                                 <div className={styles['learn-footer']}>
-                                    <button className={styles['btn-primary']} onClick={() => setTab('quiz')}>Test your Knowledge →</button>
+                                    <button className={styles['btn-primary']} onClick={() => setTab('quiz')} style={{ padding: '14px 32px', fontSize: 16, background: '#4F46E5', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>Test your Knowledge →</button>
                                     <button className={styles['nav-back']} onClick={() => setActiveRule((activeRule + 1) % KEY_IDEAS[activeIdea].rules.length)}>
                                         Next: {KEY_IDEAS[activeIdea].rules[(activeRule + 1) % KEY_IDEAS[activeIdea].rules.length].title}
                                     </button>

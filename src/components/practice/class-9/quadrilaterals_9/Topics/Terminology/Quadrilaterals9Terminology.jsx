@@ -1,95 +1,114 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from '../../lines_and_angles_9.module.css';
+import styles from '../../quadrilaterals_9.module.css';
 import { LatexText } from '../../../../../LatexText';
-import { AngleTypesChart, CompSuppChart, LinearPairChart, VOAChart, ParallelLinesChart, BasicEntitiesChart, AdjacentAnglesChart } from '../components/LADynamicCharts';
+import { QuadrilateralChart, ParallelogramChart, RectangleChart, RhombusChart, SquareChart, TrapeziumChart, KiteChart, MidPointTheoremChart } from '../components/QuadrilateralsDynamicCharts';
 
 // ─── TERMS DATA ──────────────────────────────────────────────────────────────
 const TERMS = [
     {
-        name: 'Line, Ray & Segment',
-        icon: '📏',
-        color: '#0f4c81',
-        chart: BasicEntitiesChart,
-        def: 'The fundamental 1D building blocks of geometry.\n\n• Line: Extends infinitely in both directions $\\overleftrightarrow{AB}$\n• Ray: Starts at a point and extends infinitely $\\overrightarrow{AB}$\n• Segment: Has two fixed endpoints $\\overline{AB}$',
-        example: 'A laser beam is a real-world ray.',
-        realWorld: 'A continuous road could be seen as a line, while the distance between two toll booths is a segment.',
-    },
-    {
-        name: 'Types of Angles',
+        name: 'Quadrilateral',
         icon: '📐',
-        color: '#1a237e',
-        chart: AngleTypesChart,
-        def: 'Angles are classified by their degree measurement.\n\n• Acute: $0^{\\circ} < x < 90^{\\circ}$\n• Right: Exactly $90^{\\circ}$\n• Obtuse: $90^{\\circ} < x < 180^{\\circ}$\n• Straight: Exactly $180^{\\circ}$\n• Reflex: $180^{\\circ} < x < 360^{\\circ}$',
-        example: 'An angle measuring $45^\\circ$ is acute, while $135^\\circ$ is obtuse.',
-        realWorld: 'A pizza slice is often an acute angle, while the corner of a rectangular room is a right angle.',
+        color: '#0f4c81',
+        chart: QuadrilateralChart,
+        def: 'A closed geometric figure bounded by four straight sides.\n\n• It has 4 vertices and 4 angles.\n• Angle Sum Property: the sum of the interior angles of a quadrilateral is $360^{\\circ}$.',
+        example: 'If three angles of a quadrilateral are $60^{\\circ}, 100^{\\circ},$ and $120^{\\circ}$, the fourth angle is $360^{\\circ} - (60^{\\circ} + 100^{\\circ} + 120^{\\circ}) = 80^{\\circ}$.',
+        realWorld: 'A piece of paper, a computer monitor, or a tabletop.',
     },
     {
-        name: 'Angle Pair Relationships',
-        icon: '🔄',
-        color: '#b71c1c',
-        chart: CompSuppChart,
-        def: 'Pairs of angles whose measures add up to a specific sum.\n\n• Complementary: Two angles summing to $90^{\\circ}$\n• Supplementary: Two angles summing to $180^{\\circ}$\nAngles do not need to be adjacent to be complementary/supplementary.',
-        example: 'If an angle is $30^\\circ$, its complement is $60^\\circ$. If an angle is $100^\\circ$, its supplement is $80^\\circ$.',
-        realWorld: 'Cutting a rectangular sandwich into two triangles divides a $90^\\circ$ angle into complementary angles.',
+        name: 'Parallelogram',
+        icon: '▱',
+        color: '#059669',
+        chart: ParallelogramChart,
+        def: 'A quadrilateral in which both pairs of opposite sides are parallel.\n\n• Opposite sides are equal.\n• Opposite angles are equal.\n• Diagonals bisect each other.\n• A diagonal divides it into two congruent triangles.',
+        example: 'In parallelogram ABCD, if $\\angle A = 70^{\\circ}$, then opposite angle $\\angle C = 70^{\\circ}$ and adjacent angle $\\angle B = 110^{\\circ}$ (since they add to $180^{\\circ}$).',
+        realWorld: 'An eraser slanted diagonally, or stairs viewed from the side profile.',
     },
     {
-        name: 'Adjacent Angles',
-        icon: '🤝',
-        color: '#6a1b9a',
-        chart: AdjacentAnglesChart,
-        def: 'Neighboring angles that share roots but do not overlap.\n\n• Must have: A common vertex\n• Must have: A common arm separating them\n• Must NOT have: Overlapping interior areas',
-        example: 'Two slices of a pie next to each other sharing a common cut line.',
-        realWorld: 'The adjacent sides of a picture frame.',
+        name: 'Rectangle',
+        icon: '▭',
+        color: '#2563eb',
+        chart: RectangleChart,
+        def: 'A parallelogram in which one angle is a right angle ($90^{\\circ}$).\n\n• Because opposite angles are equal, all four angles become $90^{\\circ}$.\n• The diagonals are equal in length.\n• The diagonals bisect each other.',
+        example: 'If diagonal AC of a rectangle is $10\\text{ cm}$, diagonal BD is also exactly $10\\text{ cm}$.',
+        realWorld: 'A standard smartphone screen or a book cover.',
     },
     {
-        name: 'Linear Pair',
-        icon: '↔️',
-        color: '#e65100',
-        chart: LinearPairChart,
-        def: 'Adjacent angles whose non-common arms form a straight line.\n\n• If a ray stands on a line, the sum of adjacent angles is $180^{\\circ}$ (Axiom 6.1)\n• Therefore, a Linear Pair is always supplementary.',
-        example: 'Angles measuring $120^\\circ$ and $60^\\circ$ side-by-side to make a flat straight line.',
-        realWorld: 'A pendulum forming two angles with a horizontal surface.',
+        name: 'Rhombus',
+        icon: '◇',
+        color: '#d97706',
+        chart: RhombusChart,
+        def: 'A parallelogram in which all four sides are equal.\n\n• It has all the properties of a parallelogram.\n• The diagonals bisect each other strictly at right angles ($90^{\\circ}$).',
+        example: 'If you connect the mid-points of the sides of a rectangle, the shape formed inside is a rhombus.',
+        realWorld: 'A diamond shape on a playing card.',
     },
     {
-        name: 'Vertically Opposite Angles (VOA)',
-        icon: '✂️',
-        color: '#0f766e',
-        chart: VOAChart,
-        def: 'Angles opposite each other when two lines intersect.\n\n• They share a vertex but no arms.\n• Theorem 6.1: If two lines intersect, vertically opposite angles are equal.',
-        example: 'If two intersecting lines create a $40^\\circ$ angle, the angle directly opposite to it is also $40^\\circ$.',
-        realWorld: 'An open pair of scissors creates equal vertically opposite angles.',
+        name: 'Square',
+        icon: '⏹',
+        color: '#7c3aed',
+        chart: SquareChart,
+        def: 'A square is both a rectangle and a rhombus. It has all equal sides and all $90^{\\circ}$ angles.\n\n• Diagonals are equal (from rectangle property).\n• Diagonals bisect each other at right angles (from rhombus property).',
+        example: 'A square has the highest symmetry of all quadrilaterals.',
+        realWorld: 'A chess board.',
+    },
+    {
+        name: 'Trapezium',
+        icon: '⏢',
+        color: '#0891b2',
+        chart: TrapeziumChart,
+        def: 'A quadrilateral in which exactly ONE pair of opposite sides is parallel.\n\n• The parallel sides are called "bases".\n• If the non-parallel sides are equal, it\'s called an "isosceles trapezium".',
+        example: 'The top half of a triangle cut horizontally yields a trapezium at the bottom.',
+        realWorld: 'The side profile of a lamp shade.',
+    },
+    {
+        name: 'Kite',
+        icon: '🪁',
+        color: '#db2777',
+        chart: KiteChart,
+        def: 'A quadrilateral with two distinct pairs of equal adjacent sides.\n\n• Diagonals intersect at right angles.\n• Only one pair of opposite angles is equal.',
+        example: 'In kite ABCD, $AB = AD$ and $BC = DC$.',
+        realWorld: 'A traditional flying kite!',
     }
 ];
 
 // ─── KEY IDEAS DATA ──────────────────────────────────────────────────────────
 const KEY_IDEAS = [
     {
-        title: 'Axioms vs Theorems',
-        icon: '🏛️',
-        color: '#0f4c81',
+        title: 'Core Theorems',
+        icon: '📜',
+        color: '#0f766e',
         rules: [
             {
-                title: 'Definitions',
-                f: '$\\text{Axiom } \\neq \\text{ Theorem}$',
-                d: 'An Axiom is a basic fact we assume to be true without proof. A Theorem is a statement derived and proven using logic and axioms.',
-                tip: 'Think of Axioms as the rules of a game, and Theorems as the strategies proven to work.',
-                ex: 'Axiom: Linear Pair Axiom (Axiom 6.1)\nTheorem: VOA Theorem (Theorem 6.1)'
-            }
-        ]
-    },
-    {
-        title: 'Parallel Lines & Transversal',
-        icon: '📏',
-        color: '#b71c1c',
-        rules: [
+                title: 'Diagonal Theorem (8.1)',
+                chart: QuadrilateralChart,
+                f: '$\\triangle ABC \\cong \\triangle CDA$',
+                d: 'A diagonal of a parallelogram divides it into two exact congruent triangles. This is proven using ASA criteria based on alternate interior angles from parallel lines.',
+                tip: 'This is the foundational theorem. Most other properties of parallelograms (equal sides, equal angles) are just CPCT from this theorem!',
+                ex: 'Draw diagonal AC in parallelogram ABCD. Since $\\triangle ABC \\cong \\triangle CDA$, we know $AB = DC$ and $AD = BC$.'
+            },
             {
-                title: 'Transversal Angles',
-                chart: ParallelLinesChart,
-                f: '$\\text{Parallel lines crossed by a transversal}$',
-                d: 'A transversal is a line that intersects two or more lines at distinct points.\n• Corresponding Angles: Same relative position (Equal)\n• Alternate Interior: Opposite sides, between lines (Equal)\n• Co-interior Angles: Same side, between lines (Sum to $180^{\\circ}$)',
-                tip: 'Look for F (Corresponding), Z (Alternate), and C (Co-interior) letter shapes.',
-                ex: 'If two parallel lines are crossed by a transversal and one interior angle is $50^\\circ$, its alternate interior angle is also $50^\\circ$.'
+                title: 'Diagonals Bisect (8.6)',
+                chart: ParallelogramChart,
+                f: '$OA = OC, OB = OD$',
+                d: 'The diagonals of a parallelogram bisect each other. This means they cut each other exactly in half.',
+                tip: 'The converse (Theorem 8.7) is also a fantastic tool: If the diagonals of ANY quadrilateral bisect each other, it MUST be a parallelogram.',
+                ex: 'If diagonal AC is 12cm and BD is 16cm, they intersect at point O down the middle, so OA is 6cm and OB is 8cm.'
+            },
+            {
+                title: 'Mid-point Theorem (8.8)',
+                chart: MidPointTheoremChart,
+                f: '$EF \\parallel BC \\text{ and } EF = \\frac{1}{2}BC$',
+                d: 'The line segment joining the mid-points of two sides of a triangle is parallel to the third side AND is half of it.',
+                tip: 'Think about triangles shrinking. If you connect the midpoints, you get a miniature, half-scaled version mapping the bottom side.',
+                ex: 'In $\\triangle ABC$, E is the mid-point of AB, and F is the mid-point of AC. If the base BC is $20\\text{ cm}$, the line EF is exactly $10\\text{ cm}$ and perfectly parallel to BC.'
+            },
+            {
+                title: 'Converse Mid-point (8.9)',
+                chart: MidPointTheoremChart,
+                f: '$\\text{Pass through mid-point} \\rightarrow \\text{Parallels bisect}$',
+                d: 'The line drawn through the mid-point of one side of a triangle, perfectly parallel to another side, will automatically bisect the third side.',
+                tip: 'Here you start with parallel lines, instead of proving them.',
+                ex: 'In $\\triangle XYZ$, M is the mid-point of XY. If you shoot a laser from M parallel to YZ, it will hit XZ exactly at its mid-point N.'
             }
         ]
     }
@@ -98,34 +117,34 @@ const KEY_IDEAS = [
 // ─── QUIZ (Test Prep) ────────────────────────────────────────────────────────
 const QUIZ_QUESTIONS = [
     {
-        q: 'If two angles sum to $90^{\\circ}$, what are they called?',
-        opts: ['Supplementary', 'Complementary', 'Reflex', 'Adjacent'],
+        q: 'The sum of all interior angles of a quadrilateral is:',
+        opts: ['$180^{\\circ}$', '$360^{\\circ}$', '$540^{\\circ}$', '$720^{\\circ}$'],
         ans: 1,
-        exp: 'Complementary angles add up to exactly $90^{\\circ}$.'
+        exp: 'Drawing a diagonal forms 2 triangles, and $2 \\times 180^{\\circ} = 360^{\\circ}$.'
     },
     {
-        q: 'What is the measure of a straight angle?',
-        opts: ['$90^{\\circ}$', '$180^{\\circ}$', '$360^{\\circ}$', '$270^{\\circ}$'],
-        ans: 1,
-        exp: 'A straight line forms an angle of $180^{\\circ}$.'
-    },
-    {
-        q: 'Theorem 6.1 states that if two lines intersect, the vertically opposite angles are...',
-        opts: ['Complementary', 'Supplementary', 'Equal', 'Unequal'],
+        q: 'Which of the following is NOT a property of a parallelogram?',
+        opts: ['Opposite sides are equal', 'Opposite angles are equal', 'Diagonals are equal', 'Diagonals bisect each other'],
         ans: 2,
-        exp: 'Vertically opposite angles in intersecting lines are always equal to each other.'
+        exp: 'Diagonals of a regular parallelogram are usually different lengths. They are only equal in a rectangle or square.'
     },
     {
-        q: 'Two co-interior angles on the same side of a transversal are $x$ and $2x$. What is $x$ if the lines are parallel?',
-        opts: ['$45^{\\circ}$', '$60^{\\circ}$', '$90^{\\circ}$', '$120^{\\circ}$'],
-        ans: 1,
-        exp: 'Co-interior angles are supplementary ($180^{\\circ}$). So $x + 2x = 180 \\implies 3x = 180 \\implies x = 60^{\\circ}$.'
-    },
-    {
-        q: 'An angle measures $120^{\\circ}$. What type of angle is it?',
-        opts: ['Acute', 'Right', 'Obtuse', 'Reflex'],
+        q: 'If the diagonals of a quadrilateral bisect each other at right angles, it must be a:',
+        opts: ['Rectangle', 'Trapezium', 'Rhombus', 'Kite'],
         ans: 2,
-        exp: 'An obtuse angle is greater than $90^{\\circ}$ but less than $180^{\\circ}$.'
+        exp: 'A rhombus is defined as a parallelogram whose diagonals intersect at $90^{\\circ}$. (A square works too, but a square is a special rhombus).'
+    },
+    {
+        q: 'In $\\triangle PQR$, A and B are mid-points of sides PQ and PR respectively. If QR is $14\\text{ cm}$, the length of AB is:',
+        opts: ['$14\\text{ cm}$', '$28\\text{ cm}$', '$7\\text{ cm}$', 'Cannot be determined'],
+        ans: 2,
+        exp: 'By the Mid-point theorem, the line joining mid-points is half the length of the third side. Therefore $14 / 2 = 7\\text{ cm}$.'
+    },
+    {
+        q: 'The quadrilateral formed by joining the mid-points of the sides of a quadrilateral PQRS, taken in order, is a:',
+        opts: ['Rectangle', 'Parallelogram', 'Square', 'Rhombus'],
+        ans: 1,
+        exp: 'By applying the Mid-point theorem to the triangles formed by the diagonals of PQRS, the resulting inner shape is always a parallelogram.'
     }
 ];
 
@@ -180,10 +199,10 @@ function QuizEngine({ onBack }) {
                 </div>
                 <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 28, fontWeight: 900, color: '#0f172a', margin: '0 0 8px' }}>{msg}</h2>
                 <p style={{ color: '#64748b', fontSize: 15, margin: '0 0 32px' }}>
-                    {pct >= 75 ? 'Great understanding of Lines and Angles vocabulary!' : 'Review the terms and try again for a higher score.'}
+                    {pct >= 75 ? 'Great understanding of Quadrilaterals vocabulary!' : 'Review the terms and try again for a higher score.'}
                 </p>
                 <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-                    <button className={styles['btn-primary']} onClick={() => { quizAnswersRef.current = []; setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false); }}>
+                    <button className={styles['btn-primary']} onClick={() => { quizAnswersRef.current = []; setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false); }} style={{ padding: '14px 32px', fontSize: 16, background: '#4F46E5', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
                         Try Again
                     </button>
                     <button className={styles['nav-back']} onClick={onBack}>Return to Terminology</button>
@@ -238,7 +257,7 @@ function QuizEngine({ onBack }) {
 
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <button onClick={handleNext} disabled={!answered} className={styles['btn-primary']}
-                    style={{ padding: '12px 40px', opacity: answered ? 1 : 0.4, cursor: answered ? 'pointer' : 'not-allowed' }}>
+                    style={{ padding: '12px 40px', opacity: answered ? 1 : 0.4, cursor: answered ? 'pointer' : 'not-allowed', background: '#4F46E5', color: 'white', border: 'none', borderRadius: '8px', fontWeight: 'bold' }}>
                     {current + 1 >= QUIZ_QUESTIONS.length ? 'See Final Score' : 'Next Question'}
                 </button>
             </div>
@@ -247,7 +266,7 @@ function QuizEngine({ onBack }) {
 }
 
 // ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
-export default function LinesAndAngles9Terminology() {
+export default function Quadrilaterals9Terminology() {
     const navigate = useNavigate();
     const [tab, setTab] = useState('terms');
     const [activeTerm, setActiveTerm] = useState(0);
@@ -263,24 +282,24 @@ export default function LinesAndAngles9Terminology() {
     ];
 
     return (
-        <div className={styles['page']} style={window.innerWidth > 900 ? { height: 'calc(100vh - 140px)', display: 'flex', flexDirection: 'column', overflow: 'hidden' } : { display: 'flex', flexDirection: 'column' }}>
+        <div className={styles['page']} style={{ minHeight: 'calc(100vh - 80px)', display: 'flex', flexDirection: 'column' }}>
             {/* ── TOP NAV ─────────────────────────────────── */}
             <nav className={styles['nav']} style={{ position: 'sticky', top: 0, zIndex: 100 }}>
-                <button className={styles['nav-back']} onClick={() => navigate('/practice/class-9/lines-and-angles')}>
+                <button className={styles['nav-back']} onClick={() => navigate('/practice/class-9/quadrilaterals')}>
                     ← Back to Module
                 </button>
                 <div className={styles['nav-links']}>
-                    <button className={styles['nav-link']} onClick={() => navigate('/practice/class-9/lines-and-angles/intro')}>🌟 Introduction</button>
+                    <button className={styles['nav-link']} onClick={() => navigate('/practice/class-9/quadrilaterals/intro')}>🌟 Introduction</button>
                     <button className={`${styles['nav-link']} ${styles['nav-link--active']}`}>📖 Terminology</button>
-                    <button className={styles['nav-link']} onClick={() => navigate('/practice/class-9/lines-and-angles/skills')}>🎯 Skills</button>
+                    <button className={styles['nav-link']} onClick={() => navigate('/practice/class-9/quadrilaterals/skills')}>🎯 Skills</button>
                 </div>
             </nav>
 
-            <div style={{ flex: 1, overflowY: 'auto' }}>
+            <div style={{ flex: 1, paddingBottom: '40px' }}>
                 {/* ── HEADER ──────────────────────────────────── */}
                 <div style={{ padding: '10px 12px 10px', textAlign: 'center' }}>
                     <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 900, color: '#0f172a', margin: '0 0 10px' }}>
-                        Lines & Angles{' '}
+                        Quadrilaterals{' '}
                         <span style={{ background: 'linear-gradient(90deg,#0f4c81,#6a1b9a)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Vocabulary</span>
                     </h1>
                 </div>
@@ -352,7 +371,7 @@ export default function LinesAndAngles9Terminology() {
                                 </div>
 
                                 <div className={styles['learn-footer']}>
-                                    <button className={styles['btn-primary']} onClick={() => setTab('quiz')}>Ready for the Quiz? →</button>
+                                    <button className={styles['btn-primary']} onClick={() => setTab('quiz')} style={{ padding: '14px 32px', fontSize: 16, background: '#4F46E5', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>Ready for the Quiz? →</button>
                                     <button className={styles['nav-back']} onClick={() => setActiveTerm((activeTerm + 1) % TERMS.length)}>
                                         Next: {TERMS[(activeTerm + 1) % TERMS.length].name}
                                     </button>
@@ -432,7 +451,7 @@ export default function LinesAndAngles9Terminology() {
                                 </div>
 
                                 <div className={styles['learn-footer']}>
-                                    <button className={styles['btn-primary']} onClick={() => setTab('quiz')}>Test your Knowledge →</button>
+                                    <button className={styles['btn-primary']} onClick={() => setTab('quiz')} style={{ padding: '14px 32px', fontSize: 16, background: '#4F46E5', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>Test your Knowledge →</button>
                                     <button className={styles['nav-back']} onClick={() => setActiveRule((activeRule + 1) % KEY_IDEAS[activeIdea].rules.length)}>
                                         Next: {KEY_IDEAS[activeIdea].rules[(activeRule + 1) % KEY_IDEAS[activeIdea].rules.length].title}
                                     </button>

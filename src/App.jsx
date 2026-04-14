@@ -520,6 +520,23 @@ import LinesAndAngles9Intro from './components/practice/class-9/lines_and_angles
 import LinesAndAngles9Terminology from './components/practice/class-9/lines_and_angles_9/Topics/Terminology/LinesAndAngles9Terminology';
 import LinesAndAngles9Skills from './components/practice/class-9/lines_and_angles_9/Topics/Skills/LinesAndAngles9Skills';
 
+// Class 9 - Circles
+import Circles9 from './components/practice/class-9/circles_9/Circles9';
+import Circles9Intro from './components/practice/class-9/circles_9/Topics/Intro/Circles9Intro';
+import Circles9Terminology from './components/practice/class-9/circles_9/Topics/Terminology/Circles9Terminology';
+import Circles9Skills from './components/practice/class-9/circles_9/Topics/Skills/Circles9Skills';
+
+// Grade 9 Triangles
+import Triangles9 from './components/practice/class-9/triangles_9/Triangles9';
+import Triangles9Intro from './components/practice/class-9/triangles_9/Topics/Intro/Triangles9Intro';
+import Triangles9Terminology from './components/practice/class-9/triangles_9/Topics/Terminology/Triangles9Terminology';
+import Triangles9Skills from './components/practice/class-9/triangles_9/Topics/Skills/Triangles9Skills';
+
+import Quadrilaterals9 from './components/practice/class-9/quadrilaterals_9/Quadrilaterals9';
+import Quadrilaterals9Intro from './components/practice/class-9/quadrilaterals_9/Topics/Intro/Quadrilaterals9Intro';
+import Quadrilaterals9Terminology from './components/practice/class-9/quadrilaterals_9/Topics/Terminology/Quadrilaterals9Terminology';
+import Quadrilaterals9Skills from './components/practice/class-9/quadrilaterals_9/Topics/Skills/Quadrilaterals9Skills';
+
 import LinearEquations9 from './components/practice/class-9/linear_equations_two_variables/LinearEquations9';
 import LinearEquations9Intro from './components/practice/class-9/linear_equations_two_variables/Topics/Intro/LinearEquations9Intro';
 import LinearEquations9Terminology from './components/practice/class-9/linear_equations_two_variables/Topics/Terminology/LinearEquations9Terminology';
@@ -1645,6 +1662,23 @@ function App() {
           <Route path="practice/class-9/lines-and-angles/intro" element={<ProtectedRoute redirectTo="/login"><LinesAndAngles9Intro /></ProtectedRoute>} />
           <Route path="practice/class-9/lines-and-angles/terminology" element={<ProtectedRoute redirectTo="/login"><LinesAndAngles9Terminology /></ProtectedRoute>} />
           <Route path="practice/class-9/lines-and-angles/skills" element={<ProtectedRoute redirectTo="/login"><LinesAndAngles9Skills /></ProtectedRoute>} />
+
+          {/* Circles 9 */}
+          <Route path="practice/class-9/circles" element={<ProtectedRoute redirectTo="/login"><Circles9 /></ProtectedRoute>} />
+          <Route path="practice/class-9/circles/intro" element={<ProtectedRoute redirectTo="/login"><Circles9Intro /></ProtectedRoute>} />
+          <Route path="practice/class-9/circles/terminology" element={<ProtectedRoute redirectTo="/login"><Circles9Terminology /></ProtectedRoute>} />
+          <Route path="practice/class-9/circles/skills" element={<ProtectedRoute redirectTo="/login"><Circles9Skills /></ProtectedRoute>} />
+
+          {/* Class 9: Triangles Routes */}
+          <Route path="practice/class-9/triangles" element={<ProtectedRoute redirectTo="/login"><Triangles9 /></ProtectedRoute>} />
+          <Route path="practice/class-9/triangles/intro" element={<ProtectedRoute redirectTo="/login"><Triangles9Intro /></ProtectedRoute>} />
+          <Route path="practice/class-9/triangles/terminology" element={<ProtectedRoute redirectTo="/login"><Triangles9Terminology /></ProtectedRoute>} />
+          <Route path="practice/class-9/triangles/skills" element={<ProtectedRoute redirectTo="/login"><Triangles9Skills /></ProtectedRoute>} />
+          
+          <Route path="practice/class-9/quadrilaterals" element={<ProtectedRoute redirectTo="/login"><Quadrilaterals9 /></ProtectedRoute>} />
+          <Route path="practice/class-9/quadrilaterals/intro" element={<ProtectedRoute redirectTo="/login"><Quadrilaterals9Intro /></ProtectedRoute>} />
+          <Route path="practice/class-9/quadrilaterals/terminology" element={<ProtectedRoute redirectTo="/login"><Quadrilaterals9Terminology /></ProtectedRoute>} />
+          <Route path="practice/class-9/quadrilaterals/skills" element={<ProtectedRoute redirectTo="/login"><Quadrilaterals9Skills /></ProtectedRoute>} />
 
           {/* Class 9: Linear Equations in Two Variables Routes */}
           <Route path="practice/class-9/linear-equations-two-variables" element={<ProtectedRoute redirectTo="/login"><LinearEquations9 /></ProtectedRoute>} />

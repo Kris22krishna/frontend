@@ -172,7 +172,7 @@ export default function EuclidsGeometry9Terminology() {
     }, []);
 
     return (
-        <div className={styles['page']} style={window.innerWidth > 900 ? { height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' } : { display: 'flex', flexDirection: 'column' }}>
+        <div className={styles['page']} style={window.innerWidth > 900 ? { height: 'calc(100vh - 140px)', display: 'flex', flexDirection: 'column', overflow: 'hidden' } : { display: 'flex', flexDirection: 'column' }}>
             <nav className={styles['nav']} style={{ position: 'sticky', top: 0, zIndex: 100 }}>
                 <button className={styles['nav-back']} onClick={() => navigate('/practice/class-9/euclids-geometry')}>
                     ← Back to Module
