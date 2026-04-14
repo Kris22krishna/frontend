@@ -171,13 +171,14 @@ const QUESTION_POOL = [
         'id_eraser': 'Cuboid',
       }
     },
+    rightItems: [['Cylinder', 'Cylinder'], ['Cone', 'Cone'], ['Sphere', 'Sphere'], ['Cuboid', 'Cuboid']],
     meta: {
       type: 'match',
       totalPairs: 4,
       explanation: 'Chalk → Cylinder (long rounded shape with flat circular ends). Birthday cap → Cone (pointed top with circular base). Football → Sphere (perfectly round, no flat faces). Eraser → Cuboid (rectangular box shape).',
       correctLabel: 'All 4 pairs matched correctly',
     },
-    render: (lp) => (
+    render: (lp, ctx) => (
       <div className="toy-joy-qcard">
         <div className="toy-joy-qmeta"><span className="toy-joy-qbadge">Q</span><span className="toy-joy-qtype">Match the Following</span></div>
         <p className="toy-joy-qtext">Match each object to its 3D shape. Click a left item, then a right item.</p>
@@ -200,8 +201,8 @@ const QUESTION_POOL = [
             <div className="toy-joy-match-line">→</div>
           </div>
           <div className="toy-joy-match-col">
-            {['Cylinder', 'Cone', 'Sphere', 'Cuboid'].map(val => (
-              <div key={val} onClick={() => lp.handleMatch('id_match_objects', 'right', val)} className={`toy-joy-match-item ${lp.getMatchClass('id_match_objects', 'right', val)}`}>{val}</div>
+            {ctx.shuffledRight.map(([val, label]) => (
+              <div key={val} onClick={() => lp.handleMatch('id_match_objects', 'right', val)} className={`toy-joy-match-item ${lp.getMatchClass('id_match_objects', 'right', val)}`}>{label}</div>
             ))}
           </div>
         </div>
@@ -328,13 +329,14 @@ const QUESTION_POOL = [
         'id_six_rect': 'Cuboid',
       }
     },
+    rightItems: [['Sphere', 'Sphere'], ['Cone', 'Cone'], ['Cylinder', 'Cylinder'], ['Cuboid', 'Cuboid']],
     meta: {
       type: 'match',
       totalPairs: 4,
       explanation: 'No edges at all → Sphere. One flat circular base + pointed top → Cone. Two flat circular faces + one curved surface → Cylinder. Six rectangular flat faces → Cuboid.',
       correctLabel: 'All 4 pairs matched correctly',
     },
-    render: (lp) => (
+    render: (lp, ctx) => (
       <div className="toy-joy-qcard">
         <div className="toy-joy-qmeta"><span className="toy-joy-qbadge">Q</span><span className="toy-joy-qtype">Match the Following</span></div>
         <p className="toy-joy-qtext">Match each description to the correct 3D shape. Click a left item, then a right item.</p>
@@ -362,8 +364,8 @@ const QUESTION_POOL = [
             <div className="toy-joy-match-line">→</div>
           </div>
           <div className="toy-joy-match-col">
-            {['Sphere', 'Cone', 'Cylinder', 'Cuboid'].map(val => (
-              <div key={val} onClick={() => lp.handleMatch('id_match_desc', 'right', val)} className={`toy-joy-match-item ${lp.getMatchClass('id_match_desc', 'right', val)}`}>{val}</div>
+            {ctx.shuffledRight.map(([val, label]) => (
+              <div key={val} onClick={() => lp.handleMatch('id_match_desc', 'right', val)} className={`toy-joy-match-item ${lp.getMatchClass('id_match_desc', 'right', val)}`}>{label}</div>
             ))}
           </div>
         </div>
@@ -375,7 +377,9 @@ const QUESTION_POOL = [
 const Identifying3DShapes = () => {
   const selRef = useRef(null);
   if (!selRef.current) {
-    selRef.current = shuffle([...QUESTION_POOL]).slice(0, 5);
+    selRef.current = shuffle([...QUESTION_POOL]).slice(0, 5).map(q =>
+      q.rightItems ? { ...q, shuffledRight: shuffle([...q.rightItems]) } : q
+    );
   }
   const selected = selRef.current;
 
@@ -383,7 +387,7 @@ const Identifying3DShapes = () => {
   selected.forEach(q => { if (q.matchAnswers) Object.assign(matchAnswers, q.matchAnswers); });
 
   const logicProps = useToyJoyLogic(matchAnswers);
-  const questions = selected.map(q => <React.Fragment key={q.id}>{q.render(logicProps)}</React.Fragment>);
+  const questions = selected.map(q => <React.Fragment key={q.id}>{q.render(logicProps, q)}</React.Fragment>);
   const questionMeta = selected.map(q => q.meta);
 
   return (

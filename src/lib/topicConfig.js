@@ -44,7 +44,7 @@ export const TOPIC_CONFIGS = {
             { id: "703", name: "Comparing capacities (more/less)", route: "measurement" },
             { id: "704", name: "Chapter Test - Measurement", route: "measurement" }
         ],
-        'Numbers from Twenty-One to Fifty': [
+        'Numbers from Twenty One to Fifty': [
             { id: "801", name: "Counting 21–50", route: "numbers-from-twenty-one-to-fifty" },
             { id: "802", name: "Number names 21–50", route: "numbers-from-twenty-one-to-fifty" },
             { id: "803", name: "Place value (tens and ones – basic introduction)", route: "numbers-from-twenty-one-to-fifty" },
@@ -158,6 +158,18 @@ export const TOPIC_CONFIGS = {
         ]
     },
     '3': {
+        "What's in a Name?": [
+            { id: "WIN-01", name: "Reading Tally Marks",          route: "whats-in-a-name/reading-tally-marks" },
+            { id: "WIN-02", name: "Making Tally Marks",           route: "whats-in-a-name/making-tally-marks" },
+            { id: "WIN-03", name: "Missing from Tallies",         route: "whats-in-a-name/missing-from-tallies" },
+            { id: "WIN-04", name: "Counting Letters in Names",    route: "whats-in-a-name/counting-letters" },
+            { id: "WIN-05", name: "Longest and Shortest Names",   route: "whats-in-a-name/longest-shortest-name" },
+            { id: "WIN-06", name: "Number Names & Letter Count",  route: "whats-in-a-name/number-names-letter-count" },
+            { id: "WIN-07", name: "Number Name Puzzles",          route: "whats-in-a-name/number-name-puzzles" },
+            { id: "WIN-08", name: "Sorting and Grouping",         route: "whats-in-a-name/sorting-grouping" },
+            { id: "WIN-09", name: "Data Collection and Tables",   route: "whats-in-a-name/data-collection" },
+            { id: "WIN-TEST", name: "Chapter Test",               route: "whats-in-a-name/chapter-test" },
+        ],
         'Raksha Bandhan': [
             { id: "RB-01", name: "Conceptual questions" },
             { id: "RB-02", name: "Multiplication" },
@@ -211,6 +223,17 @@ export const TOPIC_CONFIGS = {
             { id: "TGO-09", name: "Reading, representing, and calculating time on clocks", route: "clock-time" },
             { id: "TGO-10", name: "Understanding time durations and daily activities", route: "time-durations" },
             { id: "TGO-TEST", name: "Chapter Test", route: "chapter-test" }
+        ],
+        'Double Century': [
+            { id: "DC-01", name: "Counting and Groups",      route: "double-century/counting-and-groups" },
+            { id: "DC-02", name: "Number Board (Snakes & Ladders)", route: "double-century/number-board" },
+            { id: "DC-03", name: "Number Before and After",  route: "double-century/number-before-after" },
+            { id: "DC-04", name: "Making 100",               route: "double-century/making-100" },
+            { id: "DC-05", name: "Numbers 101 to 150",       route: "double-century/numbers-101-to-150" },
+            { id: "DC-06", name: "Place Value (H-T-O)",      route: "double-century/place-value" },
+            { id: "DC-07", name: "Numbers 150 to 200",       route: "double-century/numbers-150-to-200" },
+            { id: "DC-08", name: "Jumping Game",             route: "double-century/jumping-game" },
+            { id: "DC-TEST", name: "Chapter Test",           route: "double-century/chapter-test" },
         ]
     },
 

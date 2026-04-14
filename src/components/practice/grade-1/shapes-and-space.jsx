@@ -4,17 +4,17 @@ import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { NODE_IDS } from '@/lib/curriculumIds';
-import Navbar from '../../Navbar';
-import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
-import { LatexText } from '../../LatexText';
-import ExplanationModal from '../../ExplanationModal';
-import StickerExit from '../../StickerExit';
-import mascotImg from '../../../assets/mascot.png';
-import avatarImg from '../../../assets/avatar.png';
-import '../../../pages/juniors/class-1/Grade1Practice.css';
+import Navbar from '@/components/Navbar';
+import { TOPIC_CONFIGS } from '@/lib/topicConfig';
+import { LatexText } from '@/components/LatexText';
+import ExplanationModal from '@/components/ExplanationModal';
+import StickerExit from '@/components/StickerExit';
+import mascotImg from '@/assets/mascot.png';
+import avatarImg from '@/assets/avatar.png';
+import '@/pages/juniors/class-1/Grade1Practice.css';
 
 const SizeVisual = ({ data }) => {
-    const { aSize, bSize, orientation = 'vertical' } = data;
+    const { aSize, bSize, cSize = 60, orientation = 'vertical' } = data;
     const isHorizontal = orientation === 'horizontal';
 
     return (
@@ -48,8 +48,57 @@ const SizeVisual = ({ data }) => {
                     />
                     <span style={{ fontWeight: 'bold', color: '#4A5568' }}>B</span>
                 </div>
+                <div style={{ display: 'flex', flexDirection: isHorizontal ? 'row' : 'column', alignItems: 'center', gap: '8px' }}>
+                    <motion.div
+                        initial={isHorizontal ? { width: 0 } : { height: 0 }}
+                        animate={isHorizontal ? { width: cSize } : { height: cSize }}
+                        style={{
+                            width: isHorizontal ? `${cSize}px` : '40px',
+                            height: isHorizontal ? '40px' : `${cSize}px`,
+                            background: 'linear-gradient(135deg, #48BB78 0%, #38A169 100%)',
+                            borderRadius: '12px',
+                            boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
+                        }}
+                    />
+                    <span style={{ fontWeight: 'bold', color: '#4A5568' }}>C</span>
+                </div>
             </div>
         </motion.div>
+    );
+};
+
+const PositionBall = ({ pos, config }) => {
+    const { x, y, s, opacity = 1, zIndex } = config;
+
+    const getInitial = () => {
+        switch (pos) {
+            case 'inside': return { x, y, scale: 0, opacity: 0 };
+            case 'top': return { x, y: y - 60, scale: 1, opacity: 0 };
+            case 'bottom': return { x, y: y + 40, scale: 1, opacity: 0 };
+            default: return { x, y, scale: 0.5, opacity: 0 };
+        }
+    };
+
+    return (
+        <motion.g
+            initial={getInitial()}
+            animate={{ scale: s, opacity: opacity, x, y }}
+            transition={{ type: 'spring', damping: 12, stiffness: 100 }}
+            style={{ zIndex }}
+        >
+            <circle r="22" fill="url(#soccerBallGrad)" stroke="#94A3B8" strokeWidth="0.5" />
+            {/* Hexagon Patterns */}
+            <g opacity="0.8">
+                <path d="M 0,-7 L 6,-3 L 6,3 L 0,7 L -6,3 L -6,-3 Z" fill="#1E293B" />
+                <path d="M 0,-7 L 6,-3 L 6,3 L 0,7 L -6,3 L -6,-3 Z" fill="#1E293B" transform="translate(0, -16) rotate(180)" />
+                <path d="M 0,-7 L 6,-3 L 6,3 L 0,7 L -6,3 L -6,-3 Z" fill="#1E293B" transform="translate(14, -8) rotate(60)" />
+                <path d="M 0,-7 L 6,-3 L 6,3 L 0,7 L -6,3 L -6,-3 Z" fill="#1E293B" transform="translate(-14, -8) rotate(-60)" />
+                <path d="M 0,-7 L 6,-3 L 6,3 L 0,7 L -6,3 L -6,-3 Z" fill="#1E293B" transform="translate(14, 8) rotate(120)" />
+                <path d="M 0,-7 L 6,-3 L 6,3 L 0,7 L -6,3 L -6,-3 Z" fill="#1E293B" transform="translate(-14, 8) rotate(-120)" />
+            </g>
+            {/* Shine */}
+            <ellipse cx="-7" cy="-7" rx="6" ry="3" fill="white" opacity="0.4" transform="rotate(-45, -7, -7)" />
+        </motion.g>
     );
 };
 
@@ -74,22 +123,84 @@ const DynamicVisual = ({ type, data }) => {
     }
     if (type === 'position') {
         const { pos } = data;
+        
+        // Configs for each position: x, y, scale, zIndex, shadow settings
+        const POS_CONFIG = {
+            'top': { x: 150, y: 50, s: 1, zIndex: 10, sx: 150, sy: 185, ss: 1.1, so: 0.3 },
+            'bottom': { x: 140, y: 180, s: 1, zIndex: 10, sx: 140, sy: 180, ss: 1.1, so: 0.6 },
+            'inside': { x: 145, y: 125, s: 0.9, zIndex: 1, sx: 145, sy: 185, ss: 1, so: 0.4, opacity: 0.9 },
+            'outside': { x: 35, y: 135, s: 1, zIndex: 10, sx: 35, sy: 185, ss: 1, so: 0.6 },
+            'near': { x: 150, y: 230, s: 2.0, zIndex: 20, sx: 150, sy: 235, ss: 2.0, so: 0.2 },
+            'far': { x: 275, y: 35, s: 0.4, zIndex: 0, sx: 275, sy: 55, ss: 0.3, so: 0.1 },
+        };
+
+        const cfg = POS_CONFIG[pos] || POS_CONFIG['top'];
+
         return (
-            <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="position-visual" style={{ border: "none" }}>
-                <svg width="100%" height="100%" style={{ maxWidth: '300px' }} viewBox="0 0 220 150">
-                    <rect x="50" y="40" width="100" height="70" rx="10" fill="#F8FAFC" stroke="#E2E8F0" strokeWidth="2" />
-                    <text x="100" y="85" textAnchor="middle" fill="#64748B" fontSize="14" fontWeight="600">BOX</text>
-                    {pos === 'on top' && <motion.circle initial={{ y: -20 }} animate={{ y: 0 }} cx="100" cy="20" r="18" fill="url(#ballGradient)" />}
-                    {pos === 'underneath' && <motion.circle initial={{ y: 20 }} animate={{ y: 0 }} cx="100" cy="130" r="18" fill="url(#ballGradient)" />}
-                    {pos === 'inside' && <motion.circle initial={{ scale: 0 }} animate={{ scale: 1 }} cx="100" cy="75" r="18" fill="url(#ballGradient)" />}
-                    {pos === 'outside' && <motion.circle initial={{ x: -20 }} animate={{ x: 0 }} cx="25" cy="75" r="18" fill="url(#ballGradient)" />}
-                    {pos === 'far away' && <motion.circle initial={{ opacity: 0 }} animate={{ opacity: 0.5 }} cx="205" cy="35" r="10" fill="url(#ballGradient)" />}
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="position-visual" style={{ border: "none" }}>
+                <svg width="100%" height="100%" style={{ maxWidth: '450px' }} viewBox="0 0 300 240">
                     <defs>
-                        <radialGradient id="ballGradient">
-                            <stop offset="0%" stopColor="#FFD54F" />
-                            <stop offset="100%" stopColor="#FB8C00" />
+                        <radialGradient id="soccerBallGrad" cx="35%" cy="35%" r="50%">
+                            <stop offset="0%" stopColor="#FFFFFF" />
+                            <stop offset="70%" stopColor="#F0F4F8" />
+                            <stop offset="100%" stopColor="#CBD5E0" />
                         </radialGradient>
+                        <linearGradient id="binSideGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stopColor="#2563EB" />
+                            <stop offset="100%" stopColor="#1E40AF" />
+                        </linearGradient>
+                        <linearGradient id="binFrontGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stopColor="#3B82F6" />
+                            <stop offset="100%" stopColor="#2563EB" />
+                        </linearGradient>
+                        <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+                            <feOffset dx="0" dy="2" result="offsetblur" />
+                            <feComponentTransfer><feFuncA type="linear" slope="0.2"/></feComponentTransfer>
+                            <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+                        </filter>
                     </defs>
+                    
+                    {/* Environment: Rug/Floor */}
+                    <ellipse cx="150" cy="205" rx="140" ry="30" fill="#E2E8F0" opacity="0.5" />
+                    <ellipse cx="150" cy="205" rx="120" ry="20" fill="#CBD5E0" opacity="0.3" />
+                    
+                    {/* Shadow on Floor */}
+                    <motion.ellipse 
+                        animate={{ 
+                            cx: cfg.sx, 
+                            cy: cfg.sy,
+                            rx: 30 * cfg.ss, 
+                            ry: 8 * cfg.ss,
+                            opacity: cfg.so 
+                        }} 
+                        fill="#475569" 
+                    />
+                    
+                    {/* Toy Bin */}
+                    <g filter="url(#softShadow)">
+                        {/* Bin Side */}
+                        <path d="M 210 90 L 250 60 L 250 140 L 210 170 Z" fill="url(#binSideGrad)" />
+                        {/* Bin Top Rim (Perspective) */}
+                        <path d="M 70 90 L 110 60 L 250 60 L 210 90 Z" fill="#60A5FA" stroke="#1E40AF" strokeWidth="1" />
+                        {/* Bin Inside Face (Wall) */}
+                        <path d="M 110 60 L 110 140 L 250 140 L 250 60 Z" fill="#1D4ED8" />
+                        {/* Bin Front Face */}
+                        <rect x="70" y="90" width="140" height="80" fill="url(#binFrontGrad)" rx="8" />
+                        {/* Highlights on Front */}
+                        <rect x="80" y="100" width="120" height="4" fill="white" opacity="0.2" rx="2" />
+                    </g>
+
+                    {/* Ball Rendering */}
+                    {pos === 'inside' ? (
+                        <>
+                            <PositionBall pos={pos} config={cfg} />
+                            {/* Mask the ball partially by the front wall if it's deeply inside */}
+                            <rect x="70" y="90" width="140" height="80" fill="rgba(59, 130, 246, 0.4)" rx="8" style={{ pointerEvents: 'none' }} />
+                        </>
+                    ) : (
+                        <PositionBall pos={pos} config={cfg} />
+                    )}
                 </svg>
             </motion.div>
         );
@@ -195,20 +306,21 @@ const ShapesAndSpace = () => {
 
         const shapesPool = ['circle', 'square', 'triangle', 'rectangle', 'oval'].sort(() => 0.5 - Math.random());
         const posPool = [
-            { q: 'Where is the ball located?', a: 'on top' },
+            { q: 'Where is the ball located?', a: 'top' },
             { q: 'Where is the ball located?', a: 'inside' },
-            { q: 'Where is the ball located?', a: 'underneath' },
+            { q: 'Where is the ball located?', a: 'bottom' },
             { q: 'Where is the ball located?', a: 'outside' },
-            { q: 'Where is the ball located?', a: 'far away' }
+            { q: 'Where is the ball located?', a: 'near' },
+            { q: 'Where is the ball located?', a: 'far' }
         ].sort(() => 0.5 - Math.random());
         const sizePool = [
-            { q: 'Which bar is HIGHER?', a: 'A', aSize: 120, bSize: 60, orient: 'vertical', exp: 'Bar A has a greater height than Bar B.' },
-            { q: 'Which bar is SMALLER?', a: 'B', aSize: 100, bSize: 40, orient: 'vertical', exp: 'Bar B is significantly shorter than Bar A.' },
-            { q: 'Which bar is BIGGER?', a: 'A', aSize: 130, bSize: 70, orient: 'vertical', exp: 'Bar A is the larger one among the two.' },
-            { q: 'Which bar is LONGER?', a: 'A', aSize: 160, bSize: 80, orient: 'horizontal', exp: 'Bar A extends much further horizontally.' },
-            { q: 'Which bar is SHORTER?', a: 'B', aSize: 150, bSize: 60, orient: 'horizontal', exp: 'Bar B is not as long as Bar A.' },
-            { q: 'Which one is TALLER?', a: 'A', aSize: 130, bSize: 50, orient: 'vertical', exp: 'Looking at the vertical height, A is taller.' }
-        ].sort(() => 0.5 - Math.random());
+            { q: 'Which bar is TALLER?', type: 'large', orient: 'vertical' },
+            { q: 'Which bar is SMALLER?', type: 'small', orient: 'vertical' },
+            { q: 'Which bar is BIGGER?', type: 'large', orient: 'vertical' },
+            { q: 'Which bar is LONGER?', type: 'large', orient: 'horizontal' },
+            { q: 'Which bar is SHORTER?', type: 'small', orient: 'horizontal' },
+            { q: 'Which one is TALLER?', type: 'large', orient: 'vertical' }
+        ];
 
         for (let i = 0; i < totalQuestions; i++) {
             let question = {};
@@ -238,8 +350,14 @@ const ShapesAndSpace = () => {
                 };
             } else if (typeToGen === 'position') {
                 const item = posPool[i % posPool.length];
-                const pool = ['on top', 'underneath', 'inside', 'outside', 'far away'];
-                const otherOptions = pool.filter(p => p !== item.a);
+                const pool = ['top', 'bottom', 'inside', 'outside', 'near', 'far'];
+                const otherOptions = pool.filter(p => {
+                    if (p === item.a) return false;
+                    // Prevent confusion between Bottom and Near
+                    if (item.a === 'near' && p === 'bottom') return false;
+                    if (item.a === 'bottom' && p === 'near') return false;
+                    return true;
+                });
                 question = {
                     text: item.q,
                     options: [item.a, ...otherOptions.sort(() => 0.5 - Math.random()).slice(0, 3)].sort(() => 0.5 - Math.random()),
@@ -250,13 +368,24 @@ const ShapesAndSpace = () => {
                 };
             } else if (typeToGen === 'size') {
                 const item = sizePool[i % sizePool.length];
+                const baseSizes = [130, 90, 50].map(s => s + Math.floor(Math.random() * 20));
+                const shuffledSizes = [...baseSizes].sort(() => Math.random() - 0.5);
+                
+                const targetVal = item.type === 'large' ? Math.max(...shuffledSizes) : Math.min(...shuffledSizes);
+                const correct = shuffledSizes[0] === targetVal ? 'A' : (shuffledSizes[1] === targetVal ? 'B' : 'C');
+
                 question = {
                     text: item.q,
-                    options: ['A', 'B'],
-                    correct: item.a,
+                    options: ['A', 'B', 'C'],
+                    correct,
                     type: 'size',
-                    visualData: { aSize: item.aSize, bSize: item.bSize, orientation: item.orient },
-                    explanation: item.exp
+                    visualData: { 
+                        aSize: shuffledSizes[0], 
+                        bSize: shuffledSizes[1], 
+                        cSize: shuffledSizes[2], 
+                        orientation: item.orient 
+                    },
+                    explanation: `Bar ${correct} is clearly the ${item.type === 'large' ? (item.orient === 'horizontal' ? 'longest' : 'tallest') : 'smallest'}.`
                 };
             }
             questions.push(question);

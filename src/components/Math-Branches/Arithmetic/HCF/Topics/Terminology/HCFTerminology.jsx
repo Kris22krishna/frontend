@@ -31,19 +31,19 @@ export default function HCFTerminology() {
                     <button className={styles.arithIntroNavLink} onClick={() => navigate('/arithmetic/hcf/skills')}>🎯 Skills</button>
                 </div>
             </nav>
-            <div style={{ maxWidth: 1100, margin: '40px auto 20px', padding: '0 24px' }}>
+            <div className={styles.arithTermContainer}>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 20 }}>
                     <h1 style={{ fontFamily: '"Outfit", sans-serif', fontSize: '2.8rem', fontWeight: 900, color: '#0f172a', margin: '0 0 8px' }}>HCF <span style={{ background: 'linear-gradient(135deg, #e11d48, #fb7185)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Vocabulary</span></h1>
                     <div style={{ fontSize: 16, fontWeight: 700, color: '#64748b' }}>{activeTab === 'quiz' ? 'Test your knowledge!' : `Select any ${activeTab === 'terms' ? 'term' : 'method'} below.`}</div>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginBottom: 16 }}>
+                <div className={styles.arithTabSwitcher}>
                     {[['terms', '📚 Terminology'], ['rules', '⚡ Methods'], ['quiz', '🧪 Vocab Check']].map(([key, label]) => (
                         <button key={key} style={{ padding: '8px 16px', borderRadius: 100, border: 'none', background: activeTab === key ? accentColor : '#e2e8f0', color: activeTab === key ? '#fff' : '#475569', fontWeight: 700, cursor: 'pointer' }} onClick={() => setActiveTab(key)}>{label}</button>
                     ))}
                 </div>
                 {activeTab !== 'quiz' ? (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 360px) 1fr', gap: 16, alignItems: 'start' }}>
-                        <aside style={{ background: 'rgba(255,255,255,0.7)', padding: '14px', borderRadius: 20, border: '1px solid rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: 10, backdropFilter: 'blur(10px)' }}>
+                    <div className={styles.arithTermLayout}>
+                        <aside className={styles.arithTermPanel} style={{ background: 'rgba(255,255,255,0.7)', padding: '14px', borderRadius: 20, border: '1px solid rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: 10, backdropFilter: 'blur(10px)' }}>
                             {(activeTab === 'terms' ? TERMS : FIVE_RULES).map((item, i) => {
                                 const isActive = activeTab === 'terms' ? selectedIdx === i : selectedRuleIdx === i;
                                 return (<button key={i} onClick={() => activeTab === 'terms' ? setSelectedIdx(i) : setSelectedRuleIdx(i)} style={{ background: isActive ? `linear-gradient(135deg, ${accentColor}, ${accentColor}dd)` : `linear-gradient(135deg, rgba(225,29,72,0.08), rgba(225,29,72,0.02))`, borderColor: isActive ? accentColor : 'rgba(225,29,72,0.15)', borderWidth: 1.5, borderStyle: 'solid', display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 12, cursor: 'pointer', outline: 'none' }}>
@@ -99,7 +99,7 @@ export default function HCFTerminology() {
                         </main>
                     </div>
                 ) : (
-                    <div style={{ maxWidth: 700, margin: '0 auto', background: '#fff', borderRadius: 24, padding: '32px 40px', boxShadow: '0 15px 40px rgba(0,0,0,0.04)', border: '1px solid #e2e8f0' }}>
+                    <div className={styles.arithQuizPanel}>
                         <h2 style={{ textAlign: 'center', margin: '0 0 32px 0', color: '#0f172a' }}>Quick Knowledge Check</h2>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
                             {VOCAB_QUIZ.map(q => (<div key={q.id}><div style={{ fontWeight: 600, color: '#1e293b', fontSize: 16, marginBottom: 16 }}>{q.q}</div><div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>{q.options.map((opt, optIdx) => { const isSelected = quizAnswers[q.id] === optIdx; const isCorrect = optIdx === q.correct; let bg = '#f8fafc', border = '1px solid #e2e8f0', color = '#475569'; if (showResults) { if (isCorrect) { bg = '#dcfce7'; border = '1px solid #22c55e'; color = '#15803d'; } else if (isSelected && !isCorrect) { bg = '#fee2e2'; border = '1px solid #ef4444'; color = '#b91c1c'; } } else if (isSelected) { bg = accentBg; border = `1px solid ${accentColor}`; color = accentColor; } return <button key={optIdx} onClick={() => handleQuizSelect(q.id, optIdx)} style={{ padding: '16px 20px', borderRadius: 12, background: bg, border, color, textAlign: 'left', fontSize: 15, cursor: showResults ? 'default' : 'pointer', transition: 'all 0.2s ease', fontWeight: isSelected ? 600 : 400 }}>{opt}{showResults && isCorrect && <span style={{ float: 'right' }}>✅</span>}{showResults && isSelected && !isCorrect && <span style={{ float: 'right' }}>❌</span>}</button>; })}</div></div>))}
@@ -107,7 +107,7 @@ export default function HCFTerminology() {
                         <div style={{ marginTop: 40, textAlign: 'center', paddingTop: 32, borderTop: '1px solid #e2e8f0' }}>
                             {!showResults ? <button onClick={handleCheckAnswers} style={{ padding: '14px 32px', background: accentColor, color: '#fff', border: 'none', borderRadius: 100, fontSize: 16, fontWeight: 700, cursor: 'pointer' }}>Check Answers</button> : (
                                 <div><div style={{ fontSize: 24, fontWeight: 700, color: '#0f172a', marginBottom: 16 }}>You scored {Object.entries(quizAnswers).filter(([qId, ans]) => VOCAB_QUIZ.find(q => q.id === parseInt(qId)).correct === ans).length} out of {VOCAB_QUIZ.length}! 🎉</div>
-                                <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}><button onClick={handleRetry} style={{ padding: '12px 24px', background: '#fff', color: '#475569', border: '1.5px solid #e2e8f0', borderRadius: 100, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>Try Again</button><button onClick={() => navigate('/arithmetic/hcf/skills')} style={{ padding: '12px 24px', background: accentColor, color: '#fff', border: 'none', borderRadius: 100, fontSize: 15, fontWeight: 700, cursor: 'pointer' }}>Go to Skills →</button></div></div>
+                                <div className={styles.arithActionRow}><button onClick={handleRetry} style={{ padding: '12px 24px', background: '#fff', color: '#475569', border: '1.5px solid #e2e8f0', borderRadius: 100, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>Try Again</button><button onClick={() => navigate('/arithmetic/hcf/skills')} style={{ padding: '12px 24px', background: accentColor, color: '#fff', border: 'none', borderRadius: 100, fontSize: 15, fontWeight: 700, cursor: 'pointer' }}>Go to Skills →</button></div></div>
                             )}
                         </div>
                     </div>

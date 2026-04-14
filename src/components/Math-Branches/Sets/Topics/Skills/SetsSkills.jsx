@@ -4,9 +4,23 @@ import { SKILLS } from './SetsSkillsData';
 import '../../SetsBranch.css';
 import MathRenderer from '../../../../MathRenderer';
 import { LatexText } from '../../../../LatexText';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
-import QuizEngine from '../../../../Math-Branches/Algebra/Topics/Skills/Engines/QuizEngine';
-import AssessmentEngine from '../../../../Math-Branches/Algebra/Topics/Skills/Engines/AssessmentEngine';
+import QuizEngine from './Engines/QuizEngine';
+import AssessmentEngine from './Engines/AssessmentEngine';
+
+// ─── Skill-ID → canonical node-ID map ────────────────────────────────────────
+const SKILL_NODE_ID_MAP = {
+  'what-is-set':          NODE_IDS.g11MathSetsWhatIsSet,
+  'types-of-sets':        NODE_IDS.g11MathSetsTypes,
+  'equal-equivalent':     NODE_IDS.g11MathSetsEqualEquivalent,
+  'subsets-intervals':    NODE_IDS.g11MathSetsSubsetsIntervals,
+  'universal-complement': NODE_IDS.g11MathSetsUniversalComplement,
+  'set-operations':       NODE_IDS.g11MathSetsOperations,
+  'venn-diagrams':        NODE_IDS.g11MathSetsVennDiagrams,
+  'laws-properties':      NODE_IDS.g11MathSetsLawsProperties,
+  'cardinality-problems': NODE_IDS.g11MathSetsCardinality,
+};
 
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────
 export default function SetsSkills() {
@@ -152,6 +166,8 @@ export default function SetsSkills() {
                             onBack={() => setView('list')}
                             color={skill.color}
                             prefix="sets"
+                            nodeId={SKILL_NODE_ID_MAP[skill.id]}
+                            sessionType="practice"
                         />
                     ) : (
                         <AssessmentEngine
@@ -160,6 +176,8 @@ export default function SetsSkills() {
                             onBack={() => setView('list')}
                             color={skill.color}
                             prefix="sets"
+                            nodeId={SKILL_NODE_ID_MAP[skill.id]}
+                            sessionType="assessment"
                         />
                     )}
                 </div>

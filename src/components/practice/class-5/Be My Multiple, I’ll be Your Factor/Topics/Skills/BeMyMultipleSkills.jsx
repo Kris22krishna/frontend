@@ -24,6 +24,7 @@ export default function BeMyMultipleSkills() {
                 sampleSize={10}
                 title={selectedSkill.title}
                 color={selectedSkill.color}
+                nodeId={selectedSkill.nodeId}
                 onBack={() => setView('hub')} 
             />
         );
@@ -35,6 +36,7 @@ export default function BeMyMultipleSkills() {
                 questions={selectedSkill.assessment()}
                 title={selectedSkill.title}
                 color={selectedSkill.color}
+                nodeId={selectedSkill.nodeId}
                 onBack={() => setView('hub')}
                 onSecondaryBack={() => navigate('/middle/grade/5/be-my-multiple')}
             />

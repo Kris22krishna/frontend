@@ -1,6 +1,7 @@
 export const SKILLS = [
     {
         id: 'parts-of-whole',
+        nodeId: 'a4051004-0001-0000-0000-000000000000',
         title: 'Parts of a Whole',
         subtitle: 'Foundations',
         desc: 'Identifying numerator and denominator in visual models.',
@@ -27,6 +28,7 @@ export const SKILLS = [
     },
     {
         id: 'equivalent-fractions',
+        nodeId: 'a4051004-0002-0000-0000-000000000000',
         title: 'Equivalent Fractions',
         subtitle: 'Proportions',
         desc: 'Finding different fractions that represent the same value.',

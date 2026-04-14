@@ -7,6 +7,9 @@ import LatexContent from '../../../LatexContent';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
 import mascotImg from '../../../../assets/mascot.png';
 
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+
+const NODE_ID = 'a4041011-0019-0000-0000-000000000000';
 const BLUE_THEME_CSS = `
     .option-btn-modern.selected {
         border-color: #3B82F6 !important;
@@ -141,6 +144,10 @@ const EqualGroupsTest = () => {
     const [questions, setQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
     const questionStartTime = useRef(Date.now());
+  const v4AnswersPayload = useRef([]);
+  const v4IsFinishedRef = useRef(false);
+  const { startSession, finishSession, abandonSession } = useSessionLogger();
+
 
     const POOL = [
         // 1. Multiples & Skip Counting (3 Qs)
@@ -217,7 +224,12 @@ const EqualGroupsTest = () => {
                 correct_answer: currentQ.correctAnswer, student_answer: isSkipped ? "SKIPPED" : selectedOption,
                 is_correct: isSkipped ? false : isCorrect, solution_text: currentQ.solution,
                 time_spent_seconds: timeSpent
-            }).catch(console.error);
+            }).catch(console.error)
+      v4AnswersPayload.current.push({
+        node_id: NODE_ID,
+        is_correct: isCorrect,
+        time_spent_ms: Date.now() - questionStartTime.current,
+      });;
         }
     };
 
@@ -233,7 +245,11 @@ const EqualGroupsTest = () => {
 
     const finalizeTest = async () => {
         setIsTestOver(true);
-        if (sessionId) await api.finishSession(sessionId).catch(console.error);
+            if (!v4IsFinishedRef.current) {
+      v4IsFinishedRef.current = true;
+      finishSession({ answers_payload: v4AnswersPayload.current });
+    }
+    if (sessionId) await api.finishSession(sessionId).catch(console.error);
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         const uid = parseInt(rawUid, 10);
         if (!isNaN(uid)) {

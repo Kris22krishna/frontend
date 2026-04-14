@@ -119,25 +119,19 @@ export default function NaturalNumbersIntro() {
                 </div>
             </div>
 
-            <div style={{ maxWidth: 1000, margin: '0 auto', padding: '40px 20px 80px' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 24 }}>
+            <div className={styles.arithSection}>
+                <div className={styles.arithIntroGrid}>
                     {naturalNumbersCards5W1H.map((card, idx) => (
                         <W1HCard key={idx} card={card} />
                     ))}
                 </div>
 
-                <div style={{
-                    marginTop: 60, padding: 32, background: '#fff', borderRadius: 24,
-                    border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center',
-                    justifyContent: 'space-between', boxShadow: '0 4px 20px rgba(0,0,0,0.04)'
-                }}>
+                <div className={styles.arithSplitCta}>
                     <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: 600, color: '#475569' }}>
                         Up next: Key terms and sequences!
                     </p>
                     <button
-                        onClick={() => navigate('/arithmetic/natural-numbers/terminology')}
-                        style={{
-                            padding: '14px 32px', background: '#10b981', color: '#fff',
+                        onClick={() => navigate('/arithmetic/natural-numbers/terminology')} className={styles.arithSplitCtaButton} style={{ padding: '14px 32px', background: '#10b981', color: '#fff',
                             border: 'none', borderRadius: 100, fontWeight: 800, fontSize: 16,
                             cursor: 'pointer', boxShadow: '0 8px 24px rgba(16,185,129,0.3)'
                         }}
