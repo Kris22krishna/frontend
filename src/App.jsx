@@ -364,6 +364,20 @@ import BuildingCombiningShapes from './components/practice/class-3/Toy-Joy/Build
 import SequencingModelConstruction from './components/practice/class-3/Toy-Joy/SequencingModelConstruction';
 import ToyJoyTest from './components/practice/class-3/Toy-Joy/ToyJoyTest';
 
+// Vacation with My Nani Maa
+import {
+  AdditionSubtractionFacts,
+  AdditionSubtractionTensFrame,
+  NumberLineJumps,
+  NumberGridOperations,
+  PatternsMagicSquares,
+  StoryBasedAddSub,
+  BoxDiagramMethod,
+  EstimationAround100,
+  OpenNumberLine,
+  VNTest
+} from './components/practice/class-3/Vacation-with-Nani-Maa';
+
 // Grade 5 Decimal Practice Components
 import PlaceValuesOfDecimals from './components/practice/class-5/TenthsandHundrendths/Decimals/place-values-of-decimals';
 import FractionToDecimalConversion from './components/practice/class-5/TenthsandHundrendths/Decimals/fraction-to-decimal-conversion';
@@ -1957,6 +1971,18 @@ function App() {
         <Route path="/junior/grade/:grade/toy-joy/building-combining-shapes" element={<ProtectedRoute redirectTo="/login"><BuildingCombiningShapes /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/toy-joy/sequencing-model-construction" element={<ProtectedRoute redirectTo="/login"><SequencingModelConstruction /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/toy-joy/chapter-test" element={<ProtectedRoute redirectTo="/login"><ToyJoyTest /></ProtectedRoute>} />
+
+        {/* Vacation with My Nani Maa Routes */}
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/addition-subtraction-facts" element={<ProtectedRoute redirectTo="/login"><AdditionSubtractionFacts /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/addition-subtraction-tens-frame" element={<ProtectedRoute redirectTo="/login"><AdditionSubtractionTensFrame /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/number-line-jumps" element={<ProtectedRoute redirectTo="/login"><NumberLineJumps /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/number-grid-operations" element={<ProtectedRoute redirectTo="/login"><NumberGridOperations /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/patterns-magic-squares" element={<ProtectedRoute redirectTo="/login"><PatternsMagicSquares /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/story-based-add-sub" element={<ProtectedRoute redirectTo="/login"><StoryBasedAddSub /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/box-diagram-method" element={<ProtectedRoute redirectTo="/login"><BoxDiagramMethod /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/estimation-around-100" element={<ProtectedRoute redirectTo="/login"><EstimationAround100 /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/open-number-line" element={<ProtectedRoute redirectTo="/login"><OpenNumberLine /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/chapter-test" element={<ProtectedRoute redirectTo="/login"><VNTest /></ProtectedRoute>} />
 
         {/* Grade 8 Exponents and Powers - Negative Exponents */}
         <Route path="/senior/grade/8/exponents-powers/negative-exponents" element={

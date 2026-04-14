@@ -234,6 +234,18 @@ export const TOPIC_CONFIGS = {
             { id: "DC-07", name: "Numbers 150 to 200",       route: "double-century/numbers-150-to-200" },
             { id: "DC-08", name: "Jumping Game",             route: "double-century/jumping-game" },
             { id: "DC-TEST", name: "Chapter Test",           route: "double-century/chapter-test" },
+        ],
+        'Vacation with My Nani Maa': [
+            { id: "VN-01", name: "Addition & Subtraction Facts", route: "vacation-with-my-nani-maa/addition-subtraction-facts" },
+            { id: "VN-02", name: "Addition & Subtraction with Tens Frame", route: "vacation-with-my-nani-maa/addition-subtraction-tens-frame" },
+            { id: "VN-03", name: "Number Line Jumps", route: "vacation-with-my-nani-maa/number-line-jumps" },
+            { id: "VN-04", name: "Number Grid Operations", route: "vacation-with-my-nani-maa/number-grid-operations" },
+            { id: "VN-05", name: "Patterns & Magic Squares", route: "vacation-with-my-nani-maa/patterns-magic-squares" },
+            { id: "VN-06", name: "Story-Based Addition and Subtraction", route: "vacation-with-my-nani-maa/story-based-add-sub" },
+            { id: "VN-07", name: "Box Diagram Method", route: "vacation-with-my-nani-maa/box-diagram-method" },
+            { id: "VN-08", name: "Estimation Around 100", route: "vacation-with-my-nani-maa/estimation-around-100" },
+            { id: "VN-09", name: "Open Number Line", route: "vacation-with-my-nani-maa/open-number-line" },
+            { id: "VN-TEST", name: "Chapter Test", route: "vacation-with-my-nani-maa/chapter-test" }
         ]
     },
 
