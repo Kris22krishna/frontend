@@ -342,6 +342,17 @@ import SortingGrouping from './components/practice/class-3/Whats-in-a-Name/Sorti
 import DataCollection from './components/practice/class-3/Whats-in-a-Name/DataCollection';
 import WINTest from './components/practice/class-3/Whats-in-a-Name/WINTest';
 
+// Double Century
+import DCCountingAndGroups from './components/practice/class-3/Double-Century/CountingAndGroups';
+import DCNumberBoard from './components/practice/class-3/Double-Century/NumberBoard';
+import DCNumberBeforeAfter from './components/practice/class-3/Double-Century/NumberBeforeAfter';
+import DCMaking100 from './components/practice/class-3/Double-Century/Making100';
+import DCNumbers101to150 from './components/practice/class-3/Double-Century/Numbers101to150';
+import DCPlaceValue from './components/practice/class-3/Double-Century/PlaceValue';
+import DCNumbers150to200 from './components/practice/class-3/Double-Century/Numbers150to200';
+import DCJumpingGame from './components/practice/class-3/Double-Century/JumpingGame';
+import DCTest from './components/practice/class-3/Double-Century/DCTest';
+
 // Toy Joy
 import Identifying3DShapes from './components/practice/class-3/Toy-Joy/Identifying3DShapes';
 import CountingShapes from './components/practice/class-3/Toy-Joy/CountingShapes';
@@ -1924,6 +1935,17 @@ function App() {
         <Route path="/junior/grade/:grade/whats-in-a-name/sorting-grouping" element={<ProtectedRoute redirectTo="/login"><SortingGrouping /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/whats-in-a-name/data-collection" element={<ProtectedRoute redirectTo="/login"><DataCollection /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/whats-in-a-name/chapter-test" element={<ProtectedRoute redirectTo="/login"><WINTest /></ProtectedRoute>} />
+
+        {/* Double Century Routes */}
+        <Route path="/junior/grade/:grade/double-century/counting-and-groups" element={<ProtectedRoute redirectTo="/login"><DCCountingAndGroups /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/double-century/number-board" element={<ProtectedRoute redirectTo="/login"><DCNumberBoard /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/double-century/number-before-after" element={<ProtectedRoute redirectTo="/login"><DCNumberBeforeAfter /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/double-century/making-100" element={<ProtectedRoute redirectTo="/login"><DCMaking100 /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/double-century/numbers-101-to-150" element={<ProtectedRoute redirectTo="/login"><DCNumbers101to150 /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/double-century/place-value" element={<ProtectedRoute redirectTo="/login"><DCPlaceValue /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/double-century/numbers-150-to-200" element={<ProtectedRoute redirectTo="/login"><DCNumbers150to200 /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/double-century/jumping-game" element={<ProtectedRoute redirectTo="/login"><DCJumpingGame /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/double-century/chapter-test" element={<ProtectedRoute redirectTo="/login"><DCTest /></ProtectedRoute>} />
 
         {/* Toy Joy Routes */}
         <Route path="/junior/grade/:grade/toy-joy/identifying-3d-shapes" element={<ProtectedRoute redirectTo="/login"><Identifying3DShapes /></ProtectedRoute>} />
