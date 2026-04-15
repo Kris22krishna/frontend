@@ -2,6 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SKILLS, LEARN_CONTENT, generateQuestionSets } from './skillsData';
 import '../../data-handling.css';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+
+const SKILL_NODE_IDS = {
+    1: 'a4041014-0001-0000-0000-000000000000',
+    2: 'a4041014-0002-0000-0000-000000000000',
+    3: 'a4041014-0003-0000-0000-000000000000',
+    4: 'a4041014-0004-0000-0000-000000000000',
+};
 
 /* ═══════════════════════════════════════════════════════════════
    QUESTION TYPE COMPONENTS
@@ -490,7 +498,7 @@ function GroupMakerQ({ data, color, onHasInput, onAnswer, checkTrigger, saved, i
          (enabled) → click → show result → button becomes Next →
    ═══════════════════════════════════════════════════════════════ */
 
-function InteractivePractice({ questions, title, color, onBack, onRetry }) {
+function InteractivePractice({ questions, title, color, onBack, onRetry, nodeId }) {
     const [idx, setIdx] = useState(0);
     const [score, setScore] = useState(0);
     const [done, setDone] = useState(false);
@@ -503,6 +511,17 @@ function InteractivePractice({ questions, title, color, onBack, onRetry }) {
         return () => clearInterval(timerRef.current);
     }, []);
     useEffect(() => { if (done) clearInterval(timerRef.current); }, [done]);
+
+    const { startSession, finishSession, abandonSession } = useSessionLogger();
+    const v4Answers = useRef([]);
+    const v4Finished = useRef(false);
+    useEffect(() => {
+        if (!nodeId) return;
+        v4Answers.current = [];
+        v4Finished.current = false;
+        startSession({ nodeId, sessionType: 'practice' });
+        return () => { if (!v4Finished.current) abandonSession(); };
+    }, [nodeId]);
     const formatTime = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 
     // Per-question state
@@ -531,6 +550,16 @@ function InteractivePractice({ questions, title, color, onBack, onRetry }) {
         if (correct) {
             setScore(s => s + 1);
         }
+        if (nodeId) {
+            v4Answers.current.push({
+                question_index: idx,
+                answer_json: JSON.stringify({ savedState }),
+                is_correct: correct,
+                marks_awarded: correct ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0,
+            });
+        }
     };
 
     const handleCheckOrNext = () => {
@@ -543,6 +572,10 @@ function InteractivePractice({ questions, title, color, onBack, onRetry }) {
                 setCheckTrigger(0);
                 setIdx(i => i + 1);
             } else {
+                if (nodeId && !v4Finished.current) {
+                    v4Finished.current = true;
+                    finishSession({ answers_payload: v4Answers.current });
+                }
                 setDone(true);
             }
         }
@@ -706,7 +739,7 @@ function LearnView({ skill, onBack }) {
    Flow: Free navigation, explicit palette, mark for review, final submit
    ═══════════════════════════════════════════════════════════════ */
 
-function AssessmentPractice({ questions, title, color, onBack, onRetry }) {
+function AssessmentPractice({ questions, title, color, onBack, onRetry, nodeId }) {
     const [idx, setIdx] = useState(0);
     const [score, setScore] = useState(0);
     const [done, setDone] = useState(false);
@@ -720,6 +753,15 @@ function AssessmentPractice({ questions, title, color, onBack, onRetry }) {
         return () => clearInterval(timerRef.current);
     }, []);
     useEffect(() => { if (done) clearInterval(timerRef.current); }, [done]);
+
+    const { startSession, finishSession, abandonSession } = useSessionLogger();
+    const v4IsFinished = useRef(false);
+    useEffect(() => {
+        if (!nodeId) return;
+        v4IsFinished.current = false;
+        startSession({ nodeId, sessionType: 'assessment' });
+        return () => { if (!v4IsFinished.current) abandonSession(); };
+    }, [nodeId]);
     const formatTime = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 
     // Per-question state: { answered: boolean, marked: boolean, savedState: any }
@@ -787,12 +829,23 @@ function AssessmentPractice({ questions, title, color, onBack, onRetry }) {
         }
         accumulateTime();
         let s = 0;
-        questions.forEach((q, i) => {
+        const payload = questions.map((q, i) => {
             const st = qStates[i];
-            if (st.answered && evaluateAnswer(q.type, q, st.savedState)) {
-                s++;
-            }
+            const correct = st.answered && evaluateAnswer(q.type, q, st.savedState);
+            if (correct) s++;
+            return {
+                question_index: i,
+                answer_json: JSON.stringify({ savedState: st.savedState }),
+                is_correct: correct,
+                marks_awarded: correct ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0,
+            };
         });
+        if (nodeId && !v4IsFinished.current) {
+            v4IsFinished.current = true;
+            finishSession({ answers_payload: payload });
+        }
         setScore(s);
         setDone(true);
     };
@@ -1112,6 +1165,7 @@ export default function DataHandlingSkillsClass4() {
                     title={`${skillInfo.title} — Assessment`}
                     color={skillInfo.color}
                     onBack={onBack}
+                    nodeId={SKILL_NODE_IDS[selectedSkill]}
                     onRetry={() => {
                         const { practice, assessment } = generateQuestionSets(selectedSkill);
                         setPracticeQs(practice);
@@ -1129,6 +1183,7 @@ export default function DataHandlingSkillsClass4() {
                 title={`${skillInfo.title} — Practice`}
                 color={skillInfo.color}
                 onBack={onBack}
+                nodeId={SKILL_NODE_IDS[selectedSkill]}
                 onRetry={() => {
                     const { practice, assessment } = generateQuestionSets(selectedSkill);
                     setPracticeQs(practice);

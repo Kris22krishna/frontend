@@ -372,6 +372,7 @@ const generateLargeNumbersQuestions = () => {
 export const SKILLS = [
     {
         id: 'ft-01',
+        nodeId: 'a4051001-0001-0000-0000-000000000000',
         title: 'Place Value',
         subtitle: 'Lakhs & Beyond',
         icon: '🏛️',
@@ -401,6 +402,7 @@ export const SKILLS = [
     },
     {
         id: 'ft-02',
+        nodeId: 'a4051001-0002-0000-0000-000000000000',
         title: 'Estimation',
         subtitle: 'Real-Life rounding',
         icon: '🎯',
@@ -423,6 +425,7 @@ export const SKILLS = [
     },
     {
         id: 'ft-03',
+        nodeId: 'a4051001-0003-0000-0000-000000000000',
         title: 'Reading & Writing',
         subtitle: 'Figures to Words',
         icon: '📝',
@@ -445,6 +448,7 @@ export const SKILLS = [
     },
     {
         id: 'ft-04',
+        nodeId: 'a4051001-0004-0000-0000-000000000000',
         title: 'Comparison',
         subtitle: 'Value judgement',
         icon: '⚖️',
@@ -467,6 +471,7 @@ export const SKILLS = [
     },
     {
         id: 'ft-05',
+        nodeId: 'a4051001-0005-0000-0000-000000000000',
         title: 'Number Sense',
         subtitle: 'Binary Ops',
         icon: '🔢',
@@ -489,6 +494,7 @@ export const SKILLS = [
     },
     {
         id: 'ft-06',
+        nodeId: 'a4051001-0006-0000-0000-000000000000',
         title: 'Logistics',
         subtitle: 'Trip time & catch',
         icon: '🛥️',
@@ -511,6 +517,7 @@ export const SKILLS = [
     },
     {
         id: 'ft-07',
+        nodeId: 'a4051001-0007-0000-0000-000000000000',
         title: 'Real Life Data',
         subtitle: 'Trade & Profit',
         icon: '📊',
@@ -533,6 +540,7 @@ export const SKILLS = [
     },
     {
         id: 'ft-08',
+        nodeId: 'a4051001-0008-0000-0000-000000000000',
         title: 'Large Numbers',
         subtitle: 'Crowds & Counts',
         icon: '🌍',

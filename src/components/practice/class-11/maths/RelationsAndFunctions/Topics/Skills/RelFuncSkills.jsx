@@ -20,8 +20,19 @@ import {
 
 import QuizEngine from "../../../../../../Math-Branches/Algebra/Topics/Skills/Engines/QuizEngine";
 import AssessmentEngine from "../../../../../../Math-Branches/Algebra/Topics/Skills/Engines/AssessmentEngine";
+import { NODE_IDS } from "@/lib/curriculumIds";
 
 const BASE = "/senior/grade/11/maths/relations-and-functions";
+
+// Canonical node ID map — skill.id → UUID from curriculumIds.js
+const SKILL_NODE_ID_MAP = {
+  cartesian:  NODE_IDS.g11MathRAFCartesian,
+  relations:  NODE_IDS.g11MathRAFRelations,
+  counting:   NODE_IDS.g11MathRAFCounting,
+  functions:  NODE_IDS.g11MathRAFFunctions,
+  special:    NODE_IDS.g11MathRAFSpecial,
+  algebra:    NODE_IDS.g11MathRAFAlgebra,
+};
 
 // ─── SKILLS DATA ──────────────────────────────────────────────────────────
 const SKILLS = [
@@ -230,27 +241,27 @@ export default function RelFuncSkills() {
             </div>
           ) : view === "practice" ? (
             <div style={{ maxWidth: 800, margin: "0 auto" }}>
-              <QuizEngine
+            <QuizEngine
                 questions={skill.practice}
                 title={skill.title}
                 onBack={() => setView("list")}
                 onSecondaryBack={() => navigate(BASE)}
                 color={skill.color}
                 prefix="mat"
-                nodeId={`g11-relfunc-${skill.id}-practice`}
+                nodeId={SKILL_NODE_ID_MAP[skill.id]}
                 sessionType="practice"
               />
             </div>
           ) : (
             <div style={{ maxWidth: 900, margin: "0 auto" }}>
-              <AssessmentEngine
+            <AssessmentEngine
                 questions={skill.assessment}
                 title={skill.title}
                 onBack={() => setView("list")}
                 onSecondaryBack={() => navigate(BASE)}
                 color={skill.color}
                 prefix="mat"
-                nodeId={`g11-relfunc-${skill.id}-assessment`}
+                nodeId={SKILL_NODE_ID_MAP[skill.id]}
                 sessionType="assessment"
               />
             </div>

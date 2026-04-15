@@ -13,6 +13,27 @@ import mascotImg from '../../../../assets/mascot.png';
 import avatarImg from '../../../../assets/avatar.png';
 import '../../../../pages/juniors/class-1/Grade1Practice.css';
 
+const WholeWatermelon = ({ size = 60 }) => (
+    <div style={{ width: size, height: size, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <svg viewBox="0 0 100 100" width={size} height={size} style={{ filter: 'drop-shadow(0 5px 15px rgba(22, 101, 52, 0.2))' }}>
+            <defs>
+                <radialGradient id="watermelonGrad" cx="50%" cy="50%" r="50%" fx="30%" fy="30%">
+                    <stop offset="0%" style={{ stopColor: '#bbf7d0' }} />
+                    <stop offset="60%" style={{ stopColor: '#22c55e' }} />
+                    <stop offset="100%" style={{ stopColor: '#166534' }} />
+                </radialGradient>
+            </defs>
+            <ellipse cx="50" cy="50" rx="46" ry="34" fill="url(#watermelonGrad)" stroke="#166534" strokeWidth="2" />
+            <path d="M30 32 Q 38 50 30 68" stroke="#166534" strokeWidth="5" fill="none" strokeLinecap="round" opacity="0.4" />
+            <path d="M45 26 Q 52 50 45 74" stroke="#166534" strokeWidth="5" fill="none" strokeLinecap="round" opacity="0.4" />
+            <path d="M60 26 Q 68 50 60 74" stroke="#166534" strokeWidth="5" fill="none" strokeLinecap="round" opacity="0.4" />
+            <path d="M75 32 Q 82 50 75 68" stroke="#166534" strokeWidth="5" fill="none" strokeLinecap="round" opacity="0.4" />
+            {/* Shine */}
+            <ellipse cx="35" cy="35" rx="12" ry="6" fill="white" opacity="0.3" transform="rotate(-25, 35, 35)" />
+        </svg>
+    </div>
+);
+
 const DynamicVisual = ({ type, data }) => {
     if (type === 'shape') {
         const { shape, color } = data;
@@ -24,6 +45,10 @@ const DynamicVisual = ({ type, data }) => {
                     {shape === 'triangle' && <polygon points="50,5 95,90 5,90" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
                     {shape === 'rectangle' && <rect x="5" y="25" width="90" height="50" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
                     {shape === 'oval' && <ellipse cx="50" cy="50" rx="45" ry="30" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
+                    {shape === 'pentagon' && <polygon points="50,5 95,40 80,95 20,95 5,40" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
+                    {shape === 'hexagon' && <polygon points="50,5 90,25 90,75 50,95 10,75 10,25" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
+                    {shape === 'star' && <polygon points="50,5 63,38 98,38 70,59 81,91 50,70 19,91 30,59 2,38 37,38" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
+                    {shape === 'heart' && <path d="M50,30 C50,10 10,10 10,40 C10,65 50,90 50,90 C50,90 90,65 90,40 C90,10 50,10 50,30 Z" fill={color} stroke="rgba(0,0,0,0.1)" strokeWidth="2" />}
                 </svg>
             </motion.div>
         );
@@ -31,45 +56,57 @@ const DynamicVisual = ({ type, data }) => {
 
     if (type === 'length') {
         const { aLength, bLength, objectType } = data;
-        const renderObject = (width, color, type, label) => {
+        const renderItem = (width, color, label) => {
             return (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '20px', width: '100%' }}>
-                    <div style={{ fontWeight: '900', color: color, fontSize: '1.5rem', minWidth: '30px' }}>{label}</div>
-                    <div className="g1-visual-item" style={{ flexGrow: 1, height: '60px', position: 'relative', background: '#f8fafc', borderRadius: '10px', padding: '10px', border: '1px dashed #cbd5e1' }}>
+                <div style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '15px' }}>
+                    <div style={{ 
+                        minWidth: '35px', 
+                        height: '35px', 
+                        borderRadius: '10px', 
+                        background: color, 
+                        color: 'white', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center', 
+                        fontWeight: '900',
+                        fontSize: '1.2rem',
+                        boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+                    }}>
+                        {label}
+                    </div>
+                    <div style={{ flexGrow: 1, position: 'relative', height: '40px' }}>
                         <motion.div
                             initial={{ width: 0 }}
                             animate={{ width: `${width}%` }}
                             transition={{ type: 'spring', damping: 15, stiffness: 100 }}
                             style={{ height: '100%', position: 'relative' }}
                         >
-                            {type === 'pencil' && (
+                            {objectType === 'pencil' && (
                                 <svg width="100%" height="100%" viewBox="0 0 100 20" preserveAspectRatio="none">
                                     <path d="M0,5 L85,5 L95,10 L85,15 L0,15 Z" fill={color} />
                                     <path d="M85,5 L95,10 L85,15 Z" fill="#FFDBAC" />
                                     <path d="M92,8 L95,10 L92,12 Z" fill="#333" />
                                     <rect x="0" y="5" width="15" height="10" fill="#FFADAD" rx="2" />
-                                    <rect x="15" y="5" width="2" height="10" fill="rgba(0,0,0,0.1)" />
                                 </svg>
                             )}
-                            {type === 'bat' && (
+                            {objectType === 'bat' && (
                                 <svg width="100%" height="100%" viewBox="0 0 100 25" preserveAspectRatio="none">
                                     <rect x="0" y="8" width="30" height="9" rx="2" fill="#8B4513" />
                                     <path d="M30,5 L95,2 L100,5 L100,20 L95,23 L30,20 Z" fill="#DEB887" stroke="#8B4513" strokeWidth="0.5" />
                                     <rect x="0" y="9" width="15" height="7" fill="#4A90E2" rx="1" />
                                 </svg>
                             )}
-                            {type === 'snake' && (
+                            {objectType === 'snake' && (
                                 <svg width="100%" height="100%" viewBox="0 0 100 20" preserveAspectRatio="none">
-                                    <path d="M0,10 Q10,5 20,10 T40,10 T60,10 T80,10 T100,10" fill="none" stroke={color} strokeWidth="4" strokeLinecap="round" />
+                                    <path d="M0,10 Q10,2 20,10 T40,10 T60,10 T80,10 T100,10" fill="none" stroke={color} strokeWidth="6" strokeLinecap="round" />
                                     <circle cx="100" cy="10" r="3" fill={color} />
-                                    <circle cx="101" cy="9" r="0.5" fill="black" />
                                 </svg>
                             )}
-                            {type === 'ruler' && (
+                            {objectType === 'ruler' && (
                                 <svg width="100%" height="100%" viewBox="0 0 100 15" preserveAspectRatio="none">
                                     <rect x="0" y="2" width="100" height="11" fill="#FFD93D" stroke="#B8860B" strokeWidth="0.5" />
-                                    {[...Array(20)].map((_, i) => (
-                                        <line key={i} x1={i * 5} y1="2" x2={i * 5} y2={i % 5 === 0 ? 8 : 5} stroke="#B8860B" strokeWidth="0.5" />
+                                    {[...Array(10)].map((_, i) => (
+                                        <line key={i} x1={i * 10} y1="2" x2={i * 10} y2="6" stroke="#B8860B" strokeWidth="0.5" />
                                     ))}
                                 </svg>
                             )}
@@ -78,24 +115,36 @@ const DynamicVisual = ({ type, data }) => {
                 </div>
             );
         };
-        return (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', width: '100%', padding: '10px' }}>
 
-                {renderObject(aLength, '#4ECDC4', objectType, 'A')}
-                {renderObject(bLength, '#FF6B6B', objectType, 'B')}
+        return (
+            <div className="g1-visual-item" style={{ 
+                width: '100%', 
+                background: 'white', 
+                borderRadius: '25px', 
+                padding: '30px 20px', 
+                border: '2px dashed #E2E8F0',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '30px',
+                position: 'relative',
+                overflow: 'hidden'
+            }}>
+                <div style={{ position: 'absolute', top: 0, bottom: 0, left: '70px', borderLeft: '2px dotted #4A556840', zIndex: 1 }}></div>
+                {renderItem(aLength, '#4ECDC4', 'A')}
+                {renderItem(bLength, '#FF6B6B', 'B')}
             </div>
         );
     }
 
     if (type === 'emoji') {
-        const { emoji } = data;
+        const { emoji, name } = data;
         return (
             <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 style={{ fontSize: '6rem', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px', width: '100%' }}
             >
-                {emoji}
+                {name === 'Watermelon' ? <WholeWatermelon size={100} /> : emoji}
             </motion.div>
         );
     }
@@ -185,14 +234,14 @@ const Grade2WhatIsLong = () => {
         return null;
     };
 
-    const generateShapeQuestions = () => {
+    const generateShapeQuestions = (count = totalQuestions) => {
         const questions = [];
-        const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9'];
-        const shapes = ['circle', 'square', 'triangle', 'rectangle', 'oval'];
-        const shuffledTargets = [...shapes].sort(() => 0.5 - Math.random());
+        const colors = ['#FF6B6B', '#4ECDC4', '#FFE66D', '#98D8C8', '#C9A9E9', '#F6AD55', '#B794F4', '#F687B3'];
+        const shapes = ['circle', 'square', 'triangle', 'rectangle', 'oval', 'pentagon', 'hexagon', 'star', 'heart'];
+        const pool = [...shapes].sort(() => 0.5 - Math.random());
 
-        for (let i = 0; i < totalQuestions; i++) {
-            const target = shuffledTargets[i % shapes.length];
+        for (let i = 0; i < count; i++) {
+            const target = pool[i % pool.length];
             const otherOptions = shapes.filter(s => s !== target);
             questions.push({
                 text: `Identify this 2D shape!`,
@@ -200,112 +249,125 @@ const Grade2WhatIsLong = () => {
                 correct: target,
                 type: 'shape',
                 visualData: { shape: target, color: colors[i % colors.length] },
-                explanation: `This object has the properties of a ${target}.`
+                explanation: `This object has the properties of a ${target.charAt(0).toUpperCase() + target.slice(1)}.`
             });
         }
         return questions;
     };
 
-    const generateLengthQuestions = () => {
+    const generateLengthQuestions = (count = totalQuestions) => {
         const questions = [];
         const objectTypes = ['pencil', 'bat', 'snake', 'ruler'];
-        for (let i = 0; i < totalQuestions; i++) {
-            const isALonger = Math.random() > 0.5;
-            const aLen = isALonger ? 85 : 45;
-            const bLen = isALonger ? 45 : 85;
-            const longerQ = Math.random() > 0.5;
-            const objectType = objectTypes[Math.floor(Math.random() * objectTypes.length)];
+        
+        // Use a pool of unique combinations
+        const pool = [];
+        objectTypes.forEach(objType => {
+            pool.push({ objType, longerQ: true, isALonger: true });
+            pool.push({ objType, longerQ: true, isALonger: false });
+            pool.push({ objType, longerQ: false, isALonger: true });
+            pool.push({ objType, longerQ: false, isALonger: false });
+        });
+        pool.sort(() => 0.5 - Math.random());
+
+        for (let i = 0; i < count; i++) {
+            const combo = pool[i % pool.length];
+            const aLen = combo.isALonger ? (80 + Math.random() * 10) : (35 + Math.random() * 10);
+            const bLen = combo.isALonger ? (35 + Math.random() * 10) : (80 + Math.random() * 10);
 
             questions.push({
-                text: longerQ ? `Which one is LONGER?` : `Which one is SHORTER?`,
+                text: combo.longerQ ? `Which one is LONGER?` : `Which one is SHORTER?`,
                 options: ['A', 'B'],
-                correct: longerQ ? (isALonger ? 'A' : 'B') : (isALonger ? 'B' : 'A'),
+                correct: combo.longerQ ? (combo.isALonger ? 'A' : 'B') : (combo.isALonger ? 'B' : 'A'),
                 type: 'length',
-                visualData: { aLength: aLen, bLength: bLen, objectType },
-                explanation: longerQ ? `The object that stretches further is longer.` : `The object that covers less distance is shorter.`
+                visualData: { aLength: aLen, bLength: bLen, objectType: combo.objType },
+                explanation: combo.longerQ ? `The object that stretches further is longer.` : `The object that covers less distance is shorter.`
             });
         }
         return questions;
     };
 
-    const generateRoundQuestions = () => {
+    const generateRoundQuestions = (count = totalQuestions) => {
         const questions = [];
         const roundObjects = [
             { emoji: '⚽', name: 'Ball' },
             { emoji: '🎡', name: 'Wheel' },
             { emoji: '🪙', name: 'Coin' },
             { emoji: '🍊', name: 'Orange' },
-            { emoji: '📀', name: 'CD' }
+            { emoji: '📀', name: 'CD' },
+            { emoji: '🏀', name: 'Basketball' },
+            { emoji: '🎾', name: 'Tennis Ball' },
+            { emoji: '🌍', name: 'Globe' },
+            { emoji: '🍅', name: 'Tomato' },
+            { emoji: '🍉', name: 'Watermelon' },
+            { emoji: '🍋', name: 'Lemon' },
+            { emoji: '🥯', name: 'Bagel' },
+            { emoji: '🛞', name: 'Tire' }
         ];
         const nonRoundObjects = [
             { emoji: '📦', name: 'Box' },
             { emoji: '📐', name: 'Ruler' },
             { emoji: '🧱', name: 'Brick' },
             { emoji: '📱', name: 'Phone' },
-            { emoji: '📖', name: 'Book' }
+            { emoji: '📖', name: 'Book' },
+            { emoji: '🥕', name: 'Carrot' },
+            { emoji: '🥒', name: 'Cucumber' },
+            { emoji: '🪈', name: 'Flute' },
+            { emoji: '🪵', name: 'Log' },
+            { emoji: '🥖', name: 'Baguette' },
+            { emoji: '🕯️', name: 'Candle' },
+            { emoji: '🏏', name: 'Cricket Bat' },
+            { emoji: '🦷', name: 'Toothbrush' }
         ];
 
-        // Shuffle arrays to ensure variety and uniqueness
         const shuffledRound = [...roundObjects].sort(() => 0.5 - Math.random());
         const shuffledNonRound = [...nonRoundObjects].sort(() => 0.5 - Math.random());
 
-        // For a 5 question session, we want exactly 3 round and 2 non-round objects
         const targetTypes = [];
-        for (let i = 0; i < totalQuestions; i++) {
-            if (i < 3) { // First 3 are round
-                targetTypes.push({ isRound: true, item: shuffledRound[i % shuffledRound.length] });
-            } else { // Next 2 are non-round
-                targetTypes.push({ isRound: false, item: shuffledNonRound[(i - 3) % shuffledNonRound.length] });
+        for (let i = 0; i < count; i++) {
+            if (i % 2 === 0) {
+                targetTypes.push({ isRound: true, item: shuffledRound[Math.floor(i/2) % shuffledRound.length] });
+            } else {
+                targetTypes.push({ isRound: false, item: shuffledNonRound[Math.floor(i/2) % shuffledNonRound.length] });
             }
         }
 
-        // Shuffle the types so the order of round/non-round questions is random
         const shuffledTargets = targetTypes.sort(() => 0.5 - Math.random());
 
-        for (let i = 0; i < totalQuestions; i++) {
+        for (let i = 0; i < count; i++) {
             const { isRound, item } = shuffledTargets[i];
-
-            if (isRound) {
-                questions.push({
-                    text: `Is this a ROUND object?`,
-                    options: ['Yes', 'No'],
-                    correct: 'Yes',
-                    type: 'emoji',
-                    visualData: { emoji: item.emoji, isRound: true },
-                    explanation: `Objects like a ${item.name} are round.`
-                });
-            } else {
-                questions.push({
-                    text: `Is this a ROUND object?`,
-                    options: ['Yes', 'No'],
-                    correct: 'No',
-                    type: 'emoji',
-                    visualData: { emoji: item.emoji, isRound: false },
-                    explanation: `Objects like a ${item.name} are not round.`
-                });
-            }
+            questions.push({
+                text: `Is this a ROUND object?`,
+                options: ['Yes', 'No'],
+                correct: isRound ? 'Yes' : 'No',
+                type: 'emoji',
+                visualData: { emoji: item.emoji, name: item.name, isRound },
+                explanation: isRound ? `Objects like a ${item.name} are round.` : `Objects like a ${item.name} are NOT round.`
+            });
         }
         return questions;
     };
 
     const generateQuestions = (selectedSkill) => {
-        if (selectedSkill === '1001') return generateShapeQuestions();
-        if (selectedSkill === '1002') return generateLengthQuestions();
-        if (selectedSkill === '1003') return generateRoundQuestions();
+        if (selectedSkill === '1001') return generateShapeQuestions(totalQuestions);
+        if (selectedSkill === '1002') return generateLengthQuestions(totalQuestions);
+        if (selectedSkill === '1003') return generateRoundQuestions(totalQuestions);
 
-        // MIXED For Test — generate extra, deduplicate, then slice
+        // MIXED For Test — generate a balanced large pool then shuffle and slice
         const pool = [
-            ...generateShapeQuestions(),
-            ...generateLengthQuestions(),
-            ...generateRoundQuestions()
+            ...generateShapeQuestions(8),
+            ...generateLengthQuestions(8),
+            ...generateRoundQuestions(8)
         ].sort(() => 0.5 - Math.random());
+
+        const unique = [];
         const seen = new Set();
-        const unique = pool.filter(q => {
-            const key = q.text + '||' + q.correct;
-            if (seen.has(key)) return false;
-            seen.add(key);
-            return true;
-        });
+        for (const q of pool) {
+            const key = q.type + (q.visualData.shape || q.visualData.emoji || q.visualData.objectType) + q.text;
+            if (!seen.has(key)) {
+                unique.push(q);
+                seen.add(key);
+            }
+        }
         return unique.slice(0, totalQuestions);
     };
 
@@ -382,10 +444,8 @@ const Grade2WhatIsLong = () => {
             }
         }));
 
-        if (!isTest && !isCorrect) {
+        if (!isTest) {
             setShowExplanationModal(true);
-        } else if (isTest) {
-            handleNext();
         } else {
             setIsAutoAdvancing(true);
             setTimeout(() => {

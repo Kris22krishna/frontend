@@ -1045,7 +1045,7 @@ export const generateMeasurementConversionApplicationLevel = () => {
 
     return {
         type: "userInput",
-        topic,
+        topic: topic,
         question,
         answer
     };
@@ -1256,7 +1256,7 @@ export const generateSimpleGrade4Pattern = () => {
     return {
         type: "userInput",
         question: `Complete the pattern: </br> ${seq.join(", ")}, ?`,
-        topic: "Number Patterns",
+        topic: "Logical Thinking / Patterns",
         answer: String(next)
     };
 };

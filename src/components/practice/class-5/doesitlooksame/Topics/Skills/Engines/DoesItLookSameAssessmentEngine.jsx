@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { useNavigate } from 'react-router-dom';
 import '../../../doesitlooksame.css';
 import MathRenderer from '@/components/MathRenderer';
@@ -12,7 +13,7 @@ function sample(arr, n) {
     return copy.slice(0, n);
 }
 
-export default function DoesItLookSameAssessmentEngine({ questions: questionPool, sampleSize = 10, title, color, onBack, onSecondaryBack }) {
+export default function DoesItLookSameAssessmentEngine({ questions: questionPool, sampleSize = 10, title, color, onBack, onSecondaryBack , nodeId}) {
     const [questions] = useState(() => {
         const pool = typeof questionPool === 'function' ? questionPool() : questionPool;
         return sample(pool, sampleSize);
@@ -21,6 +22,8 @@ export default function DoesItLookSameAssessmentEngine({ questions: questionPool
     const [answers, setAnswers] = useState(Array(sampleSize).fill(null));
     const [timeLeft, setTimeLeft] = useState(sampleSize * 60); 
     const [finished, setFinished] = useState(false);
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const v4IsFinished = useRef(false);
 
     const finish = useCallback(() => setFinished(true), []);
 
@@ -30,6 +33,26 @@ export default function DoesItLookSameAssessmentEngine({ questions: questionPool
         const t = setInterval(() => setTimeLeft(s => s - 1), 1000);
         return () => clearInterval(t);
     }, [finished, timeLeft, finish]);
+    useEffect(() => {
+        if (!nodeId) return;
+        v4IsFinished.current = false;
+        startSession({ nodeId, sessionType: 'assessment' });
+        return () => { if (!v4IsFinished.current) abandonSession(); };
+    }, [nodeId]);
+
+    useEffect(() => {
+        if (!finished || !nodeId || v4IsFinished.current) return;
+        v4IsFinished.current = true;
+        const payload = questions.map((q, i) => ({
+            question_index: i,
+            answer_json: JSON.stringify({ selected: answers[i] }),
+            is_correct: answers[i] === q.correct,
+            marks_awarded: answers[i] === q.correct ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0,
+        }));
+        finishSession({ answers_payload: payload });
+    }, [finished]);
 
     const formatTime = (sec) => {
         const m = Math.floor(sec / 60);

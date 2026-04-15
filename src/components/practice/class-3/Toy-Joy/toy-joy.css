@@ -123,4 +123,21 @@ hr.toy-joy-div{border:none;border-top:2px dashed #e2e8f0;margin:44px 0;}
 .toy-joy-order-item:active{cursor:grabbing;box-shadow:0 4px 16px rgba(0,0,0,.13);}
 .toy-joy-order-num{width:28px;height:28px;border-radius:8px;background:var(--orange);color:#fff;font-family:'Baloo 2',cursive;font-weight:800;font-size:.85rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 
-@media(max-width:520px){.toy-joy-opts{grid-template-columns:1fr;}}
+@media(max-width:520px){
+  .toy-joy-opts{grid-template-columns:1fr;}
+  .toy-joy-count-boxes{flex-direction:column;}
+}
+
+@media(max-width:480px){
+  .toy-joy-match-wrap{gap:8px;flex-wrap:nowrap;}
+  .toy-joy-match-col{min-width:0;flex:1;}
+  .toy-joy-match-item{padding:8px 8px;font-size:.78rem;}
+  .toy-joy-match-center{gap:2px;}
+  .toy-joy-match-line{font-size:1.1rem;}
+}
+
+@media(max-width:400px){
+  .toy-joy-qcard{padding:14px 10px 16px;}
+  .toy-joy-qtext{font-size:.88rem;}
+  .toy-joy-main{padding:24px 10px 60px;}
+}

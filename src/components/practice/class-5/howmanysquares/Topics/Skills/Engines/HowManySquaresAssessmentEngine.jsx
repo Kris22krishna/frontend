@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import styles from './HowManySquaresEngines.module.css';
 import { LatexText } from '@/components/LatexText';
 
-export default function HowManySquaresAssessmentEngine({ questions, title, color, onBack, onSecondaryBack }) {
+export default function HowManySquaresAssessmentEngine({ questions, title, color, onBack, onSecondaryBack , nodeId}) {
     const [qIndex, setQIndex] = useState(0);
     const [answers, setAnswers] = useState({}); // { selectedOption, isCorrect }
 
@@ -10,6 +11,8 @@ export default function HowManySquaresAssessmentEngine({ questions, title, color
     const [isSubmitted, setIsSubmitted] = useState(false); // Used strictly for UI rendering of selected option in assessment
 
     const [finished, setFinished] = useState(false);
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const v4IsFinished = useRef(false);
     const [timeTaken, setTimeTaken] = useState(0);
 
     // Timer
@@ -18,6 +21,31 @@ export default function HowManySquaresAssessmentEngine({ questions, title, color
         const t = setInterval(() => setTimeTaken(s => s + 1), 1000);
         return () => clearInterval(t);
     }, [finished, questions]);
+
+    useEffect(() => {
+        if (!nodeId) return;
+        v4IsFinished.current = false;
+        startSession({ nodeId, sessionType: 'assessment' });
+        return () => { if (!v4IsFinished.current) abandonSession(); };
+    }, [nodeId]);
+
+    useEffect(() => {
+        if (!finished || !nodeId || v4IsFinished.current) return;
+        v4IsFinished.current = true;
+        const payload = questions.map((q, i) => {
+            const ans = answers[i];
+            const correct = ans ? ans.isCorrect : false;
+            return {
+                question_index: i,
+                answer_json: JSON.stringify({ selected: ans ? ans.selectedOption : null }),
+                is_correct: correct,
+                marks_awarded: correct ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0,
+            };
+        });
+        finishSession({ answers_payload: payload });
+    }, [finished]);
 
     // Restoration Hook for Assessment
     useEffect(() => {

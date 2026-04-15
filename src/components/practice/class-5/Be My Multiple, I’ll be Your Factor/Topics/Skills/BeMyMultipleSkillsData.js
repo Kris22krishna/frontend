@@ -171,6 +171,7 @@ export const generateLogicalReasoningQuestions = () => {
 export const SKILLS = [
     {
         id: 'bmf-01',
+        nodeId: 'a4051006-0001-0000-0000-000000000000',
         title: 'Factorization',
         subtitle: 'Breaking down numbers',
         icon: '🧶',
@@ -193,6 +194,7 @@ export const SKILLS = [
     },
     {
         id: 'bmf-02',
+        nodeId: 'a4051006-0002-0000-0000-000000000000',
         title: 'Multiples & Relationships',
         subtitle: 'Growth through multiplication',
         icon: '🚀',
@@ -215,6 +217,7 @@ export const SKILLS = [
     },
     {
         id: 'bmf-03',
+        nodeId: 'a4051006-0003-0000-0000-000000000000',
         title: 'Logical Reasoning',
         subtitle: 'Real-world application',
         icon: '🧩',

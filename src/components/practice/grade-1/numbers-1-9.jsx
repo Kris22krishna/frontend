@@ -4,16 +4,16 @@ import { Home, ArrowRight, Timer, Trophy, Star, ChevronLeft, RefreshCw, FileText
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { NODE_IDS } from '@/lib/curriculumIds';
-import Navbar from '../../Navbar';
-import { TOPIC_CONFIGS } from '../../../lib/topicConfig';
-import { LatexText } from '../../LatexText';
-import ExplanationModal from '../../ExplanationModal';
-import StickerExit from '../../StickerExit';
-import mascotImg from '../../../assets/mascot.png';
-import avatarImg from '../../../assets/avatar.png';
-import '../../../pages/juniors/class-1/Grade1Practice.css';
+import Navbar from '@/components/Navbar';
+import { TOPIC_CONFIGS } from '@/lib/topicConfig';
+import { LatexText } from '@/components/LatexText';
+import ExplanationModal from '@/components/ExplanationModal';
+import StickerExit from '@/components/StickerExit';
+import mascotImg from '@/assets/mascot.png';
+import avatarImg from '@/assets/avatar.png';
+import '@/pages/juniors/class-1/Grade1Practice.css';
 
-const DynamicVisual = ({ type, data }) => {
+const DynamicVisual = ({ type, data, isAnswered }) => {
     if (type === 'counting' || data.forceCounting) {
         const { count, objType, color } = data;
         const rows = Math.ceil(count / 3);
@@ -70,7 +70,9 @@ const DynamicVisual = ({ type, data }) => {
                             ))}
                         </svg>
                     </div>
-                    <div style={{ marginTop: '12px', fontWeight: 400, color: '#4ECDC4', fontSize: '1.2rem', fontFamily: 'Nunito, sans-serif' }}>Group A</div>
+                    <div style={{ marginTop: '12px', fontWeight: 600, color: '#4ECDC4', fontSize: '1.2rem', fontFamily: 'Nunito, sans-serif' }}>
+                        Group A {isAnswered && <span style={{ opacity: 0.8, fontSize: '0.9rem' }}>({n1})</span>}
+                    </div>
                 </div>
                 <div style={{ fontSize: '2.5rem', fontWeight: 400, color: '#CBD5E0' }}>VS</div>
                 <div style={{ textAlign: 'center' }}>
@@ -81,7 +83,9 @@ const DynamicVisual = ({ type, data }) => {
                             ))}
                         </svg>
                     </div>
-                    <div style={{ marginTop: '12px', fontWeight: 400, color: '#FF6B6B', fontSize: '1.2rem', fontFamily: 'Nunito, sans-serif' }}>Group B</div>
+                    <div style={{ marginTop: '12px', fontWeight: 600, color: '#FF6B6B', fontSize: '1.2rem', fontFamily: 'Nunito, sans-serif' }}>
+                        Group B {isAnswered && <span style={{ opacity: 0.8, fontSize: '0.9rem' }}>({n2})</span>}
+                    </div>
                 </div>
             </div>
         );
@@ -131,6 +135,8 @@ const Numbers1to9 = () => {
         return { topicName: 'Practice', skillName: 'Mathematics', grade: '1' };
     };
 
+    const { topicName, skillName } = getTopicInfo();
+
     const getNextSkill = () => {
         const { grade } = getTopicInfo();
         const gradeConfig = TOPIC_CONFIGS[grade];
@@ -176,11 +182,15 @@ const Numbers1to9 = () => {
 
     const makeOptions = (correct) => {
         const opts = new Set([correct]);
-        const offsets = [1, -1, 2, -2, 3, -3, 4];
+        const offsets = [1, -1, 2, -2, 3, -3, 4, -4, 5];
         for (const off of offsets) {
             if (opts.size >= 4) break;
             const v = correct + off;
-            if (v >= 0) opts.add(v);
+            if (v >= 0 && v <= 10) opts.add(v);
+        }
+        // Fallback for very small numbers if needed
+        while (opts.size < 4) {
+            opts.add(Math.floor(Math.random() * 10));
         }
         return [...opts].sort(() => 0.5 - Math.random());
     };
@@ -191,90 +201,99 @@ const Numbers1to9 = () => {
         const objTypes = ['circle', 'star', 'square'];
 
 
-        for (let i = 0; i < totalQuestions; i++) {
-            let question = {};
-
-            let typeToGen = 'counting';
-            if (isTest) {
-                if (i < 4) typeToGen = 'counting';
-                else if (i < 8) typeToGen = 'recognition';
-                else if (i < 11) typeToGen = 'userinput';
-                else typeToGen = 'comparison';
-            } else {
-                if (selectedSkill === '201' || !selectedSkill) typeToGen = 'counting';
-                else if (selectedSkill === '202') typeToGen = 'recognition';
-                else if (selectedSkill === '204') typeToGen = 'comparison';
-                else if (selectedSkill === '203') typeToGen = 'userinput';
+            // Create pools for unique numbers
+            const countingPool = Array.from({ length: 9 }, (_, k) => k + 1).sort(() => 0.5 - Math.random());
+            const recognitionPool = Array.from({ length: 9 }, (_, k) => k + 1).sort(() => 0.5 - Math.random());
+            const userInputPool = Array.from({ length: 9 }, (_, k) => k + 1).sort(() => 0.5 - Math.random());
+            
+            // Create comparison pool (shuffled pairs)
+            const allPairs = [];
+            for (let a = 1; a <= 9; a++) {
+                for (let b = 1; b <= 9; b++) {
+                    if (a !== b) allPairs.push([a, b]);
+                }
             }
+            const comparisonPool = allPairs.sort(() => 0.5 - Math.random());
+            
+            let countingIdx = 0;
+            let recognitionIdx = 0;
+            let userInputIdx = 0;
+            let comparisonIdx = 0;
 
-            if (typeToGen === 'counting') {
-                let count;
+            for (let i = 0; i < totalQuestions; i++) {
+                let question = {};
+
+                let typeToGen = 'counting';
                 if (isTest) {
-                    count = (i % 9) + 1;
+                    if (i < 4) typeToGen = 'counting';
+                    else if (i < 8) typeToGen = 'recognition';
+                    else if (i < 11) typeToGen = 'userinput';
+                    else typeToGen = 'comparison';
                 } else {
-                    count = Math.floor(Math.random() * 9) + 1;
+                    if (selectedSkill === '201' || !selectedSkill) typeToGen = 'counting';
+                    else if (selectedSkill === '202') typeToGen = 'recognition';
+                    else if (selectedSkill === '204') typeToGen = 'comparison';
+                    else if (selectedSkill === '203') typeToGen = 'userinput';
                 }
-                const objType = objTypes[i % objTypes.length];
-                question = {
-                    text: `How many ${objType}s can you count?`,
-                    options: makeOptions(count),
-                    correct: count,
-                    type: 'counting',
-                    visualData: { count, objType, color: colors[i % colors.length] },
-                    explanation: `By counting carefully, we can see there are exactly ${count} ${objType}s.`
-                };
-            } else if (typeToGen === 'recognition') {
-                const names = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
-                let num;
-                if (isTest) {
-                    num = ((i - 4) % 9) + 1;
-                } else {
-                    num = Math.floor(Math.random() * 9) + 1;
+
+                if (typeToGen === 'counting') {
+                    const count = countingPool[countingIdx % countingPool.length];
+                    countingIdx++;
+                    const objType = objTypes[i % objTypes.length];
+                    question = {
+                        text: `How many ${objType}s can you count?`,
+                        options: makeOptions(count),
+                        correct: count,
+                        type: 'counting',
+                        visualData: { count, objType, color: colors[i % colors.length] },
+                        explanation: `By counting carefully, we can see there are exactly ${count} ${objType}s.`
+                    };
+                } else if (typeToGen === 'recognition') {
+                    const names = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'];
+                    const num = recognitionPool[recognitionIdx % recognitionPool.length];
+                    recognitionIdx++;
+                    const optionsArr = [names[num - 1]];
+                    while (optionsArr.length < 4) {
+                        const randomName = names[Math.floor(Math.random() * names.length)];
+                        if (!optionsArr.includes(randomName)) optionsArr.push(randomName);
+                    }
+                    
+                    question = {
+                        text: `What is the number name for this number?`,
+                        options: optionsArr.sort(() => 0.5 - Math.random()),
+                        correct: names[num - 1],
+                        type: 'recognition',
+                        visualData: { num, color: colors[i % colors.length] },
+                        explanation: `The number ${num} is written as '${names[num - 1].toUpperCase()}'.`
+                    };
+                } else if (typeToGen === 'comparison') {
+                    const pair = comparisonPool[comparisonIdx % comparisonPool.length];
+                    comparisonIdx++;
+                    const n1 = pair[0];
+                    const n2 = pair[1];
+                    const isMore = isTest ? (i % 2 === 0) : Math.random() > 0.5;
+                    const correct = isMore ? (n1 > n2 ? 'Group A' : 'Group B') : (n1 < n2 ? 'Group A' : 'Group B');
+                    question = {
+                        text: `Which group has ${isMore ? 'more' : 'fewer'} items?`,
+                        options: ['Group A', 'Group B'],
+                        correct: correct,
+                        type: 'comparison',
+                        visualData: { n1, n2 },
+                        explanation: `Group A has ${n1} and Group B has ${n2}. So ${correct} clearly has ${isMore ? 'more' : 'fewer'}.`
+                    };
+                } else if (typeToGen === 'userinput') {
+                    const count = userInputPool[userInputIdx % userInputPool.length];
+                    userInputIdx++;
+                    const objType = objTypes[i % objTypes.length];
+                    question = {
+                        text: `How many ${objType}s are there?`,
+                        options: [],
+                        correct: count.toString(),
+                        type: 'userinput',
+                        visualData: { count, objType, color: colors[i % colors.length], forceCounting: true },
+                        explanation: `We count ${count} items. We write this as the number ${count}.`
+                    };
                 }
-                question = {
-                    text: `What is the name of this number?`,
-                    options: [names[num - 1], names[num % 9], names[(num + 2) % 9], names[(num + 4) % 9]].filter((v, i, self) => self.indexOf(v) === i).sort(() => 0.5 - Math.random()),
-                    correct: names[num - 1],
-                    type: 'recognition',
-                    visualData: { num, color: colors[i % colors.length] },
-                    explanation: `The number ${num} is written as '${names[num - 1].toUpperCase()}'.`
-                };
-            } else if (typeToGen === 'comparison') {
-                let n1, n2;
-                if (isTest) {
-                    const pairs = [[2, 5], [7, 3], [4, 8], [9, 1]];
-                    [n1, n2] = pairs[(i - 11) % pairs.length];
-                } else {
-                    n1 = Math.floor(Math.random() * 5) + 1;
-                    n2 = Math.floor(Math.random() * 4) + 6;
-                }
-                const isMore = isTest ? (i % 2 === 0) : Math.random() > 0.5;
-                const correct = isMore ? (n1 > n2 ? 'Group A' : 'Group B') : (n1 < n2 ? 'Group A' : 'Group B');
-                question = {
-                    text: `Which group has ${isMore ? 'more' : 'fewer'} items?`,
-                    options: ['Group A', 'Group B'],
-                    correct: correct,
-                    type: 'comparison',
-                    visualData: { n1, n2 },
-                    explanation: `Group A has ${n1} and Group B has ${n2}. So ${correct} clearly has ${isMore ? 'more' : 'fewer'}.`
-                };
-            } else if (typeToGen === 'userinput') {
-                let count;
-                if (isTest) {
-                    count = ((i - 8) % 9) + 1;
-                } else {
-                    count = Math.floor(Math.random() * 9) + 1;
-                }
-                const objType = objTypes[i % objTypes.length];
-                question = {
-                    text: `Count the items and write the number!`,
-                    options: [],
-                    correct: count.toString(),
-                    type: 'userinput',
-                    visualData: { count, objType, color: colors[i % colors.length], forceCounting: true },
-                    explanation: `We count ${count} items. We write this as the number ${count}.`
-                };
-            }
             questions.push(question);
         }
         return questions;
@@ -628,7 +647,7 @@ const Numbers1to9 = () => {
 
                     <div className="g1-content-split">
                         <div className="g1-visual-area">
-                            <DynamicVisual type={currentQ.type} data={currentQ.visualData} />
+                            <DynamicVisual type={currentQ.type} data={currentQ.visualData} isAnswered={isAnswered} />
                         </div>
 
                         <div className="g1-quiz-side">

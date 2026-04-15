@@ -6,6 +6,7 @@ import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
 import '../../../../pages/juniors/JuniorPracticeSession.css';
 import mascotImg from '../../../../assets/mascot.png';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 const BLUE_THEME_CSS = `
     .option-btn-modern.selected {
@@ -163,6 +164,9 @@ const ElephantsTest = () => {
     const [questions, setQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
     const questionStartTime = useRef(Date.now());
+    const v4AnswersPayload = useRef([]);
+    const v4IsFinishedRef = useRef(false);
+    const { startSession, finishSession, abandonSession } = useSessionLogger();
 
     const POOL = [
         // 1. Large Number Addition (5 Qs)
@@ -274,6 +278,10 @@ const ElephantsTest = () => {
 
     const finalizeTest = async () => {
         setIsTestOver(true);
+        if (!v4IsFinishedRef.current) {
+            v4IsFinishedRef.current = true;
+            finishSession({ answers_payload: v4AnswersPayload.current });
+        }
         if (sessionId) await api.finishSession(sessionId).catch(console.error);
 
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');

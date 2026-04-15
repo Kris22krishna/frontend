@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import '../../../../Calculus/calculus.css';
+import '../../../arithmetic-practice.css';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../../arithmetic.module.css';
 import MathRenderer from '../../../../../MathRenderer';
-import QuizEngine from '../../../../Algebra/Topics/Skills/Engines/QuizEngine';
-import AssessmentEngine from '../../../../Algebra/Topics/Skills/Engines/AssessmentEngine';
+import QuizEngine from '../../../Skills/Engines/QuizEngine';
+import AssessmentEngine from '../../../Skills/Engines/AssessmentEngine';
 import SkillSparkEmbed from '../../../../../common/SkillSparkEmbed';
 import { SKILLS } from './IntegersSkillsData';
 
@@ -168,7 +168,7 @@ export default function IntegersSkills() {
                                     <p style={{ fontSize: 14, color: 'var(--calc-muted)', fontWeight: 500, margin: 0, opacity: 0.85 }}>{item.desc}</p>
                                 </div>
 
-                                <div style={{ display: 'flex', gap: 10, flexShrink: 0, alignItems: 'center', marginLeft: 'auto' }}>
+                                <div className="calc-skill-actions">
                                     <button className="calc-skill-btn-outline" onClick={() => openSkill(index, 'learn')}>Learn</button>
                                     <button className="calc-skill-btn-outline" onClick={() => openSkill(index, 'practice')}>Practice</button>
                                     <button className="calc-skill-btn-filled" style={{ '--skill-color': item.color }} onClick={() => openSkill(index, 'assessment')}>Assess</button>

@@ -22,11 +22,13 @@ export default function SkillSparkCanvas({ spark, title, returnPath, returnLabel
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                padding: '16px 32px',
+                padding: '16px 20px',
                 background: 'rgba(15,23,42,0.9)',
                 backdropFilter: 'blur(10px)',
                 borderBottom: tabs.length > 0 ? 'none' : '1px solid rgba(255,255,255,0.1)',
-                zIndex: 50
+                zIndex: 50,
+                flexWrap: 'wrap',
+                gap: '12px'
             }}>
                 <button onClick={() => navigate(returnPath)} style={{
                     display: 'flex', alignItems: 'center', gap: '8px',
@@ -46,21 +48,21 @@ export default function SkillSparkCanvas({ spark, title, returnPath, returnLabel
                     <span style={{ fontSize: '24px' }}>⚡</span>
                     {currentTitle}
                 </div>
-                <div style={{ width: 150 }} /> {/* Spacer */}
             </nav>
 
             {tabs.length > 0 && (
                 <div style={{
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
+                    justifyContent: 'flex-start',
                     gap: 8,
                     background: 'rgba(15,23,42,0.9)',
                     backdropFilter: 'blur(10px)',
                     borderBottom: '1px solid rgba(255,255,255,0.1)',
-                    padding: '0 32px 16px',
+                    padding: '0 20px 16px',
                     zIndex: 50,
-                    overflowX: 'auto'
+                    overflowX: 'auto',
+                    WebkitOverflowScrolling: 'touch'
                 }}>
                     {tabs.map((tab, idx) => {
                         const isActive = idx === activeTabIdx;

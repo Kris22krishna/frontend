@@ -6,6 +6,7 @@ import { api } from '../../../../../services/api';
 import LatexContent from '../../../../LatexContent';
 import ExplanationModal from '../../../../ExplanationModal';
 import '../../../../../pages/juniors/JuniorPracticeSession.css';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 const CORRECT_MESSAGES = [
     "✨ Brilliant logic! You found the missing part! ✨",
@@ -33,6 +34,9 @@ const FindMissingDifference = () => {
     // Logging
     const [sessionId, setSessionId] = useState(null);
     const questionStartTime = useRef(Date.now());
+    const v4AnswersPayload = useRef([]);
+    const v4IsFinishedRef = useRef(false);
+    const { startSession, finishSession, abandonSession } = useSessionLogger();
     const accumulatedTime = useRef(0);
     const isTabActive = useRef(true);
     const SKILL_ID = 1195;
@@ -231,6 +235,17 @@ const FindMissingDifference = () => {
             solution_text: String(currentQuestion.solution),
             time_spent_seconds: Math.round(timeSpent / 1000)
         }).catch(console.error);
+        if (sessionId) {
+            const _v4t = Date.now() - questionStartTime.current;
+            v4AnswersPayload.current.push({
+                question_index: qIndex,
+                answer_json: JSON.stringify({ selected: selectedOption }),
+                is_correct: isRight,
+                marks_awarded: isRight ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: Math.round(_v4t),
+            });
+        }
     };
 
     const handleNext = async () => {
@@ -254,6 +269,10 @@ const FindMissingDifference = () => {
                         parameters: { skill_id: SKILL_ID, total_questions: TOTAL_QUESTIONS, correct_answers: totalCorrect, timestamp: new Date().toISOString(), time_taken_seconds: timeElapsed },
                         user_id: parseInt(userId, 10)
                     });
+                    if (!v4IsFinishedRef.current) {
+                        v4IsFinishedRef.current = true;
+                        finishSession({ answers_payload: v4AnswersPayload.current });
+                    }
                     await api.finishSession(sessionId);
                 } catch (err) {
                     console.error("Failed to create report", err);

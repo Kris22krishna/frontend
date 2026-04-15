@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../../MathRenderer';
-import { useSessionLogger } from '../../../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 export default function NumberPlay6AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'np6', nodeId }) {
     const getQuestionType = (question) => {

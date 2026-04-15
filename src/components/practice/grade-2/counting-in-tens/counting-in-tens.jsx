@@ -487,7 +487,7 @@ const Grade2CountingInTens = () => {
             }
         }));
 
-        if (!isTest && !isCorrect) {
+        if (!isTest) {
             setShowExplanationModal(true);
         } else if (isTest) {
             handleNext();

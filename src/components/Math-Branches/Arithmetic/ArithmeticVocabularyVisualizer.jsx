@@ -135,7 +135,7 @@ function EquivalentFractionsVisual({ accentColor }) {
                 <motion.div key={idx}
                     initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: idx * 0.25, type: 'spring' }}
-                    style={{ display: 'flex', alignItems: 'center', gap: 12, width: '90%', maxWidth: 420 }}>
+                    style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%', maxWidth: 420 }}>
                     <div style={{ minWidth: 50, textAlign: 'center', fontFamily: '"Outfit", sans-serif', fontWeight: 800, fontSize: 18, color: accentColor }}>
                         {f.num}/{f.den}
                     </div>
@@ -327,7 +327,7 @@ function FactorTree({ number, accentColor }) {
 /* ──────────────── Circle Visualization (for π) ──────────────── */
 function CircleVisualization({ accentColor }) {
     return (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, padding: '10px 0' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24, padding: '10px 0', flexWrap: 'wrap' }}>
             <svg width="130" height="130" viewBox="0 0 130 130">
                 <motion.circle cx="65" cy="65" r="55" fill="none" stroke={accentColor} strokeWidth="3"
                     initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}

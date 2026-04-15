@@ -7,6 +7,9 @@ import LatexContent from '../../../LatexContent';
 import './FunWithSymmetry.css';
 import mascotImg from '../../../../assets/mascot.png';
 
+import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+
+const NODE_ID = 'a4041006-0012-0000-0000-000000000000';
 const BLUE_THEME_CSS = `
     .option-btn-modern.selected {
         border-color: #3B82F6 !important;
@@ -164,6 +167,10 @@ const FunWithSymmetryTest = () => {
     const [questions, setQuestions] = useState([]);
     const [sessionId, setSessionId] = useState(null);
     const questionStartTime = useRef(Date.now());
+  const v4AnswersPayload = useRef([]);
+  const v4IsFinishedRef = useRef(false);
+  const { startSession, finishSession, abandonSession } = useSessionLogger();
+
 
     // --- SVG rendering extracted from subcomponents ---
 
@@ -373,6 +380,9 @@ const FunWithSymmetryTest = () => {
             api.createPracticeSession(String(uid).includes("-") ? 1 : parseInt(uid, 10), SKILL_ID).then(sess => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             });
+            startSession({ nodeId: NODE_ID, sessionType: 'assessment' });
+            v4AnswersPayload.current = [];
+            v4IsFinishedRef.current = false;
         }
     }, []);
 
@@ -407,6 +417,11 @@ const FunWithSymmetryTest = () => {
                 time_spent_seconds: timeSpent
             };
             api.recordAttempt(attemptData).catch(console.error);
+      v4AnswersPayload.current.push({
+        node_id: NODE_ID,
+        is_correct: isCorrect,
+        time_spent_ms: Date.now() - questionStartTime.current,
+      });
         }
     };
 
@@ -434,6 +449,10 @@ const FunWithSymmetryTest = () => {
 
     const finalizeTest = async () => {
         setIsTestOver(true);
+        if (!v4IsFinishedRef.current) {
+          v4IsFinishedRef.current = true;
+          finishSession({ answers_payload: v4AnswersPayload.current });
+        }
         if (sessionId) await api.finishSession(sessionId).catch(console.error);
 
         const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');

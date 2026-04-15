@@ -6,7 +6,7 @@ import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
 import mascotImg from '../../../../assets/mascot.png';
 import '../../../../pages/high/class8/Grade8ChapterTests.css';
-import { useSessionLogger } from '../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { NODE_IDS } from '../../../../lib/curriculumIds';
 
 const SKILL_ID = 1210;

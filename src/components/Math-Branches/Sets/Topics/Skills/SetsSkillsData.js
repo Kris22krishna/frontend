@@ -75,7 +75,7 @@ export const SKILLS = [
             { 
                 type: 'text', 
                 question: 'Represent the set of all even prime numbers in roster form.', 
-                answer: '$\\{2\\}$',
+                answer: '{2}',
                 explanation: '2 is the only even prime number.'
             },
             { 
@@ -108,7 +108,7 @@ export const SKILLS = [
             { 
                 type: 'text', 
                 question: 'Convert the set $\\{x : x \\in \\mathbb{Z}, -3 < x < 2\\}$ into Roster form.', 
-                answer: '$\\{-2, -1, 0, 1\\}$',
+                answer: '{-2, -1, 0, 1}',
                 explanation: 'The integers between -3 and 2 are -2, -1, 0, and 1.'
             },
             { 
@@ -119,9 +119,10 @@ export const SKILLS = [
                 explanation: '"Clever" is not well-defined.'
             },
             { 
-                type: 'text', 
+                type: 'mcq', 
                 question: 'If $A = \\{1, 2, 3, 4, 5, 6\\}$, insert symbols $\\in$ or $\\notin$ in: $5$...$A$', 
-                answer: '$\\in$',
+                options: ['$\\in$', '$\\notin$', '$\\subset$', '$\\supset$'],
+                correct: 0,
                 explanation: '5 is an element of A.'
             },
             { 
@@ -215,7 +216,10 @@ export const SKILLS = [
             { 
                 type: 'mcq', 
                 question: 'Which of the following is an empty set?', 
-                options: ['Set of odd natural numbers divisible by 2', 'Set of even prime numbers', '$\\{x : x^2 - 2 = 0 \\text{ and } x \\text{ is rational}\\}$', '$\\{x : x \\text{ is a natural number, } x < 5 \\text{ and } x > 7\\}$'],
+
+
+
+                options: ['Set of odd natural numbers divisible by 2', 'Set of even prime numbers', '$\\{x : x^2 - 1 = 0 \\text{ and } x \\text{ is rational}\\}$', '$\\{x : x \\text{ is a natural number, } 2 < x < 5\\}$'],
                 correct: 0,
                 explanation: 'Odd numbers are by definition not divisible by 2.'
             },
@@ -249,9 +253,36 @@ export const SKILLS = [
             { 
                 type: 'msq', 
                 question: 'Which sets are Infinite?', 
-                options: ['Set of points on a circle', 'Set of concentic circles in a plane', 'Set of prime numbers < 100', 'Set of integers'],
+                options: ['Set of points on a circle', 'Set of concentric circles in a plane', 'Set of prime numbers < 100', 'Set of integers'],
                 correct: [0, 1, 3],
                 explanation: 'Prime numbers < 100 are limited, so it\'s finite.'
+            },
+            { 
+                type: 'mcq', 
+                question: 'What is the cardinality of the set $\\{\\emptyset\\}$?', 
+                options: ['0', '1', '2', 'Infinite'],
+                correct: 1,
+                explanation: '$\\{\\emptyset\\}$ has one element, namely the empty set.'
+            },
+            { 
+                type: 'text', 
+                question: 'Write the set of all even prime numbers in roster form.', 
+                answer: '{2}',
+                acceptedAnswers: ['$\\{2\\}$'],
+                explanation: 'The only even prime number is $2$, so the set is $\\{2\\}$.'
+            },
+            { 
+                type: 'msq', 
+                question: 'Which of the following are singleton sets?', 
+                options: ['$\\{0\\}$', '$\\{\\emptyset\\}$', 'Set of months in a year', '$\\emptyset$'],
+                correct: [0, 1],
+                explanation: '$\\{0\\}$ and $\\{\\emptyset\\}$ each contain exactly one element.'
+            },
+            { 
+                type: 'text', 
+                question: 'Find $n(A)$ if $A = \\{x : x \\in \\mathbb{Z}, |x| < 3\\}$.', 
+                answer: '5',
+                explanation: 'The elements are $\\{-2, -1, 0, 1, 2\\}$, so $n(A) = 5$.'
             },
             { 
                 type: 'text', 
@@ -453,19 +484,19 @@ export const SKILLS = [
                 question: 'Level 3: Which representation corresponds to $( -1, 4 ]$?',
                 options: ['$\\{x : -1 < x \\le 4\\}$', '$\\{x : -1 \\le x \\le 4\\}$', '$\\{x : -1 < x < 4\\}$', '$\\{x : -1 \\le x < 4\\}$'],
                 correct: 0,
-                explanation: 'Round bracket = strict inequality (<), square bracket = non-strict (\\le).'
+                explanation: 'Round bracket means strict inequality ($<$), while square bracket means non-strict inequality ($\\le$).'
             },
             {
-                question: 'Level 3: If A \\subseteq B and B \\subseteq C, then:',
+                question: 'Level 3: If $A \\subseteq B$ and $B \\subseteq C$, then:',
                 options: ['$A \\subseteq C$', '$C \\subseteq A$', '$A = C$', 'None'],
                 correct: 0,
-                explanation: 'Subset relationship is transitive.'
+                explanation: 'The subset relation is transitive: if $A \\subseteq B$ and $B \\subseteq C$, then $A \\subseteq C$.'
             },
             {
                 question: 'Level 3: The power set of $A = \\{1\\}$ is:',
                 options: ['$\\{1\\}$', '$\\{\\emptyset, 1\\}$', '$\\{\\emptyset, \\{1\\}\\}$', '$\\{\\{1\\}\\}$'],
                 correct: 2,
-                explanation: 'Power set contains all subsets.'
+                explanation: 'A power set contains every subset of $A$, including $\\emptyset$ and $A$ itself.'
             }
         ],
         assessment: [
@@ -487,12 +518,13 @@ export const SKILLS = [
                 question: 'Let $A = \\{1, 2, \\{3, 4\\}, 5\\}$. Which statements are correct?', 
                 options: ['$\\{3, 4\\} \\subset A$', '$\\{3, 4\\} \\in A$', '$\\{\\{3, 4\\}\\} \\subset A$', '$1 \\in A$'],
                 correct: [1, 2, 3],
-                explanation: '{3,4} is an element of A. So the set containing it is a subset.'
+                explanation: '$\\{3, 4\\}$ is an element of $A$, so $\\{\\{3, 4\\}\\}$ is a subset of $A$.'
             },
             { 
                 type: 'text', 
                 question: 'Represent $\\{x : x \\in \\mathbb{R}, -4 < x \\le 6\\}$ as an interval.', 
-                answer: '$(-4, 6]$',
+                answer: '(-4, 6]',
+                acceptedAnswers: ['(-4,6]'],
                 explanation: 'Strict inequality is open (round), non-strict is closed (square).'
             },
             { 
@@ -503,17 +535,18 @@ export const SKILLS = [
                 explanation: 'Definition of $P(A)$.'
             },
             { 
-                type: 'text', 
+                type: 'mcq', 
                 question: 'If $n(A) = m$, then $n(P(A)) = $?', 
-                answer: '$2^m$',
+                options: ['$m^2$', '$2m$', '$2^m$', '$m!$'],
+                correct: 2,
                 explanation: 'Power set has as many elements as there are subsets.'
             },
             { 
                 type: 'msq', 
                 question: 'Which of the following are True?', 
-                options: ['$\\mathbb{N} \\subset \\mathbb{Z}$', '$\\mathbb{Q} \\subset \\mathbb{R}$', '$\\mathbb{T} \\subset \\mathbb{R}$', '$\\mathbb{Z} \\subset \\mathbb{N}$'],
+                options: ['$\\mathbb{N} \\subset \\mathbb{Z}$', '$\\mathbb{Q} \\subset \\mathbb{R}$', '$\\mathbb{R} \\setminus \\mathbb{Q} \\subset \\mathbb{R}$', '$\\mathbb{Z} \\subset \\mathbb{N}$'],
                 correct: [0, 1, 2],
-                explanation: 'Z is not subset of N.'
+                explanation: '$\\mathbb{Z}$ is not a subset of $\\mathbb{N}$.'
             },
             { 
                 type: 'mcq', 
@@ -540,7 +573,7 @@ export const SKILLS = [
                 question: 'If $P(A) = \\{\\emptyset, \\{1\\}, \\{2\\}, \\{1, 2\\}\\}$, what are the elements of A?', 
                 options: ['1', '2', '$\\{1\\}$', '$\\{1, 2\\}$'],
                 correct: [0, 1],
-                explanation: 'A is {1, 2}.'
+                explanation: '$A = \\{1, 2\\}$.'
             },
             { 
                 type: 'text', 
@@ -626,7 +659,7 @@ export const SKILLS = [
             { 
                 type: 'text', 
                 question: "If $U = \\{ 1, 2, 3, 4, 5 \\}$ and $A = \\emptyset$, what is $A'$?", 
-                answer: "$\\{ 1, 2, 3, 4, 5 \\}$",
+                answer: '{1, 2, 3, 4, 5}',
                 explanation: 'Complement of empty set is the universal set.'
             },
             { 
@@ -646,7 +679,7 @@ export const SKILLS = [
             { 
                 type: 'text', 
                 question: "Find $A'$ if $U = \\{ x : x \\in \\mathbb{N}, x \\le 5 \\}$ and $A = \\{ x : x \\in \\mathbb{N}, x \\text{ is even} \\}$.", 
-                answer: "$\\{ 1, 3, 5 \\}$",
+                answer: '{1, 3, 5}',
                 explanation: "U = { 1, 2, 3, 4, 5 }, A = { 2, 4 }. A' = { 1, 3, 5 }."
             }
         ]
@@ -728,7 +761,7 @@ export const SKILLS = [
                 type: 'text', 
                 question: 'If $A = \\{ 1, 3, 5 \\}$ and $B = \\{ 1, 2, 3 \\}$, find $n(A \\cup B)$.', 
                 answer: '4',
-                explanation: 'A \\cup B = { 1, 2, 3, 5 }. Cardinality is 4.'
+                explanation: '$A \\cup B = \\{1, 2, 3, 5\\}$, so its cardinality is $4$.'
             },
             { 
                 type: 'mcq', 
@@ -745,9 +778,10 @@ export const SKILLS = [
                 explanation: 'All standard operation results are correct.'
             },
             { 
-                type: 'text', 
+                type: 'mcq', 
                 question: 'Evaluate $A - A$.', 
-                answer: '$\\emptyset$',
+                options: ['$A$', '$\\emptyset$', '$U$', '$\\{A\\}$'],
+                correct: 1,
                 explanation: 'Removing all elements of a set from itself leaves nothing.'
             }
         ]
@@ -928,9 +962,10 @@ export const SKILLS = [
                 explanation: "Both represent the two parts of De Morgan's laws."
             },
             { 
-                type: 'text', 
+                type: 'mcq', 
                 question: 'Complete the law: $A \\cap (B \\cup C) = (A \\cap B) \\cup (...)$', 
-                answer: '$A \\cap C$',
+                options: ['$A \\cup C$', '$B \\cap C$', '$A \\cap C$', '$A \\cup B$'],
+                correct: 2,
                 explanation: 'Distributive law of intersection over union.'
             },
             { 
@@ -948,9 +983,10 @@ export const SKILLS = [
                 explanation: 'All are fundamental identity and domination laws.'
             },
             { 
-                type: 'text', 
+                type: 'mcq', 
                 question: "According to De Morgan's Law, $(A \\cup B)'$ is equal to?", 
-                answer: "$A' \\cap B'$",
+                options: ["$A' \\cup B'$", "$A' \\cap B'$", "$A \\cap B$", "$(A \\cap B)'$"],
+                correct: 1,
                 explanation: 'Complement of union is the intersection of complements.'
             }
         ]

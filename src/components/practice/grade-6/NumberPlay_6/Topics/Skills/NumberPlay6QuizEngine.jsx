@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../../MathRenderer';
-import { useSessionLogger } from '../../../../../../hooks/useSessionLogger';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 // import ProtractorInteractive from './Topics/Skills/ProtractorInteractive.jsx';
 // import GeometryDrawInteractive from './Topics/Skills/GeometryDrawInteractive.jsx';
 

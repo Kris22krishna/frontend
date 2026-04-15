@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { ChevronLeft, ChevronRight, Lightbulb } from 'lucide-react';
 import '../../../Patterns.css';
 import MathRenderer from '../../../../../../MathRenderer';
@@ -13,7 +14,7 @@ function sample(arr, n) {
     return copy.slice(0, n);
 }
 
-export default function PatternsPracticeEngine({ questionPool, sampleSize = 10, title, color, onBack }) {
+export default function PatternsPracticeEngine({ questionPool, sampleSize = 10, title, color, onBack , nodeId}) {
     const [questions, setQuestions] = useState(() => {
         const pool = typeof questionPool === 'function' ? questionPool() : questionPool;
         return sample(pool, sampleSize);
@@ -22,6 +23,9 @@ export default function PatternsPracticeEngine({ questionPool, sampleSize = 10, 
     const [answers, setAnswers] = useState({});
     const [finished, setFinished] = useState(false);
     const [timeTaken, setTimeTaken] = useState(0);
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const v4Answers = useRef([]);
+    const v4Finished = useRef(false);
     const [showExplanation, setShowExplanation] = useState(false);
 
     useEffect(() => {
@@ -29,6 +33,14 @@ export default function PatternsPracticeEngine({ questionPool, sampleSize = 10, 
         const t = setInterval(() => setTimeTaken(s => s + 1), 1000);
         return () => clearInterval(t);
     }, [finished]);
+
+    useEffect(() => {
+        if (!nodeId) return;
+        v4Answers.current = [];
+        v4Finished.current = false;
+        startSession({ nodeId, sessionType: 'practice' });
+        return () => { if (!v4Finished.current) abandonSession(); };
+    }, [nodeId]);
 
     // Reset explanation visibility when moving between questions
     useEffect(() => {
@@ -54,6 +66,16 @@ export default function PatternsPracticeEngine({ questionPool, sampleSize = 10, 
             [qIndex]: { selectedOption: idx, isCorrect: isRight } 
         }));
         if (!isRight) setShowExplanation(true);
+        if (nodeId) {
+            v4Answers.current.push({
+                question_index: qIndex,
+                answer_json: JSON.stringify({ selected: idx }),
+                is_correct: idx === q.correct,
+                marks_awarded: idx === q.correct ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0,
+            });
+        }
     };
 
     const handleNext = () => {
@@ -74,6 +96,9 @@ export default function PatternsPracticeEngine({ questionPool, sampleSize = 10, 
         const pool = typeof questionPool === 'function' ? questionPool() : questionPool;
         setQuestions(sample(pool, sampleSize));
         setQIndex(0); setAnswers({}); setFinished(false); setTimeTaken(0);
+        v4Answers.current = [];
+        v4Finished.current = false;
+        if (nodeId) startSession({ nodeId, sessionType: 'practice' });
     };
 
     if (finished) {
