@@ -342,6 +342,17 @@ import SortingGrouping from './components/practice/class-3/Whats-in-a-Name/Sorti
 import DataCollection from './components/practice/class-3/Whats-in-a-Name/DataCollection';
 import WINTest from './components/practice/class-3/Whats-in-a-Name/WINTest';
 
+// Double Century
+import DCCountingAndGroups from './components/practice/class-3/Double-Century/CountingAndGroups';
+import DCNumberBoard from './components/practice/class-3/Double-Century/NumberBoard';
+import DCNumberBeforeAfter from './components/practice/class-3/Double-Century/NumberBeforeAfter';
+import DCMaking100 from './components/practice/class-3/Double-Century/Making100';
+import DCNumbers101to150 from './components/practice/class-3/Double-Century/Numbers101to150';
+import DCPlaceValue from './components/practice/class-3/Double-Century/PlaceValue';
+import DCNumbers150to200 from './components/practice/class-3/Double-Century/Numbers150to200';
+import DCJumpingGame from './components/practice/class-3/Double-Century/JumpingGame';
+import DCTest from './components/practice/class-3/Double-Century/DCTest';
+
 // Toy Joy
 import Identifying3DShapes from './components/practice/class-3/Toy-Joy/Identifying3DShapes';
 import CountingShapes from './components/practice/class-3/Toy-Joy/CountingShapes';
@@ -519,6 +530,23 @@ import LinesAndAngles9 from './components/practice/class-9/lines_and_angles_9/Li
 import LinesAndAngles9Intro from './components/practice/class-9/lines_and_angles_9/Topics/Intro/LinesAndAngles9Intro';
 import LinesAndAngles9Terminology from './components/practice/class-9/lines_and_angles_9/Topics/Terminology/LinesAndAngles9Terminology';
 import LinesAndAngles9Skills from './components/practice/class-9/lines_and_angles_9/Topics/Skills/LinesAndAngles9Skills';
+
+// Class 9 - Circles
+import Circles9 from './components/practice/class-9/circles_9/Circles9';
+import Circles9Intro from './components/practice/class-9/circles_9/Topics/Intro/Circles9Intro';
+import Circles9Terminology from './components/practice/class-9/circles_9/Topics/Terminology/Circles9Terminology';
+import Circles9Skills from './components/practice/class-9/circles_9/Topics/Skills/Circles9Skills';
+
+// Grade 9 Triangles
+import Triangles9 from './components/practice/class-9/triangles_9/Triangles9';
+import Triangles9Intro from './components/practice/class-9/triangles_9/Topics/Intro/Triangles9Intro';
+import Triangles9Terminology from './components/practice/class-9/triangles_9/Topics/Terminology/Triangles9Terminology';
+import Triangles9Skills from './components/practice/class-9/triangles_9/Topics/Skills/Triangles9Skills';
+
+import Quadrilaterals9 from './components/practice/class-9/quadrilaterals_9/Quadrilaterals9';
+import Quadrilaterals9Intro from './components/practice/class-9/quadrilaterals_9/Topics/Intro/Quadrilaterals9Intro';
+import Quadrilaterals9Terminology from './components/practice/class-9/quadrilaterals_9/Topics/Terminology/Quadrilaterals9Terminology';
+import Quadrilaterals9Skills from './components/practice/class-9/quadrilaterals_9/Topics/Skills/Quadrilaterals9Skills';
 
 import LinearEquations9 from './components/practice/class-9/linear_equations_two_variables/LinearEquations9';
 import LinearEquations9Intro from './components/practice/class-9/linear_equations_two_variables/Topics/Intro/LinearEquations9Intro';
@@ -1646,6 +1674,23 @@ function App() {
           <Route path="practice/class-9/lines-and-angles/terminology" element={<ProtectedRoute redirectTo="/login"><LinesAndAngles9Terminology /></ProtectedRoute>} />
           <Route path="practice/class-9/lines-and-angles/skills" element={<ProtectedRoute redirectTo="/login"><LinesAndAngles9Skills /></ProtectedRoute>} />
 
+          {/* Circles 9 */}
+          <Route path="practice/class-9/circles" element={<ProtectedRoute redirectTo="/login"><Circles9 /></ProtectedRoute>} />
+          <Route path="practice/class-9/circles/intro" element={<ProtectedRoute redirectTo="/login"><Circles9Intro /></ProtectedRoute>} />
+          <Route path="practice/class-9/circles/terminology" element={<ProtectedRoute redirectTo="/login"><Circles9Terminology /></ProtectedRoute>} />
+          <Route path="practice/class-9/circles/skills" element={<ProtectedRoute redirectTo="/login"><Circles9Skills /></ProtectedRoute>} />
+
+          {/* Class 9: Triangles Routes */}
+          <Route path="practice/class-9/triangles" element={<ProtectedRoute redirectTo="/login"><Triangles9 /></ProtectedRoute>} />
+          <Route path="practice/class-9/triangles/intro" element={<ProtectedRoute redirectTo="/login"><Triangles9Intro /></ProtectedRoute>} />
+          <Route path="practice/class-9/triangles/terminology" element={<ProtectedRoute redirectTo="/login"><Triangles9Terminology /></ProtectedRoute>} />
+          <Route path="practice/class-9/triangles/skills" element={<ProtectedRoute redirectTo="/login"><Triangles9Skills /></ProtectedRoute>} />
+          
+          <Route path="practice/class-9/quadrilaterals" element={<ProtectedRoute redirectTo="/login"><Quadrilaterals9 /></ProtectedRoute>} />
+          <Route path="practice/class-9/quadrilaterals/intro" element={<ProtectedRoute redirectTo="/login"><Quadrilaterals9Intro /></ProtectedRoute>} />
+          <Route path="practice/class-9/quadrilaterals/terminology" element={<ProtectedRoute redirectTo="/login"><Quadrilaterals9Terminology /></ProtectedRoute>} />
+          <Route path="practice/class-9/quadrilaterals/skills" element={<ProtectedRoute redirectTo="/login"><Quadrilaterals9Skills /></ProtectedRoute>} />
+
           {/* Class 9: Linear Equations in Two Variables Routes */}
           <Route path="practice/class-9/linear-equations-two-variables" element={<ProtectedRoute redirectTo="/login"><LinearEquations9 /></ProtectedRoute>} />
           <Route path="practice/class-9/linear-equations-two-variables/intro" element={<ProtectedRoute redirectTo="/login"><LinearEquations9Intro /></ProtectedRoute>} />
@@ -1924,6 +1969,17 @@ function App() {
         <Route path="/junior/grade/:grade/whats-in-a-name/sorting-grouping" element={<ProtectedRoute redirectTo="/login"><SortingGrouping /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/whats-in-a-name/data-collection" element={<ProtectedRoute redirectTo="/login"><DataCollection /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/whats-in-a-name/chapter-test" element={<ProtectedRoute redirectTo="/login"><WINTest /></ProtectedRoute>} />
+
+        {/* Double Century Routes */}
+        <Route path="/junior/grade/:grade/double-century/counting-and-groups" element={<ProtectedRoute redirectTo="/login"><DCCountingAndGroups /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/double-century/number-board" element={<ProtectedRoute redirectTo="/login"><DCNumberBoard /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/double-century/number-before-after" element={<ProtectedRoute redirectTo="/login"><DCNumberBeforeAfter /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/double-century/making-100" element={<ProtectedRoute redirectTo="/login"><DCMaking100 /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/double-century/numbers-101-to-150" element={<ProtectedRoute redirectTo="/login"><DCNumbers101to150 /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/double-century/place-value" element={<ProtectedRoute redirectTo="/login"><DCPlaceValue /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/double-century/numbers-150-to-200" element={<ProtectedRoute redirectTo="/login"><DCNumbers150to200 /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/double-century/jumping-game" element={<ProtectedRoute redirectTo="/login"><DCJumpingGame /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/double-century/chapter-test" element={<ProtectedRoute redirectTo="/login"><DCTest /></ProtectedRoute>} />
 
         {/* Toy Joy Routes */}
         <Route path="/junior/grade/:grade/toy-joy/identifying-3d-shapes" element={<ProtectedRoute redirectTo="/login"><Identifying3DShapes /></ProtectedRoute>} />

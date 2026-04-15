@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../WorkEnergyPowerBranch.css';
 import MathRenderer from '../../../../../../MathRenderer';
 import { TERMS, FIVE_RULES, VOCAB_QUIZ } from './WorkEnergyPowerTerminologyData';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 export default function WorkEnergyPowerTerminology() {
     const navigate = useNavigate();
@@ -25,6 +27,21 @@ export default function WorkEnergyPowerTerminology() {
     const [quizTotalScore, setQuizTotalScore] = useState(0);
     const [quizFinished, setQuizFinished] = useState(false);
 
+    // v4 Session logging for Quiz Time
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const quizAnswersPayload = useRef([]);
+    const quizSessionStarted = useRef(false);
+
+    // Start session lazily when user enters Quiz tab
+    const handleTabChange = (tab) => {
+        setActiveTab(tab);
+        if (tab === 'quiz' && !quizSessionStarted.current) {
+            startSession({ nodeId: NODE_IDS.g11PhysWEPTerminologyQuiz, sessionType: 'practice' });
+            quizSessionStarted.current = true;
+            quizAnswersPayload.current = [];
+        }
+    };
+
     const activeTerm = TERMS[selectedIdx];
     const activeRule = FIVE_RULES[selectedRuleIdx];
     const activeQuiz = VOCAB_QUIZ[quizIdx];
@@ -35,24 +52,41 @@ export default function WorkEnergyPowerTerminology() {
         setQuizAnswered(false);
         setQuizTotalScore(0);
         setQuizFinished(false);
+        quizSessionStarted.current = false; // allow fresh session on re-entry
     };
 
-    const handleQuizSelect = (optIdx) => {
+    const handleQuizSelect = async (optIdx) => {
         if (quizAnswered) return;
         setQuizSelected(optIdx);
         setQuizAnswered(true);
-        if (optIdx === activeQuiz.correct) {
-            setQuizTotalScore(s => s + 1);
-        }
+        const correct = optIdx === activeQuiz.correct;
+        if (correct) setQuizTotalScore(s => s + 1);
+
+        // v4 Log answer
+        const answerData = {
+            question_index: quizIdx + 1,
+            answer_json: { selected: optIdx, text: activeQuiz.options[optIdx] },
+            is_correct: correct ? 1.0 : 0.0,
+            marks_awarded: correct ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        };
+        quizAnswersPayload.current.push(answerData);
+        await logAnswer({ questionIndex: answerData.question_index, answerJson: answerData.answer_json, isCorrect: answerData.is_correct });
     };
 
-    const nextQuiz = () => {
+    const nextQuiz = async () => {
         if (quizIdx + 1 < VOCAB_QUIZ.length) {
             setQuizIdx(i => i + 1);
             setQuizSelected(null);
             setQuizAnswered(false);
         } else {
             setQuizFinished(true);
+            await finishSession({
+                totalQuestions: VOCAB_QUIZ.length,
+                questionsAnswered: quizAnswersPayload.current.length,
+                answersPayload: quizAnswersPayload.current
+            });
         }
     };
 
@@ -87,9 +121,9 @@ export default function WorkEnergyPowerTerminology() {
 
                 {/* Sub Tabs */}
                 <div className="rn-subtabs" style={{ display: 'flex', justifyContent: 'center', gap: 12, marginBottom: 32 }}>
-                    <button className={`wep-nav-link ${activeTab === 'terms' ? 'active' : ''}`} onClick={() => setActiveTab('terms')}>📚 Key Terms</button>
-                    <button className={`wep-nav-link ${activeTab === 'rules' ? 'active' : ''}`} onClick={() => setActiveTab('rules')}>📏 5 Golden Rules</button>
-                    <button className={`wep-nav-link ${activeTab === 'quiz' ? 'active' : ''}`} onClick={() => setActiveTab('quiz')}>🧪 Quiz Time</button>
+                    <button className={`wep-nav-link ${activeTab === 'terms' ? 'active' : ''}`} onClick={() => handleTabChange('terms')}>📚 Key Terms</button>
+                    <button className={`wep-nav-link ${activeTab === 'rules' ? 'active' : ''}`} onClick={() => handleTabChange('rules')}>📏 5 Golden Rules</button>
+                    <button className={`wep-nav-link ${activeTab === 'quiz' ? 'active' : ''}`} onClick={() => handleTabChange('quiz')}>🧪 Quiz Time</button>
                 </div>
 
                 {activeTab !== 'quiz' ? (

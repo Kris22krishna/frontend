@@ -10,6 +10,18 @@ import { LatexText } from '../../components/LatexText';
 import { capitalizeFirstLetter } from '../../lib/stringUtils';
 import './SeniorGradeSyllabus.css';
 
+const GRADE_9_TOPIC_SKILL_COUNTS = {
+    'Number System': 5,
+    Polynomials: 4,
+    'Coordinate Geometry': 4,
+    'Lines and Angles': 4,
+    'Linear Equations in Two Variables': 4,
+    "Introduction to Euclid's Geometry": 3,
+    Triangles: 4,
+    Quadrilaterals: 3,
+    Circles: 3,
+};
+
 const SeniorGradeSyllabus = () => {
     const { grade } = useParams();
     const navigate = useNavigate();
@@ -141,22 +153,31 @@ const SeniorGradeSyllabus = () => {
                 } else if (grade === '9') {
                     setSkills([
                         // Number System Hub
-                        { skill_id: 1240, skill_name: 'Number System: Master Hub', topic: 'Number System', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/9/number-system' },
+                        { skill_id: 1240, skill_name: 'Number System: Master Hub', topic: 'Number System', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/9/number-system', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS['Number System'] },
                         
                         // Polynomials Hub
-                        { skill_id: 1241, skill_name: 'Polynomials: Master Hub', topic: 'Polynomials', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/9/polynomials' },
+                        { skill_id: 1241, skill_name: 'Polynomials: Master Hub', topic: 'Polynomials', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/9/polynomials', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS.Polynomials },
 
                         // Coordinate Geometry Hub
-                        { skill_id: 1242, skill_name: 'Coordinate Geometry: Master Hub', topic: 'Coordinate Geometry', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/coordinate-geometry' },
+                        { skill_id: 1242, skill_name: 'Coordinate Geometry: Master Hub', topic: 'Coordinate Geometry', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/coordinate-geometry', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS['Coordinate Geometry'] },
 
                         // Lines and Angles Hub
-                        { skill_id: 1243, skill_name: 'Lines and Angles: Master Hub', topic: 'Lines and Angles', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/lines-and-angles' },
+                        { skill_id: 1243, skill_name: 'Lines and Angles: Master Hub', topic: 'Lines and Angles', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/lines-and-angles', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS['Lines and Angles'] },
 
                         // Linear Equations in Two Variables Hub
-                        { skill_id: 1244, skill_name: 'Linear Equations in Two Variables: Master Hub', topic: 'Linear Equations in Two Variables', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/linear-equations-two-variables' },
+                        { skill_id: 1244, skill_name: 'Linear Equations in Two Variables: Master Hub', topic: 'Linear Equations in Two Variables', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/linear-equations-two-variables', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS['Linear Equations in Two Variables'] },
 
                         // Euclid's Geometry Hub
-                        { skill_id: 1245, skill_name: 'Introduction to Euclid\'s Geometry: Master Hub', topic: 'Introduction to Euclid\'s Geometry', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/euclids-geometry' }
+                        { skill_id: 1245, skill_name: 'Introduction to Euclid\'s Geometry: Master Hub', topic: 'Introduction to Euclid\'s Geometry', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/euclids-geometry', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS["Introduction to Euclid's Geometry"] },
+
+                        // Triangles Hub
+                        { skill_id: 1246, skill_name: 'Triangles: Master Hub', topic: 'Triangles', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/triangles', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS.Triangles },
+
+                        // Quadrilaterals Hub
+                        { skill_id: 1247, skill_name: 'Quadrilaterals: Master Hub', topic: 'Quadrilaterals', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/quadrilaterals', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS.Quadrilaterals },
+                        
+                        // Circles Hub
+                        { skill_id: 1248, skill_name: 'Circles: Master Hub', topic: 'Circles', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/circles', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS.Circles }
 
                     ]);
                 } else if (grade === '8') {
@@ -624,6 +645,32 @@ const SeniorGradeSyllabus = () => {
             }
         ];
 
+        // Triangles Syllabus
+        skillsByTopic['Triangles'] = [
+            {
+                skill_id: 1246,
+                skill_name: 'Triangles Hub',
+                topic: 'Triangles',
+                subtopic: 'Interactive Learning',
+                points: 0,
+                progress: 0,
+                path: '/practice/class-9/triangles'
+            }
+        ];
+
+        // Quadrilaterals Syllabus
+        skillsByTopic['Quadrilaterals'] = [
+            {
+                skill_id: 1247,
+                skill_name: 'Quadrilaterals Hub',
+                topic: 'Quadrilaterals',
+                subtopic: 'Interactive Learning',
+                points: 0,
+                progress: 0,
+                path: '/practice/class-9/quadrilaterals'
+            }
+        ];
+
         // Linear Equations in One Variable (NCERT Ch. 2 — Grade 8)
         skillsByTopic['Linear Equations in One Variable'] = [
             {
@@ -638,6 +685,12 @@ const SeniorGradeSyllabus = () => {
     }
 
     const topics = Object.keys(skillsByTopic);
+
+    const getTopicDisplaySkillCount = (topic) =>
+        (skillsByTopic[topic] || []).reduce(
+            (count, skill) => count + (skill.displaySkillCount ?? 1),
+            0
+        );
 
     // Handle Closing Modal on Escape Key
     useEffect(() => {
@@ -920,7 +973,7 @@ const SeniorGradeSyllabus = () => {
                                 </div>
                                 <h3><LatexText text={capitalizeFirstLetter(topic)} /></h3>
                                 <div className="topic-meta">
-                                    {skillsByTopic[topic].length} {skillsByTopic[topic].length === 1 ? 'Skill' : 'Skills'}
+                                    {getTopicDisplaySkillCount(topic)} {getTopicDisplaySkillCount(topic) === 1 ? 'Skill' : 'Skills'}
                                 </div>
                             </div>
                         ))}

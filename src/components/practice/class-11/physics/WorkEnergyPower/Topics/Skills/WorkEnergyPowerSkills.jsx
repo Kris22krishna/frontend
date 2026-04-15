@@ -1,8 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SKILLS } from './WorkEnergyPowerSkillsData';
 import '../../WorkEnergyPowerBranch.css';
 import MathRenderer from '../../../../../../MathRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
+
+// ── Canonical node ID map (skill.id → UUID) ──────────────────────────────
+const SKILL_NODE_ID_MAP = {
+    'work-calculation':       NODE_IDS.g11PhysWEPWorkCalc,
+    'work-energy-theorem':    NODE_IDS.g11PhysWEPWorkEnergyTheorem,
+    'potential-energy':       NODE_IDS.g11PhysWEPPotentialEnergy,
+    'conservation-of-energy': NODE_IDS.g11PhysWEPConservation,
+};
 
 export default function WorkEnergyPowerSkills() {
     const navigate = useNavigate();
@@ -17,6 +27,7 @@ export default function WorkEnergyPowerSkills() {
     }, [view, activeSkillId]);
 
     const skill = SKILLS.find(s => s.id === activeSkillId);
+    const activeNodeId = activeSkillId ? SKILL_NODE_ID_MAP[activeSkillId] : null;
 
     /* ── Render Skills List ──────────────────────────────── */
     if (view === 'list') {
@@ -96,8 +107,8 @@ export default function WorkEnergyPowerSkills() {
                         setSelectedCategory={setSelectedCategory}
                     />
                 )}
-                {view === 'practice' && <PracticeView skill={skill} onAssess={() => setView('assess')} />}
-                {view === 'assess' && <AssessView skill={skill} onComplete={() => setView('list')} />}
+                {view === 'practice' && <PracticeView skill={skill} onAssess={() => setView('assess')} nodeId={activeNodeId} />}
+                {view === 'assess' && <AssessView skill={skill} onComplete={() => setView('list')} nodeId={activeNodeId} />}
             </main>
         </div>
     );
@@ -241,10 +252,10 @@ function LearnView({ skill, onPractice, mobileLearnDetailView, setMobileLearnDet
 }
 
 /* ── Practice View Component (Probability Chapter Style) ── */
-function PracticeView({ skill, onAssess }) {
+function PracticeView({ skill, onAssess, nodeId }) {
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);
-    const [responses, setResponses] = useState({}); // { index: { selected: number, isCorrect: boolean } }
+    const [responses, setResponses] = useState({});
     const [finished, setFinished] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [visited, setVisited] = useState({ 0: true });
@@ -252,6 +263,24 @@ function PracticeView({ skill, onAssess }) {
     const questions = skill.practice;
     const q = questions[current];
     const color = skill.color;
+
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
+
+    useEffect(() => { isFinishedRef.current = finished; }, [finished]);
+
+    useEffect(() => {
+        if (!nodeId) return;
+        startSession({ nodeId, sessionType: 'practice' });
+        answersPayload.current = [];
+        return () => {
+            if (!isFinishedRef.current && answersPayload.current.length > 0) {
+                abandonSession({ answersPayload: answersPayload.current, totalQuestions: questions.length });
+            }
+        };
+    }, [nodeId]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Timer logic
     useEffect(() => {
@@ -267,20 +296,28 @@ function PracticeView({ skill, onAssess }) {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    const handleSelect = (optIdx) => {
-        if (finished || selected !== null) return; // Lock after selection in practice
-
+    const handleSelect = async (optIdx) => {
+        if (finished || selected !== null) return;
         setSelected(optIdx);
-        setResponses(prev => ({
-            ...prev,
-            [current]: {
-                selected: optIdx,
-                isCorrect: optIdx === q.correct
-            }
-        }));
+        const correct = optIdx === q.correct;
+        setResponses(prev => ({ ...prev, [current]: { selected: optIdx, isCorrect: correct } }));
+
+        // v4 Log answer
+        if (nodeId) {
+            const answerData = {
+                question_index: current + 1,
+                answer_json: { selected: optIdx, text: q.options[optIdx] },
+                is_correct: correct ? 1.0 : 0.0,
+                marks_awarded: correct ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0
+            };
+            answersPayload.current.push(answerData);
+            await logAnswer({ questionIndex: answerData.question_index, answerJson: answerData.answer_json, isCorrect: answerData.is_correct });
+        }
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (current + 1 < questions.length) {
             const nextIdx = current + 1;
             setCurrent(nextIdx);
@@ -288,6 +325,13 @@ function PracticeView({ skill, onAssess }) {
             setVisited(prev => ({ ...prev, [nextIdx]: true }));
         } else {
             setFinished(true);
+            if (nodeId) {
+                await finishSession({
+                    totalQuestions: questions.length,
+                    questionsAnswered: answersPayload.current.length,
+                    answersPayload: answersPayload.current
+                });
+            }
         }
     };
 
@@ -485,10 +529,10 @@ function PracticeView({ skill, onAssess }) {
 
 /* ── Assess View Component ────────────────────────────── */
 /* ── Assess View Component (Probability Chapter Style) ── */
-function AssessView({ skill, onComplete }) {
+function AssessView({ skill, onComplete, nodeId }) {
     const [qIdx, setQIdx] = useState(0);
     const [selected, setSelected] = useState(null);
-    const [responses, setResponses] = useState({}); // { qIdx: { selected: number, isCorrect: boolean } }
+    const [responses, setResponses] = useState({});
     const [finished, setFinished] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [visited, setVisited] = useState({ 0: true });
@@ -496,6 +540,25 @@ function AssessView({ skill, onComplete }) {
     const questions = skill.assessment;
     const q = questions[qIdx];
     const color = 'var(--wep-indigo)';
+
+    // v4 Logging
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
+    const qStartRef = useRef(Date.now());
+
+    useEffect(() => { isFinishedRef.current = finished; }, [finished]);
+
+    useEffect(() => {
+        if (!nodeId) return;
+        startSession({ nodeId, sessionType: 'assessment' });
+        answersPayload.current = Array(questions.length).fill(null);
+        return () => {
+            if (!isFinishedRef.current && answersPayload.current.some(a => a !== null)) {
+                abandonSession({ answersPayload: answersPayload.current.filter(Boolean), totalQuestions: questions.length });
+            }
+        };
+    }, [nodeId]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Timer logic
     useEffect(() => {
@@ -511,19 +574,30 @@ function AssessView({ skill, onComplete }) {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    const handleSelect = (optIdx) => {
+    const handleSelect = async (optIdx) => {
         if (finished) return;
+        const timeSpent = Date.now() - qStartRef.current;
         setSelected(optIdx);
-        setResponses(prev => ({
-            ...prev,
-            [qIdx]: {
-                selected: optIdx,
-                isCorrect: optIdx === q.correct
-            }
-        }));
+        const correct = optIdx === q.correct;
+        setResponses(prev => ({ ...prev, [qIdx]: { selected: optIdx, isCorrect: correct } }));
+        qStartRef.current = Date.now();
+
+        // v4 Log answer
+        if (nodeId) {
+            const answerData = {
+                question_index: qIdx + 1,
+                answer_json: { selected: optIdx, text: q.options[optIdx] },
+                is_correct: correct ? 1.0 : 0.0,
+                marks_awarded: correct ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: timeSpent
+            };
+            answersPayload.current[qIdx] = answerData;
+            await logAnswer({ questionIndex: answerData.question_index, answerJson: answerData.answer_json, isCorrect: answerData.is_correct });
+        }
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (qIdx + 1 < questions.length) {
             const nextIdx = qIdx + 1;
             setQIdx(nextIdx);
@@ -531,6 +605,11 @@ function AssessView({ skill, onComplete }) {
             setVisited(prev => ({ ...prev, [nextIdx]: true }));
         } else {
             setFinished(true);
+            // v4 Finish session
+            if (nodeId) {
+                const fPayload = answersPayload.current.filter(Boolean);
+                await finishSession({ totalQuestions: questions.length, questionsAnswered: fPayload.length, answersPayload: fPayload });
+            }
         }
     };
 
