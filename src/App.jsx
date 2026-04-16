@@ -537,6 +537,18 @@ import Circles9Intro from './components/practice/class-9/circles_9/Topics/Intro/
 import Circles9Terminology from './components/practice/class-9/circles_9/Topics/Terminology/Circles9Terminology';
 import Circles9Skills from './components/practice/class-9/circles_9/Topics/Skills/Circles9Skills';
 
+// Class 9 - Heron's Formula
+import HeronsFormula9 from './components/practice/class-9/herons_formula_9/HeronsFormula9';
+import HeronsFormula9Intro from './components/practice/class-9/herons_formula_9/Topics/Intro/HeronsFormula9Intro';
+import HeronsFormula9Terminology from './components/practice/class-9/herons_formula_9/Topics/Terminology/HeronsFormula9Terminology';
+import HeronsFormula9Skills from './components/practice/class-9/herons_formula_9/Topics/Skills/HeronsFormula9Skills';
+
+// Grade 9 Surface Areas and Volumes
+import SurfaceAreasAndVolumes9 from './components/practice/class-9/surface_areas_and_volumes_9/SurfaceAreasAndVolumes9';
+import SurfaceAreasAndVolumes9Intro from './components/practice/class-9/surface_areas_and_volumes_9/Topics/Intro/SurfaceAreasAndVolumes9Intro';
+import SurfaceAreasAndVolumes9Terminology from './components/practice/class-9/surface_areas_and_volumes_9/Topics/Terminology/SurfaceAreasAndVolumes9Terminology';
+import SurfaceAreasAndVolumes9Skills from './components/practice/class-9/surface_areas_and_volumes_9/Topics/Skills/SurfaceAreasAndVolumes9Skills';
+
 // Grade 9 Triangles
 import Triangles9 from './components/practice/class-9/triangles_9/Triangles9';
 import Triangles9Intro from './components/practice/class-9/triangles_9/Topics/Intro/Triangles9Intro';
@@ -1679,6 +1691,18 @@ function App() {
           <Route path="practice/class-9/circles/intro" element={<ProtectedRoute redirectTo="/login"><Circles9Intro /></ProtectedRoute>} />
           <Route path="practice/class-9/circles/terminology" element={<ProtectedRoute redirectTo="/login"><Circles9Terminology /></ProtectedRoute>} />
           <Route path="practice/class-9/circles/skills" element={<ProtectedRoute redirectTo="/login"><Circles9Skills /></ProtectedRoute>} />
+
+          {/* Class 9: Heron's Formula Routes */}
+          <Route path="practice/class-9/herons-formula" element={<ProtectedRoute redirectTo="/login"><HeronsFormula9 /></ProtectedRoute>} />
+          <Route path="practice/class-9/herons-formula/intro" element={<ProtectedRoute redirectTo="/login"><HeronsFormula9Intro /></ProtectedRoute>} />
+          <Route path="practice/class-9/herons-formula/terminology" element={<ProtectedRoute redirectTo="/login"><HeronsFormula9Terminology /></ProtectedRoute>} />
+          <Route path="practice/class-9/herons-formula/skills" element={<ProtectedRoute redirectTo="/login"><HeronsFormula9Skills /></ProtectedRoute>} />
+
+          {/* Class 9: Surface Areas and Volumes Routes */}
+          <Route path="practice/class-9/surface-areas-and-volumes" element={<ProtectedRoute redirectTo="/login"><SurfaceAreasAndVolumes9 /></ProtectedRoute>} />
+          <Route path="practice/class-9/surface-areas-and-volumes/intro" element={<ProtectedRoute redirectTo="/login"><SurfaceAreasAndVolumes9Intro /></ProtectedRoute>} />
+          <Route path="practice/class-9/surface-areas-and-volumes/terminology" element={<ProtectedRoute redirectTo="/login"><SurfaceAreasAndVolumes9Terminology /></ProtectedRoute>} />
+          <Route path="practice/class-9/surface-areas-and-volumes/skills" element={<ProtectedRoute redirectTo="/login"><SurfaceAreasAndVolumes9Skills /></ProtectedRoute>} />
 
           {/* Class 9: Triangles Routes */}
           <Route path="practice/class-9/triangles" element={<ProtectedRoute redirectTo="/login"><Triangles9 /></ProtectedRoute>} />
