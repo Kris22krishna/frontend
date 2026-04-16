@@ -543,6 +543,12 @@ import HeronsFormula9Intro from './components/practice/class-9/herons_formula_9/
 import HeronsFormula9Terminology from './components/practice/class-9/herons_formula_9/Topics/Terminology/HeronsFormula9Terminology';
 import HeronsFormula9Skills from './components/practice/class-9/herons_formula_9/Topics/Skills/HeronsFormula9Skills';
 
+// Class 9 - Statistics
+import Statistics9 from './components/practice/class-9/statistics_9/Statistics9';
+import Statistics9Intro from './components/practice/class-9/statistics_9/Topics/Intro/Statistics9Intro';
+import Statistics9Terminology from './components/practice/class-9/statistics_9/Topics/Terminology/Statistics9Terminology';
+import Statistics9Skills from './components/practice/class-9/statistics_9/Topics/Skills/Statistics9Skills';
+
 // Grade 9 Surface Areas and Volumes
 import SurfaceAreasAndVolumes9 from './components/practice/class-9/surface_areas_and_volumes_9/SurfaceAreasAndVolumes9';
 import SurfaceAreasAndVolumes9Intro from './components/practice/class-9/surface_areas_and_volumes_9/Topics/Intro/SurfaceAreasAndVolumes9Intro';
@@ -1710,6 +1716,11 @@ function App() {
           <Route path="practice/class-9/triangles/terminology" element={<ProtectedRoute redirectTo="/login"><Triangles9Terminology /></ProtectedRoute>} />
           <Route path="practice/class-9/triangles/skills" element={<ProtectedRoute redirectTo="/login"><Triangles9Skills /></ProtectedRoute>} />
           
+          <Route path="practice/class-9/statistics" element={<ProtectedRoute redirectTo="/login"><Statistics9 /></ProtectedRoute>} />
+          <Route path="practice/class-9/statistics/intro" element={<ProtectedRoute redirectTo="/login"><Statistics9Intro /></ProtectedRoute>} />
+          <Route path="practice/class-9/statistics/terminology" element={<ProtectedRoute redirectTo="/login"><Statistics9Terminology /></ProtectedRoute>} />
+          <Route path="practice/class-9/statistics/skills" element={<ProtectedRoute redirectTo="/login"><Statistics9Skills /></ProtectedRoute>} />
+
           <Route path="practice/class-9/quadrilaterals" element={<ProtectedRoute redirectTo="/login"><Quadrilaterals9 /></ProtectedRoute>} />
           <Route path="practice/class-9/quadrilaterals/intro" element={<ProtectedRoute redirectTo="/login"><Quadrilaterals9Intro /></ProtectedRoute>} />
           <Route path="practice/class-9/quadrilaterals/terminology" element={<ProtectedRoute redirectTo="/login"><Quadrilaterals9Terminology /></ProtectedRoute>} />
