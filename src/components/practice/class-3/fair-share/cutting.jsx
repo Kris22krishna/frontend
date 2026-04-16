@@ -7,6 +7,7 @@ import { api } from '../../../../services/api';
 import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
+import GenericReportCard from '../GenericReportCard';
 import '../../../../pages/juniors/grade3/fair-share.css';
 
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -199,6 +200,7 @@ const FairShareCutting = () => {
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [shuffledOptions, setShuffledOptions] = useState([]);
     const [feedbackMessage, setFeedbackMessage] = useState("");
+    const [history, setHistory] = useState({});
 
     // Logging states
     const [sessionId, setSessionId] = useState(null);
@@ -223,9 +225,12 @@ const FairShareCutting = () => {
             }).catch(err => console.error("Failed to start session", err));
         }
 
-        const timer = setInterval(() => {
-            setTimeElapsed(prev => prev + 1);
-        }, 1000);
+        let timer;
+        if (!showResult) {
+            timer = setInterval(() => {
+                setTimeElapsed(prev => prev + 1);
+            }, 1000);
+        }
 
         // Visibility Change logic
         const handleVisibilityChange = () => {
@@ -240,10 +245,10 @@ const FairShareCutting = () => {
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
         return () => {
-            clearInterval(timer);
+            if (timer) clearInterval(timer);
             document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
-    }, []);
+    }, [showResult]);
 
     useEffect(() => {
         generateQuestion(qIndex);
@@ -367,6 +372,17 @@ const FairShareCutting = () => {
             setShowExplanationModal(true);
         }
 
+        setHistory(prev => ({
+            ...prev,
+            [qIndex]: {
+                text: currentQuestion?.text,
+                selected: selectedOption,
+                correctAnswer: currentQuestion?.correctAnswer,
+                isCorrect: isRight,
+                isSubmitted: true
+            }
+        }));
+
         recordQuestionAttempt(currentQuestion, selectedOption, isRight);
     };
 
@@ -423,19 +439,16 @@ const FairShareCutting = () => {
     if (!currentQuestion) return <div>Loading...</div>;
 
     
-    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
-    if (showRes) {
-        const scoreVal = typeof score !== 'undefined' 
-            ? score 
-            : (typeof stats !== 'undefined' && stats.correct !== undefined 
-                ? stats.correct 
-                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
-        const totalVal = typeof questions !== 'undefined' 
-            ? questions.length 
-            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
-                ? sessionQuestions.length 
-                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
-        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
+    if (showResult) {
+        return (
+            <GenericReportCard 
+                score={Object.values(answers).filter(val => val === true).length} 
+                totalQuestions={TOTAL_QUESTIONS} 
+                onRestart={() => window.location.reload()} 
+                timeElapsed={timeElapsed} 
+                summaryData={Object.values(history)} 
+            />
+        );
     }
 
     return (

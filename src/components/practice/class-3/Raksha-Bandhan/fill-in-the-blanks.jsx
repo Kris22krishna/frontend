@@ -9,6 +9,7 @@ import LatexContent from '../../../LatexContent';
 import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
 import { FullScreenScratchpad } from '../../../FullScreenScratchpad';
+import GenericReportCard from '../GenericReportCard';
 
 import '../../../../pages/juniors/grade3/Raksha-Bandhan.css';
 
@@ -75,9 +76,12 @@ const RakshaBandhanFillInTheBlanks = () => {
             }).catch(err => console.error("Failed to start session", err));
         }
 
-        const timer = setInterval(() => {
-            setTimeElapsed(prev => prev + 1);
-        }, 1000);
+        let timer;
+        if (!showResult) {
+            timer = setInterval(() => {
+                setTimeElapsed(prev => prev + 1);
+            }, 1000);
+        }
 
         // Visibility Change logic
         const handleVisibilityChange = () => {
@@ -92,10 +96,10 @@ const RakshaBandhanFillInTheBlanks = () => {
         document.addEventListener("visibilitychange", handleVisibilityChange);
 
         return () => {
-            clearInterval(timer);
+            if (timer) clearInterval(timer);
             document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
-    }, []);
+    }, [showResult]);
 
     useEffect(() => {
         if (history[qIndex]) {
@@ -190,7 +194,9 @@ const RakshaBandhanFillInTheBlanks = () => {
             ...prev,
             [qIndex]: {
                 ...prev[qIndex],
-                selectedOption: selectedOption,
+                text: currentQuestion?.text,
+                selected: selectedOption,
+                correctAnswer: currentQuestion?.correctAnswer,
                 isSubmitted: true,
                 isCorrect: isRight,
                 feedbackMessage: feedbackMsg
@@ -254,19 +260,16 @@ const RakshaBandhanFillInTheBlanks = () => {
     };
 
     
-    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
-    if (showRes) {
-        const scoreVal = typeof score !== 'undefined' 
-            ? score 
-            : (typeof stats !== 'undefined' && stats.correct !== undefined 
-                ? stats.correct 
-                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
-        const totalVal = typeof questions !== 'undefined' 
-            ? questions.length 
-            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
-                ? sessionQuestions.length 
-                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
-        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
+    if (showResult) {
+        return (
+            <GenericReportCard 
+                score={Object.values(answers).filter(val => val === true).length} 
+                totalQuestions={questions.length} 
+                onRestart={() => window.location.reload()} 
+                timeElapsed={timeElapsed} 
+                summaryData={Object.values(history)} 
+            />
+        );
     }
 
     return (
