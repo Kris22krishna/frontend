@@ -22,6 +22,7 @@ const GRADE_9_TOPIC_SKILL_COUNTS = {
     Circles: 3,
     'Heron\'s Formula': 3,
     'Surface Areas and Volumes': 3,
+    Statistics: 3,
 };
 
 const SeniorGradeSyllabus = () => {
@@ -185,7 +186,10 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 1249, skill_name: 'Heron\'s Formula: Master Hub', topic: 'Heron\'s Formula', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/herons-formula', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS['Heron\'s Formula'] },
                         
                         // Surface Areas and Volumes Hub
-                        { skill_id: 1250, skill_name: 'Surface Areas & Volumes: Master Hub', topic: 'Surface Areas and Volumes', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/surface-areas-and-volumes', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS['Surface Areas and Volumes'] }
+                        { skill_id: 1250, skill_name: 'Surface Areas & Volumes: Master Hub', topic: 'Surface Areas and Volumes', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/surface-areas-and-volumes', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS['Surface Areas and Volumes'] },
+
+                        // Statistics Hub
+                        { skill_id: 1251, skill_name: 'Statistics: Master Hub', topic: 'Statistics', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/statistics', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS.Statistics }
 
                     ]);
                 } else if (grade === '8') {
