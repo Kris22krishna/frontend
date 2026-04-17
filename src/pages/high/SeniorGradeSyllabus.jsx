@@ -20,6 +20,8 @@ const GRADE_9_TOPIC_SKILL_COUNTS = {
     Triangles: 4,
     Quadrilaterals: 3,
     Circles: 3,
+    'Heron\'s Formula': 3,
+    'Surface Areas and Volumes': 3,
 };
 
 const SeniorGradeSyllabus = () => {
@@ -177,7 +179,13 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 1247, skill_name: 'Quadrilaterals: Master Hub', topic: 'Quadrilaterals', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/quadrilaterals', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS.Quadrilaterals },
                         
                         // Circles Hub
-                        { skill_id: 1248, skill_name: 'Circles: Master Hub', topic: 'Circles', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/circles', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS.Circles }
+                        { skill_id: 1248, skill_name: 'Circles: Master Hub', topic: 'Circles', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/circles', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS.Circles },
+                        
+                        // Heron's Formula Hub
+                        { skill_id: 1249, skill_name: 'Heron\'s Formula: Master Hub', topic: 'Heron\'s Formula', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/herons-formula', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS['Heron\'s Formula'] },
+                        
+                        // Surface Areas and Volumes Hub
+                        { skill_id: 1250, skill_name: 'Surface Areas & Volumes: Master Hub', topic: 'Surface Areas and Volumes', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/surface-areas-and-volumes', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS['Surface Areas and Volumes'] }
 
                     ]);
                 } else if (grade === '8') {
