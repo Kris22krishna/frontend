@@ -238,6 +238,7 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 'local-8-cq-landing', skill_name: 'Comparing Quantities Chapter', topic: 'Comparing Quantities' },
                         { skill_id: 'local-8-leq-landing', skill_name: 'Linear Equations Chapter', topic: 'Linear Equations in One Variable' },
                         { skill_id: 'local-8-ccr-landing', skill_name: 'Cubes and Cube Roots Chapter', topic: 'Cubes and Cube Roots' },
+                        { skill_id: 'local-8-aei-landing', skill_name: 'Algebraic Expressions and Identities Chapter', topic: 'Algebraic Expressions and Identities' },
                     ]);
                 } else {
                     const response = await api.getSkills(grade);
@@ -630,6 +631,18 @@ const SeniorGradeSyllabus = () => {
                 subtopic: 'Perfect Cubes, Cube Roots, Estimating',
                 isLocal: true,
                 path: '/senior/grade/8/cubes-and-cube-roots'
+            }
+        ];
+
+        // Algebraic Expressions and Identities (NCERT Ch. 9 — Grade 8)
+        skillsByTopic['Algebraic Expressions and Identities'] = [
+            {
+                skill_id: 'local-8-aei-landing',
+                skill_name: 'Algebraic Expressions and Identities Chapter',
+                topic: 'Algebraic Expressions and Identities',
+                subtopic: 'Expressions, Operations, Multiplication, Identities',
+                isLocal: true,
+                path: '/senior/grade/8/algebraic-expressions-and-identities'
             }
         ];
 

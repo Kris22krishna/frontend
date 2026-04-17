@@ -468,6 +468,12 @@ import CubesIntro5W1H from './components/practice/class-8/cubes_and_cube_roots/T
 import CubesTerminology from './components/practice/class-8/cubes_and_cube_roots/Topics/Terminology/CubesTerminology';
 import CubesSkills from './components/practice/class-8/cubes_and_cube_roots/Topics/Skills/CubesSkills';
 
+// Grade 8 Algebraic Expressions and Identities
+import AlgebraicExpressionsAndIdentities from './components/practice/class-8/algebraic_expressions_and_identities/AlgebraicExpressionsAndIdentities';
+import AlgebraicExpressionsIntro5W1H from './components/practice/class-8/algebraic_expressions_and_identities/Topics/5W1H/AlgebraicExpressionsIntro5W1H';
+import AlgebraicExpressionsTerminology from './components/practice/class-8/algebraic_expressions_and_identities/Topics/Terminology/AlgebraicExpressionsTerminology';
+import AlgebraicExpressionsSkills from './components/practice/class-8/algebraic_expressions_and_identities/Topics/Skills/AlgebraicExpressionsSkills';
+
 // Grade 8 Understanding Quadrilaterals
 import UnderstandingQuadrilaterals from './components/practice/class-8/understanding_quadrilaterals/UnderstandingQuadrilaterals';
 import UnderstandingQuadrilateralsIntro5W1H from './components/practice/class-8/understanding_quadrilaterals/Topics/5W1H/UnderstandingQuadrilateralsIntro5W1H';
@@ -1503,6 +1509,12 @@ function App() {
           <Route path="senior/grade/8/cubes-and-cube-roots/introduction" element={<ProtectedRoute redirectTo="/login"><CubesIntro5W1H /></ProtectedRoute>} />
           <Route path="senior/grade/8/cubes-and-cube-roots/terminology" element={<ProtectedRoute redirectTo="/login"><CubesTerminology /></ProtectedRoute>} />
           <Route path="senior/grade/8/cubes-and-cube-roots/skills" element={<ProtectedRoute redirectTo="/login"><CubesSkills /></ProtectedRoute>} />
+
+          {/* Grade 8: Algebraic Expressions and Identities Chapter Pages */}
+          <Route path="/senior/grade/8/algebraic-expressions-and-identities" element={<ProtectedRoute redirectTo="/login"><AlgebraicExpressionsAndIdentities /></ProtectedRoute>} />
+          <Route path="/senior/grade/8/algebraic-expressions-and-identities/introduction" element={<ProtectedRoute redirectTo="/login"><AlgebraicExpressionsIntro5W1H /></ProtectedRoute>} />
+          <Route path="/senior/grade/8/algebraic-expressions-and-identities/terminology" element={<ProtectedRoute redirectTo="/login"><AlgebraicExpressionsTerminology /></ProtectedRoute>} />
+          <Route path="/senior/grade/8/algebraic-expressions-and-identities/skills" element={<ProtectedRoute redirectTo="/login"><AlgebraicExpressionsSkills /></ProtectedRoute>} />
 
           {/* Grade 8: Understanding Quadrilaterals Chapter Pages */}
           <Route path="senior/grade/8/understanding-quadrilaterals" element={<ProtectedRoute redirectTo="/login"><UnderstandingQuadrilaterals /></ProtectedRoute>} />
