@@ -303,6 +303,22 @@ import Grade3Practice from './components/practice/grade-3/Grade3Practice';
 import JuniorGradeSyllabus from './pages/juniors/JuniorGradeSyllabus';
 import JuniorSubtopics from './pages/juniors/JuniorSubtopics';
 import JuniorPracticeSession from './pages/juniors/JuniorPracticeSession';
+// House-of-Hundreds-I
+import {
+  CountingBeyond200,
+  NumberSequences,
+  NumberRepresentation,
+  NumberLineSkills,
+  NumberGamesPatterns,
+  LargeNumbersContext,
+  NumberGrid,
+  PlaceValueHTO,
+  PatternsGroups,
+  NumberHuntGames,
+  ComparingNumbers,
+  HOHTest,
+} from './components/practice/class-3/House-of-Hundreds-I';
+
 // House-of-Hundreds-II
 import DrawTiles from './components/practice/class-3/House-of-Hundreds-II/Draw-tiles';
 import NeighbouringNumbers from './components/practice/class-3/House-of-Hundreds-II/neighbouring-numbers';
@@ -1975,6 +1991,20 @@ function App() {
             <FunAtClassPartyTest />
           </ProtectedRoute>
         } />
+
+        {/* House of Hundreds I Routes */}
+        <Route path="/junior/grade/:grade/house-of-hundreds-i/counting-beyond-200" element={<ProtectedRoute redirectTo="/login"><CountingBeyond200 /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/house-of-hundreds-i/number-sequences" element={<ProtectedRoute redirectTo="/login"><NumberSequences /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/house-of-hundreds-i/number-representation" element={<ProtectedRoute redirectTo="/login"><NumberRepresentation /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/house-of-hundreds-i/number-line-skills" element={<ProtectedRoute redirectTo="/login"><NumberLineSkills /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/house-of-hundreds-i/number-games-patterns" element={<ProtectedRoute redirectTo="/login"><NumberGamesPatterns /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/house-of-hundreds-i/large-numbers-context" element={<ProtectedRoute redirectTo="/login"><LargeNumbersContext /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/house-of-hundreds-i/number-grid" element={<ProtectedRoute redirectTo="/login"><NumberGrid /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/house-of-hundreds-i/place-value-hto" element={<ProtectedRoute redirectTo="/login"><PlaceValueHTO /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/house-of-hundreds-i/patterns-groups" element={<ProtectedRoute redirectTo="/login"><PatternsGroups /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/house-of-hundreds-i/number-hunt-games" element={<ProtectedRoute redirectTo="/login"><NumberHuntGames /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/house-of-hundreds-i/comparing-numbers" element={<ProtectedRoute redirectTo="/login"><ComparingNumbers /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/house-of-hundreds-i/chapter-test" element={<ProtectedRoute redirectTo="/login"><HOHTest /></ProtectedRoute>} />
 
         <Route path="/junior/grade/:grade/house-of-hundreds-ii/draw-tiles" element={
           <ProtectedRoute redirectTo="/login">
