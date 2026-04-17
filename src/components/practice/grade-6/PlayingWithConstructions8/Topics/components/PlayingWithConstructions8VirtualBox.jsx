@@ -106,8 +106,8 @@ export function GeometryCanvasBox({ onUpdateCoordinates, activeSubtype }) {
             const dx = x - protractorPose.x;
             const dy = y - protractorPose.y;
             const d = Math.sqrt(dx*dx + dy*dy);
-            if (d < 60) setIsDraggingProtractor(true);
-            else if (d < 160) setIsRotatingProtractor(true);
+            if (d < 120) setIsDraggingProtractor(true);
+            else if (d >= 120 && d < 180) setIsRotatingProtractor(true);
             return;
         }
 
@@ -128,11 +128,11 @@ export function GeometryCanvasBox({ onUpdateCoordinates, activeSubtype }) {
 
         if (tool === 'protractor') {
             if (isDraggingProtractor) {
-                setProtractorPose(prev => ({ ...prev, x: sp.x, y: sp.y }));
+                setProtractorPose(prev => ({ ...prev, x: Math.max(0, Math.min(x, 800)), y: Math.max(0, Math.min(y, 400)) }));
             } else if (isRotatingProtractor) {
                 const dx = x - protractorPose.x;
                 const dy = y - protractorPose.y;
-                let angle = Math.round((Math.atan2(dy, dx) * 180 / Math.PI) / 5) * 5;
+                let angle = Math.round(((Math.atan2(dy, dx) * 180 / Math.PI) + 90) / 5) * 5;
                 setProtractorPose(prev => ({ ...prev, angle }));
             }
             return;

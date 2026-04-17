@@ -297,6 +297,14 @@ const MiddleGradeSyllabus = () => {
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/6/playing-with-constructions'
+                        },
+                        {
+                            skill_id: 'local-symmetry-6-chapter',
+                            skill_name: 'Symmetry: Interactive Chapter',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/6/symmetry-6'
                         }
                     ];
                 }

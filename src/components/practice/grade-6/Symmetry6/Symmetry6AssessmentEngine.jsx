@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../MathRenderer';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
-import { ConstructionInteractiveDraw } from './Topics/components/PlayingWithConstructions8InteractiveDraw';
+import Symmetry6InteractiveDraw from './Topics/components/Symmetry6InteractiveDraw';
 
 export default function AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'dh' , nodeId }) {
     const normalizeTextAnswer = (value) => String(value ?? '').replace(/\s+/g, ' ').trim().toLowerCase();
@@ -15,6 +15,7 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
     const isAnswerComplete = (question, answer) => {
         const type = getQuestionType(question);
         if (type === 'text') return normalizeTextAnswer(answer).length > 0;
+        if (type === 'interactive-draw') return Array.isArray(answer) && answer.length > 0;
         return answer !== null && answer !== undefined;
     };
 
@@ -22,13 +23,30 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         const type = getQuestionType(question);
         if (type === 'text') return normalizeTextAnswer(answer) === normalizeTextAnswer(question.answer);
         if (type === 'interactive-draw') {
-            const tol = 0.6;
-            if (question.subType === 'draw-circle') return answer?.circles >= 1 && Math.abs((answer?.radius || 0) - question.targetDimensions?.radius) <= tol;
-            if (question.subType === 'draw-rectangle') return answer?.lines >= 4 && answer?.circles >= 1 && 
-                Math.abs((answer?.length || 0) - question.targetDimensions?.length) <= tol && 
-                Math.abs((answer?.breadth || 0) - question.targetDimensions?.breadth) <= tol;
-            if (question.subType === 'draw-square') return answer?.lines >= 4 && answer?.circles >= 1 && 
-                Math.abs((answer?.side || 0) - question.targetDimensions?.side) <= tol;
+             if (question.subType === 'draw-lines-of-symmetry') {
+                 const userLines = answer || [];
+                 const targets = question.targetLines || [];
+                 if (userLines.length !== targets.length) return false;
+                 let matchedAll = true;
+                 const distToLine = (px, py, l1x, l1y, l2x, l2y) => {
+                     const num = Math.abs((l2y - l1y)*px - (l2x - l1x)*py + l2x*l1y - l2y*l1x);
+                     const den = Math.sqrt(Math.pow(l2y - l1y, 2) + Math.pow(l2x - l1x, 2));
+                     return den === 0 ? 0 : num / den;
+                 };
+                 for (const t of targets) {
+                     const match = userLines.find(ul => {
+                         const d1 = distToLine(ul.x1/20, ul.y1/20, t.p1.x, t.p1.y, t.p2.x, t.p2.y);
+                         const d2 = distToLine(ul.x2/20, ul.y2/20, t.p1.x, t.p1.y, t.p2.x, t.p2.y);
+                         return d1 < 0.5 && d2 < 0.5;
+                     });
+                     if (!match) {
+                         matchedAll = false;
+                         break;
+                     }
+                 }
+                 return matchedAll;
+             }
+             return false;
         }
         return answer === question.correct || (question.options && question.options[answer] !== undefined && String(question.options[answer]) === String(question.correct));
     };
@@ -38,7 +56,7 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
     const getCorrectAnswerLabel = (question) => {
         const type = getQuestionType(question);
         if (type === 'text') return question.answer ?? 'No answer provided';
-        if (type === 'interactive-draw') return 'Correct Dimensions Set';
+        if (type === 'interactive-draw') return `${question.targetLines?.length} Line(s) of Symmetry`;
         return question.options?.[question.correct] ?? 'No answer provided';
     };
 
@@ -46,7 +64,7 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         if (!isAnswerComplete(question, answer)) return 'Not Answered';
         const type = getQuestionType(question);
         if (type === 'text') return answer;
-        if (type === 'interactive-draw') return 'Submitted Drawing';
+        if (type === 'interactive-draw') return `${answer.length} Line(s) drawn`;
         return question.options?.[answer] ?? 'Not Answered';
     };
 
@@ -139,6 +157,13 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         if (finished) return;
         const newAns = [...answers];
         newAns[current] = value;
+        setAnswers(newAns);
+    };
+
+    const handleInteractiveDrawChange = (lines) => {
+        if (finished) return;
+        const newAns = [...answers];
+        newAns[current] = lines;
         setAnswers(newAns);
     };
 
@@ -458,14 +483,7 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                         <MathRenderer text={q.question} />
                     </div>
 
-                    {getQuestionType(q) === 'interactive-draw' ? (
-                        <ConstructionInteractiveDraw 
-                            q={q} 
-                            isAnswered={false} 
-                            draftAnswer={answers[current]} 
-                            setDraftAnswer={handleTextAnswerChange} 
-                        />
-                    ) : getQuestionType(q) === 'text' ? (
+                    {getQuestionType(q) === 'text' ? (
                         <div style={{ display: 'grid', gap: 12 }}>
                             <label style={{ fontSize: 13, fontWeight: 800, letterSpacing: 1.2, textTransform: 'uppercase', color: '#64748b' }}>
                                 Type your answer
@@ -487,6 +505,15 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                                     outline: 'none',
                                     transition: 'all 0.2s'
                                 }}
+                            />
+                        </div>
+                    ) : getQuestionType(q) === 'interactive-draw' ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                            <Symmetry6InteractiveDraw 
+                                key={q.id}
+                                question={q} 
+                                onUpdate={handleInteractiveDrawChange} 
+                                color={color} 
                             />
                         </div>
                     ) : (

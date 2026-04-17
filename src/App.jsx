@@ -629,6 +629,11 @@ import Grade6FractionsIntro from './components/practice/grade-6/Fractions6/Topic
 import Grade6FractionsTerminology from './components/practice/grade-6/Fractions6/Topics/Terminology/Fractions6Terminology';
 import Grade6FractionsSkills from './components/practice/grade-6/Fractions6/Topics/Skills/Fractions6Skills';
 
+import Grade6Symmetry from './components/practice/grade-6/Symmetry6/Symmetry6';
+import Grade6SymmetryIntro from './components/practice/grade-6/Symmetry6/Topics/5W1H/Symmetry6Intro';
+import Grade6SymmetryTerminology from './components/practice/grade-6/Symmetry6/Topics/Terminology/Symmetry6Terminology';
+import Grade6SymmetrySkills from './components/practice/grade-6/Symmetry6/Topics/Skills/Symmetry6Skills';
+
 // Grade 6 Playing With Constructions Chapter
 import Grade6Constructions from './components/practice/grade-6/PlayingWithConstructions8/PlayingWithConstructions8';
 import Grade6ConstructionsIntro from './components/practice/grade-6/PlayingWithConstructions8/Topics/5W1H/ConstructionsIntro';
@@ -1769,6 +1774,12 @@ function App() {
           <Route path="middle/grade/6/fractions-6/introduction" element={<Grade6FractionsIntro />} />
           <Route path="middle/grade/6/fractions-6/terminology" element={<Grade6FractionsTerminology />} />
           <Route path="middle/grade/6/fractions-6/skills" element={<Grade6FractionsSkills />} />
+
+          {/* Grade 6 Symmetry Routes */}
+          <Route path="middle/grade/6/symmetry-6" element={<Grade6Symmetry />} />
+          <Route path="middle/grade/6/symmetry-6/introduction" element={<Grade6SymmetryIntro />} />
+          <Route path="middle/grade/6/symmetry-6/terminology" element={<Grade6SymmetryTerminology />} />
+          <Route path="middle/grade/6/symmetry-6/skills" element={<Grade6SymmetrySkills />} />
 
           {/* Grade 6 Playing With Constructions Routes */}
           <Route path="middle/grade/6/playing-with-constructions" element={<Grade6Constructions />} />
