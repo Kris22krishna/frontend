@@ -629,6 +629,12 @@ import Grade6FractionsIntro from './components/practice/grade-6/Fractions6/Topic
 import Grade6FractionsTerminology from './components/practice/grade-6/Fractions6/Topics/Terminology/Fractions6Terminology';
 import Grade6FractionsSkills from './components/practice/grade-6/Fractions6/Topics/Skills/Fractions6Skills';
 
+// Grade 6 Playing With Constructions Chapter
+import Grade6Constructions from './components/practice/grade-6/PlayingWithConstructions8/PlayingWithConstructions8';
+import Grade6ConstructionsIntro from './components/practice/grade-6/PlayingWithConstructions8/Topics/5W1H/ConstructionsIntro';
+import Grade6ConstructionsTerminology from './components/practice/grade-6/PlayingWithConstructions8/Topics/Terminology/ConstructionsTerminology';
+import Grade6ConstructionsSkills from './components/practice/grade-6/PlayingWithConstructions8/Topics/Skills/ConstructionsSkills';
+
 
 // Grade 6 Mensuration (Perimeter and Area) Chapter
 import Grade6Mensuration from './components/practice/grade-6/Mensuration6/Mensuration6';
@@ -1763,6 +1769,12 @@ function App() {
           <Route path="middle/grade/6/fractions-6/introduction" element={<Grade6FractionsIntro />} />
           <Route path="middle/grade/6/fractions-6/terminology" element={<Grade6FractionsTerminology />} />
           <Route path="middle/grade/6/fractions-6/skills" element={<Grade6FractionsSkills />} />
+
+          {/* Grade 6 Playing With Constructions Routes */}
+          <Route path="middle/grade/6/playing-with-constructions" element={<Grade6Constructions />} />
+          <Route path="middle/grade/6/playing-with-constructions/introduction" element={<Grade6ConstructionsIntro />} />
+          <Route path="middle/grade/6/playing-with-constructions/terminology" element={<Grade6ConstructionsTerminology />} />
+          <Route path="middle/grade/6/playing-with-constructions/skills" element={<Grade6ConstructionsSkills />} />
 
           {/* Grade 6 Mensuration Routes */}
           <Route path="middle/grade/6/mensuration-6" element={<Grade6Mensuration />} />
