@@ -361,6 +361,20 @@ import DCNumbers150to200 from './components/practice/class-3/Double-Century/Numb
 import DCJumpingGame from './components/practice/class-3/Double-Century/JumpingGame';
 import DCTest from './components/practice/class-3/Double-Century/DCTest';
 
+// Fun with Shapes
+import {
+  RecognisingShapes,
+  FlatShapesFaces,
+  Rectangles as FWSRectangles,
+  Squares as FWSSquares,
+  CornersAngles,
+  Triangles as FWSTriangles,
+  Circles as FWSCircles,
+  CompositeShapes,
+  LinesTangram,
+  FWSTest,
+} from './components/practice/class-3/Fun-with-Shapes';
+
 // Toy Joy
 import Identifying3DShapes from './components/practice/class-3/Toy-Joy/Identifying3DShapes';
 import CountingShapes from './components/practice/class-3/Toy-Joy/CountingShapes';
@@ -371,6 +385,20 @@ import OppositeFacesCube from './components/practice/class-3/Toy-Joy/OppositeFac
 import BuildingCombiningShapes from './components/practice/class-3/Toy-Joy/BuildingCombiningShapes';
 import SequencingModelConstruction from './components/practice/class-3/Toy-Joy/SequencingModelConstruction';
 import ToyJoyTest from './components/practice/class-3/Toy-Joy/ToyJoyTest';
+
+// Vacation with My Nani Maa
+import {
+  AdditionSubtractionFacts,
+  AdditionSubtractionTensFrame,
+  NumberLineJumps,
+  NumberGridOperations,
+  PatternsMagicSquares,
+  StoryBasedAddSub,
+  BoxDiagramMethod,
+  EstimationAround100,
+  OpenNumberLine,
+  VNTest
+} from './components/practice/class-3/Vacation-with-Nani-Maa';
 
 // Grade 5 Decimal Practice Components
 import PlaceValuesOfDecimals from './components/practice/class-5/TenthsandHundrendths/Decimals/place-values-of-decimals';
@@ -476,6 +504,12 @@ import CubesIntro5W1H from './components/practice/class-8/cubes_and_cube_roots/T
 import CubesTerminology from './components/practice/class-8/cubes_and_cube_roots/Topics/Terminology/CubesTerminology';
 import CubesSkills from './components/practice/class-8/cubes_and_cube_roots/Topics/Skills/CubesSkills';
 
+// Grade 8 Algebraic Expressions and Identities
+import AlgebraicExpressionsAndIdentities from './components/practice/class-8/algebraic_expressions_and_identities/AlgebraicExpressionsAndIdentities';
+import AlgebraicExpressionsIntro5W1H from './components/practice/class-8/algebraic_expressions_and_identities/Topics/5W1H/AlgebraicExpressionsIntro5W1H';
+import AlgebraicExpressionsTerminology from './components/practice/class-8/algebraic_expressions_and_identities/Topics/Terminology/AlgebraicExpressionsTerminology';
+import AlgebraicExpressionsSkills from './components/practice/class-8/algebraic_expressions_and_identities/Topics/Skills/AlgebraicExpressionsSkills';
+
 // Grade 8 Understanding Quadrilaterals
 import UnderstandingQuadrilaterals from './components/practice/class-8/understanding_quadrilaterals/UnderstandingQuadrilaterals';
 import UnderstandingQuadrilateralsIntro5W1H from './components/practice/class-8/understanding_quadrilaterals/Topics/5W1H/UnderstandingQuadrilateralsIntro5W1H';
@@ -551,6 +585,12 @@ import HeronsFormula9Intro from './components/practice/class-9/herons_formula_9/
 import HeronsFormula9Terminology from './components/practice/class-9/herons_formula_9/Topics/Terminology/HeronsFormula9Terminology';
 import HeronsFormula9Skills from './components/practice/class-9/herons_formula_9/Topics/Skills/HeronsFormula9Skills';
 
+// Class 9 - Statistics
+import Statistics9 from './components/practice/class-9/statistics_9/Statistics9';
+import Statistics9Intro from './components/practice/class-9/statistics_9/Topics/Intro/Statistics9Intro';
+import Statistics9Terminology from './components/practice/class-9/statistics_9/Topics/Terminology/Statistics9Terminology';
+import Statistics9Skills from './components/practice/class-9/statistics_9/Topics/Skills/Statistics9Skills';
+
 // Grade 9 Surface Areas and Volumes
 import SurfaceAreasAndVolumes9 from './components/practice/class-9/surface_areas_and_volumes_9/SurfaceAreasAndVolumes9';
 import SurfaceAreasAndVolumes9Intro from './components/practice/class-9/surface_areas_and_volumes_9/Topics/Intro/SurfaceAreasAndVolumes9Intro';
@@ -598,22 +638,7 @@ import ChapterTestPatterns from './components/practice/class-5/CanyouseethePatte
 // Middle Pages (Grades 5-7 professional design)
 import MiddleGradeSyllabus from './pages/middle/MiddleGradeSyllabus';
 import MiddlePracticeSession from './pages/middle/MiddlePracticeSession';
-import RectanglePractice from './components/practice/grade-6/Perimeter and Area/Rectangle';
-import SquarePractice from './components/practice/grade-6/Perimeter and Area/Square';
-import TrianglePractice from './components/practice/grade-6/Perimeter and Area/Triangle';
-import RegularPolygonPractice from './components/practice/grade-6/Perimeter and Area/Regular Polygon';
-import MixedBagPractice from './components/practice/grade-6/Perimeter and Area/MixedBag';
-import VisualisingNumberSequences from './components/practice/grade-6/patterns-in-mathematics/VisualisingNumberSequences';
-import RelationsAmongNumberSequences from './components/practice/grade-6/patterns-in-mathematics/RelationsAmongNumberSequences';
-import PatternsInShapes from './components/practice/grade-6/patterns-in-mathematics/PatternsInShapes';
-import NumbersCanTellUsThings from './components/practice/grade-6/number-play/NumbersCanTellUsThings';
-import Supercells from './components/practice/grade-6/number-play/Supercells';
-import GrowingPatterns from './components/practice/grade-6/number-play/GrowingPatterns';
-import CollectingAndOrganisingData from './components/practice/grade-6/DataHandlingAndPresentation/CollectingAndOrganisingData';
-import Pictographs from './components/practice/grade-6/DataHandlingAndPresentation/Pictographs';
-import BarGraphs from './components/practice/grade-6/DataHandlingAndPresentation/BarGraphs';
-import DrawingABarGraph from './components/practice/grade-6/DataHandlingAndPresentation/DrawingABarGraph';
-import FigureItOut from './components/practice/grade-6/DataHandlingAndPresentation/FigureItOut';
+
 
 // Grade 6 Patterns
 import Grade6PatternsInMathematics from './components/practice/grade-6/PatternsInMathematics/PatternsInMathematics';
@@ -627,11 +652,6 @@ import Grade6LinesAndAnglesIntro from './components/practice/grade-6/LinesAndAng
 import Grade6LinesAndAnglesTerminology from './components/practice/grade-6/LinesAndAngles/Topics/Terminology/LinesAndAnglesTerminology';
 import Grade6LinesAndAnglesSkills from './components/practice/grade-6/LinesAndAngles/Topics/Skills/LinesAndAnglesSkills';
 
-// Grade 6 Symmetry
-import ReflectionInALine6 from './components/practice/grade-6/symmetry/ReflectionInALine';
-import RotationalSymmetry6 from './components/practice/grade-6/symmetry/RotationalSymmetry';
-import OrderOfRotationalSymmetry6 from './components/practice/grade-6/symmetry/OrderOfRotationalSymmetry';
-import IntroToSymmetry6 from './components/practice/grade-6/symmetry/line-of-symmetry';
 
 // Grade 6 Number Play Chapter
 import Grade6NumberPlay from './components/practice/grade-6/NumberPlay_6/NumberPlay_6';
@@ -645,6 +665,24 @@ import Grade6DataHandlingIntro from './components/practice/grade-6/DataHandling6
 import Grade6DataHandlingTerminology from './components/practice/grade-6/DataHandling6/Topics/Terminology/DataHandling6Terminology';
 import Grade6DataHandlingSkills from './components/practice/grade-6/DataHandling6/Topics/Skills/DataHandling6Skills';
 
+// Grade 6 Fractions Chapter
+import Grade6Fractions from './components/practice/grade-6/Fractions6/Fractions6';
+import Grade6FractionsIntro from './components/practice/grade-6/Fractions6/Topics/5W1H/Fractions6Intro';
+import Grade6FractionsTerminology from './components/practice/grade-6/Fractions6/Topics/Terminology/Fractions6Terminology';
+import Grade6FractionsSkills from './components/practice/grade-6/Fractions6/Topics/Skills/Fractions6Skills';
+
+import Grade6Symmetry from './components/practice/grade-6/Symmetry6/Symmetry6';
+import Grade6SymmetryIntro from './components/practice/grade-6/Symmetry6/Topics/5W1H/Symmetry6Intro';
+import Grade6SymmetryTerminology from './components/practice/grade-6/Symmetry6/Topics/Terminology/Symmetry6Terminology';
+import Grade6SymmetrySkills from './components/practice/grade-6/Symmetry6/Topics/Skills/Symmetry6Skills';
+
+// Grade 6 Playing With Constructions Chapter
+import Grade6Constructions from './components/practice/grade-6/PlayingWithConstructions8/PlayingWithConstructions8';
+import Grade6ConstructionsIntro from './components/practice/grade-6/PlayingWithConstructions8/Topics/5W1H/ConstructionsIntro';
+import Grade6ConstructionsTerminology from './components/practice/grade-6/PlayingWithConstructions8/Topics/Terminology/ConstructionsTerminology';
+import Grade6ConstructionsSkills from './components/practice/grade-6/PlayingWithConstructions8/Topics/Skills/ConstructionsSkills';
+
+
 // Grade 6 Mensuration (Perimeter and Area) Chapter
 import Grade6Mensuration from './components/practice/grade-6/Mensuration6/Mensuration6';
 import Grade6MensurationIntro from './components/practice/grade-6/Mensuration6/Topics/5W1H/Mensuration6Intro';
@@ -657,7 +695,6 @@ import Grade6PrimeTimeIntro from './components/practice/grade-6/PrimeTime6/Topic
 import Grade6PrimeTimeTerminology from './components/practice/grade-6/PrimeTime6/Topics/Terminology/PrimeTime6Terminology';
 import Grade6PrimeTimeSkills from './components/practice/grade-6/PrimeTime6/Topics/Skills/PrimeTime6Skills';
 
-import PlayingWithDigits from './components/practice/grade-6/number-play/PlayingWithDigits';
 import Percentage from './components/practice/class-7/comparing quantities/Percentage';
 import UseOfPercentages from './components/practice/class-7/comparing quantities/UseOfPercentages';
 import ProfitAndLoss from './components/practice/class-7/comparing quantities/ProfitAndLoss';
@@ -1532,6 +1569,12 @@ function App() {
           <Route path="senior/grade/8/cubes-and-cube-roots/terminology" element={<ProtectedRoute redirectTo="/login"><CubesTerminology /></ProtectedRoute>} />
           <Route path="senior/grade/8/cubes-and-cube-roots/skills" element={<ProtectedRoute redirectTo="/login"><CubesSkills /></ProtectedRoute>} />
 
+          {/* Grade 8: Algebraic Expressions and Identities Chapter Pages */}
+          <Route path="/senior/grade/8/algebraic-expressions-and-identities" element={<ProtectedRoute redirectTo="/login"><AlgebraicExpressionsAndIdentities /></ProtectedRoute>} />
+          <Route path="/senior/grade/8/algebraic-expressions-and-identities/introduction" element={<ProtectedRoute redirectTo="/login"><AlgebraicExpressionsIntro5W1H /></ProtectedRoute>} />
+          <Route path="/senior/grade/8/algebraic-expressions-and-identities/terminology" element={<ProtectedRoute redirectTo="/login"><AlgebraicExpressionsTerminology /></ProtectedRoute>} />
+          <Route path="/senior/grade/8/algebraic-expressions-and-identities/skills" element={<ProtectedRoute redirectTo="/login"><AlgebraicExpressionsSkills /></ProtectedRoute>} />
+
           {/* Grade 8: Understanding Quadrilaterals Chapter Pages */}
           <Route path="senior/grade/8/understanding-quadrilaterals" element={<ProtectedRoute redirectTo="/login"><UnderstandingQuadrilaterals /></ProtectedRoute>} />
           <Route path="senior/grade/8/understanding-quadrilaterals/introduction" element={<ProtectedRoute redirectTo="/login"><UnderstandingQuadrilateralsIntro5W1H /></ProtectedRoute>} />
@@ -1736,6 +1779,11 @@ function App() {
           <Route path="practice/class-9/triangles/terminology" element={<ProtectedRoute redirectTo="/login"><Triangles9Terminology /></ProtectedRoute>} />
           <Route path="practice/class-9/triangles/skills" element={<ProtectedRoute redirectTo="/login"><Triangles9Skills /></ProtectedRoute>} />
           
+          <Route path="practice/class-9/statistics" element={<ProtectedRoute redirectTo="/login"><Statistics9 /></ProtectedRoute>} />
+          <Route path="practice/class-9/statistics/intro" element={<ProtectedRoute redirectTo="/login"><Statistics9Intro /></ProtectedRoute>} />
+          <Route path="practice/class-9/statistics/terminology" element={<ProtectedRoute redirectTo="/login"><Statistics9Terminology /></ProtectedRoute>} />
+          <Route path="practice/class-9/statistics/skills" element={<ProtectedRoute redirectTo="/login"><Statistics9Skills /></ProtectedRoute>} />
+
           <Route path="practice/class-9/quadrilaterals" element={<ProtectedRoute redirectTo="/login"><Quadrilaterals9 /></ProtectedRoute>} />
           <Route path="practice/class-9/quadrilaterals/intro" element={<ProtectedRoute redirectTo="/login"><Quadrilaterals9Intro /></ProtectedRoute>} />
           <Route path="practice/class-9/quadrilaterals/terminology" element={<ProtectedRoute redirectTo="/login"><Quadrilaterals9Terminology /></ProtectedRoute>} />
@@ -1786,6 +1834,24 @@ function App() {
           <Route path="middle/grade/6/data-handling-6/introduction" element={<Grade6DataHandlingIntro />} />
           <Route path="middle/grade/6/data-handling-6/terminology" element={<Grade6DataHandlingTerminology />} />
           <Route path="middle/grade/6/data-handling-6/skills" element={<Grade6DataHandlingSkills />} />
+
+          {/* Grade 6 Fractions Routes */}
+          <Route path="middle/grade/6/fractions-6" element={<Grade6Fractions />} />
+          <Route path="middle/grade/6/fractions-6/introduction" element={<Grade6FractionsIntro />} />
+          <Route path="middle/grade/6/fractions-6/terminology" element={<Grade6FractionsTerminology />} />
+          <Route path="middle/grade/6/fractions-6/skills" element={<Grade6FractionsSkills />} />
+
+          {/* Grade 6 Symmetry Routes */}
+          <Route path="middle/grade/6/symmetry-6" element={<Grade6Symmetry />} />
+          <Route path="middle/grade/6/symmetry-6/introduction" element={<Grade6SymmetryIntro />} />
+          <Route path="middle/grade/6/symmetry-6/terminology" element={<Grade6SymmetryTerminology />} />
+          <Route path="middle/grade/6/symmetry-6/skills" element={<Grade6SymmetrySkills />} />
+
+          {/* Grade 6 Playing With Constructions Routes */}
+          <Route path="middle/grade/6/playing-with-constructions" element={<Grade6Constructions />} />
+          <Route path="middle/grade/6/playing-with-constructions/introduction" element={<Grade6ConstructionsIntro />} />
+          <Route path="middle/grade/6/playing-with-constructions/terminology" element={<Grade6ConstructionsTerminology />} />
+          <Route path="middle/grade/6/playing-with-constructions/skills" element={<Grade6ConstructionsSkills />} />
 
           {/* Grade 6 Mensuration Routes */}
           <Route path="middle/grade/6/mensuration-6" element={<Grade6Mensuration />} />
@@ -2031,6 +2097,18 @@ function App() {
         <Route path="/junior/grade/:grade/double-century/jumping-game" element={<ProtectedRoute redirectTo="/login"><DCJumpingGame /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/double-century/chapter-test" element={<ProtectedRoute redirectTo="/login"><DCTest /></ProtectedRoute>} />
 
+        {/* Fun with Shapes Routes */}
+        <Route path="/junior/grade/:grade/fun-with-shapes/recognising-shapes" element={<ProtectedRoute redirectTo="/login"><RecognisingShapes /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/flat-shapes-faces" element={<ProtectedRoute redirectTo="/login"><FlatShapesFaces /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/rectangles" element={<ProtectedRoute redirectTo="/login"><FWSRectangles /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/squares" element={<ProtectedRoute redirectTo="/login"><FWSSquares /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/corners-angles" element={<ProtectedRoute redirectTo="/login"><CornersAngles /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/triangles" element={<ProtectedRoute redirectTo="/login"><FWSTriangles /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/circles" element={<ProtectedRoute redirectTo="/login"><FWSCircles /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/composite-shapes" element={<ProtectedRoute redirectTo="/login"><CompositeShapes /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/lines-tangram" element={<ProtectedRoute redirectTo="/login"><LinesTangram /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/chapter-test" element={<ProtectedRoute redirectTo="/login"><FWSTest /></ProtectedRoute>} />
+
         {/* Toy Joy Routes */}
         <Route path="/junior/grade/:grade/toy-joy/identifying-3d-shapes" element={<ProtectedRoute redirectTo="/login"><Identifying3DShapes /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/toy-joy/counting-shapes" element={<ProtectedRoute redirectTo="/login"><CountingShapes /></ProtectedRoute>} />
@@ -2041,6 +2119,18 @@ function App() {
         <Route path="/junior/grade/:grade/toy-joy/building-combining-shapes" element={<ProtectedRoute redirectTo="/login"><BuildingCombiningShapes /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/toy-joy/sequencing-model-construction" element={<ProtectedRoute redirectTo="/login"><SequencingModelConstruction /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/toy-joy/chapter-test" element={<ProtectedRoute redirectTo="/login"><ToyJoyTest /></ProtectedRoute>} />
+
+        {/* Vacation with My Nani Maa Routes */}
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/addition-subtraction-facts" element={<ProtectedRoute redirectTo="/login"><AdditionSubtractionFacts /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/addition-subtraction-tens-frame" element={<ProtectedRoute redirectTo="/login"><AdditionSubtractionTensFrame /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/number-line-jumps" element={<ProtectedRoute redirectTo="/login"><NumberLineJumps /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/number-grid-operations" element={<ProtectedRoute redirectTo="/login"><NumberGridOperations /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/patterns-magic-squares" element={<ProtectedRoute redirectTo="/login"><PatternsMagicSquares /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/story-based-add-sub" element={<ProtectedRoute redirectTo="/login"><StoryBasedAddSub /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/box-diagram-method" element={<ProtectedRoute redirectTo="/login"><BoxDiagramMethod /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/estimation-around-100" element={<ProtectedRoute redirectTo="/login"><EstimationAround100 /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/open-number-line" element={<ProtectedRoute redirectTo="/login"><OpenNumberLine /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/chapter-test" element={<ProtectedRoute redirectTo="/login"><VNTest /></ProtectedRoute>} />
 
         {/* Grade 8 Exponents and Powers - Negative Exponents */}
         <Route path="/senior/grade/8/exponents-powers/negative-exponents" element={
@@ -2658,33 +2748,7 @@ function App() {
         <Route path="/junior/grade/2/birds-come-birds-go" element={<ProtectedRoute redirectTo="/login"><Grade2BirdsComeBirdsGo /></ProtectedRoute>} />
 
         {/* Middle Routes (Grades 5-7 separate professional design) */}
-        <Route path="/middle/grade/6/perimeter-area/rectangle" element={<RectanglePractice />} />
-        <Route path="/middle/grade/6/perimeter-area/square" element={<SquarePractice />} />
-        <Route path="/middle/grade/6/perimeter-area/triangle" element={<TrianglePractice />} />
-        <Route path="/middle/grade/6/perimeter-area/regular-polygon" element={<RegularPolygonPractice />} />
-        <Route path="/middle/grade/6/perimeter-area/mixed-bag" element={<MixedBagPractice />} />
 
-
-
-        <Route path="/middle/grade/6/patterns-math/intro" element={<VisualisingNumberSequences />} />
-        <Route path="/middle/grade/6/patterns-math/relations" element={<RelationsAmongNumberSequences />} />
-        <Route path="/middle/grade/6/patterns-math/shapes" element={<PatternsInShapes />} />
-
-        <Route path="/middle/grade/6/number-play/numbers-things" element={<NumbersCanTellUsThings />} />
-        <Route path="/middle/grade/6/number-play/supercells" element={<Supercells />} />
-        <Route path="/middle/grade/6/number-play/growing-patterns" element={<GrowingPatterns />} />
-        <Route path="/middle/grade/6/number-play/playing-with-digits" element={<PlayingWithDigits />} />
-        <Route path="/middle/grade/6/data-handling/collecting-organising" element={<CollectingAndOrganisingData />} />
-        <Route path="/middle/grade/6/data-handling/pictographs" element={<Pictographs />} />
-        <Route path="/middle/grade/6/data-handling/bar-graphs" element={<BarGraphs />} />
-        <Route path="/middle/grade/6/data-handling/drawing-a-bar-graph" element={<DrawingABarGraph />} />
-        <Route path="/middle/grade/6/data-handling/figure-it-out" element={<FigureItOut />} />
-
-        {/* Grade 6 Symmetry */}
-        <Route path="/middle/grade/:grade/symmetry/intro" element={<IntroToSymmetry6 />} />
-        <Route path="/middle/grade/:grade/symmetry/reflection" element={<ReflectionInALine6 />} />
-        <Route path="/middle/grade/:grade/symmetry/rotational" element={<RotationalSymmetry6 />} />
-        <Route path="/middle/grade/:grade/symmetry/order-rotational" element={<OrderOfRotationalSymmetry6 />} />
 
 
         <Route path="/middle/grade/7/comparing-quantities/percentage" element={<Percentage />} />
