@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../MathRenderer';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { ConstructionInteractiveDraw } from './Topics/components/PlayingWithConstructions8InteractiveDraw';
 
 export default function QuizEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'dh' , nodeId }) {
     const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
@@ -93,8 +94,31 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
             const arrStr = JSON.stringify(draftCustomAnswer);
             const tgtStr = JSON.stringify(q.targetCounts);
             isCorrect = arrStr === tgtStr;
+        } else if (q.type === 'interactive-draw') {
+            const tol = 0.2;
+            if (q.subType === 'draw-circle') {
+                isCorrect = draftCustomAnswer?.circles >= 1 && Math.abs((draftCustomAnswer?.radius || 0) - q.targetDimensions.radius) <= tol;
+            } else if (q.subType === 'draw-rectangle') {
+                isCorrect = draftCustomAnswer?.lines >= 4 && draftCustomAnswer?.circles >= 1 && 
+                            Math.abs((draftCustomAnswer?.length || 0) - q.targetDimensions.length) <= tol && 
+                            Math.abs((draftCustomAnswer?.breadth || 0) - q.targetDimensions.breadth) <= tol;
+            } else if (q.subType === 'draw-square') {
+                isCorrect = draftCustomAnswer?.lines >= 4 && draftCustomAnswer?.circles >= 1 && 
+                            Math.abs((draftCustomAnswer?.side || 0) - q.targetDimensions.side) <= tol;
+            }
         }
+        
         setAnswersMap(prev => ({ ...prev, [current]: { customAnswer: draftCustomAnswer, isCorrect } }));
+        if (nodeId) {
+            v4Answers.current.push({
+                question_index: current,
+                answer_json: JSON.stringify({ custom: draftCustomAnswer }),
+                is_correct: isCorrect,
+                marks_awarded: isCorrect ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0,
+            });
+        }
     };
 
     const handleNext = async () => {
@@ -231,7 +255,33 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
                 </div>
 
                 {/* Interactive widget for custom types */}
-                {q.type === 'text' ? (
+                {q.type === 'interactive-draw' ? (
+                    <div style={{ display: 'grid', gap: 12 }}>
+                        <ConstructionInteractiveDraw 
+                            q={q} 
+                            isAnswered={isAnswered} 
+                            draftAnswer={draftCustomAnswer} 
+                            setDraftAnswer={setDraftCustomAnswer} 
+                        />
+                        {!isAnswered && (
+                            <button
+                                onClick={handleCustomSubmit}
+                                disabled={!draftCustomAnswer}
+                                style={{
+                                    marginTop: 16, padding: '16px 24px', borderRadius: 12, border: 'none',
+                                    background: draftCustomAnswer ? color : '#e2e8f0',
+                                    color: draftCustomAnswer ? '#fff' : '#94a3b8', fontSize: 16,
+                                    fontWeight: 800, cursor: draftCustomAnswer ? 'pointer' : 'not-allowed', width: '100%'
+                                }}
+                            >Submit Drawing</button>
+                        )}
+                        {isAnswered && (
+                            <div style={{ fontSize: 16, fontWeight: 800, textAlign: 'center', marginTop: 12, padding: 16, borderRadius: 12, background: savedAnswer.isCorrect ? '#dcfce7' : '#fee2e2', color: savedAnswer.isCorrect ? '#10b981' : '#ef4444' }}>
+                                {savedAnswer.isCorrect ? '✅ Perfect Construction!' : `❌ Incorrect Construction.`}
+                            </div>
+                        )}
+                    </div>
+                ) : q.type === 'text' ? (
                     <div style={{ display: 'grid', gap: 12 }}>
                         <label style={{ fontSize: 12, fontWeight: 800, letterSpacing: 1.2, textTransform: 'uppercase', color: '#64748b' }}>Type your answer</label>
                         <div style={{ display: 'flex', gap: 10 }}>
