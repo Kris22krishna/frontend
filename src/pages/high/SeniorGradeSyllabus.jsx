@@ -137,6 +137,9 @@ const SeniorGradeSyllabus = () => {
                         // Some Applications of Trigonometry
                         { skill_id: 1401, skill_name: 'Some Applications of Trigonometry: Interactive Chapter', topic: 'Some Applications of Trigonometry', subtopic: 'Complete Chapter', isLocal: true, path: '/some-applications-of-trigonometry' },
 
+                        // Statistics
+                        { skill_id: 1500, skill_name: 'Statistics: Interactive Chapter', topic: 'Statistics', subtopic: 'Complete Chapter', isLocal: true, path: '/statistics' },
+
                         // Probability
                         { skill_id: 10148, skill_name: 'Probability: Interactive Chapter', topic: 'Probability', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/probability' },
 
