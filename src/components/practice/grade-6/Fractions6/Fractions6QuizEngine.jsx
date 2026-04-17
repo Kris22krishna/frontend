@@ -269,7 +269,7 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
                         )}
                     </div>
                 ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                         {(q.options || []).map((opt, oi) => {
                             let borderColor = 'rgba(0,0,0,0.04)';
                             let bgColor = '#fff';
@@ -299,16 +299,16 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
                                     onClick={() => handleSelect(oi)}
                                     disabled={isAnswered}
                                     style={{
-                                        display: 'flex', alignItems: 'flex-start', gap: 12,
-                                        padding: '14px 16px', borderRadius: 16,
+                                        display: 'flex', alignItems: 'center', gap: 16,
+                                        padding: '20px 24px', borderRadius: 16,
                                         border: `2.5px solid ${borderColor}`,
                                         background: bgColor, cursor: isAnswered ? 'default' : 'pointer',
-                                        fontSize: 14, color: textColor, textAlign: 'left',
+                                        fontSize: 22, color: textColor, textAlign: 'left',
                                         transition: 'all 0.2s', fontWeight: isAnswered && oi === savedAnswer.selectedIdx ? 700 : 500,
-                                        width: '100%', minHeight: 56, lineHeight: 1.55
+                                        width: '100%', minHeight: 76, lineHeight: 1.55
                                     }}
                                 >
-                                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: dotColor, flexShrink: 0, marginTop: 6 }} />
+                                    <div style={{ width: 10, height: 10, borderRadius: '50%', background: dotColor, flexShrink: 0 }} />
                                     <span style={{ display: 'block', minWidth: 0, maxWidth: '100%', lineHeight: 1.55 }}>
                                         <MathRenderer text={latexOpt} />
                                     </span>

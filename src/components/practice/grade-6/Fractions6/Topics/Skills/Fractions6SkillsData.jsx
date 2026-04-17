@@ -6,12 +6,7 @@ import {
     EquivalentFractionStrips, 
     AdditionVisualizer 
 } from '../components/FractionsDynamicCharts';
-import { fractionsQuestions } from './fractions6Questions';
-
-// Extract subsets of questions per skill (20 per skill as requested)
-const getQuestions = (skillId) => {
-    return fractionsQuestions.filter(q => q.skill === skillId);
-};
+import { generateFractionQuestions } from './fractions6Questions';
 
 export const SKILLS = [
     {
@@ -42,8 +37,8 @@ export const SKILLS = [
                 }
             ]
         },
-        practice: getQuestions('parts-of-a-whole'),
-        assessment: getQuestions('parts-of-a-whole')
+        practice: () => generateFractionQuestions('parts-of-a-whole', 20),
+        assessment: () => generateFractionQuestions('parts-of-a-whole', 20)
     },
     {
         id: 'number-line',
@@ -73,8 +68,8 @@ export const SKILLS = [
                 }
             ]
         },
-        practice: getQuestions('number-line'),
-        assessment: getQuestions('number-line')
+        practice: () => generateFractionQuestions('number-line', 20),
+        assessment: () => generateFractionQuestions('number-line', 20)
     },
     {
         id: 'equivalent-mixed',
@@ -104,8 +99,8 @@ export const SKILLS = [
                 }
             ]
         },
-        practice: getQuestions('equivalent-mixed'),
-        assessment: getQuestions('equivalent-mixed')
+        practice: () => generateFractionQuestions('equivalent-mixed', 20),
+        assessment: () => generateFractionQuestions('equivalent-mixed', 20)
     },
     {
         id: 'comparing-operations',
@@ -135,7 +130,7 @@ export const SKILLS = [
                 }
             ]
         },
-        practice: getQuestions('comparing-operations'),
-        assessment: getQuestions('comparing-operations')
+        practice: () => generateFractionQuestions('comparing-operations', 20),
+        assessment: () => generateFractionQuestions('comparing-operations', 20)
     }
 ];

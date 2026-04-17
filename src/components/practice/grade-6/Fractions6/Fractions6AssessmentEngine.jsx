@@ -204,6 +204,25 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                         const statusColor = isSkipped ? '#eab308' : isCorrect ? '#10b981' : '#ef4444';
                         const statusBg = isSkipped ? 'rgba(234,179,8,0.05)' : isCorrect ? 'rgba(16,185,129,0.03)' : 'rgba(239,68,68,0.03)';
                         const statusText = isSkipped ? 'Skipped ⚠️' : isCorrect ? 'Correct ✅' : 'Incorrect ❌';
+                        let correctLatOpts = correctOptText;
+                        if (typeof correctOptText === 'string' && /^\d+\/\d+$/.test(correctOptText.trim())) {
+                            const [num, den] = correctOptText.trim().split('/');
+                            correctLatOpts = `$$\\frac{${num}}{${den}}$$`;
+                        } else if (typeof correctOptText === 'string' && /^(\d+)\s+(\d+)\/(\d+)$/.test(correctOptText.trim())) {
+                            const match = correctOptText.trim().match(/^(\d+)\s+(\d+)\/(\d+)$/);
+                            if (match) correctLatOpts = `$$${match[1]}\\frac{${match[2]}}{${match[3]}}$$`;
+                        }
+
+                        let userLatOpts = userOptText;
+                        if (typeof userOptText === 'string' && !isSkipped) {
+                            if (/^\d+\/\d+$/.test(userOptText.trim())) {
+                                const [num, den] = userOptText.trim().split('/');
+                                userLatOpts = `$$\\frac{${num}}{${den}}$$`;
+                            } else if (/^(\d+)\s+(\d+)\/(\d+)$/.test(userOptText.trim())) {
+                                const match = userOptText.trim().match(/^(\d+)\s+(\d+)\/(\d+)$/);
+                                if (match) userLatOpts = `$$${match[1]}\\frac{${match[2]}}{${match[3]}}$$`;
+                            }
+                        }
 
                         return (
                             <div
@@ -228,16 +247,16 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                                 <div className={`${prefix}-summary-split`} style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 16 }}>
                                     <div className={`${prefix}-summary-item`} style={{ background: '#fff', padding: 16, borderRadius: 12, border: '1px solid #e2e8f0' }}>
                                         <strong style={{ color: '#10b981', display: 'block', marginBottom: 8, fontSize: 12, textTransform: 'uppercase', letterSpacing: 1 }}>Correct Answer</strong>
-                                        <div style={{ color: '#0f172a', fontWeight: 600, fontSize: 15 }}>
-                                            <MathRenderer text={String(correctOptText)} />
+                                        <div style={{ color: '#0f172a', fontWeight: 600, fontSize: 18 }}>
+                                            <MathRenderer text={String(correctLatOpts)} />
                                         </div>
                                     </div>
                                     <div className={`${prefix}-summary-item user-ans`} style={{ background: '#fff', padding: 16, borderRadius: 12, border: '1px solid #e2e8f0' }}>
                                         <strong style={{ color: statusColor, display: 'block', marginBottom: 8, fontSize: 12, textTransform: 'uppercase', letterSpacing: 1 }}>Your Answer</strong>
-                                        <div style={{ color: '#0f172a', fontWeight: 600, fontSize: 15 }}>
-                                            {userOptText === 'Not Answered'
+                                        <div style={{ color: '#0f172a', fontWeight: 600, fontSize: 18 }}>
+                                            {isSkipped
                                                 ? <span style={{ color: '#94a3b8', fontStyle: 'italic' }}>Not Answered</span>
-                                                : <MathRenderer text={String(userOptText)} />}
+                                                : <MathRenderer text={String(userLatOpts)} />}
                                         </div>
                                     </div>
                                 </div>
@@ -451,9 +470,18 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                             />
                         </div>
                     ) : (
-                        <div className={`${prefix}-quiz-options`} style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr)', gap: 12 }}>
+                        <div className={`${prefix}-quiz-options`} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                             {(q.options ?? []).map((opt, optIndex) => {
                                 const isSelected = answers[current] === optIndex;
+                                
+                                let latexOpt = opt;
+                                if (typeof opt === 'string' && /^\d+\/\d+$/.test(opt.trim())) {
+                                    const [num, den] = opt.trim().split('/');
+                                    latexOpt = `$$\\frac{${num}}{${den}}$$`;
+                                } else if (typeof opt === 'string' && /^(\d+)\s+(\d+)\/(\d+)$/.test(opt.trim())) {
+                                    const match = opt.trim().match(/^(\d+)\s+(\d+)\/(\d+)$/);
+                                    if (match) latexOpt = `$$${match[1]}\\frac{${match[2]}}{${match[3]}}$$`;
+                                }
 
                                 return (
                                     <button
@@ -464,12 +492,12 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                                             display: 'flex',
                                             alignItems: 'center',
                                             gap: 16,
-                                            padding: '16px 20px',
+                                            padding: '20px 24px',
                                             borderRadius: 16,
                                             border: `2px solid ${isSelected ? color : '#e2e8f0'}`,
                                             background: isSelected ? `${color}08` : '#fff',
                                             cursor: 'pointer',
-                                            fontSize: 16,
+                                            fontSize: 22,
                                             textAlign: 'left',
                                             transition: 'all 0.2s',
                                             fontWeight: isSelected ? 700 : 500,
@@ -479,8 +507,8 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                                     >
                                         <div
                                             style={{
-                                                width: 12,
-                                                height: 12,
+                                                width: 14,
+                                                height: 14,
                                                 borderRadius: '50%',
                                                 background: isSelected ? color : '#fff',
                                                 border: isSelected ? 'none' : '2px solid #cbd5e1',
@@ -488,7 +516,7 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                                             }}
                                         />
                                         <span style={{ display: 'block', minWidth: 0, maxWidth: '100%', lineHeight: 1.5, color: 'inherit' }}>
-                                            <MathRenderer text={String(opt)} />
+                                            <MathRenderer text={String(latexOpt)} />
                                         </span>
                                     </button>
                                 );
