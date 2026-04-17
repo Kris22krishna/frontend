@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../MathRenderer';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { ConstructionInteractiveDraw } from './Topics/components/PlayingWithConstructions8InteractiveDraw';
 
 export default function AssessmentEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'dh' , nodeId }) {
     const normalizeTextAnswer = (value) => String(value ?? '').replace(/\s+/g, ' ').trim().toLowerCase();
 
     const getQuestionType = (question) => {
         if (question?.type === 'text') return 'text';
+        if (question?.type === 'interactive-draw') return 'interactive-draw';
         return 'mcq';
     };
 
@@ -19,6 +21,15 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
     const isAnswerCorrect = (question, answer) => {
         const type = getQuestionType(question);
         if (type === 'text') return normalizeTextAnswer(answer) === normalizeTextAnswer(question.answer);
+        if (type === 'interactive-draw') {
+            const tol = 0.2;
+            if (question.subType === 'draw-circle') return answer?.circles >= 1 && Math.abs((answer?.radius || 0) - question.targetDimensions?.radius) <= tol;
+            if (question.subType === 'draw-rectangle') return answer?.lines >= 4 && answer?.circles >= 1 && 
+                Math.abs((answer?.length || 0) - question.targetDimensions?.length) <= tol && 
+                Math.abs((answer?.breadth || 0) - question.targetDimensions?.breadth) <= tol;
+            if (question.subType === 'draw-square') return answer?.lines >= 4 && answer?.circles >= 1 && 
+                Math.abs((answer?.side || 0) - question.targetDimensions?.side) <= tol;
+        }
         return answer === question.correct || (question.options && question.options[answer] !== undefined && String(question.options[answer]) === String(question.correct));
     };
 
@@ -27,6 +38,7 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
     const getCorrectAnswerLabel = (question) => {
         const type = getQuestionType(question);
         if (type === 'text') return question.answer ?? 'No answer provided';
+        if (type === 'interactive-draw') return 'Correct Dimensions Set';
         return question.options?.[question.correct] ?? 'No answer provided';
     };
 
@@ -34,6 +46,7 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         if (!isAnswerComplete(question, answer)) return 'Not Answered';
         const type = getQuestionType(question);
         if (type === 'text') return answer;
+        if (type === 'interactive-draw') return 'Submitted Drawing';
         return question.options?.[answer] ?? 'Not Answered';
     };
 
@@ -445,7 +458,14 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                         <MathRenderer text={q.question} />
                     </div>
 
-                    {getQuestionType(q) === 'text' ? (
+                    {getQuestionType(q) === 'interactive-draw' ? (
+                        <ConstructionInteractiveDraw 
+                            q={q} 
+                            isAnswered={false} 
+                            draftAnswer={answers[current]} 
+                            setDraftAnswer={handleTextAnswerChange} 
+                        />
+                    ) : getQuestionType(q) === 'text' ? (
                         <div style={{ display: 'grid', gap: 12 }}>
                             <label style={{ fontSize: 13, fontWeight: 800, letterSpacing: 1.2, textTransform: 'uppercase', color: '#64748b' }}>
                                 Type your answer
