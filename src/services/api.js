@@ -140,6 +140,24 @@ export const api = {
         return handleResponse(response);
     },
 
+    checkUsername: async (username) => {
+        const response = await fetch(`${BASE_URL}/api/v1/auth/check-username`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username }),
+        });
+        return handleResponse(response);
+    },
+
+    fetchPhoneAccounts: async (phone_number) => {
+        const response = await fetch(`${BASE_URL}/api/v1/auth/phone-login-accounts`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone_number }),
+        });
+        return handleResponse(response);
+    },
+
     predictUsername: async (name, role) => {
         const response = await fetch(`${BASE_URL}/api/v1/auth/predict-username`, {
             method: 'POST',

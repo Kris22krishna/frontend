@@ -13,6 +13,7 @@ export const authService = {
             const payload = {
                 name: data.name,
                 role: data.role,
+                username: data.username,
                 email: data.email || null,
                 password: data.password,
                 phone_number: data.phoneNumber,
@@ -35,6 +36,24 @@ export const authService = {
             // If check fails (e.g., 500 error), we might want to let the user proceed 
             // and let the actual registration handle the error.
             return { available: true };
+        }
+    },
+
+    async checkUsername(username) {
+        try {
+            return await api.checkUsername(username);
+        } catch (error) {
+            console.error("Username check failed:", error);
+            throw error;
+        }
+    },
+
+    async fetchPhoneAccounts(phoneNumber) {
+        try {
+            return await api.fetchPhoneAccounts(phoneNumber);
+        } catch (error) {
+            console.error("Fetch phone accounts failed:", error);
+            throw error;
         }
     },
 
