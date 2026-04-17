@@ -1193,56 +1193,56 @@ function App() {
 
           {/* Class 11 Biology */}
           <Route path="senior/grade/11/biology" element={<BiologyChapters />} />
-          <Route path="senior/grade/11/biology/cell-structure" element={<CellStructureTest />} />
-          <Route path="senior/grade/11/biology/the-cell" element={<TheCellDashboard />} />
-          <Route path="senior/grade/11/biology/the-cell/introduction" element={<TheCellIntro />} />
-          <Route path="senior/grade/11/biology/the-cell/terminology" element={<TheCellTerminology />} />
-          <Route path="senior/grade/11/biology/the-cell/skills" element={<TheCellSkills />} />
-          <Route path="senior/grade/11/biology/the-cell/connectomics" element={<TheCellConnectomics />} />
-          <Route path="senior/grade/11/biology/the-cell/exam-edge" element={<TheCellExamEdge />} />
+          <Route path="senior/grade/11/biology/cell-structure" element={<ProtectedRoute redirectTo="/login"><CellStructureTest /></ProtectedRoute>} />
+          <Route path="senior/grade/11/biology/the-cell" element={<ProtectedRoute redirectTo="/login"><TheCellDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/11/biology/the-cell/introduction" element={<ProtectedRoute redirectTo="/login"><TheCellIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/11/biology/the-cell/terminology" element={<ProtectedRoute redirectTo="/login"><TheCellTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/11/biology/the-cell/skills" element={<ProtectedRoute redirectTo="/login"><TheCellSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/11/biology/the-cell/connectomics" element={<ProtectedRoute redirectTo="/login"><TheCellConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/11/biology/the-cell/exam-edge" element={<ProtectedRoute redirectTo="/login"><TheCellExamEdge /></ProtectedRoute>} />
 
           {/* Class 11 Maths */}
           <Route path="senior/grade/11/maths" element={<MathsChapters />} />
-          <Route path="senior/grade/11/maths/sets" element={<SetsDashboard />} />
-          <Route path="senior/grade/11/maths/sets/introduction" element={<SetsIntro />} />
-          <Route path="senior/grade/11/maths/sets/terminology" element={<SetsTerminology />} />
-          <Route path="senior/grade/11/maths/sets/skills" element={<SetsSkills />} />
-          <Route path="senior/grade/11/maths/sets/connectomics" element={<SetsConnectomics />} />
-          <Route path="senior/grade/11/maths/sets/exam-edge" element={<SetsExamEdge />} />
+          <Route path="senior/grade/11/maths/sets" element={<ProtectedRoute redirectTo="/login"><SetsDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/sets/introduction" element={<ProtectedRoute redirectTo="/login"><SetsIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/sets/terminology" element={<ProtectedRoute redirectTo="/login"><SetsTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/sets/skills" element={<ProtectedRoute redirectTo="/login"><SetsSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/sets/connectomics" element={<ProtectedRoute redirectTo="/login"><SetsConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/sets/exam-edge" element={<ProtectedRoute redirectTo="/login"><SetsExamEdge /></ProtectedRoute>} />
 
           {/* Class 11 Maths: Relations & Functions */}
-          <Route path="senior/grade/11/maths/relations-and-functions" element={<RelFuncDashboard />} />
-          <Route path="senior/grade/11/maths/relations-and-functions/introduction" element={<RelFuncIntro />} />
-          <Route path="senior/grade/11/maths/relations-and-functions/terminology" element={<RelFuncTerminology />} />
-          <Route path="senior/grade/11/maths/relations-and-functions/skills" element={<RelFuncSkills />} />
-          <Route path="senior/grade/11/maths/relations-and-functions/connectomics" element={<RelFuncConnectomics />} />
-          <Route path="senior/grade/11/maths/relations-and-functions/exam-edge" element={<RelFuncExamEdge />} />
+          <Route path="senior/grade/11/maths/relations-and-functions" element={<ProtectedRoute redirectTo="/login"><RelFuncDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/relations-and-functions/introduction" element={<ProtectedRoute redirectTo="/login"><RelFuncIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/relations-and-functions/terminology" element={<ProtectedRoute redirectTo="/login"><RelFuncTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/relations-and-functions/skills" element={<ProtectedRoute redirectTo="/login"><RelFuncSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/relations-and-functions/connectomics" element={<ProtectedRoute redirectTo="/login"><RelFuncConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/relations-and-functions/exam-edge" element={<ProtectedRoute redirectTo="/login"><RelFuncExamEdge /></ProtectedRoute>} />
 
           {/* Class 11 Physics */}
           <Route path="senior/grade/11/physics" element={<PhysicsChapters />} />
-          <Route path="senior/grade/11/physics/laws-of-motion" element={<LawsOfMotionDashboard />} />
-          <Route path="senior/grade/11/physics/laws-of-motion/introduction" element={<LawsOfMotionIntro />} />
-          <Route path="senior/grade/11/physics/laws-of-motion/terminology" element={<LawsOfMotionTerminology />} />
-          <Route path="senior/grade/11/physics/laws-of-motion/skills" element={<LawsOfMotionSkills />} />
-          <Route path="senior/grade/11/physics/laws-of-motion/connectomics" element={<LawsOfMotionConnectomics />} />
-          <Route path="senior/grade/11/physics/laws-of-motion/exam-edge" element={<LawsOfMotionExamEdge />} />
-          <Route path="senior/grade/11/physics/work-energy-power" element={<WorkEnergyPowerDashboard />} />
-          <Route path="senior/grade/11/physics/work-energy-power/introduction" element={<WorkEnergyPowerIntro />} />
-          <Route path="senior/grade/11/physics/work-energy-power/terminology" element={<WorkEnergyPowerTerminology />} />
-          <Route path="senior/grade/11/physics/work-energy-power/skills" element={<WorkEnergyPowerSkills />} />
-          <Route path="senior/grade/11/physics/work-energy-power/connectomics" element={<WorkEnergyPowerConnectomics />} />
-          <Route path="senior/grade/11/physics/work-energy-power/exam-edge" element={<WorkEnergyPowerExamEdge />} />
-          <Route path="senior/grade/11/physics/work-energy-power/mind-map" element={<WorkEnergyPowerMindMap />} />
-          <Route path="senior/grade/11/physics/work-energy-power/derivations" element={<WorkEnergyPowerDerivations />} />
+          <Route path="senior/grade/11/physics/laws-of-motion" element={<ProtectedRoute redirectTo="/login"><LawsOfMotionDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/laws-of-motion/introduction" element={<ProtectedRoute redirectTo="/login"><LawsOfMotionIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/laws-of-motion/terminology" element={<ProtectedRoute redirectTo="/login"><LawsOfMotionTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/laws-of-motion/skills" element={<ProtectedRoute redirectTo="/login"><LawsOfMotionSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/laws-of-motion/connectomics" element={<ProtectedRoute redirectTo="/login"><LawsOfMotionConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/laws-of-motion/exam-edge" element={<ProtectedRoute redirectTo="/login"><LawsOfMotionExamEdge /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/work-energy-power" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/work-energy-power/introduction" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/work-energy-power/terminology" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/work-energy-power/skills" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/work-energy-power/connectomics" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/work-energy-power/exam-edge" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerExamEdge /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/work-energy-power/mind-map" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerMindMap /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/work-energy-power/derivations" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerDerivations /></ProtectedRoute>} />
 
           {/* Class 11 Chemistry */}
           <Route path="senior/grade/11/chemistry" element={<ChemistryChapters />} />
-          <Route path="senior/grade/11/chemistry/structure-of-atom" element={<StructureOfAtomDashboard />} />
-          <Route path="senior/grade/11/chemistry/structure-of-atom/introduction" element={<StructureOfAtomIntro />} />
-          <Route path="senior/grade/11/chemistry/structure-of-atom/terminology" element={<StructureOfAtomTerminology />} />
-          <Route path="senior/grade/11/chemistry/structure-of-atom/skills" element={<StructureOfAtomSkills />} />
-          <Route path="senior/grade/11/chemistry/structure-of-atom/connectomics" element={<StructureOfAtomConnectomics />} />
-          <Route path="senior/grade/11/chemistry/structure-of-atom/exam-edge" element={<StructureOfAtomExamEdge />} />
+          <Route path="senior/grade/11/chemistry/structure-of-atom" element={<ProtectedRoute redirectTo="/login"><StructureOfAtomDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/11/chemistry/structure-of-atom/introduction" element={<ProtectedRoute redirectTo="/login"><StructureOfAtomIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/11/chemistry/structure-of-atom/terminology" element={<ProtectedRoute redirectTo="/login"><StructureOfAtomTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/11/chemistry/structure-of-atom/skills" element={<ProtectedRoute redirectTo="/login"><StructureOfAtomSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/11/chemistry/structure-of-atom/connectomics" element={<ProtectedRoute redirectTo="/login"><StructureOfAtomConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/11/chemistry/structure-of-atom/exam-edge" element={<ProtectedRoute redirectTo="/login"><StructureOfAtomExamEdge /></ProtectedRoute>} />
           
           {/* Grade 7 Science */}
           <Route path="/middle/grade/7/science/wonderful-world-science" element={<EverEvolvingScienceDashboard />} />
