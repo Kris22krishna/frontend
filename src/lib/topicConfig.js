@@ -170,6 +170,18 @@ export const TOPIC_CONFIGS = {
             { id: "WIN-09", name: "Data Collection and Tables",   route: "whats-in-a-name/data-collection" },
             { id: "WIN-TEST", name: "Chapter Test",               route: "whats-in-a-name/chapter-test" },
         ],
+        'Fun with Shapes': [
+            { id: "FWS-01", name: "Recognising Shapes", route: "fun-with-shapes/recognising-shapes" },
+            { id: "FWS-02", name: "Flat Shapes and Faces", route: "fun-with-shapes/flat-shapes-faces" },
+            { id: "FWS-03", name: "Rectangles", route: "fun-with-shapes/rectangles" },
+            { id: "FWS-04", name: "Squares", route: "fun-with-shapes/squares" },
+            { id: "FWS-05", name: "Corners and Angles", route: "fun-with-shapes/corners-angles" },
+            { id: "FWS-06", name: "Triangles", route: "fun-with-shapes/triangles" },
+            { id: "FWS-07", name: "Circles", route: "fun-with-shapes/circles" },
+            { id: "FWS-08", name: "Composite Shapes", route: "fun-with-shapes/composite-shapes" },
+            { id: "FWS-09", name: "Lines, Curves and Tangram", route: "fun-with-shapes/lines-tangram" },
+            { id: "FWS-TEST", name: "Chapter Test", route: "fun-with-shapes/chapter-test" }
+        ],
         'Raksha Bandhan': [
             { id: "RB-01", name: "Conceptual questions" },
             { id: "RB-02", name: "Multiplication" },
@@ -234,6 +246,18 @@ export const TOPIC_CONFIGS = {
             { id: "DC-07", name: "Numbers 150 to 200",       route: "double-century/numbers-150-to-200" },
             { id: "DC-08", name: "Jumping Game",             route: "double-century/jumping-game" },
             { id: "DC-TEST", name: "Chapter Test",           route: "double-century/chapter-test" },
+        ],
+        'Vacation with My Nani Maa': [
+            { id: "VN-01", name: "Addition & Subtraction Facts", route: "vacation-with-my-nani-maa/addition-subtraction-facts" },
+            { id: "VN-02", name: "Addition & Subtraction with Tens Frame", route: "vacation-with-my-nani-maa/addition-subtraction-tens-frame" },
+            { id: "VN-03", name: "Number Line Jumps", route: "vacation-with-my-nani-maa/number-line-jumps" },
+            { id: "VN-04", name: "Number Grid Operations", route: "vacation-with-my-nani-maa/number-grid-operations" },
+            { id: "VN-05", name: "Patterns & Magic Squares", route: "vacation-with-my-nani-maa/patterns-magic-squares" },
+            { id: "VN-06", name: "Story-Based Addition and Subtraction", route: "vacation-with-my-nani-maa/story-based-add-sub" },
+            { id: "VN-07", name: "Box Diagram Method", route: "vacation-with-my-nani-maa/box-diagram-method" },
+            { id: "VN-08", name: "Estimation Around 100", route: "vacation-with-my-nani-maa/estimation-around-100" },
+            { id: "VN-09", name: "Open Number Line", route: "vacation-with-my-nani-maa/open-number-line" },
+            { id: "VN-TEST", name: "Chapter Test", route: "vacation-with-my-nani-maa/chapter-test" }
         ]
     },
 

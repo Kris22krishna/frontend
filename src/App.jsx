@@ -353,6 +353,20 @@ import DCNumbers150to200 from './components/practice/class-3/Double-Century/Numb
 import DCJumpingGame from './components/practice/class-3/Double-Century/JumpingGame';
 import DCTest from './components/practice/class-3/Double-Century/DCTest';
 
+// Fun with Shapes
+import {
+  RecognisingShapes,
+  FlatShapesFaces,
+  Rectangles as FWSRectangles,
+  Squares as FWSSquares,
+  CornersAngles,
+  Triangles as FWSTriangles,
+  Circles as FWSCircles,
+  CompositeShapes,
+  LinesTangram,
+  FWSTest,
+} from './components/practice/class-3/Fun-with-Shapes';
+
 // Toy Joy
 import Identifying3DShapes from './components/practice/class-3/Toy-Joy/Identifying3DShapes';
 import CountingShapes from './components/practice/class-3/Toy-Joy/CountingShapes';
@@ -363,6 +377,20 @@ import OppositeFacesCube from './components/practice/class-3/Toy-Joy/OppositeFac
 import BuildingCombiningShapes from './components/practice/class-3/Toy-Joy/BuildingCombiningShapes';
 import SequencingModelConstruction from './components/practice/class-3/Toy-Joy/SequencingModelConstruction';
 import ToyJoyTest from './components/practice/class-3/Toy-Joy/ToyJoyTest';
+
+// Vacation with My Nani Maa
+import {
+  AdditionSubtractionFacts,
+  AdditionSubtractionTensFrame,
+  NumberLineJumps,
+  NumberGridOperations,
+  PatternsMagicSquares,
+  StoryBasedAddSub,
+  BoxDiagramMethod,
+  EstimationAround100,
+  OpenNumberLine,
+  VNTest
+} from './components/practice/class-3/Vacation-with-Nani-Maa';
 
 // Grade 5 Decimal Practice Components
 import PlaceValuesOfDecimals from './components/practice/class-5/TenthsandHundrendths/Decimals/place-values-of-decimals';
@@ -2032,6 +2060,18 @@ function App() {
         <Route path="/junior/grade/:grade/double-century/jumping-game" element={<ProtectedRoute redirectTo="/login"><DCJumpingGame /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/double-century/chapter-test" element={<ProtectedRoute redirectTo="/login"><DCTest /></ProtectedRoute>} />
 
+        {/* Fun with Shapes Routes */}
+        <Route path="/junior/grade/:grade/fun-with-shapes/recognising-shapes" element={<ProtectedRoute redirectTo="/login"><RecognisingShapes /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/flat-shapes-faces" element={<ProtectedRoute redirectTo="/login"><FlatShapesFaces /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/rectangles" element={<ProtectedRoute redirectTo="/login"><FWSRectangles /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/squares" element={<ProtectedRoute redirectTo="/login"><FWSSquares /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/corners-angles" element={<ProtectedRoute redirectTo="/login"><CornersAngles /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/triangles" element={<ProtectedRoute redirectTo="/login"><FWSTriangles /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/circles" element={<ProtectedRoute redirectTo="/login"><FWSCircles /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/composite-shapes" element={<ProtectedRoute redirectTo="/login"><CompositeShapes /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/lines-tangram" element={<ProtectedRoute redirectTo="/login"><LinesTangram /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/chapter-test" element={<ProtectedRoute redirectTo="/login"><FWSTest /></ProtectedRoute>} />
+
         {/* Toy Joy Routes */}
         <Route path="/junior/grade/:grade/toy-joy/identifying-3d-shapes" element={<ProtectedRoute redirectTo="/login"><Identifying3DShapes /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/toy-joy/counting-shapes" element={<ProtectedRoute redirectTo="/login"><CountingShapes /></ProtectedRoute>} />
@@ -2042,6 +2082,18 @@ function App() {
         <Route path="/junior/grade/:grade/toy-joy/building-combining-shapes" element={<ProtectedRoute redirectTo="/login"><BuildingCombiningShapes /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/toy-joy/sequencing-model-construction" element={<ProtectedRoute redirectTo="/login"><SequencingModelConstruction /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/toy-joy/chapter-test" element={<ProtectedRoute redirectTo="/login"><ToyJoyTest /></ProtectedRoute>} />
+
+        {/* Vacation with My Nani Maa Routes */}
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/addition-subtraction-facts" element={<ProtectedRoute redirectTo="/login"><AdditionSubtractionFacts /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/addition-subtraction-tens-frame" element={<ProtectedRoute redirectTo="/login"><AdditionSubtractionTensFrame /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/number-line-jumps" element={<ProtectedRoute redirectTo="/login"><NumberLineJumps /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/number-grid-operations" element={<ProtectedRoute redirectTo="/login"><NumberGridOperations /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/patterns-magic-squares" element={<ProtectedRoute redirectTo="/login"><PatternsMagicSquares /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/story-based-add-sub" element={<ProtectedRoute redirectTo="/login"><StoryBasedAddSub /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/box-diagram-method" element={<ProtectedRoute redirectTo="/login"><BoxDiagramMethod /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/estimation-around-100" element={<ProtectedRoute redirectTo="/login"><EstimationAround100 /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/open-number-line" element={<ProtectedRoute redirectTo="/login"><OpenNumberLine /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/vacation-with-my-nani-maa/chapter-test" element={<ProtectedRoute redirectTo="/login"><VNTest /></ProtectedRoute>} />
 
         {/* Grade 8 Exponents and Powers - Negative Exponents */}
         <Route path="/senior/grade/8/exponents-powers/negative-exponents" element={
