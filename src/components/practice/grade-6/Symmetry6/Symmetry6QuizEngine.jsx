@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../MathRenderer';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
-import { ConstructionInteractiveDraw } from './Topics/components/PlayingWithConstructions8InteractiveDraw';
+import Symmetry6InteractiveDraw from './Topics/components/Symmetry6InteractiveDraw';
 
 export default function QuizEngine({ questions, title, onBack, onSecondaryBack, color, prefix = 'dh' , nodeId }) {
     const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
@@ -88,37 +88,35 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
     const handleCustomSubmit = () => {
         if (isAnswered) return;
         let isCorrect = false;
-        if (q.type === 'tally-draw') {
-            isCorrect = draftCustomAnswer === q.targetCount;
-        } else if (q.type === 'pictograph-draw' || q.type === 'bar-graph-draw') {
-            const arrStr = JSON.stringify(draftCustomAnswer);
-            const tgtStr = JSON.stringify(q.targetCounts);
-            isCorrect = arrStr === tgtStr;
-        } else if (q.type === 'interactive-draw') {
-            const tol = 0.6;
-            if (q.subType === 'draw-circle') {
-                isCorrect = draftCustomAnswer?.circles >= 1 && Math.abs((draftCustomAnswer?.radius || 0) - q.targetDimensions.radius) <= tol;
-            } else if (q.subType === 'draw-rectangle') {
-                isCorrect = draftCustomAnswer?.lines >= 4 && draftCustomAnswer?.circles >= 1 && 
-                            Math.abs((draftCustomAnswer?.length || 0) - q.targetDimensions.length) <= tol && 
-                            Math.abs((draftCustomAnswer?.breadth || 0) - q.targetDimensions.breadth) <= tol;
-            } else if (q.subType === 'draw-square') {
-                isCorrect = draftCustomAnswer?.lines >= 4 && draftCustomAnswer?.circles >= 1 && 
-                            Math.abs((draftCustomAnswer?.side || 0) - q.targetDimensions.side) <= tol;
+        if (q.type === 'interactive-draw' && q.subType === 'draw-lines-of-symmetry') {
+            const userLines = draftCustomAnswer || [];
+            const targets = q.targetLines || [];
+            
+            if (userLines.length === targets.length) {
+                // Check if every true line has a match
+                let matchedAll = true;
+                const distToLine = (px, py, l1x, l1y, l2x, l2y) => {
+                    const num = Math.abs((l2y - l1y)*px - (l2x - l1x)*py + l2x*l1y - l2y*l1x);
+                    const den = Math.sqrt(Math.pow(l2y - l1y, 2) + Math.pow(l2x - l1x, 2));
+                    return den === 0 ? 0 : num / den;
+                };
+
+                for (const t of targets) {
+                    // Find a user line that represents this target line
+                    const match = userLines.find(ul => {
+                        const d1 = distToLine(ul.x1/20, ul.y1/20, t.p1.x, t.p1.y, t.p2.x, t.p2.y);
+                        const d2 = distToLine(ul.x2/20, ul.y2/20, t.p1.x, t.p1.y, t.p2.x, t.p2.y);
+                        return d1 < 0.5 && d2 < 0.5;
+                    });
+                    if (!match) {
+                        matchedAll = false;
+                        break;
+                    }
+                }
+                isCorrect = matchedAll;
             }
         }
-        
         setAnswersMap(prev => ({ ...prev, [current]: { customAnswer: draftCustomAnswer, isCorrect } }));
-        if (nodeId) {
-            v4Answers.current.push({
-                question_index: current,
-                answer_json: JSON.stringify({ custom: draftCustomAnswer }),
-                is_correct: isCorrect,
-                marks_awarded: isCorrect ? 1 : 0,
-                marks_possible: 1,
-                time_taken_ms: 0,
-            });
-        }
     };
 
     const handleNext = async () => {
@@ -255,33 +253,7 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
                 </div>
 
                 {/* Interactive widget for custom types */}
-                {q.type === 'interactive-draw' ? (
-                    <div style={{ display: 'grid', gap: 12 }}>
-                        <ConstructionInteractiveDraw 
-                            q={q} 
-                            isAnswered={isAnswered} 
-                            draftAnswer={draftCustomAnswer} 
-                            setDraftAnswer={setDraftCustomAnswer} 
-                        />
-                        {!isAnswered && (
-                            <button
-                                onClick={handleCustomSubmit}
-                                disabled={!draftCustomAnswer}
-                                style={{
-                                    marginTop: 16, padding: '16px 24px', borderRadius: 12, border: 'none',
-                                    background: draftCustomAnswer ? color : '#e2e8f0',
-                                    color: draftCustomAnswer ? '#fff' : '#94a3b8', fontSize: 16,
-                                    fontWeight: 800, cursor: draftCustomAnswer ? 'pointer' : 'not-allowed', width: '100%'
-                                }}
-                            >Submit Drawing</button>
-                        )}
-                        {isAnswered && (
-                            <div style={{ fontSize: 16, fontWeight: 800, textAlign: 'center', marginTop: 12, padding: 16, borderRadius: 12, background: savedAnswer.isCorrect ? '#dcfce7' : '#fee2e2', color: savedAnswer.isCorrect ? '#10b981' : '#ef4444' }}>
-                                {savedAnswer.isCorrect ? '✅ Perfect Construction!' : `❌ Incorrect Construction.`}
-                            </div>
-                        )}
-                    </div>
-                ) : q.type === 'text' ? (
+                {q.type === 'text' ? (
                     <div style={{ display: 'grid', gap: 12 }}>
                         <label style={{ fontSize: 12, fontWeight: 800, letterSpacing: 1.2, textTransform: 'uppercase', color: '#64748b' }}>Type your answer</label>
                         <div style={{ display: 'flex', gap: 10 }}>
@@ -315,6 +287,35 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
                         {isAnswered && (
                             <div style={{ fontSize: 14, fontWeight: 700, color: savedAnswer.isCorrect ? '#10b981' : '#ef4444' }}>
                                 {savedAnswer.isCorrect ? '✅ Correct!' : `❌ Incorrect. The correct answer is ${q.answer}.`}
+                            </div>
+                        )}
+                    </div>
+                ) : q.type === 'interactive-draw' ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                        <Symmetry6InteractiveDraw 
+                            key={q.id}
+                            question={q} 
+                            onUpdate={(lines) => !isAnswered && setDraftCustomAnswer(lines)} 
+                            color={color} 
+                        />
+                        {!isAnswered && (
+                            <button
+                                onClick={handleCustomSubmit}
+                                disabled={!draftCustomAnswer || draftCustomAnswer.length === 0}
+                                style={{
+                                    alignSelf: 'center', padding: '14px 40px', borderRadius: 100, border: 'none',
+                                    background: (draftCustomAnswer && draftCustomAnswer.length > 0) ? color : '#e2e8f0',
+                                    color: (draftCustomAnswer && draftCustomAnswer.length > 0) ? '#fff' : '#94a3b8',
+                                    fontWeight: 800, fontSize: 16, cursor: (draftCustomAnswer && draftCustomAnswer.length > 0) ? 'pointer' : 'not-allowed',
+                                    boxShadow: (draftCustomAnswer && draftCustomAnswer.length > 0) ? `0 8px 20px ${color}40` : 'none'
+                                }}
+                            >
+                                Submit Drawing
+                            </button>
+                        )}
+                        {isAnswered && (
+                            <div style={{ textAlign: 'center', fontSize: 16, fontWeight: 700, marginTop: 12, color: savedAnswer.isCorrect ? '#10b981' : '#ef4444' }}>
+                                {savedAnswer.isCorrect ? '✅ Spot on! You found all the symmetry lines!' : `❌ Not quite. Remember to find ALL the correct lines of symmetry.`}
                             </div>
                         )}
                     </div>

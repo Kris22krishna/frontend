@@ -139,7 +139,7 @@ const circleGenerators = [
     },
     // Type 2: Interactive Draw Circle
     () => {
-        const r = randInt(3, 15);
+        const r = randInt(3, 7);
         return { 
             type: 'interactive-draw', 
             subType: 'draw-circle', 
@@ -199,7 +199,7 @@ const squareRectGenerators = [
     },
     // Type 3: Interactive Draw Square
     () => {
-        const s = randInt(3, 15);
+        const s = randInt(3, 12);
         return { 
             type: 'interactive-draw', 
             subType: 'draw-square', 
