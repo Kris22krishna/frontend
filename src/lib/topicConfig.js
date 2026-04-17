@@ -170,6 +170,18 @@ export const TOPIC_CONFIGS = {
             { id: "WIN-09", name: "Data Collection and Tables",   route: "whats-in-a-name/data-collection" },
             { id: "WIN-TEST", name: "Chapter Test",               route: "whats-in-a-name/chapter-test" },
         ],
+        'Fun with Shapes': [
+            { id: "FWS-01", name: "Recognising Shapes", route: "fun-with-shapes/recognising-shapes" },
+            { id: "FWS-02", name: "Flat Shapes and Faces", route: "fun-with-shapes/flat-shapes-faces" },
+            { id: "FWS-03", name: "Rectangles", route: "fun-with-shapes/rectangles" },
+            { id: "FWS-04", name: "Squares", route: "fun-with-shapes/squares" },
+            { id: "FWS-05", name: "Corners and Angles", route: "fun-with-shapes/corners-angles" },
+            { id: "FWS-06", name: "Triangles", route: "fun-with-shapes/triangles" },
+            { id: "FWS-07", name: "Circles", route: "fun-with-shapes/circles" },
+            { id: "FWS-08", name: "Composite Shapes", route: "fun-with-shapes/composite-shapes" },
+            { id: "FWS-09", name: "Lines, Curves and Tangram", route: "fun-with-shapes/lines-tangram" },
+            { id: "FWS-TEST", name: "Chapter Test", route: "fun-with-shapes/chapter-test" }
+        ],
         'Raksha Bandhan': [
             { id: "RB-01", name: "Conceptual questions" },
             { id: "RB-02", name: "Multiplication" },

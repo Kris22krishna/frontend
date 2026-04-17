@@ -353,6 +353,20 @@ import DCNumbers150to200 from './components/practice/class-3/Double-Century/Numb
 import DCJumpingGame from './components/practice/class-3/Double-Century/JumpingGame';
 import DCTest from './components/practice/class-3/Double-Century/DCTest';
 
+// Fun with Shapes
+import {
+  RecognisingShapes,
+  FlatShapesFaces,
+  Rectangles as FWSRectangles,
+  Squares as FWSSquares,
+  CornersAngles,
+  Triangles as FWSTriangles,
+  Circles as FWSCircles,
+  CompositeShapes,
+  LinesTangram,
+  FWSTest,
+} from './components/practice/class-3/Fun-with-Shapes';
+
 // Toy Joy
 import Identifying3DShapes from './components/practice/class-3/Toy-Joy/Identifying3DShapes';
 import CountingShapes from './components/practice/class-3/Toy-Joy/CountingShapes';
@@ -1960,6 +1974,18 @@ function App() {
         <Route path="/junior/grade/:grade/double-century/numbers-150-to-200" element={<ProtectedRoute redirectTo="/login"><DCNumbers150to200 /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/double-century/jumping-game" element={<ProtectedRoute redirectTo="/login"><DCJumpingGame /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/double-century/chapter-test" element={<ProtectedRoute redirectTo="/login"><DCTest /></ProtectedRoute>} />
+
+        {/* Fun with Shapes Routes */}
+        <Route path="/junior/grade/:grade/fun-with-shapes/recognising-shapes" element={<ProtectedRoute redirectTo="/login"><RecognisingShapes /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/flat-shapes-faces" element={<ProtectedRoute redirectTo="/login"><FlatShapesFaces /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/rectangles" element={<ProtectedRoute redirectTo="/login"><FWSRectangles /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/squares" element={<ProtectedRoute redirectTo="/login"><FWSSquares /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/corners-angles" element={<ProtectedRoute redirectTo="/login"><CornersAngles /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/triangles" element={<ProtectedRoute redirectTo="/login"><FWSTriangles /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/circles" element={<ProtectedRoute redirectTo="/login"><FWSCircles /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/composite-shapes" element={<ProtectedRoute redirectTo="/login"><CompositeShapes /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/lines-tangram" element={<ProtectedRoute redirectTo="/login"><LinesTangram /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/fun-with-shapes/chapter-test" element={<ProtectedRoute redirectTo="/login"><FWSTest /></ProtectedRoute>} />
 
         {/* Toy Joy Routes */}
         <Route path="/junior/grade/:grade/toy-joy/identifying-3d-shapes" element={<ProtectedRoute redirectTo="/login"><Identifying3DShapes /></ProtectedRoute>} />
