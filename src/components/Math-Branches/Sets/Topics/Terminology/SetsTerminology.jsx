@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../SetsBranch.css';
 import MathRenderer from '../../../../MathRenderer';
 import { TERMS, FIVE_RULES, VOCAB_QUIZ } from './SetsTerminologyData';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
+
+const TERMINOLOGY_NODE_ID = NODE_IDS.g11MathSetsTerminologyQuiz;
 
 export default function SetsTerminology() {
     const navigate = useNavigate();
@@ -25,32 +29,49 @@ export default function SetsTerminology() {
     const activeRule = FIVE_RULES[selectedRuleIdx];
     const activeQuiz = VOCAB_QUIZ[quizIdx];
 
+    // v4 Session Logging
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const sessionStarted = useRef(false);
+    const answersPayload = useRef([]);
+
     const resetQuiz = () => {
         setQuizIdx(0);
         setQuizSelected(null);
         setQuizAnswered(false);
         setQuizTotalScore(0);
         setQuizFinished(false);
+        sessionStarted.current = false;
+        answersPayload.current = [];
     };
 
-    const handleQuizSelect = (optIdx) => {
+    const handleQuizSelect = async (optIdx) => {
         if (quizAnswered) return;
+        if (!sessionStarted.current) {
+            sessionStarted.current = true;
+            startSession({ nodeId: TERMINOLOGY_NODE_ID, sessionType: 'practice' });
+        }
         setQuizSelected(optIdx);
         setQuizAnswered(true);
-        if (optIdx === activeQuiz.correct) {
-            setQuizTotalScore(s => s + 1);
-        }
+        const correct = optIdx === activeQuiz.correct;
+        if (correct) setQuizTotalScore(s => s + 1);
+        const entry = { question_index: quizIdx + 1, answer_json: { selected: optIdx }, is_correct: correct ? 1.0 : 0.0, marks_awarded: correct ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+        answersPayload.current.push(entry);
+        await logAnswer({ questionIndex: entry.question_index, answerJson: entry.answer_json, isCorrect: entry.is_correct });
     };
 
-    const nextQuiz = () => {
+    const nextQuiz = async () => {
         if (quizIdx + 1 < VOCAB_QUIZ.length) {
             setQuizIdx(i => i + 1);
             setQuizSelected(null);
             setQuizAnswered(false);
         } else {
             setQuizFinished(true);
+            if (sessionStarted.current) {
+                await finishSession({ totalQuestions: VOCAB_QUIZ.length, questionsAnswered: answersPayload.current.length, answersPayload: answersPayload.current });
+            }
         }
     };
+
 
     return (
         <div className="sets-page">

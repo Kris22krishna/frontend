@@ -2,6 +2,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { generateLawsOfMotionSkillsData } from './LawsOfMotionSkillsData';
 import '../../LawsOfMotionBranch.css';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
+
+// ─── Skill-ID → canonical node-ID map ─────────────────────────────────────────
+const SKILL_NODE_ID_MAP = {
+  'newtons-three-laws':     NODE_IDS.g11PhysLOMNewtons3Laws,
+  'momentum-impulse':       NODE_IDS.g11PhysLOMMomentumImpulse,
+  'conservation-momentum':  NODE_IDS.g11PhysLOMConservationMomentum,
+  'equilibrium-forces':     NODE_IDS.g11PhysLOMEquilibriumForces,
+  'friction':               NODE_IDS.g11PhysLOMFriction,
+  'circular-motion':        NODE_IDS.g11PhysLOMCircularMotion,
+};
 
 /* ═══════════════════════════════════════════════════════════════
    SHUFFLE UTILITIES
@@ -356,6 +368,28 @@ function PracticeMode({ skill, onBack, onAssess }) {
     const [finished, setFinished] = useState(false);
     const startTime = useRef(Date.now());
 
+    // v4 Session Logging
+    const nodeId = SKILL_NODE_ID_MAP[skill.id];
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
+
+    useEffect(() => {
+        isFinishedRef.current = finished;
+    }, [finished]);
+
+    useEffect(() => {
+        if (!nodeId || !questions || questions.length === 0) return;
+        startSession({ nodeId, sessionType: 'practice' });
+        answersPayload.current = [];
+        return () => {
+            if (!isFinishedRef.current && answersPayload.current.length > 0) {
+                abandonSession({ answersPayload: answersPayload.current, totalQuestions: questions.length });
+            }
+        };
+    }, [nodeId, questions]);
+
+
     if (!questions || questions.length === 0) return <div>Loading...</div>;
 
     const q = questions[qIdx];
@@ -364,19 +398,31 @@ function PracticeMode({ skill, onBack, onAssess }) {
     const isCorrect = currentAnswer?.isCorrect ?? false;
     const selectedOpt = currentAnswer?.selectedOpt ?? null;
 
-    const handleAnswer = (val) => {
+    const handleAnswer = async (val) => {
         if (answered) return;
         let correct = false;
         if (q.type === 'multiple-choice') correct = val === q.correctAnswer;
         else correct = val.toString().toLowerCase() === q.correctAnswer.toString().toLowerCase();
         setAnswersMap(prev => ({ ...prev, [qIdx]: { selectedOpt: val, isCorrect: correct } }));
+        // v4 log
+        if (nodeId) {
+            const entry = { question_index: qIdx + 1, answer_json: { selected: val }, is_correct: correct ? 1.0 : 0.0, marks_awarded: correct ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+            answersPayload.current.push(entry);
+            await logAnswer({ questionIndex: entry.question_index, answerJson: entry.answer_json, isCorrect: entry.is_correct });
+        }
     };
 
-    const nextQ = () => {
-        if (qIdx + 1 < questions.length) setQIdx(qIdx + 1);
-        else setFinished(true);
+    const nextQ = async () => {
+        if (qIdx + 1 < questions.length) {
+            setQIdx(qIdx + 1);
+        } else {
+            setFinished(true);
+            isFinishedRef.current = true;
+            if (nodeId) await finishSession({ totalQuestions: questions.length, questionsAnswered: answersPayload.current.length, answersPayload: answersPayload.current });
+        }
     };
     const prevQ = () => { if (qIdx > 0) setQIdx(qIdx - 1); };
+
 
     if (finished) {
         const totalTime = Date.now() - startTime.current;
@@ -446,6 +492,27 @@ function AssessMode({ skill, onBack }) {
     const qStartRef = useRef(Date.now());
     const [qTimes, setQTimes] = useState({});
 
+    // v4 Session Logging
+    const nodeId = SKILL_NODE_ID_MAP[skill.id];
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
+
+    useEffect(() => {
+        isFinishedRef.current = finished;
+    }, [finished]);
+
+    useEffect(() => {
+        if (!nodeId || !questions || questions.length === 0) return;
+        startSession({ nodeId, sessionType: 'assessment' });
+        answersPayload.current = [];
+        return () => {
+            if (!isFinishedRef.current && answersPayload.current.length > 0) {
+                abandonSession({ answersPayload: answersPayload.current, totalQuestions: questions.length });
+            }
+        };
+    }, [nodeId, questions]);
+
     // Timer tick
     useEffect(() => {
         if (finished) return;
@@ -463,6 +530,14 @@ function AssessMode({ skill, onBack }) {
         setAnswersMap(prev => ({ ...prev, [qIdx]: val }));
         setQTimes(prev => ({ ...prev, [qIdx]: (prev[qIdx] || 0) + timeSpent }));
         qStartRef.current = now;
+        // v4 log
+        if (nodeId) {
+            const q_now = questions[qIdx];
+            const correct = q_now.type === 'multiple-choice' ? val === q_now.correctAnswer : val?.toString().toLowerCase() === q_now.correctAnswer?.toString().toLowerCase();
+            const entry = { question_index: qIdx + 1, answer_json: { selected: val }, is_correct: correct ? 1.0 : 0.0, marks_awarded: correct ? 1 : 0, marks_possible: 1, time_taken_ms: timeSpent };
+            answersPayload.current.push(entry);
+            logAnswer({ questionIndex: entry.question_index, answerJson: entry.answer_json, isCorrect: entry.is_correct });
+        }
     };
 
     const goTo = (idx) => {
@@ -474,11 +549,14 @@ function AssessMode({ skill, onBack }) {
 
     const toggleMark = () => setMarked(prev => ({ ...prev, [qIdx]: !prev[qIdx] }));
 
-    const submitAssessment = () => {
+    const submitAssessment = async () => {
         const now = Date.now();
         setQTimes(prev => ({ ...prev, [qIdx]: (prev[qIdx] || 0) + (now - qStartRef.current) }));
         setFinished(true);
+        isFinishedRef.current = true;
+        if (nodeId) await finishSession({ totalQuestions: questions.length, questionsAnswered: answersPayload.current.length, answersPayload: answersPayload.current });
     };
+
 
     if (finished) {
         const totalTime = Date.now() - startRef.current;

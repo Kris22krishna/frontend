@@ -1,0 +1,10 @@
+export { default as RecognisingShapes } from './RecognisingShapes';
+export { default as FlatShapesFaces }   from './FlatShapesFaces';
+export { default as Rectangles }        from './Rectangles';
+export { default as Squares }           from './Squares';
+export { default as CornersAngles }     from './CornersAngles';
+export { default as Triangles }         from './Triangles';
+export { default as Circles }           from './Circles';
+export { default as CompositeShapes }   from './CompositeShapes';
+export { default as LinesTangram }      from './LinesTangram';
+export { default as FWSTest }           from './FWSTest';

@@ -267,6 +267,14 @@ const MiddleGradeSyllabus = () => {
                             path: '/middle/grade/6/data-handling-6'
                         },
                         {
+                            skill_id: 'local-fractions-6-chapter',
+                            skill_name: 'Fractions: Interactive Chapter',
+                            topic: 'Fractions',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/6/fractions-6'
+                        },
+                        {
                             skill_id: 'local-prime-time-6-chapter',
                             skill_name: 'Prime Time: Interactive Chapter',
                             topic: 'Prime Time',
@@ -281,6 +289,22 @@ const MiddleGradeSyllabus = () => {
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/6/mensuration-6'
+                        },
+                        {
+                            skill_id: 'local-constructions-8-chapter',
+                            skill_name: 'Playing with Constructions: Interactive Chapter',
+                            topic: 'Playing with Constructions',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/6/playing-with-constructions'
+                        },
+                        {
+                            skill_id: 'local-symmetry-6-chapter',
+                            skill_name: 'Symmetry: Interactive Chapter',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/6/symmetry-6'
                         }
                     ];
                 }
@@ -696,7 +720,7 @@ const MiddleGradeSyllabus = () => {
 
         if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
         if (activeSubject === 'mathematics') {
-            if (gradeNum === 6 && !["arithmetic", "perimeter and area", "pattern", "number play", "data handling", "symmetry", "lines and angles", "prime time"].some(t => topicName.includes(t.toLowerCase()))) return acc;
+            if (gradeNum === 6 && !["arithmetic", "perimeter and area", "pattern", "number play", "data handling", "symmetry", "lines and angles", "prime time", "fractions", "playing with constructions"].some(t => topicName.includes(t.toLowerCase()))) return acc;
             if (gradeNum === 7 && topicName !== "integers" && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area" && topicName !== "fractions and decimals" && topicName !== "data handling" && topicName !== "arithmetic") return acc;
             if (gradeNum === 7 && (topicName === "integers" || topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions" || topicName === "fractions and decimals" || topicName === "data handling" || topicName === "arithmetic") && !skill.isLocal) return acc;
         }

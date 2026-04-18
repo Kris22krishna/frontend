@@ -34,12 +34,17 @@
     color: #64748B;
     margin-bottom: 1rem;
     font-weight: 500;
+    position: relative;
+    z-index: 9999;
 }
 
 .home-link {
     color: #64748B;
     text-decoration: none;
     transition: color 0.2s;
+    position: relative;
+    z-index: 9999;
+    pointer-events: auto;
 }
 
 .home-link:hover {

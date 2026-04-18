@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../../../../class-12/Matrices/Matrices.css";
 import "../../../../../class-12/Matrices/MatricesPages.css";
 import MathRenderer from "../../../../../../MathRenderer";
+import { useSessionLogger } from "@/hooks/useSessionLogger";
+import { NODE_IDS } from "@/lib/curriculumIds";
 
 const BASE = "/senior/grade/11/maths/relations-and-functions";
 
@@ -232,19 +234,44 @@ export default function RelFuncTerminology() {
   const [quizSelected, setQuizSelected] = useState(null);
   const [quizFinished, setQuizFinished] = useState(false);
 
+  // v4 Session logging
+  const { startSession, logAnswer, finishSession } = useSessionLogger();
+  const quizAnswersPayload = useRef([]);
+
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
   const term = TERMS[activeTermIdx];
 
-  const handleQuizSelect = (idx) => {
+  const handleQuizSelect = async (idx) => {
     if (quizAnswered) return;
     setQuizSelected(idx);
     setQuizAnswered(true);
-    if (idx === QUIZ_QUESTIONS[quizCurrent].correct) setQuizScore(s => s + 1);
+    const correct = idx === QUIZ_QUESTIONS[quizCurrent].correct;
+    if (correct) setQuizScore(s => s + 1);
+
+    // v4 Log answer
+    const answerData = {
+      question_index: quizCurrent + 1,
+      answer_json: { selected: idx, text: QUIZ_QUESTIONS[quizCurrent].opts[idx] },
+      is_correct: correct ? 1.0 : 0.0,
+      marks_awarded: correct ? 1 : 0,
+      marks_possible: 1,
+      time_taken_ms: 0
+    };
+    quizAnswersPayload.current.push(answerData);
+    await logAnswer({ questionIndex: answerData.question_index, answerJson: answerData.answer_json, isCorrect: answerData.is_correct });
   };
 
-  const handleQuizNext = () => {
-    if (quizCurrent + 1 >= QUIZ_QUESTIONS.length) { setQuizFinished(true); return; }
+  const handleQuizNext = async () => {
+    if (quizCurrent + 1 >= QUIZ_QUESTIONS.length) {
+      setQuizFinished(true);
+      await finishSession({
+        totalQuestions: QUIZ_QUESTIONS.length,
+        questionsAnswered: quizAnswersPayload.current.length,
+        answersPayload: quizAnswersPayload.current
+      });
+      return;
+    }
     setQuizCurrent(c => c + 1);
     setQuizSelected(null);
     setQuizAnswered(false);
@@ -397,14 +424,19 @@ export default function RelFuncTerminology() {
                 <div style={{ fontSize: "48px", marginBottom: "16px" }}>🧪</div>
                 <h2 style={{ fontFamily: "Outfit, sans-serif", fontSize: "28px", fontWeight: 900, marginBottom: "12px", color: "#0f172a" }}>Vocabulary Quiz</h2>
                 <p style={{ color: "#64748b", fontSize: "16px", marginBottom: "32px" }}>10 quick questions to test your terminology mastery.</p>
-                <button onClick={() => setQuizStarted(true)} style={{ padding: "14px 40px", background: "linear-gradient(135deg, #1e1b4b, #312e81)", color: "#fff", border: "none", borderRadius: "100px", fontWeight: 800, fontSize: "16px", cursor: "pointer", boxShadow: "0 8px 24px rgba(30,27,75,0.3)" }}>Start Quiz</button>
+                <button onClick={() => {
+                  // v4 Start session on quiz begin
+                  startSession({ nodeId: NODE_IDS.g11MathRAFTerminologyQuiz, sessionType: 'practice' });
+                  quizAnswersPayload.current = [];
+                  setQuizStarted(true);
+                }} style={{ padding: "14px 40px", background: "linear-gradient(135deg, #1e1b4b, #312e81)", color: "#fff", border: "none", borderRadius: "100px", fontWeight: 800, fontSize: "16px", cursor: "pointer", boxShadow: "0 8px 24px rgba(30,27,75,0.3)" }}>Start Quiz</button>
               </div>
             ) : quizFinished ? (
               <div style={{ textAlign: "center", padding: "60px 32px", background: "#fff", borderRadius: "24px", border: "1px solid #e2e8f0" }}>
                 <div style={{ fontSize: "64px", marginBottom: "16px" }}>{quizScore >= 8 ? "🏆" : quizScore >= 5 ? "🌟" : "💪"}</div>
                 <div style={{ fontSize: "48px", fontWeight: 900, color: "#312e81" }}>{quizScore}/{QUIZ_QUESTIONS.length}</div>
                 <p style={{ color: "#64748b", fontSize: "16px", marginBottom: "32px" }}>{quizScore >= 8 ? "Excellent mastery!" : quizScore >= 5 ? "Good progress, keep going!" : "Review the terms and try again!"}</p>
-                <button onClick={() => { setQuizStarted(false); setQuizFinished(false); setQuizCurrent(0); setQuizScore(0); setQuizSelected(null); setQuizAnswered(false); }} style={{ padding: "14px 40px", background: "linear-gradient(135deg, #1e1b4b, #312e81)", color: "#fff", border: "none", borderRadius: "100px", fontWeight: 800, fontSize: "16px", cursor: "pointer" }}>Try Again</button>
+                <button onClick={() => { setQuizStarted(false); setQuizFinished(false); setQuizCurrent(0); setQuizScore(0); setQuizSelected(null); setQuizAnswered(false); quizAnswersPayload.current = []; }} style={{ padding: "14px 40px", background: "linear-gradient(135deg, #1e1b4b, #312e81)", color: "#fff", border: "none", borderRadius: "100px", fontWeight: 800, fontSize: "16px", cursor: "pointer" }}>Try Again</button>
               </div>
             ) : (
               <div style={{ background: "#fff", borderRadius: "24px", padding: "40px", border: "1px solid #e2e8f0" }}>
