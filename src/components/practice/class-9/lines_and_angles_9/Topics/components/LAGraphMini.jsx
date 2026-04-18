@@ -1,5 +1,39 @@
 import React, { useState, useRef, useEffect } from 'react';
 
+const describeArc = (x, y, radius, startAngle, endAngle) => {
+    let diff = endAngle - startAngle;
+    if (diff < 0) diff += 360;
+    const largeArcFlag = diff <= 180 ? "0" : "1";
+    const startRad = (startAngle * Math.PI) / 180;
+    const endRad = (endAngle * Math.PI) / 180;
+    const startX = x + radius * Math.cos(startRad);
+    const startY = y - radius * Math.sin(startRad);
+    const endX = x + radius * Math.cos(endRad);
+    const endY = y - radius * Math.sin(endRad);
+    return `M ${startX} ${startY} A ${radius} ${radius} 0 ${largeArcFlag} 0 ${endX} ${endY}`;
+};
+
+const AngleLabel = ({ cx, cy, angleRadius, angleMid, text, color }) => {
+    if (text === undefined || text === null || text === '') return null;
+    const isUnknown = String(text).includes('x') || String(text).includes('?') || String(text).includes('y') || String(text).includes('z');
+    const rad = (angleMid * Math.PI) / 180.0;
+    const px = cx + angleRadius * Math.cos(rad);
+    const py = cy - angleRadius * Math.sin(rad); 
+    return (
+        <text 
+            x={px} y={py} 
+            fontSize={isUnknown ? "16" : "13"} 
+            fill={isUnknown ? "#e11d48" : (color || "#0284c7")} fontFamily="Times New Roman, serif" fontStyle="italic" 
+            fontWeight="bold" 
+            textAnchor="middle" 
+            dominantBaseline="central"
+            style={isUnknown ? { filter: 'drop-shadow(0px 0px 3px rgba(255,255,255,0.9))' } : {}}
+        >
+            {text}
+        </text>
+    );
+};
+
 // Renders the different SVG question types
 export const LAGraphMini = ({ config, onProtractorChange }) => {
     if (!config) return null;
@@ -11,128 +45,115 @@ export const LAGraphMini = ({ config, onProtractorChange }) => {
     }
 
     if (type === 'linear-pair') {
+        const { a1, a2, splitAngle, pointLabels } = data;
+        const [pL, pO, pR, pC] = pointLabels || ['P', 'O', 'Q', ''];
+        const rad = (splitAngle * Math.PI) / 180;
+        const r = 100;
+        const cx = 170;
         return (
-            <svg viewBox="0 0 300 200" width="100%" style={{ maxWidth: 280, maxHeight: 180, background: '#f8fafc', borderRadius: 12 }}>
-                {/* Horizontal Line */}
-                <line x1="30" y1="150" x2="270" y2="150" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-                <circle cx="150" cy="150" r="4" fill="#0f172a" />
+            <svg viewBox="0 0 340 220" width="100%" style={{ maxWidth: 320, maxHeight: 200, background: '#f8fafc', borderRadius: 12 }}>
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#0ea5e9" />
+                    </marker>
+                </defs>
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="40" y1="160" x2="300" y2="160" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <circle cx={cx} cy="160" r="4" fill="#0f172a" />
+                <line markerEnd="url(#arrow)" x1={cx} y1="160" x2={cx + r * Math.cos(rad)} y2={160 - r * Math.sin(rad)} stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
                 
-                {/* Ray leaning left or right based on splitAngle */}
-                {(() => {
-                    const r = 100;
-                    const rad = (data.splitAngle * Math.PI) / 180;
-                    const x2 = 150 + r * Math.cos(rad);
-                    const y2 = 150 - r * Math.sin(rad);
-                    return (
-                        <g>
-                            <line x1="150" y1="150" x2={x2} y2={y2} stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-                            {/* Arcs */}
-                            <path d={`M 180 150 A 30 30 0 0 0 ${150 + 30 * Math.cos(rad)} ${150 - 30 * Math.sin(rad)}`} stroke="#0284c7" strokeWidth="3" fill="none" />
-                            <path d={`M 120 150 A 30 30 0 0 1 ${150 + 30 * Math.cos(rad)} ${150 - 30 * Math.sin(rad)}`} stroke="#e11d48" strokeWidth="3" fill="none" />
-                            
-                            {/* Labels */}
-                            <text x="190" y="130" fontSize="14" fill="#0284c7" fontWeight="bold">{data.a1}</text>
-                            <text x="100" y="130" fontSize="14" fill="#e11d48" fontWeight="bold">{data.a2}</text>
-                        </g>
-                    );
-                })()}
+                <path d={describeArc(cx, 160, 30, 0, splitAngle)} stroke="#0284c7" strokeWidth="2.5" fill="none" />
+                <path d={describeArc(cx, 160, 30, splitAngle, 180)} stroke="#e11d48" strokeWidth="2.5" fill="none" />
+                
+                <AngleLabel cx={cx} cy={160} angleRadius={50} angleMid={splitAngle / 2} text={a1} color="#0284c7" />
+                <AngleLabel cx={cx} cy={160} angleRadius={50} angleMid={(180 + splitAngle) / 2} text={a2} color="#e11d48" />
+                
+                <text x="35" y="145" fontSize="13" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pL}</text>
+                <text x={cx} y="180" fontSize="13" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" textAnchor="middle">{pO}</text>
+                <text x="295" y="145" fontSize="13" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pR}</text>
+                {pC && <text x={cx + (r+12) * Math.cos(rad)} y={160 - (r+12) * Math.sin(rad)} fontSize="13" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" dominantBaseline="central" textAnchor="middle">{pC}</text>}
             </svg>
         );
     }
 
     if (type === 'linear-pair-labelled') {
-        // More detailed linear pair with point labels (A, O, B, C)
         const { labelLeft, labelRight, splitAngle, pointLabels } = data;
         const r = 100;
         const rad = (splitAngle * Math.PI) / 180;
-        const x2 = 150 + r * Math.cos(rad);
-        const y2 = 150 - r * Math.sin(rad);
         const [pA, pO, pB, pC] = pointLabels || ['A', 'O', 'B', 'C'];
         return (
             <svg viewBox="0 0 340 220" width="100%" style={{ maxWidth: 320, maxHeight: 200, background: '#f8fafc', borderRadius: 12 }}>
-                {/* Horizontal Line A-O-B */}
-                <line x1="20" y1="160" x2="320" y2="160" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#0ea5e9" />
+                    </marker>
+                </defs>
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="20" y1="160" x2="320" y2="160" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
                 <circle cx="170" cy="160" r="4" fill="#0f172a" />
                 
-                {/* Ray O→C */}
-                <line x1="170" y1="160" x2={170 + r * Math.cos(rad)} y2={160 - r * Math.sin(rad)} stroke="#334155" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" x1="170" y1="160" x2={170 + r * Math.cos(rad)} y2={160 - r * Math.sin(rad)} stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
                 
-                {/* Arc for left angle */}
-                <path d={`M 140 160 A 30 30 0 0 1 ${170 + 30 * Math.cos(rad)} ${160 - 30 * Math.sin(rad)}`} stroke="#e11d48" strokeWidth="2.5" fill="rgba(225,29,72,0.08)" />
-                {/* Arc for right angle */}
-                <path d={`M 200 160 A 30 30 0 0 0 ${170 + 30 * Math.cos(rad)} ${160 - 30 * Math.sin(rad)}`} stroke="#0284c7" strokeWidth="2.5" fill="rgba(2,132,199,0.08)" />
+                <path d={describeArc(170, 160, 30, splitAngle, 180)} stroke="#e11d48" strokeWidth="2.5" fill="none" />
+                <path d={describeArc(170, 160, 30, 0, splitAngle)} stroke="#0284c7" strokeWidth="2.5" fill="none" />
                 
-                {/* Angle labels */}
-                <text x={115} y={140} fontSize="13" fill="#e11d48" fontWeight="bold" textAnchor="middle">{labelLeft}</text>
-                <text x={225} y={140} fontSize="13" fill="#0284c7" fontWeight="bold" textAnchor="middle">{labelRight}</text>
+                <AngleLabel cx={170} cy={160} angleRadius={50} angleMid={(180 + splitAngle) / 2} text={labelLeft} color="#e11d48" />
+                <AngleLabel cx={170} cy={160} angleRadius={50} angleMid={splitAngle / 2} text={labelRight} color="#0284c7" />
                 
-                {/* Point labels */}
-                <text x="15" y="175" fontSize="13" fill="#64748b" fontWeight="bold">{pA}</text>
-                <text x="170" y="185" fontSize="13" fill="#0f172a" fontWeight="bold" textAnchor="middle">{pO}</text>
-                <text x="318" y="175" fontSize="13" fill="#64748b" fontWeight="bold">{pB}</text>
-                <text x={170 + r * Math.cos(rad) + 8} y={160 - r * Math.sin(rad) - 5} fontSize="13" fill="#64748b" fontWeight="bold">{pC}</text>
+                <text x="15" y="175" fontSize="13" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pA}</text>
+                <text x="170" y="185" fontSize="13" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" textAnchor="middle">{pO}</text>
+                <text x="318" y="175" fontSize="13" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pB}</text>
+                <text x={170 + (r+12) * Math.cos(rad)} y={160 - (r+12) * Math.sin(rad)} fontSize="13" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" dominantBaseline="central" textAnchor="middle">{pC}</text>
             </svg>
         );
     }
 
     if (type === 'bisector-on-line') {
-        // Ray OS on line PQ, bisectors OR and OT, showing ∠ROT = 90°
         const { mainAngle, pointLabels } = data;
         const [pP, pO, pQ, pS, pR, pT] = pointLabels || ['P', 'O', 'Q', 'S', 'R', 'T'];
-        const rad = (mainAngle * Math.PI) / 180;
-        const halfLeft = mainAngle / 2;
-        const halfRight = (180 - mainAngle) / 2 + mainAngle;
+        const radS = (mainAngle * Math.PI) / 180;
         const r = 90;
         const rBis = 80;
 
-        const radS = rad;
-        const radR = ((180 + mainAngle) / 2) * Math.PI / 180; // Bisects POS (left side)
-        const radT = (mainAngle / 2) * Math.PI / 180; // Bisects SOQ (right side)
+        const bisLeftDeg = (180 + mainAngle) / 2;
+        const bisRightDeg = mainAngle / 2;
+        const radR = (bisLeftDeg * Math.PI) / 180;
+        const radT = (bisRightDeg * Math.PI) / 180;
 
         return (
             <svg viewBox="0 0 340 220" width="100%" style={{ maxWidth: 320, maxHeight: 200, background: '#f8fafc', borderRadius: 12 }}>
-                {/* Line P-O-Q */}
-                <line x1="20" y1="170" x2="320" y2="170" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#0ea5e9" />
+                    </marker>
+                </defs>
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="20" y1="170" x2="320" y2="170" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
                 <circle cx="170" cy="170" r="4" fill="#0f172a" />
 
-                {/* Ray OS (main) */}
-                <line x1="170" y1="170" x2={170 + r * Math.cos(radS)} y2={170 - r * Math.sin(radS)} stroke="#334155" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" x1="170" y1="170" x2={170 + r * Math.cos(radS)} y2={170 - r * Math.sin(radS)} stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" x1="170" y1="170" x2={170 + rBis * Math.cos(radR)} y2={170 - rBis * Math.sin(radR)} stroke="#0284c7" strokeWidth="2" strokeLinecap="round" strokeDasharray="6,3" />
+                <line markerEnd="url(#arrow)" x1="170" y1="170" x2={170 + rBis * Math.cos(radT)} y2={170 - rBis * Math.sin(radT)} stroke="#e11d48" strokeWidth="2" strokeLinecap="round" strokeDasharray="6,3" />
 
-                {/* Bisector OR */}
-                <line x1="170" y1="170" x2={170 + rBis * Math.cos(radR)} y2={170 - rBis * Math.sin(radR)} stroke="#0284c7" strokeWidth="2" strokeLinecap="round" strokeDasharray="6,3" />
+                <path d={describeArc(170, 170, 25, bisRightDeg, bisLeftDeg)} stroke="#059669" strokeWidth="2.5" fill="none" />
+                <AngleLabel cx={170} cy={170} angleRadius={50} angleMid={90} text="∠ROT = ?" color="#059669" />
 
-                {/* Bisector OT */}
-                <line x1="170" y1="170" x2={170 + rBis * Math.cos(radT)} y2={170 - rBis * Math.sin(radT)} stroke="#e11d48" strokeWidth="2" strokeLinecap="round" strokeDasharray="6,3" />
-
-                {/* Angle arc ROT */}
-                <path d={`M ${170 + 25 * Math.cos(radT)} ${170 - 25 * Math.sin(radT)} A 25 25 0 0 0 ${170 + 25 * Math.cos(radR)} ${170 - 25 * Math.sin(radR)}`}
-                    stroke="#059669" strokeWidth="2.5" fill="rgba(5,150,105,0.08)" />
-                <text x="170" y="130" fontSize="14" fill="#059669" fontWeight="bold" textAnchor="middle">∠ROT = ?</text>
-
-                {/* Point labels */}
-                <text x="15" y="185" fontSize="12" fill="#64748b" fontWeight="bold">{pP}</text>
-                <text x="170" y="195" fontSize="12" fill="#0f172a" fontWeight="bold" textAnchor="middle">{pO}</text>
-                <text x="318" y="185" fontSize="12" fill="#64748b" fontWeight="bold">{pQ}</text>
-                <text x={170 + r * Math.cos(radS) + 6} y={170 - r * Math.sin(radS) - 4} fontSize="12" fill="#334155" fontWeight="bold">{pS}</text>
-                <text x={170 + rBis * Math.cos(radR) + 6} y={170 - rBis * Math.sin(radR) - 4} fontSize="12" fill="#0284c7" fontWeight="bold">{pR}</text>
-                <text x={170 + rBis * Math.cos(radT) + 6} y={170 - rBis * Math.sin(radT) - 4} fontSize="12" fill="#e11d48" fontWeight="bold">{pT}</text>
+                <text x="15" y="185" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pP}</text>
+                <text x="170" y="195" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" textAnchor="middle">{pO}</text>
+                <text x="318" y="185" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pQ}</text>
+                <text x={170 + (r+10) * Math.cos(radS)} y={170 - (r+10) * Math.sin(radS)} fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" dominantBaseline="central" textAnchor="middle">{pS}</text>
+                <text x={170 + (rBis+10) * Math.cos(radR)} y={170 - (rBis+10) * Math.sin(radR)} fontSize="12" fill="#0284c7" fontWeight="bold" dominantBaseline="central" textAnchor="middle">{pR}</text>
+                <text x={170 + (rBis+10) * Math.cos(radT)} y={170 - (rBis+10) * Math.sin(radT)} fontSize="12" fill="#e11d48" fontWeight="bold" dominantBaseline="central" textAnchor="middle">{pT}</text>
             </svg>
         );
     }
 
     if (type === 'three-rays-on-line') {
-        // Three angles on one side of a straight line
-        // angles[0] is the leftmost angle (near P), angles[last] is rightmost (near Q)
         const { angles, pointLabels } = data;
         const [pP, pO, pQ, pA, pB] = pointLabels || ['P', 'O', 'Q', 'A', 'B'];
         const r = 90;
 
-        // Parse numeric values (for 'x' labels, estimate based on remaining)
         const numericAngles = angles.map(a => {
             if (typeof a === 'number') return a;
             const parsed = parseInt(a);
             if (!isNaN(parsed)) return parsed;
-            // For 'x', calculate as remainder to 180
             const knownSum = angles.reduce((s, v) => {
                 if (typeof v === 'number') return s + v;
                 const p = parseInt(v);
@@ -141,63 +162,44 @@ export const LAGraphMini = ({ config, onProtractorChange }) => {
             return 180 - knownSum;
         });
 
-        // Start from 180° (left/P side) and subtract each angle going right toward 0° (Q side)
         const cumAngles = [180];
         for (let j = 0; j < numericAngles.length; j++) {
             cumAngles.push(cumAngles[j] - numericAngles[j]);
         }
-        // Intermediate ray positions (between P and Q)
         const rayAngles = cumAngles.slice(1, -1);
 
         return (
             <svg viewBox="0 0 340 220" width="100%" style={{ maxWidth: 320, maxHeight: 200, background: '#f8fafc', borderRadius: 12 }}>
-                {/* Line P-O-Q */}
-                <line x1="20" y1="170" x2="320" y2="170" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#0ea5e9" />
+                    </marker>
+                </defs>
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="20" y1="170" x2="320" y2="170" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
                 <circle cx="170" cy="170" r="4" fill="#0f172a" />
 
-                {/* Rays from O */}
                 {rayAngles.map((deg, ri) => {
                     const rad = (deg * Math.PI) / 180;
                     return (
-                        <line key={ri} x1="170" y1="170"
+                        <line markerEnd="url(#arrow)" markerStart="url(#arrow)" key={ri} x1="170" y1="170"
                             x2={170 + r * Math.cos(rad)} y2={170 - r * Math.sin(rad)}
-                            stroke="#334155" strokeWidth="2.5" strokeLinecap="round" />
+                            stroke="#0ea5e9" strokeWidth="2.5" strokeLinecap="round" />
                     );
                 })}
 
-                {/* Angle labels */}
                 {angles.map((label, ai) => {
-                    const midAngle = ((cumAngles[ai] + cumAngles[ai + 1]) / 2) * Math.PI / 180;
-                    const labelR = 45;
                     const colors = ['#0284c7', '#059669', '#e11d48'];
-                    return (
-                        <text key={ai}
-                            x={170 + labelR * Math.cos(midAngle)}
-                            y={170 - labelR * Math.sin(midAngle)}
-                            fontSize="13" fill={colors[ai % 3]} fontWeight="bold" textAnchor="middle"
-                        >{label}</text>
-                    );
+                    return <AngleLabel key={ai} cx={170} cy={170} angleRadius={50} angleMid={(cumAngles[ai]+cumAngles[ai+1])/2} text={label} color={colors[ai%3]} />;
                 })}
 
-                {/* Arcs for each angle (clockwise from left to right) */}
                 {angles.map((_, ai) => {
-                    const startRad = (cumAngles[ai] * Math.PI) / 180;
-                    const endRad = (cumAngles[ai + 1] * Math.PI) / 180;
-                    const arcR = 30;
-                    const colors = ['rgba(2,132,199,0.15)', 'rgba(5,150,105,0.15)', 'rgba(225,29,72,0.15)'];
                     const strokeColors = ['#0284c7', '#059669', '#e11d48'];
-                    return (
-                        <path key={'arc' + ai}
-                            d={`M ${170 + arcR * Math.cos(startRad)} ${170 - arcR * Math.sin(startRad)} A ${arcR} ${arcR} 0 0 1 ${170 + arcR * Math.cos(endRad)} ${170 - arcR * Math.sin(endRad)}`}
-                            stroke={strokeColors[ai % 3]} strokeWidth="2" fill={colors[ai % 3]}
-                        />
-                    );
+                    return <path key={'arc'+ai} d={describeArc(170, 170, 30, cumAngles[ai+1], cumAngles[ai])} stroke={strokeColors[ai%3]} strokeWidth="2" fill="none" />;
                 })}
 
-                {/* Point labels */}
-                <text x="15" y="185" fontSize="12" fill="#64748b" fontWeight="bold">{pP}</text>
-                <text x="170" y="195" fontSize="12" fill="#0f172a" fontWeight="bold" textAnchor="middle">{pO}</text>
-                <text x="318" y="185" fontSize="12" fill="#64748b" fontWeight="bold">{pQ}</text>
+                <text x="15" y="185" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pP}</text>
+                <text x="170" y="195" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" textAnchor="middle">{pO}</text>
+                <text x="318" y="185" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pQ}</text>
                 {rayAngles.map((deg, ri) => {
                     const rad = (deg * Math.PI) / 180;
                     const rayLabels = [pA, pB];
@@ -205,7 +207,7 @@ export const LAGraphMini = ({ config, onProtractorChange }) => {
                         <text key={'rl' + ri}
                             x={170 + (r + 12) * Math.cos(rad)}
                             y={170 - (r + 12) * Math.sin(rad)}
-                            fontSize="12" fill="#64748b" fontWeight="bold" textAnchor="middle"
+                            fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" textAnchor="middle" dominantBaseline="central"
                         >{rayLabels[ri] || ''}</text>
                     );
                 })}
@@ -214,29 +216,42 @@ export const LAGraphMini = ({ config, onProtractorChange }) => {
     }
 
     if (type === 'intersecting') {
-        const { top, bottom, left, right, angle } = data;
+        const { top, bottom, left, right, angle, pointLabels } = data;
+        const [pP, pQ, pR, pS, pO] = pointLabels || ['', '', '', '', 'O'];
         const rad = (angle * Math.PI) / 180;
-        const r = 100;
+        const r = 90;
 
         return (
-            <svg viewBox="0 0 300 200" width="100%" style={{ maxWidth: 280, maxHeight: 180, background: '#f8fafc', borderRadius: 12 }}>
-                {/* Horizontal line */}
-                <line x1={150 - r} y1="100" x2={150 + r} y2="100" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-                {/* Angled line */}
-                <line x1={150 - r * Math.cos(rad)} y1={100 + r * Math.sin(rad)} x2={150 + r * Math.cos(rad)} y2={100 - r * Math.sin(rad)} stroke="#334155" strokeWidth="3" strokeLinecap="round" />
+            <svg viewBox="0 0 340 220" width="100%" style={{ maxWidth: 320, maxHeight: 200, background: '#f8fafc', borderRadius: 12 }}>
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#0ea5e9" />
+                    </marker>
+                </defs>
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1={170 - r} y1="110" x2={170 + r} y2="110" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1={170 - r * Math.cos(rad)} y1={110 + r * Math.sin(rad)} x2={170 + r * Math.cos(rad)} y2={110 - r * Math.sin(rad)} stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <circle cx="170" cy="110" r="4" fill="#0f172a" />
                 
-                <circle cx="150" cy="100" r="4" fill="#0f172a" />
+                <path d={describeArc(170, 110, 25, 0, angle)} stroke="#d97706" strokeWidth="2" fill="none" />
+                <path d={describeArc(170, 110, 25, angle, 180)} stroke="#059669" strokeWidth="2" fill="none" />
+                <path d={describeArc(170, 110, 25, 180, 180+angle)} stroke="#d97706" strokeWidth="2" fill="none" />
+                <path d={describeArc(170, 110, 25, 180+angle, 360)} stroke="#059669" strokeWidth="2" fill="none" />
                 
-                <text x="150" y={100 - 30} fontSize="14" fill="#059669" textAnchor="middle" fontWeight="bold">{top}</text>
-                <text x="150" y={100 + 40} fontSize="14" fill="#059669" textAnchor="middle" fontWeight="bold">{bottom}</text>
-                <text x={150 - 50} y="105" fontSize="14" fill="#d97706" textAnchor="middle" fontWeight="bold">{left}</text>
-                <text x={150 + 50} y="105" fontSize="14" fill="#d97706" textAnchor="middle" fontWeight="bold">{right}</text>
+                <AngleLabel cx={170} cy={110} angleRadius={45} angleMid={90 + angle/2} text={top} color="#059669" />
+                <AngleLabel cx={170} cy={110} angleRadius={45} angleMid={270 + angle/2} text={bottom} color="#059669" />
+                <AngleLabel cx={170} cy={110} angleRadius={45} angleMid={180 + angle/2} text={left} color="#d97706" />
+                <AngleLabel cx={170} cy={110} angleRadius={45} angleMid={angle/2} text={right} color="#d97706" />
+                
+                {pP && <text x={170 - r - 12} y="115" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pP}</text>}
+                {pQ && <text x={170 + r + 8} y="115" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pQ}</text>}
+                {pR && <text x={170 + (r+10) * Math.cos(rad)} y={110 - (r+10) * Math.sin(rad)} fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" dominantBaseline="central" textAnchor="middle">{pR}</text>}
+                {pS && <text x={170 - (r+10) * Math.cos(rad)} y={110 + (r+10) * Math.sin(rad)} fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" dominantBaseline="central" textAnchor="middle">{pS}</text>}
+                {pO && <text x="178" y="125" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pO}</text>}
             </svg>
         );
     }
 
     if (type === 'intersecting-labelled') {
-        // Intersecting lines with point labels and ratio labels on all four angles
         const { labels, angle, pointLabels } = data;
         const [pP, pQ, pR, pS, pO] = pointLabels || ['P', 'Q', 'R', 'S', 'O'];
         const rad = (angle * Math.PI) / 180;
@@ -244,82 +259,93 @@ export const LAGraphMini = ({ config, onProtractorChange }) => {
 
         return (
             <svg viewBox="0 0 340 220" width="100%" style={{ maxWidth: 320, maxHeight: 200, background: '#f8fafc', borderRadius: 12 }}>
-                {/* Horizontal line P-O-Q */}
-                <line x1={170 - r} y1="110" x2={170 + r} y2="110" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-                {/* Angled line R-O-S */}
-                <line x1={170 - r * Math.cos(rad)} y1={110 + r * Math.sin(rad)} x2={170 + r * Math.cos(rad)} y2={110 - r * Math.sin(rad)} stroke="#334155" strokeWidth="3" strokeLinecap="round" />
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#0ea5e9" />
+                    </marker>
+                </defs>
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1={170 - r} y1="110" x2={170 + r} y2="110" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1={170 - r * Math.cos(rad)} y1={110 + r * Math.sin(rad)} x2={170 + r * Math.cos(rad)} y2={110 - r * Math.sin(rad)} stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
                 <circle cx="170" cy="110" r="4" fill="#0f172a" />
 
-                {/* Labels for four angles */}
-                <text x="170" y="80" fontSize="13" fill="#0284c7" textAnchor="middle" fontWeight="bold">{labels[0]}</text>
-                <text x="210" y="115" fontSize="13" fill="#e11d48" textAnchor="middle" fontWeight="bold">{labels[1]}</text>
-                <text x="170" y="145" fontSize="13" fill="#0284c7" textAnchor="middle" fontWeight="bold">{labels[2]}</text>
-                <text x="130" y="115" fontSize="13" fill="#e11d48" textAnchor="middle" fontWeight="bold">{labels[3]}</text>
+                <path d={describeArc(170, 110, 25, 90 + angle/2, 90 + angle/2)} stroke="#0284c7" strokeWidth="2" fill="none" />
+                <path d={describeArc(170, 110, 25, angle/2, angle/2)} stroke="#e11d48" strokeWidth="2" fill="none" />
+                <path d={describeArc(170, 110, 25, 270 + angle/2, 270 + angle/2)} stroke="#0284c7" strokeWidth="2" fill="none" />
+                <path d={describeArc(170, 110, 25, 180 + angle/2, 180 + angle/2)} stroke="#e11d48" strokeWidth="2" fill="none" />
 
-                {/* Point labels */}
-                <text x={170 - r - 12} y="115" fontSize="12" fill="#64748b" fontWeight="bold">{pP}</text>
-                <text x={170 + r + 8} y="115" fontSize="12" fill="#64748b" fontWeight="bold">{pQ}</text>
-                <text x={170 + r * Math.cos(rad) + 6} y={110 - r * Math.sin(rad) - 4} fontSize="12" fill="#64748b" fontWeight="bold">{pR}</text>
-                <text x={170 - r * Math.cos(rad) - 12} y={110 + r * Math.sin(rad) + 12} fontSize="12" fill="#64748b" fontWeight="bold">{pS}</text>
-                <text x="178" y="125" fontSize="12" fill="#0f172a" fontWeight="bold">{pO}</text>
+                <AngleLabel cx={170} cy={110} angleRadius={45} angleMid={90 + angle/2} text={labels[0]} color="#0284c7" />
+                <AngleLabel cx={170} cy={110} angleRadius={45} angleMid={angle/2} text={labels[1]} color="#e11d48" />
+                <AngleLabel cx={170} cy={110} angleRadius={45} angleMid={270 + angle/2} text={labels[2]} color="#0284c7" />
+                <AngleLabel cx={170} cy={110} angleRadius={45} angleMid={180 + angle/2} text={labels[3]} color="#e11d48" />
+
+                <text x={170 - r - 12} y="115" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pP}</text>
+                <text x={170 + r + 8} y="115" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pQ}</text>
+                <text x={170 + (r+10) * Math.cos(rad)} y={110 - (r+10) * Math.sin(rad)} fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" dominantBaseline="central" textAnchor="middle">{pR}</text>
+                <text x={170 - (r+10) * Math.cos(rad)} y={110 + (r+10) * Math.sin(rad)} fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" dominantBaseline="central" textAnchor="middle">{pS}</text>
+                <text x="178" y="125" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pO}</text>
             </svg>
         );
     }
 
     if (type === 'intersecting-four') {
-        // Show all four angles labelled with values
         const { a, b, angle } = data;
         const rad = (angle * Math.PI) / 180;
         const r = 90;
 
         return (
             <svg viewBox="0 0 340 220" width="100%" style={{ maxWidth: 320, maxHeight: 200, background: '#f8fafc', borderRadius: 12 }}>
-                <line x1={170 - r} y1="110" x2={170 + r} y2="110" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-                <line x1={170 - r * Math.cos(rad)} y1={110 + r * Math.sin(rad)} x2={170 + r * Math.cos(rad)} y2={110 - r * Math.sin(rad)} stroke="#334155" strokeWidth="3" strokeLinecap="round" />
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#0ea5e9" />
+                    </marker>
+                </defs>
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1={170 - r} y1="110" x2={170 + r} y2="110" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1={170 - r * Math.cos(rad)} y1={110 + r * Math.sin(rad)} x2={170 + r * Math.cos(rad)} y2={110 - r * Math.sin(rad)} stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
                 <circle cx="170" cy="110" r="4" fill="#0f172a" />
 
-                {/* Angle arcs */}
-                <path d={`M 195 110 A 25 25 0 0 0 ${170 + 25 * Math.cos(rad)} ${110 - 25 * Math.sin(rad)}`} stroke="#0284c7" strokeWidth="2" fill="rgba(2,132,199,0.1)" />
-                <path d={`M ${170 + 25 * Math.cos(rad)} ${110 - 25 * Math.sin(rad)} A 25 25 0 0 0 145 110`} stroke="#e11d48" strokeWidth="2" fill="rgba(225,29,72,0.1)" />
+                <path d={describeArc(170, 110, 25, 0, angle)} stroke="#0284c7" strokeWidth="2" fill="none" />
+                <path d={describeArc(170, 110, 25, angle, 180)} stroke="#e11d48" strokeWidth="2" fill="none" />
 
-                <text x="205" y="96" fontSize="13" fill="#0284c7" fontWeight="bold">{a}°</text>
-                <text x="130" y="96" fontSize="13" fill="#e11d48" fontWeight="bold">{b}°</text>
-                <text x="130" y="132" fontSize="13" fill="#0284c7" fontWeight="bold">{a}°</text>
-                <text x="205" y="132" fontSize="13" fill="#e11d48" fontWeight="bold">x</text>
+                <AngleLabel cx={170} cy={110} angleRadius={45} angleMid={angle/2} text={`${a}°`} color="#0284c7" />
+                <AngleLabel cx={170} cy={110} angleRadius={45} angleMid={90 + angle/2} text={`${b}°`} color="#e11d48" />
+                <AngleLabel cx={170} cy={110} angleRadius={45} angleMid={180 + angle/2} text={`${a}°`} color="#0284c7" />
+                <AngleLabel cx={170} cy={110} angleRadius={45} angleMid={270 + angle/2} text="x" color="#e11d48" />
 
-                <text x="170" y="200" fontSize="12" fill="#64748b" fontWeight="600" textAnchor="middle">O</text>
+                <text x="178" y="125" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="600">O</text>
             </svg>
         );
     }
 
     if (type === 'intersecting-reflex') {
-        // Show an acute angle and its reflex
         const { a, reflex, angle } = data;
         const rad = (angle * Math.PI) / 180;
         const r = 80;
 
         return (
             <svg viewBox="0 0 340 220" width="100%" style={{ maxWidth: 320, maxHeight: 200, background: '#f8fafc', borderRadius: 12 }}>
-                <line x1={170 - r} y1="110" x2={170 + r} y2="110" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-                <line x1={170 - r * Math.cos(rad)} y1={110 + r * Math.sin(rad)} x2={170 + r * Math.cos(rad)} y2={110 - r * Math.sin(rad)} stroke="#334155" strokeWidth="3" strokeLinecap="round" />
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#0ea5e9" />
+                    </marker>
+                </defs>
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1={170 - r} y1="110" x2={170 + r} y2="110" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1={170 - r * Math.cos(rad)} y1={110 + r * Math.sin(rad)} x2={170 + r * Math.cos(rad)} y2={110 - r * Math.sin(rad)} stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
                 <circle cx="170" cy="110" r="4" fill="#0f172a" />
 
-                {/* Small arc for acute */}
-                <path d={`M 195 110 A 25 25 0 0 0 ${170 + 25 * Math.cos(rad)} ${110 - 25 * Math.sin(rad)}`} stroke="#0284c7" strokeWidth="2.5" fill="rgba(2,132,199,0.1)" />
-                <text x="208" y="95" fontSize="12" fill="#0284c7" fontWeight="bold">{a}°</text>
+                <path d={describeArc(170, 110, 25, 0, angle)} stroke="#0284c7" strokeWidth="2.5" fill="none" />
+                <AngleLabel cx={170} cy={110} angleRadius={40} angleMid={angle/2} text={`${a}°`} color="#0284c7" />
 
-                {/* Large arc for reflex (sweep-flag = 1 for long way around) */}
-                <path d={`M 195 110 A 40 40 0 1 1 ${170 + 40 * Math.cos(rad)} ${110 - 40 * Math.sin(rad)}`} stroke="#e11d48" strokeWidth="2" fill="none" strokeDasharray="5,3" />
-                <text x="125" y="155" fontSize="13" fill="#e11d48" fontWeight="bold">x = ?</text>
+                <path d={describeArc(170, 110, 40, angle, 360)} stroke="#e11d48" strokeWidth="2" fill="none" strokeDasharray="5,3" />
+                <AngleLabel cx={170} cy={110} angleRadius={60} angleMid={(360+angle)/2} text="x = ?" color="#e11d48" />
+                
+                <text x="178" y="125" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">O</text>
             </svg>
         );
     }
 
     if (type === 'three-lines-point') {
-        // 3 lines through a point → 6 angles (show 3 on upper side)
         const { angles, pointLabels } = data;
         const r = 80;
-        // 3 angles on the upper semicircle
         const cumAngles = [0];
         for (let j = 0; j < angles.length; j++) {
             cumAngles.push(cumAngles[j] + angles[j]);
@@ -327,314 +353,314 @@ export const LAGraphMini = ({ config, onProtractorChange }) => {
 
         return (
             <svg viewBox="0 0 340 220" width="100%" style={{ maxWidth: 320, maxHeight: 200, background: '#f8fafc', borderRadius: 12 }}>
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#0ea5e9" />
+                    </marker>
+                </defs>
                 <circle cx="170" cy="130" r="4" fill="#0f172a" />
-                <text x="178" y="148" fontSize="12" fill="#0f172a" fontWeight="bold">O</text>
+                <text x="178" y="148" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">O</text>
 
-                {/* Draw 3 full lines (6 rays) */}
-                {[0, ...cumAngles.slice(1, 3)].map((deg, li) => {
+                {[0, ...cumAngles.slice(1, 4)].map((deg, li) => {
+                    if (deg === undefined) return null;
                     const rad = (deg * Math.PI) / 180;
                     return (
-                        <line key={li}
+                        <line markerEnd="url(#arrow)" markerStart="url(#arrow)" key={li}
                             x1={170 - r * Math.cos(rad)} y1={130 + r * Math.sin(rad)}
                             x2={170 + r * Math.cos(rad)} y2={130 - r * Math.sin(rad)}
-                            stroke="#334155" strokeWidth="2.5" strokeLinecap="round" />
+                            stroke="#0ea5e9" strokeWidth="2.5" strokeLinecap="round" />
                     );
                 })}
 
-                {/* Angle labels on upper side */}
                 {angles.map((a, ai) => {
-                    const midAngle = ((cumAngles[ai] + cumAngles[ai + 1]) / 2) * Math.PI / 180;
                     const colors = ['#0284c7', '#059669', '#e11d48'];
-                    return (
-                        <text key={ai}
-                            x={170 + 40 * Math.cos(midAngle)}
-                            y={130 - 40 * Math.sin(midAngle)}
-                            fontSize="13" fill={colors[ai % 3]} fontWeight="bold" textAnchor="middle"
-                        >{a}°</text>
-                    );
+                    return <AngleLabel key={ai} cx={170} cy={130} angleRadius={45} angleMid={(cumAngles[ai]+cumAngles[ai+1])/2} text={`${a}°`} color={colors[ai%3]} />;
                 })}
 
-                {/* Arcs */}
                 {angles.map((_, ai) => {
-                    const startRad = (cumAngles[ai] * Math.PI) / 180;
-                    const endRad = (cumAngles[ai + 1] * Math.PI) / 180;
-                    const arcR = 25;
                     const strokeColors = ['#0284c7', '#059669', '#e11d48'];
-                    return (
-                        <path key={'arc' + ai}
-                            d={`M ${170 + arcR * Math.cos(startRad)} ${130 - arcR * Math.sin(startRad)} A ${arcR} ${arcR} 0 0 0 ${170 + arcR * Math.cos(endRad)} ${130 - arcR * Math.sin(endRad)}`}
-                            stroke={strokeColors[ai % 3]} strokeWidth="2" fill="none"
-                        />
-                    );
+                    return <path key={'arc'+ai} d={describeArc(170, 130, 25, cumAngles[ai], cumAngles[ai+1])} stroke={strokeColors[ai%3]} strokeWidth="2" fill="none" />;
                 })}
             </svg>
         );
     }
 
     if (type === 'intersecting-extra-ray') {
-        // Two intersecting lines with an extra ray (e.g., OE)
         const { angleBOD, angleBOE, pointLabels } = data;
         const [pA, pB, pC, pD, pO, pE] = pointLabels || ['A', 'B', 'C', 'D', 'O', 'E'];
         const r = 85;
-        // Line AB is horizontal, line CD at angle angleBOD from OB
         const radCD = (angleBOD * Math.PI) / 180;
-        // Extra ray OE at angleBOE from OB (between OB and OD)
         const radOE = (angleBOE * Math.PI) / 180;
 
         return (
             <svg viewBox="0 0 340 220" width="100%" style={{ maxWidth: 320, maxHeight: 200, background: '#f8fafc', borderRadius: 12 }}>
-                {/* Line AB (horizontal) */}
-                <line x1={170 - r} y1="120" x2={170 + r} y2="120" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-                {/* Line CD */}
-                <line x1={170 - r * Math.cos(radCD)} y1={120 + r * Math.sin(radCD)} x2={170 + r * Math.cos(radCD)} y2={120 - r * Math.sin(radCD)} stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-                {/* Extra Ray OE */}
-                <line x1="170" y1="120" x2={170 + r * Math.cos(radOE)} y2={120 - r * Math.sin(radOE)} stroke="#7c3aed" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="6,4" />
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#0ea5e9" />
+                    </marker>
+                </defs>
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1={170 - r} y1="120" x2={170 + r} y2="120" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1={170 - r * Math.cos(radCD)} y1={120 + r * Math.sin(radCD)} x2={170 + r * Math.cos(radCD)} y2={120 - r * Math.sin(radCD)} stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" x1="170" y1="120" x2={170 + r * Math.cos(radOE)} y2={120 - r * Math.sin(radOE)} stroke="#7c3aed" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="6,4" />
 
                 <circle cx="170" cy="120" r="4" fill="#0f172a" />
 
-                {/* Point labels */}
-                <text x={170 - r - 12} y="125" fontSize="12" fill="#64748b" fontWeight="bold">{pA}</text>
-                <text x={170 + r + 6} y="125" fontSize="12" fill="#64748b" fontWeight="bold">{pB}</text>
-                <text x={170 + r * Math.cos(radCD) + 6} y={120 - r * Math.sin(radCD) - 4} fontSize="12" fill="#64748b" fontWeight="bold">{pD}</text>
-                <text x={170 - r * Math.cos(radCD) - 12} y={120 + r * Math.sin(radCD) + 12} fontSize="12" fill="#64748b" fontWeight="bold">{pC}</text>
-                <text x={170 + r * Math.cos(radOE) + 6} y={120 - r * Math.sin(radOE) - 4} fontSize="12" fill="#7c3aed" fontWeight="bold">{pE}</text>
-                <text x="178" y="138" fontSize="12" fill="#0f172a" fontWeight="bold">{pO}</text>
+                <text x={170 - r - 12} y="125" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pA}</text>
+                <text x={170 + r + 6} y="125" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pB}</text>
+                <text x={170 + (r+10) * Math.cos(radCD)} y={120 - (r+10) * Math.sin(radCD)} fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" dominantBaseline="central" textAnchor="middle">{pD}</text>
+                <text x={170 - (r+10) * Math.cos(radCD)} y={120 + (r+10) * Math.sin(radCD)} fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" dominantBaseline="central" textAnchor="middle">{pC}</text>
+                <text x={170 + (r+10) * Math.cos(radOE)} y={120 - (r+10) * Math.sin(radOE)} fontSize="12" fill="#7c3aed" fontWeight="bold" dominantBaseline="central" textAnchor="middle">{pE}</text>
+                <text x="178" y="138" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pO}</text>
 
-                {/* Angle arc for BOD */}
-                <path d={`M 195 120 A 25 25 0 0 0 ${170 + 25 * Math.cos(radCD)} ${120 - 25 * Math.sin(radCD)}`} stroke="#0284c7" strokeWidth="2" fill="rgba(2,132,199,0.08)" />
-                <text x={170 + 38 * Math.cos(radCD / 2)} y={120 - 38 * Math.sin(radCD / 2)} fontSize="11" fill="#0284c7" fontWeight="bold" textAnchor="middle">{angleBOD}°</text>
+                <path d={describeArc(170, 120, 25, 0, angleBOD)} stroke="#0284c7" strokeWidth="2" fill="none" />
+                <AngleLabel cx={170} cy={120} angleRadius={45} angleMid={angleBOD/2} text={`${angleBOD}°`} color="#0284c7" />
             </svg>
         );
     }
 
     if (type === 'parallel') {
         const { knownLoc, unknownLoc, knownVal, tilt } = data;
+        const rad = (tilt * Math.PI) / 180;
+        
+        const dy = 60; // 130 - 70
+        const dx = dy / Math.tan(rad);
+        const topX = 150 + dx/2;
+        const botX = 150 - dx/2;
+
         return (
             <svg viewBox="0 0 300 200" width="100%" style={{ maxWidth: 280, maxHeight: 180, background: '#f8fafc', borderRadius: 12 }}>
-                {/* Parallel lines */}
-                <line x1="50" y1="70" x2="250" y2="70" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-                <line x1="50" y1="130" x2="250" y2="130" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="40" y1="70" x2="260" y2="70" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="40" y1="130" x2="260" y2="130" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <text x="25" y="60" fontSize="13" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic">l</text>
+                <text x="25" y="120" fontSize="13" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic">m</text>
                 
-                {/* Arrows indicating parallel */}
-                <text x="30" y="74" fontSize="11" fill="#64748b">l</text>
-                <text x="30" y="134" fontSize="11" fill="#64748b">m</text>
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1={botX - 40*Math.cos(rad)} y1={130 + 40*Math.sin(rad)} x2={topX + 40*Math.cos(rad)} y2={70 - 40*Math.sin(rad)} stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
                 
-                {/* Transversal */}
-                <line x1="120" y1="30" x2="180" y2="170" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-
-                {/* Labels */}
-                <text x="175" y="60" fontSize="14" fill="#7c3aed" fontWeight="bold">{knownLoc === 'top-right' ? `${knownVal}°` : ''}</text>
-                <text x="125" y="60" fontSize="14" fill="#7c3aed" fontWeight="bold">{knownLoc === 'top-left' ? `${knownVal}°` : ''}</text>
-                <text x="135" y="125" fontSize="14" fill="#e11d48" fontWeight="bold">{unknownLoc === 'bottom-left' ? 'x' : ''}</text>
-                <text x="175" y="150" fontSize="14" fill="#e11d48" fontWeight="bold">{unknownLoc === 'bottom-right' ? 'x' : ''}</text>
-                <text x="125" y="150" fontSize="14" fill="#e11d48" fontWeight="bold">{unknownLoc === 'bottom-left-out' ? 'x' : ''}</text>
+                {knownLoc === 'top-right' && <path d={describeArc(topX, 70, 25, 0, tilt)} stroke="#0ea5e9" strokeWidth="2" fill="none" />}
+                <AngleLabel cx={topX} cy={70} angleRadius={35} angleMid={tilt/2} text={(knownLoc === 'top-right') ? `${knownVal}°` : ''} color="#0ea5e9" />
+                
+                {knownLoc === 'top-left' && <path d={describeArc(topX, 70, 25, tilt, 180)} stroke="#0ea5e9" strokeWidth="2" fill="none" />}
+                <AngleLabel cx={topX} cy={70} angleRadius={35} angleMid={90 + tilt/2} text={knownLoc === 'top-left' ? `${knownVal}°` : ''} color="#0ea5e9" />
+                
+                {(unknownLoc === 'bottom-left' || unknownLoc === 'bottom-left-out') && <path d={describeArc(botX, 130, 25, 180, 180+tilt)} stroke="#e11d48" strokeWidth="2" fill="none" />}
+                <AngleLabel cx={botX} cy={130} angleRadius={35} angleMid={180 + tilt/2} text={(unknownLoc === 'bottom-left' || unknownLoc === 'bottom-left-out') ? 'x' : ''} color="#e11d48" />
+                
+                {unknownLoc === 'bottom-right' && <path d={describeArc(botX, 130, 25, 180+tilt, 360)} stroke="#e11d48" strokeWidth="2" fill="none" />}
+                <AngleLabel cx={botX} cy={130} angleRadius={35} angleMid={360 - (180 - tilt)/2} text={unknownLoc === 'bottom-right' ? 'x' : ''} color="#e11d48" />
             </svg>
         );
     }
 
     if (type === 'parallel-aux-line') {
-        // PQ || RS with point M between them, auxiliary line through M
         const { mxq, myr, xmy, pointLabels } = data;
         const [pP, pQ, pR, pS, pM, pX, pY] = pointLabels || ['P', 'Q', 'R', 'S', 'M', 'X', 'Y'];
 
         return (
             <svg viewBox="0 0 360 250" width="100%" style={{ maxWidth: 340, maxHeight: 230, background: '#f8fafc', borderRadius: 12 }}>
-                {/* Line PQ (top) */}
-                <line x1="30" y1="60" x2="330" y2="60" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-                {/* Line RS (bottom) */}
-                <line x1="30" y1="190" x2="330" y2="190" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="30" y1="60" x2="330" y2="60" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="30" y1="190" x2="330" y2="190" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
 
-                {/* Transversal X→M (from PQ to M) */}
-                <line x1="230" y1="60" x2="170" y2="125" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" />
-                {/* Transversal M→Y (from M to RS) */}
-                <line x1="170" y1="125" x2="130" y2="190" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" />
-
-                {/* Auxiliary dashed line through M */}
-                <line x1="60" y1="125" x2="300" y2="125" stroke="#059669" strokeWidth="1.5" strokeDasharray="6,4" />
-
-                {/* Point M */}
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="230" y1="60" x2="170" y2="125" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="170" y1="125" x2="130" y2="190" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="60" y1="125" x2="300" y2="125" stroke="#059669" strokeWidth="1.5" strokeDasharray="6,4" />
                 <circle cx="170" cy="125" r="4" fill="#0f172a" />
 
-                {/* Angle labels */}
-                <text x="245" y="55" fontSize="12" fill="#7c3aed" fontWeight="bold">{mxq}°</text>
-                <text x="115" y="205" fontSize="12" fill="#7c3aed" fontWeight="bold">{myr}°</text>
-                <text x="175" y="115" fontSize="13" fill="#e11d48" fontWeight="bold">∠XMY = ?</text>
+                <path d={describeArc(230, 60, 25, 225, 360)} stroke="#0ea5e9" strokeWidth="2" fill="none" />
+                <AngleLabel cx={230} cy={60} angleRadius={35} angleMid={225} text={`${mxq}°`} color="#0ea5e9" />
+                
+                <path d={describeArc(130, 190, 25, 0, 45)} stroke="#0ea5e9" strokeWidth="2" fill="none" />
+                <AngleLabel cx={130} cy={190} angleRadius={35} angleMid={45} text={`${myr}°`} color="#0ea5e9" />
+                
+                <text x="170" y="105" fontSize="14" fill="#e11d48" fontWeight="bold">∠XMY = ?</text>
 
-                {/* Point labels */}
-                <text x="15" y="56" fontSize="12" fill="#64748b" fontWeight="bold">{pP}</text>
-                <text x="325" y="56" fontSize="12" fill="#64748b" fontWeight="bold">{pQ}</text>
-                <text x="15" y="186" fontSize="12" fill="#64748b" fontWeight="bold">{pR}</text>
-                <text x="325" y="186" fontSize="12" fill="#64748b" fontWeight="bold">{pS}</text>
-                <text x="170" y="142" fontSize="11" fill="#0f172a" fontWeight="bold" textAnchor="middle">{pM}</text>
-                <text x="235" y="56" fontSize="11" fill="#0284c7" fontWeight="bold">{pX}</text>
-                <text x="125" y="206" fontSize="11" fill="#0284c7" fontWeight="bold">{pY}</text>
+                <text x="25" y="45" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pP}</text>
+                <text x="325" y="45" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pQ}</text>
+                <text x="25" y="175" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pR}</text>
+                <text x="325" y="175" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pS}</text>
+                <text x="175" y="142" fontSize="12" fill="#0f172a" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" textAnchor="middle">{pM}</text>
+                <text x="225" y="50" fontSize="12" fill="#0f172a" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pX}</text>
+                <text x="125" y="205" fontSize="12" fill="#0f172a" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pY}</text>
+                <circle cx="230" cy="60" r="3" fill="#0f172a" />
+                <circle cx="130" cy="190" r="3" fill="#0f172a" />
             </svg>
         );
     }
 
     if (type === 'parallel-perp') {
-        // AB||CD||EF with EA⊥AB
         const { bef, z, x, y, pointLabels } = data;
         const [pA, pB, pC, pD, pE, pF] = pointLabels || ['A', 'B', 'C', 'D', 'E', 'F'];
 
         return (
             <svg viewBox="0 0 360 250" width="100%" style={{ maxWidth: 340, maxHeight: 230, background: '#f8fafc', borderRadius: 12 }}>
-                {/* Line AB (top) */}
-                <line x1="80" y1="50" x2="330" y2="50" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-                {/* Line CD (middle) */}
-                <line x1="80" y1="120" x2="330" y2="120" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-                {/* Line EF (bottom) */}
-                <line x1="80" y1="200" x2="330" y2="200" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="80" y1="50" x2="330" y2="50" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="80" y1="120" x2="330" y2="120" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="80" y1="200" x2="330" y2="200" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
 
-                {/* Vertical line EA (perpendicular to AB) */}
-                <line x1="120" y1="50" x2="120" y2="200" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="120" y1="50" x2="120" y2="200" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" />
 
-                {/* Right angle mark at A */}
                 <rect x="120" y="50" width="10" height="10" fill="none" stroke="#0284c7" strokeWidth="1.5" />
 
-                {/* Angle label */}
-                <text x="130" y="212" fontSize="12" fill="#e11d48" fontWeight="bold">{bef}°</text>
-                <text x="130" y="190" fontSize="12" fill="#059669" fontWeight="bold">z</text>
-                <text x="245" y="45" fontSize="12" fill="#7c3aed" fontWeight="bold">x = {x}°</text>
-                <text x="245" y="115" fontSize="12" fill="#7c3aed" fontWeight="bold">y = {y}°</text>
+                <path d={describeArc(120, 200, 25, 0, 90)} stroke="#e11d48" strokeWidth="2" fill="none" />
+                <AngleLabel cx={120} cy={200} angleRadius={40} angleMid={45} text={`${bef}°`} color="#e11d48" />
+                
+                <path d={describeArc(120, 200, 25, 90, 180)} stroke="#059669" strokeWidth="2" fill="none" />
+                <AngleLabel cx={120} cy={200} angleRadius={40} angleMid={135} text="z" color="#059669" />
 
-                {/* Point labels */}
-                <text x="112" y="43" fontSize="12" fill="#64748b" fontWeight="bold">{pA}</text>
-                <text x="325" y="43" fontSize="12" fill="#64748b" fontWeight="bold">{pB}</text>
-                <text x="73" y="116" fontSize="12" fill="#64748b" fontWeight="bold">{pC}</text>
-                <text x="325" y="116" fontSize="12" fill="#64748b" fontWeight="bold">{pD}</text>
-                <text x="112" y="215" fontSize="12" fill="#64748b" fontWeight="bold">{pE}</text>
-                <text x="325" y="196" fontSize="12" fill="#64748b" fontWeight="bold">{pF}</text>
+                <text x="110" y="35" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pA}</text>
+                <text x="325" y="35" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pB}</text>
+                <text x="90" y="105" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pC}</text>
+                <text x="325" y="105" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pD}</text>
+                <text x="110" y="215" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pE}</text>
+                <text x="325" y="215" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pF}</text>
             </svg>
         );
     }
 
     if (type === 'triple-parallel') {
-        // AB||CD||EF with transversal
         const { y: yAngle, z: zAngle, x: xAngle, rm, rn, pointLabels } = data;
         const [pA, pB, pC, pD, pE, pF] = pointLabels || ['A', 'B', 'C', 'D', 'E', 'F'];
+        const tilt = 65;
+        const rad = (tilt * Math.PI) / 180;
+
+        // Three lines: y=50, y=125, y=200. Transversal crosses all three.
+        const midX = 180;
+        const topX = midX + (75 / Math.tan(rad));
+        const botX = midX - (75 / Math.tan(rad));
 
         return (
             <svg viewBox="0 0 360 250" width="100%" style={{ maxWidth: 340, maxHeight: 230, background: '#f8fafc', borderRadius: 12 }}>
-                {/* Three parallel lines */}
-                <line x1="40" y1="50" x2="320" y2="50" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-                <line x1="40" y1="125" x2="320" y2="125" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-                <line x1="40" y1="200" x2="320" y2="200" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="40" y1="50" x2="320" y2="50" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="40" y1="125" x2="320" y2="125" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="40" y1="200" x2="320" y2="200" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
 
-                {/* Transversal */}
-                <line x1="140" y1="30" x2="220" y2="220" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1={botX - 30*Math.cos(rad)} y1={200 + 30*Math.sin(rad)} x2={topX + 30*Math.cos(rad)} y2={50 - 30*Math.sin(rad)} stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" />
 
-                {/* Angle labels */}
-                <text x="165" y="45" fontSize="13" fill="#e11d48" fontWeight="bold">x</text>
-                <text x="185" y="120" fontSize="13" fill="#059669" fontWeight="bold">y ({rm}k)</text>
-                <text x="200" y="195" fontSize="13" fill="#7c3aed" fontWeight="bold">z ({rn}k)</text>
+                <path d={describeArc(topX, 50, 25, 0, tilt)} stroke="#e11d48" strokeWidth="2" fill="none" />
+                <AngleLabel cx={topX} cy={50} angleRadius={35} angleMid={tilt/2} text="x" color="#e11d48" />
+                
+                <path d={describeArc(midX, 125, 25, 0, tilt)} stroke="#059669" strokeWidth="2" fill="none" />
+                <AngleLabel cx={midX} cy={125} angleRadius={35} angleMid={tilt/2} text={`y (${rm}k)`} color="#059669" />
+                
+                <path d={describeArc(botX, 200, 25, 0, tilt)} stroke="#7c3aed" strokeWidth="2" fill="none" />
+                <AngleLabel cx={botX} cy={200} angleRadius={35} angleMid={tilt/2} text={`z (${rn}k)`} color="#7c3aed" />
 
-                {/* Point labels */}
-                <text x="25" y="46" fontSize="12" fill="#64748b" fontWeight="bold">{pA}</text>
-                <text x="315" y="46" fontSize="12" fill="#64748b" fontWeight="bold">{pB}</text>
-                <text x="25" y="121" fontSize="12" fill="#64748b" fontWeight="bold">{pC}</text>
-                <text x="315" y="121" fontSize="12" fill="#64748b" fontWeight="bold">{pD}</text>
-                <text x="25" y="196" fontSize="12" fill="#64748b" fontWeight="bold">{pE}</text>
-                <text x="315" y="196" fontSize="12" fill="#64748b" fontWeight="bold">{pF}</text>
+                <text x="35" y="35" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pA}</text>
+                <text x="315" y="35" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pB}</text>
+                <text x="35" y="110" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pC}</text>
+                <text x="315" y="110" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pD}</text>
+                <text x="35" y="185" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pE}</text>
+                <text x="315" y="185" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pF}</text>
             </svg>
         );
     }
 
     if (type === 'parallel-ext') {
-        // Alternate exterior angles
         const { knownVal, tilt } = data;
+        const rad = ((tilt || 65) * Math.PI) / 180;
+        const dy = 60;
+        const dx = dy / Math.tan(rad);
+        const topX = 150 + dx/2;
+        const botX = 150 - dx/2;
+
         return (
             <svg viewBox="0 0 300 200" width="100%" style={{ maxWidth: 280, maxHeight: 180, background: '#f8fafc', borderRadius: 12 }}>
-                <line x1="50" y1="70" x2="250" y2="70" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-                <line x1="50" y1="130" x2="250" y2="130" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-                <line x1="120" y1="30" x2="180" y2="170" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#0ea5e9" />
+                    </marker>
+                </defs>
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="40" y1="70" x2="260" y2="70" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="40" y1="130" x2="260" y2="130" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1={botX - 40*Math.cos(rad)} y1={130 + 40*Math.sin(rad)} x2={topX + 40*Math.cos(rad)} y2={70 - 40*Math.sin(rad)} stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
 
-                <text x="30" y="74" fontSize="11" fill="#64748b">l</text>
-                <text x="30" y="134" fontSize="11" fill="#64748b">m</text>
+                <text x="30" y="74" fontSize="11" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic">l</text>
+                <text x="30" y="134" fontSize="11" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic">m</text>
 
-                {/* Top exterior angle (above l) */}
-                <text x="110" y="60" fontSize="14" fill="#7c3aed" fontWeight="bold">{knownVal}°</text>
-                {/* Bottom exterior angle (below m) */}
-                <text x="185" y="155" fontSize="14" fill="#e11d48" fontWeight="bold">x</text>
+                <AngleLabel cx={topX} cy={70} angleRadius={30} angleMid={180 + (tilt||65)/2} text={`${knownVal}°`} color="#7c3aed" />
+                <AngleLabel cx={botX} cy={130} angleRadius={30} angleMid={(tilt||65)/2} text="x" color="#e11d48" />
             </svg>
         );
     }
 
     if (type === 'parallel-transversal-labelled') {
-        // AB||CD with transversal PQ, labelled intersection points
         const { apq, pqd, pointLabels } = data;
         const [pA, pB, pC, pD, pP, pQ] = pointLabels || ['A', 'B', 'C', 'D', 'P', 'Q'];
+        const tilt = 65;
+        const rad = (tilt * Math.PI) / 180;
+        const dy = 120;
+        const dx = dy / Math.tan(rad);
+        const topX = 170 + dx/2;
+        const botX = 170 - dx/2;
 
         return (
             <svg viewBox="0 0 340 220" width="100%" style={{ maxWidth: 320, maxHeight: 200, background: '#f8fafc', borderRadius: 12 }}>
-                {/* Line AB */}
-                <line x1="30" y1="70" x2="310" y2="70" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-                {/* Line CD */}
-                <line x1="30" y1="150" x2="310" y2="150" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-                {/* Transversal */}
-                <line x1="130" y1="30" x2="200" y2="190" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" />
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#0ea5e9" />
+                    </marker>
+                </defs>
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="40" y1="60" x2="300" y2="60" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="40" y1="180" x2="300" y2="180" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1={botX - 40*Math.cos(rad)} y1={180 + 40*Math.sin(rad)} x2={topX + 40*Math.cos(rad)} y2={60 - 40*Math.sin(rad)} stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" />
 
-                {/* Intersection points */}
-                <circle cx="148" cy="70" r="4" fill="#0f172a" />
-                <circle cx="178" cy="150" r="4" fill="#0f172a" />
+                <path d={describeArc(topX, 60, 25, 180, 180+tilt)} stroke="#e11d48" strokeWidth="2" fill="none" />
+                <AngleLabel cx={topX} cy={60} angleRadius={35} angleMid={180 + tilt/2} text={`${apq}°`} color="#e11d48" />
+                
+                <path d={describeArc(botX, 180, 25, 0, tilt)} stroke="#059669" strokeWidth="2" fill="none" />
+                <AngleLabel cx={botX} cy={180} angleRadius={35} angleMid={tilt/2} text={`x (${pqd}°)`} color="#059669" />
 
-                {/* Angle labels */}
-                <text x="108" y="60" fontSize="13" fill="#7c3aed" fontWeight="bold">{apq}°</text>
-                <text x="195" y="165" fontSize="13" fill="#e11d48" fontWeight="bold">x</text>
-
-                {/* Line/Point labels */}
-                <text x="22" y="65" fontSize="12" fill="#64748b" fontWeight="bold">{pA}</text>
-                <text x="305" y="65" fontSize="12" fill="#64748b" fontWeight="bold">{pB}</text>
-                <text x="22" y="145" fontSize="12" fill="#64748b" fontWeight="bold">{pC}</text>
-                <text x="305" y="145" fontSize="12" fill="#64748b" fontWeight="bold">{pD}</text>
-                <text x="155" y="65" fontSize="11" fill="#0f172a" fontWeight="bold">{pP}</text>
-                <text x="185" y="145" fontSize="11" fill="#0f172a" fontWeight="bold">{pQ}</text>
+                <text x="35" y="45" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pA}</text>
+                <text x="295" y="45" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pB}</text>
+                <text x="35" y="165" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pC}</text>
+                <text x="295" y="165" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pD}</text>
+                
+                <text x={topX - 10} y={45} fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pP}</text>
+                <text x={botX + 10} y={195} fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pQ}</text>
             </svg>
         );
     }
 
     if (type === 'parallel-intersect-complex') {
-        // AB||CD with lines intersecting at P on AB
         const { baseAngle, coInt, pointLabels } = data;
         const [pA, pB, pC, pD, pE, pF, pP] = pointLabels || ['A', 'B', 'C', 'D', 'E', 'F', 'P'];
+        const tilt = 60;
+        const rad = (tilt * Math.PI) / 180;
 
         return (
             <svg viewBox="0 0 360 250" width="100%" style={{ maxWidth: 340, maxHeight: 230, background: '#f8fafc', borderRadius: 12 }}>
-                {/* Line AB */}
-                <line x1="30" y1="80" x2="330" y2="80" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
-                {/* Line CD */}
-                <line x1="30" y1="190" x2="330" y2="190" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#0ea5e9" />
+                    </marker>
+                </defs>
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="30" y1="80" x2="330" y2="80" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="30" y1="190" x2="330" y2="190" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
 
-                {/* Line EF through P */}
-                <line x1="180" y1="80" x2="230" y2="190" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" />
-                <line x1="180" y1="80" x2="130" y2="30" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="180" y1="80" x2={180 + 110*Math.cos(rad)} y2={80 + 110*Math.sin(rad)} stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="180" y1="80" x2={180 - 50*Math.cos(rad)} y2={80 - 50*Math.sin(rad)} stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" />
 
-                {/* Point P on AB */}
                 <circle cx="180" cy="80" r="4" fill="#0f172a" />
 
-                {/* Angle labels */}
-                <text x="200" y="75" fontSize="13" fill="#0284c7" fontWeight="bold">{baseAngle}°</text>
-                <text x="240" y="185" fontSize="13" fill="#e11d48" fontWeight="bold">x = ?</text>
+                <path d={describeArc(180, 80, 25, -tilt, 0)} stroke="#0284c7" strokeWidth="2" fill="none" />
+                <AngleLabel cx={180} cy={80} angleRadius={35} angleMid={-tilt/2} text={`${baseAngle}°`} color="#0284c7" />
+                <AngleLabel cx={180 + 110*Math.cos(rad) * (110/(110))  } cy={190} angleRadius={35} angleMid={180-tilt/2} text="x = ?" color="#e11d48" />
 
-                {/* Labels */}
-                <text x="20" y="75" fontSize="12" fill="#64748b" fontWeight="bold">{pA}</text>
-                <text x="325" y="75" fontSize="12" fill="#64748b" fontWeight="bold">{pB}</text>
-                <text x="20" y="185" fontSize="12" fill="#64748b" fontWeight="bold">{pC}</text>
-                <text x="325" y="185" fontSize="12" fill="#64748b" fontWeight="bold">{pD}</text>
-                <text x="120" y="25" fontSize="12" fill="#0284c7" fontWeight="bold">{pE}</text>
-                <text x="235" y="205" fontSize="12" fill="#0284c7" fontWeight="bold">{pF}</text>
-                <text x="180" y="100" fontSize="11" fill="#0f172a" fontWeight="bold" textAnchor="middle">{pP}</text>
+                <text x="20" y="75" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pA}</text>
+                <text x="325" y="75" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pB}</text>
+                <text x="20" y="185" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pC}</text>
+                <text x="325" y="185" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pD}</text>
+                <text x={180 - 50*Math.cos(rad) - 10} y={80 - 50*Math.sin(rad) - 8} fontSize="12" fill="#0284c7" fontWeight="bold">{pE}</text>
+                <text x={180 + 110*Math.cos(rad) + 6} y={80 + 110*Math.sin(rad) + 12} fontSize="12" fill="#0284c7" fontWeight="bold">{pF}</text>
+                <text x="180" y="100" fontSize="11" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" textAnchor="middle">{pP}</text>
             </svg>
         );
     }
 
     if (type === 'angles-around-point') {
         const angles = data.angles;
-        // Calculate actual numeric values for positioning
-        const numericAngles = angles.map(a => typeof a === 'string' ? 90 : a);
-        const totalAngle = numericAngles.reduce((s, a) => s + a, 0);
+        const knownSum = angles.filter(x => typeof x === 'number').reduce((s, x) => s + x, 0);
+        const numericAngles = angles.map(a => typeof a === 'string' ? (360 - knownSum) : a);
         
-        // Build cumulative angles for ray directions (in degrees from 3 o'clock, going counterclockwise)
         const cumAngles = [0];
         for (let j = 0; j < numericAngles.length; j++) {
             cumAngles.push(cumAngles[j] + numericAngles[j]);
@@ -642,60 +668,50 @@ export const LAGraphMini = ({ config, onProtractorChange }) => {
 
         const r = 75;
         const cx = 170, cy = 110;
+        const rayLabels = data.pointLabels || ['P', 'Q', 'R', 'S', 'O'];
 
         return (
             <svg viewBox="0 0 340 220" width="100%" style={{ maxWidth: 320, maxHeight: 200, background: '#f8fafc', borderRadius: 12 }}>
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#0ea5e9" />
+                    </marker>
+                </defs>
                 <circle cx={cx} cy={cy} r="4" fill="#0f172a" />
+                <text x={cx-10} y={cy+15} fontSize="12" fill="#0f172a" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{rayLabels[4]}</text>
 
-                {/* Rays */}
                 {cumAngles.slice(0, -1).map((deg, ri) => {
                     const rad = (deg * Math.PI) / 180;
+                    const textX = cx + (r + 15) * Math.cos(rad);
+                    const textY = cy - (r + 15) * Math.sin(rad);
                     return (
-                        <line key={ri} x1={cx} y1={cy}
-                            x2={cx + r * Math.cos(rad)} y2={cy - r * Math.sin(rad)}
-                            stroke="#334155" strokeWidth="2.5" strokeLinecap="round" />
+                        <g key={ri}>
+                            <line markerEnd="url(#arrow)" x1={cx} y1={cy}
+                                x2={cx + r * Math.cos(rad)} y2={cy - r * Math.sin(rad)}
+                                stroke="#0ea5e9" strokeWidth="2.5" strokeLinecap="round" />
+                            <text x={textX} y={textY} fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" dominantBaseline="central" textAnchor="middle">{rayLabels[ri]}</text>
+                        </g>
                     );
                 })}
 
-                {/* Angle labels */}
                 {angles.map((label, ai) => {
-                    const midAngle = ((cumAngles[ai] + cumAngles[ai + 1]) / 2) * Math.PI / 180;
-                    const labelR = 50;
                     const colors = ['#0284c7', '#e11d48', '#059669', '#d97706', '#7c3aed'];
                     const displayLabel = typeof label === 'string' ? label : `${label}°`;
-                    return (
-                        <text key={ai}
-                            x={cx + labelR * Math.cos(midAngle)}
-                            y={cy - labelR * Math.sin(midAngle)}
-                            fontSize="13" fill={colors[ai % 5]} fontWeight="bold" textAnchor="middle"
-                            dominantBaseline="central"
-                        >{displayLabel}</text>
-                    );
+                    return <AngleLabel key={ai} cx={cx} cy={cy} angleRadius={50} angleMid={(cumAngles[ai]+cumAngles[ai+1])/2} text={displayLabel} color={colors[ai%5]} />;
                 })}
 
-                {/* Arcs */}
                 {angles.map((_, ai) => {
-                    const startRad = (cumAngles[ai] * Math.PI) / 180;
-                    const endRad = (cumAngles[ai + 1] * Math.PI) / 180;
-                    const arcR = 28;
                     const strokeColors = ['#0284c7', '#e11d48', '#059669', '#d97706', '#7c3aed'];
-                    const span = numericAngles[ai];
-                    const largeArc = span > 180 ? 1 : 0;
-                    return (
-                        <path key={'arc' + ai}
-                            d={`M ${cx + arcR * Math.cos(startRad)} ${cy - arcR * Math.sin(startRad)} A ${arcR} ${arcR} 0 ${largeArc} 0 ${cx + arcR * Math.cos(endRad)} ${cy - arcR * Math.sin(endRad)}`}
-                            stroke={strokeColors[ai % 5]} strokeWidth="2" fill="none"
-                        />
-                    );
+                    return <path key={'arc'+ai} d={describeArc(cx, cy, 28, cumAngles[ai], cumAngles[ai+1])} stroke={strokeColors[ai%5]} strokeWidth="2" fill="none" />;
                 })}
             </svg>
         );
     }
 
     if (type === 'five-rays-point') {
-        // 5 rays from a point
         const angles = data.angles;
-        const numericAngles = angles.map(a => typeof a === 'string' ? (360 - angles.filter(x => typeof x === 'number').reduce((s, x) => s + x, 0)) : a);
+        const knownSum = angles.filter(x => typeof x === 'number').reduce((s, x) => s + x, 0);
+        const numericAngles = angles.map(a => typeof a === 'string' ? (360 - knownSum) : a);
         const cumAngles = [0];
         for (let j = 0; j < numericAngles.length; j++) {
             cumAngles.push(cumAngles[j] + numericAngles[j]);
@@ -703,57 +719,50 @@ export const LAGraphMini = ({ config, onProtractorChange }) => {
 
         const r = 75;
         const cx = 170, cy = 110;
+        const rayLabels = data.pointLabels || ['P', 'Q', 'R', 'S', 'T', 'O'];
 
         return (
             <svg viewBox="0 0 340 220" width="100%" style={{ maxWidth: 320, maxHeight: 200, background: '#f8fafc', borderRadius: 12 }}>
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#0ea5e9" />
+                    </marker>
+                </defs>
                 <circle cx={cx} cy={cy} r="4" fill="#0f172a" />
+                <text x={cx-10} y={cy+15} fontSize="12" fill="#0f172a" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{rayLabels[5]}</text>
 
                 {cumAngles.slice(0, -1).map((deg, ri) => {
                     const rad = (deg * Math.PI) / 180;
+                    const textX = cx + (r + 15) * Math.cos(rad);
+                    const textY = cy - (r + 15) * Math.sin(rad);
                     return (
-                        <line key={ri} x1={cx} y1={cy}
-                            x2={cx + r * Math.cos(rad)} y2={cy - r * Math.sin(rad)}
-                            stroke="#334155" strokeWidth="2.5" strokeLinecap="round" />
+                        <g key={ri}>
+                            <line markerEnd="url(#arrow)" x1={cx} y1={cy}
+                                x2={cx + r * Math.cos(rad)} y2={cy - r * Math.sin(rad)}
+                                stroke="#0ea5e9" strokeWidth="2.5" strokeLinecap="round" />
+                            <text x={textX} y={textY} fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" dominantBaseline="central" textAnchor="middle">{rayLabels[ri]}</text>
+                        </g>
                     );
                 })}
 
                 {angles.map((label, ai) => {
-                    const midAngle = ((cumAngles[ai] + cumAngles[ai + 1]) / 2) * Math.PI / 180;
-                    const labelR = 50;
                     const colors = ['#0284c7', '#e11d48', '#059669', '#d97706', '#7c3aed'];
                     const displayLabel = typeof label === 'string' ? label : `${label}°`;
-                    return (
-                        <text key={ai}
-                            x={cx + labelR * Math.cos(midAngle)}
-                            y={cy - labelR * Math.sin(midAngle)}
-                            fontSize="12" fill={colors[ai % 5]} fontWeight="bold" textAnchor="middle"
-                            dominantBaseline="central"
-                        >{displayLabel}</text>
-                    );
+                    return <AngleLabel key={ai} cx={cx} cy={cy} angleRadius={50} angleMid={(cumAngles[ai]+cumAngles[ai+1])/2} text={displayLabel} color={colors[ai%5]} />;
                 })}
 
                 {angles.map((_, ai) => {
-                    const startRad = (cumAngles[ai] * Math.PI) / 180;
-                    const endRad = (cumAngles[ai + 1] * Math.PI) / 180;
-                    const arcR = 25;
                     const strokeColors = ['#0284c7', '#e11d48', '#059669', '#d97706', '#7c3aed'];
-                    const span = numericAngles[ai];
-                    const largeArc = span > 180 ? 1 : 0;
-                    return (
-                        <path key={'arc' + ai}
-                            d={`M ${cx + arcR * Math.cos(startRad)} ${cy - arcR * Math.sin(startRad)} A ${arcR} ${arcR} 0 ${largeArc} 0 ${cx + arcR * Math.cos(endRad)} ${cy - arcR * Math.sin(endRad)}`}
-                            stroke={strokeColors[ai % 5]} strokeWidth="2" fill="none"
-                        />
-                    );
+                    return <path key={'arc'+ai} d={describeArc(cx, cy, 25, cumAngles[ai], cumAngles[ai+1])} stroke={strokeColors[ai%5]} strokeWidth="2" fill="none" />;
                 })}
             </svg>
         );
     }
 
     if (type === 'three-rays-around-point') {
-        // 3 angles around a point summing to 360
         const angles = data.angles;
-        const numericAngles = angles.map(a => typeof a === 'string' ? (360 - angles.filter(x => typeof x === 'number').reduce((s, x) => s + x, 0)) : a);
+        const knownSum = angles.filter(x => typeof x === 'number').reduce((s, x) => s + x, 0);
+        const numericAngles = angles.map(a => typeof a === 'string' ? (360 - knownSum) : a);
         const cumAngles = [0];
         for (let j = 0; j < numericAngles.length; j++) {
             cumAngles.push(cumAngles[j] + numericAngles[j]);
@@ -761,69 +770,88 @@ export const LAGraphMini = ({ config, onProtractorChange }) => {
 
         const r = 75;
         const cx = 170, cy = 110;
+        const rayLabels = data.pointLabels || ['P', 'Q', 'R', 'O'];
 
         return (
             <svg viewBox="0 0 340 220" width="100%" style={{ maxWidth: 320, maxHeight: 200, background: '#f8fafc', borderRadius: 12 }}>
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#0ea5e9" />
+                    </marker>
+                </defs>
                 <circle cx={cx} cy={cy} r="4" fill="#0f172a" />
+                <text x={cx-10} y={cy+15} fontSize="12" fill="#0f172a" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{rayLabels[3]}</text>
 
                 {cumAngles.slice(0, -1).map((deg, ri) => {
                     const rad = (deg * Math.PI) / 180;
+                    const textX = cx + (r + 15) * Math.cos(rad);
+                    const textY = cy - (r + 15) * Math.sin(rad);
                     return (
-                        <line key={ri} x1={cx} y1={cy}
-                            x2={cx + r * Math.cos(rad)} y2={cy - r * Math.sin(rad)}
-                            stroke="#334155" strokeWidth="2.5" strokeLinecap="round" />
+                        <g key={ri}>
+                            <line markerEnd="url(#arrow)" x1={cx} y1={cy}
+                                x2={cx + r * Math.cos(rad)} y2={cy - r * Math.sin(rad)}
+                                stroke="#0ea5e9" strokeWidth="2.5" strokeLinecap="round" />
+                            <text x={textX} y={textY} fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" dominantBaseline="central" textAnchor="middle">{rayLabels[ri]}</text>
+                        </g>
                     );
                 })}
 
                 {angles.map((label, ai) => {
-                    const midAngle = ((cumAngles[ai] + cumAngles[ai + 1]) / 2) * Math.PI / 180;
-                    const labelR = 50;
                     const colors = ['#0284c7', '#e11d48', '#059669'];
                     const displayLabel = typeof label === 'string' ? label : `${label}°`;
-                    return (
-                        <text key={ai}
-                            x={cx + labelR * Math.cos(midAngle)}
-                            y={cy - labelR * Math.sin(midAngle)}
-                            fontSize="13" fill={colors[ai % 3]} fontWeight="bold" textAnchor="middle"
-                            dominantBaseline="central"
-                        >{displayLabel}</text>
-                    );
+                    return <AngleLabel key={ai} cx={cx} cy={cy} angleRadius={50} angleMid={(cumAngles[ai]+cumAngles[ai+1])/2} text={displayLabel} color={colors[ai%3]} />;
+                })}
+
+                {angles.map((_, ai) => {
+                    const strokeColors = ['#0284c7', '#e11d48', '#059669'];
+                    return <path key={'arc'+ai} d={describeArc(cx, cy, 28, cumAngles[ai], cumAngles[ai+1])} stroke={strokeColors[ai%3]} strokeWidth="2" fill="none" />;
                 })}
             </svg>
         );
     }
 
     if (type === 'triangle-exterior') {
-        // Triangle with an exterior angle
         const { intA, intB, extC, pointLabels } = data;
         const [pP, pQ, pR, pS] = pointLabels || ['P', 'Q', 'R', 'S'];
 
+        // Triangle vertices
+        const Px = 180, Py = 40;
+        const Qx = 80, Qy = 180;
+        const Rx = 260, Ry = 180;
+        const Sx = 340, Sy = 180;
+
+        // Angle at P: direction from P to Q and P to R
+        const pAngQ = Math.atan2(-(Qy - Py), Qx - Px) * 180 / Math.PI;
+        const pAngR = Math.atan2(-(Ry - Py), Rx - Px) * 180 / Math.PI;
+        const pMid = (pAngQ + pAngR) / 2;
+
+        // Angle at Q: direction from Q to P and Q to R (=0 since horizontal)
+        const qAngP = Math.atan2(-(Py - Qy), Px - Qx) * 180 / Math.PI;
+        const qAngR = Math.atan2(-(Ry - Qy), Rx - Qx) * 180 / Math.PI;
+        const qMid = (qAngP + qAngR) / 2;
+
         return (
             <svg viewBox="0 0 360 230" width="100%" style={{ maxWidth: 340, maxHeight: 210, background: '#f8fafc', borderRadius: 12 }}>
-                {/* Triangle PQR */}
-                <polygon points="180,40 80,180 260,180" fill="none" stroke="#334155" strokeWidth="3" strokeLinejoin="round" />
-                
-                {/* Extended side QR to S */}
-                <line x1="260" y1="180" x2="340" y2="180" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
+                <defs>
+                    <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 0 L 10 5 L 0 10 z" fill="#0ea5e9" />
+                    </marker>
+                </defs>
+                <polygon points={`${Px},${Py} ${Qx},${Qy} ${Rx},${Ry}`} fill="none" stroke="#0ea5e9" strokeWidth="3" strokeLinejoin="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1={Rx} y1={Ry} x2={Sx} y2={Sy} stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
 
-                {/* Angle arcs */}
-                {/* Angle P (top) */}
-                <path d="M 172,58 A 18 18 0 0 1 188,58" stroke="#0284c7" strokeWidth="2" fill="rgba(2,132,199,0.1)" />
-                {/* Angle Q (bottom-left) */}
-                <path d="M 98,170 A 18 18 0 0 0 88,164" stroke="#059669" strokeWidth="2" fill="rgba(5,150,105,0.1)" />
-                {/* Exterior angle at R */}
-                <path d="M 280,180 A 20 20 0 0 0 254,168" stroke="#e11d48" strokeWidth="2.5" fill="rgba(225,29,72,0.1)" />
+                <path d={describeArc(Px, Py, 18, pAngR, pAngQ)} stroke="#0284c7" strokeWidth="2" fill="none" />
+                <path d={describeArc(Qx, Qy, 18, qAngR, qAngP)} stroke="#059669" strokeWidth="2" fill="none" />
+                <path d={describeArc(Rx, Ry, 20, 0, 180 - Math.atan2(Ry - Py, Rx - Px) * 180 / Math.PI)} stroke="#e11d48" strokeWidth="2.5" fill="none" />
 
-                {/* Labels */}
-                <text x="180" y="32" fontSize="13" fill="#0284c7" fontWeight="bold" textAnchor="middle">{intA}°</text>
-                <text x="70" y="192" fontSize="13" fill="#059669" fontWeight="bold">{intB}°</text>
-                <text x="295" y="172" fontSize="13" fill="#e11d48" fontWeight="bold">x</text>
+                <AngleLabel cx={Px} cy={Py} angleRadius={32} angleMid={pMid} text={`${intA}°`} color="#0284c7" />
+                <AngleLabel cx={Qx} cy={Qy} angleRadius={32} angleMid={qMid} text={`${intB}°`} color="#059669" />
+                <text x="300" y="172" fontSize="16" fill="#e11d48" fontWeight="bold" style={{ filter: 'drop-shadow(0px 0px 3px rgba(255,255,255,0.9))' }}>x</text>
 
-                {/* Point labels */}
-                <text x="180" y="22" fontSize="12" fill="#64748b" fontWeight="bold" textAnchor="middle">{pP}</text>
-                <text x="65" y="195" fontSize="12" fill="#64748b" fontWeight="bold">{pQ}</text>
-                <text x="268" y="195" fontSize="12" fill="#64748b" fontWeight="bold">{pR}</text>
-                <text x="340" y="195" fontSize="12" fill="#64748b" fontWeight="bold">{pS}</text>
+                <text x={Px} y={Py - 12} fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" textAnchor="middle">{pP}</text>
+                <text x={Qx - 12} y={Qy + 12} fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pQ}</text>
+                <text x={Rx} y={Ry + 15} fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" textAnchor="middle">{pR}</text>
+                <text x={Sx} y={Sy + 15} fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pS}</text>
             </svg>
         );
     }
@@ -869,14 +897,14 @@ const InteractiveProtractor = ({ angle, onChange }) => {
                 onPointerUp={(e) => { setIsDragging(false); e.currentTarget.releasePointerCapture(e.pointerId); }}
             >
                 {/* Target Graphic (ghosted) */}
-                <line x1="150" y1="140" x2="250" y2="140" stroke="#cbd5e1" strokeWidth="4" />
-                <line x1="150" y1="140" x2={150 + 100 * Math.cos(angle * Math.PI / 180)} y2={140 - 100 * Math.sin(angle * Math.PI / 180)} stroke="#cbd5e1" strokeWidth="4" />
+                <line markerEnd="url(#arrow)" x1="150" y1="140" x2="250" y2="140" stroke="#cbd5e1" strokeWidth="4" />
+                <line markerEnd="url(#arrow)" x1="150" y1="140" x2={150 + 100 * Math.cos(angle * Math.PI / 180)} y2={140 - 100 * Math.sin(angle * Math.PI / 180)} stroke="#cbd5e1" strokeWidth="4" />
 
                 {/* User Graphic */}
-                <line x1="150" y1="140" x2="250" y2="140" stroke="#334155" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" x1="150" y1="140" x2="250" y2="140" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
                 <circle cx="150" cy="140" r="6" fill="#0f172a" />
                 
-                <line x1="150" y1="140" x2={150 + 100 * Math.cos(userAngle * Math.PI / 180)} y2={140 - 100 * Math.sin(userAngle * Math.PI / 180)} stroke="#0284c7" strokeWidth="3" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" x1="150" y1="140" x2={150 + 100 * Math.cos(userAngle * Math.PI / 180)} y2={140 - 100 * Math.sin(userAngle * Math.PI / 180)} stroke="#0284c7" strokeWidth="3" strokeLinecap="round" />
                 <circle cx={150 + 100 * Math.cos(userAngle * Math.PI / 180)} cy={140 - 100 * Math.sin(userAngle * Math.PI / 180)} r="8" fill="#e11d48" />
                 
                 {/* Arc */}

@@ -83,7 +83,7 @@ export const generateLinearPairScenarios = () => {
                 expl: `By the Linear Pair Axiom, $x = 180^{\\circ} - ${knownAngle}^{\\circ} = ${qAngle}^{\\circ}$.`,
                 svg: {
                     type: "linear-pair",
-                    data: { a1: unknown === 1 ? "x" : `${a1}°`, a2: unknown === 2 ? "x" : `${a2}°`, splitAngle: a1 }
+                    data: { a1: unknown === 1 ? "x" : `${a1}°`, a2: unknown === 2 ? "x" : `${a2}°`, splitAngle: a1, pointLabels: ['P', 'O', 'Q', ''] }
                 }
             });
         } else if (tpl === 'ratio') {
@@ -159,7 +159,7 @@ export const generateLinearPairScenarios = () => {
                 expl: `Supplementary angles sum to $180^{\\circ}$. So the supplement of $${a}^{\\circ}$ is $180 - ${a} = ${supp}^{\\circ}$.`,
                 svg: {
                     type: "linear-pair",
-                    data: { a1: `${a}°`, a2: '?', splitAngle: a }
+                    data: { a1: `${a}°`, a2: '?', splitAngle: a, pointLabels: ['', '', '', ''] }
                 }
             });
         } else if (tpl === 'expr-x') {
