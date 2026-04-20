@@ -188,7 +188,7 @@ export function useSessionLogger() {
         node_id:              s.nodeId,
         session_type:         s.sessionType,
         status,
-        total_questions:      tQty,
+        total_questions:      tQty || finalAnswers.length,
         questions_answered:   qAns ?? finalAnswers.length,
         total_marks_awarded:  totalMarksAwarded,
         total_marks_possible: totalMarksPossible,
