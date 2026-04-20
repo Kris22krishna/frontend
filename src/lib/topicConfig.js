@@ -272,6 +272,18 @@ export const TOPIC_CONFIGS = {
             { id: "VN-08", name: "Estimation Around 100", route: "vacation-with-my-nani-maa/estimation-around-100" },
             { id: "VN-09", name: "Open Number Line", route: "vacation-with-my-nani-maa/open-number-line" },
             { id: "VN-TEST", name: "Chapter Test", route: "vacation-with-my-nani-maa/chapter-test" }
+        ],
+        'Filling and Lifting': [
+            { id: "FL-01", name: "Comparing Capacity",       route: "filling-and-lifting/comparing-capacity" },
+            { id: "FL-02", name: "Estimating Capacity",      route: "filling-and-lifting/estimating-capacity" },
+            { id: "FL-03", name: "Measuring by Filling",     route: "filling-and-lifting/measuring-by-filling" },
+            { id: "FL-04", name: "Understanding Litre",      route: "filling-and-lifting/understanding-litre" },
+            { id: "FL-05", name: "Heavy and Light",          route: "filling-and-lifting/heavy-and-light" },
+            { id: "FL-06", name: "Measuring with Balance",   route: "filling-and-lifting/measuring-with-balance" },
+            { id: "FL-07", name: "Understanding Kilogram",   route: "filling-and-lifting/understanding-kilogram" },
+            { id: "FL-08", name: "Half and Quarter kg",      route: "filling-and-lifting/half-and-quarter-kg" },
+            { id: "FL-09", name: "Logical Weight Puzzles",   route: "filling-and-lifting/weight-puzzles" },
+            { id: "FL-TEST", name: "Chapter Test",           route: "filling-and-lifting/chapter-test" },
         ]
     },
 

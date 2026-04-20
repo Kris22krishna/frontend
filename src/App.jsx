@@ -358,6 +358,18 @@ import SortingGrouping from './components/practice/class-3/Whats-in-a-Name/Sorti
 import DataCollection from './components/practice/class-3/Whats-in-a-Name/DataCollection';
 import WINTest from './components/practice/class-3/Whats-in-a-Name/WINTest';
 
+// Filling and Lifting
+import FLComparingCapacity from './components/practice/class-3/Filling-and-Lifting/ComparingCapacity';
+import FLEstimatingCapacity from './components/practice/class-3/Filling-and-Lifting/EstimatingCapacity';
+import FLMeasuringByFilling from './components/practice/class-3/Filling-and-Lifting/MeasuringByFilling';
+import FLUnderstandingLitre from './components/practice/class-3/Filling-and-Lifting/UnderstandingLitre';
+import FLHeavyAndLight from './components/practice/class-3/Filling-and-Lifting/HeavyAndLight';
+import FLMeasuringWithBalance from './components/practice/class-3/Filling-and-Lifting/MeasuringWithBalance';
+import FLUnderstandingKilogram from './components/practice/class-3/Filling-and-Lifting/UnderstandingKilogram';
+import FLHalfAndQuarterKg from './components/practice/class-3/Filling-and-Lifting/HalfAndQuarterKg';
+import FLWeightPuzzles from './components/practice/class-3/Filling-and-Lifting/WeightPuzzles';
+import FLTest from './components/practice/class-3/Filling-and-Lifting/FLTest';
+
 // Double Century
 import DCCountingAndGroups from './components/practice/class-3/Double-Century/CountingAndGroups';
 import DCNumberBoard from './components/practice/class-3/Double-Century/NumberBoard';
@@ -1993,6 +2005,18 @@ function App() {
         <Route path="/junior/grade/:grade/whats-in-a-name/sorting-grouping" element={<ProtectedRoute redirectTo="/login"><SortingGrouping /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/whats-in-a-name/data-collection" element={<ProtectedRoute redirectTo="/login"><DataCollection /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/whats-in-a-name/chapter-test" element={<ProtectedRoute redirectTo="/login"><WINTest /></ProtectedRoute>} />
+
+        {/* Filling and Lifting Routes */}
+        <Route path="/junior/grade/:grade/filling-and-lifting/comparing-capacity" element={<ProtectedRoute redirectTo="/login"><FLComparingCapacity /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/filling-and-lifting/estimating-capacity" element={<ProtectedRoute redirectTo="/login"><FLEstimatingCapacity /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/filling-and-lifting/measuring-by-filling" element={<ProtectedRoute redirectTo="/login"><FLMeasuringByFilling /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/filling-and-lifting/understanding-litre" element={<ProtectedRoute redirectTo="/login"><FLUnderstandingLitre /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/filling-and-lifting/heavy-and-light" element={<ProtectedRoute redirectTo="/login"><FLHeavyAndLight /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/filling-and-lifting/measuring-with-balance" element={<ProtectedRoute redirectTo="/login"><FLMeasuringWithBalance /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/filling-and-lifting/understanding-kilogram" element={<ProtectedRoute redirectTo="/login"><FLUnderstandingKilogram /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/filling-and-lifting/half-and-quarter-kg" element={<ProtectedRoute redirectTo="/login"><FLHalfAndQuarterKg /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/filling-and-lifting/weight-puzzles" element={<ProtectedRoute redirectTo="/login"><FLWeightPuzzles /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/filling-and-lifting/chapter-test" element={<ProtectedRoute redirectTo="/login"><FLTest /></ProtectedRoute>} />
 
         {/* Double Century Routes */}
         <Route path="/junior/grade/:grade/double-century/counting-and-groups" element={<ProtectedRoute redirectTo="/login"><DCCountingAndGroups /></ProtectedRoute>} />
