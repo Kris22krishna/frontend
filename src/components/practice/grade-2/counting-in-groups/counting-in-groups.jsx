@@ -195,16 +195,20 @@ const Grade2CountingInGroups = () => {
             const askTotal = Math.random() > 0.5;
 
             const target = askTotal ? (pairCount * 2).toString() : pairCount.toString();
-            const wrongOptions = [];
-
             const obviousWrong = askTotal ? pairCount.toString() : (pairCount * 2).toString();
-            wrongOptions.push(obviousWrong);
-
+            const wrongOptionsPool = [
+                obviousWrong,
+                askTotal ? (pairCount * 2 + 2).toString() : (pairCount + 1).toString(),
+                askTotal ? (pairCount * 2 - 2).toString() : (pairCount - 1).toString(),
+                askTotal ? (pairCount * 2 + 4).toString() : (pairCount + 2).toString(),
+            ];
+            const wrongOptions = Array.from(new Set(wrongOptionsPool))
+                .filter(w => w !== target && parseInt(w) > 0)
+                .slice(0, 3);
+            let pad = 20;
             while (wrongOptions.length < 3) {
-                const wrong = askTotal ? (pairCount * 2 + (Math.random() > 0.5 ? 2 : -2)).toString() : (pairCount + (Math.random() > 0.5 ? 1 : -1)).toString();
-                if (wrong !== target && wrong !== '0' && parseInt(wrong) > 0 && !wrongOptions.includes(wrong)) {
-                    wrongOptions.push(wrong);
-                }
+                if (!wrongOptions.includes(pad.toString()) && pad.toString() !== target) wrongOptions.push(pad.toString());
+                pad++;
             }
 
             questions.push({
@@ -232,13 +236,19 @@ const Grade2CountingInGroups = () => {
             const target = sequence[missingIndex].toString();
             const color = colors[i % colors.length];
 
-            const wrongOptions = [];
+            const wrongOptionsPool = [
+                (parseInt(target) + step).toString(),
+                (parseInt(target) - step).toString(),
+                (parseInt(target) + step * 2).toString(),
+                (parseInt(target) - step * 2).toString()
+            ];
+            const wrongOptions = Array.from(new Set(wrongOptionsPool))
+                .filter(w => w !== target && parseInt(w) > 0)
+                .slice(0, 3);
+            let pad = 20;
             while (wrongOptions.length < 3) {
-                let wrong = (start + Math.floor(Math.random() * 10) * (step / 2 === parseInt(step / 2) ? (step / 2) : 1)).toString();
-                if (wrong === '0') wrong = '2'; // Just adjusting simple random edge case
-                if (wrong !== target && !wrongOptions.includes(wrong) && wrong !== '0') {
-                    wrongOptions.push(wrong);
-                }
+                if (!wrongOptions.includes(pad.toString()) && pad.toString() !== target) wrongOptions.push(pad.toString());
+                pad++;
             }
 
             questions.push({
@@ -268,18 +278,20 @@ const Grade2CountingInGroups = () => {
             const repeatedStr = Array(groupCount).fill(perGroup).join(' + ');
             const target = `${repeatedStr} = ${total}`;
 
-            const wrongOptions = [];
+            const wrongOptionsPool = [
+                `${Array(groupCount + 1).fill(perGroup).join(' + ')} = ${(groupCount + 1) * perGroup}`,
+                `${Array(Math.max(1, groupCount - 1)).fill(perGroup).join(' + ')} = ${Math.max(1, groupCount - 1) * perGroup}`,
+                `${Array(groupCount).fill(perGroup + 1).join(' + ')} = ${groupCount * (perGroup + 1)}`,
+                `${Array(groupCount).fill(Math.max(1, perGroup - 1)).join(' + ')} = ${groupCount * Math.max(1, perGroup - 1)}`
+            ];
+            const wrongOptions = Array.from(new Set(wrongOptionsPool))
+                .filter(w => w !== target)
+                .slice(0, 3);
+            let pad = 20;
             while (wrongOptions.length < 3) {
-                const wGroups = groupCount + (Math.random() > 0.5 ? 1 : -1);
-                const wPer = perGroup + (Math.random() > 0.5 ? 1 : -1);
-                if (wGroups > 0 && wPer > 0) {
-                    const wStr = Array(wGroups).fill(wPer).join(' + ');
-                    const wTotal = wGroups * wPer;
-                    const wOption = `${wStr} = ${wTotal}`;
-                    if (wOption !== target && !wrongOptions.includes(wOption)) {
-                        wrongOptions.push(wOption);
-                    }
-                }
+                const fOpt = `2 + 2 = ${pad}`;
+                if (!wrongOptions.includes(fOpt) && fOpt !== target) wrongOptions.push(fOpt);
+                pad++;
             }
 
             questions.push({

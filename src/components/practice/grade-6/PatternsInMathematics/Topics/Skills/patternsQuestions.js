@@ -74,7 +74,7 @@ function drawPolygon(sides, size = 60, color = '#0891b2', label = '') {
     }
     return `<svg width="${size * 2}" height="${size * 2 + 20}" viewBox="0 0 ${size * 2} ${size * 2 + 20}" xmlns="http://www.w3.org/2000/svg">
         <polygon points="${points.trim()}" fill="${color}15" stroke="${color}" stroke-width="2.5" stroke-linejoin="round"/>
-        <text x="${cx}" y="${size * 2 + 14}" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label || sides + ' sides'}</text>
+        ${label ? `<text x="${cx}" y="${size * 2 + 14}" text-anchor="middle" font-size="11" font-weight="700" fill="${color}">${label}</text>` : ''}
     </svg>`;
 }
 

@@ -21,12 +21,13 @@ const NeighbouringNumbers = () => {
     const [isCorrect, setIsCorrect] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
 
-    React.useEffect(() => {
+    useEffect(() => {
+        if (showResult) return;
         const timer = setInterval(() => {
             setTimeElapsed(prev => prev + 1);
         }, 1000);
         return () => clearInterval(timer);
-    }, []);
+    }, [showResult]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -119,7 +120,7 @@ const NeighbouringNumbers = () => {
         {
             id: 10,
             type: 'mixed',
-            number: 50,
+            number: 125,
             question: "This one is tricky! 125 lies between...",
             options: ["100 and 150 (Fifties)", "120 and 130 (Tens)", "100 and 200 (Hundreds)", "All of the above"],
             correct: "All of the above",
@@ -139,18 +140,27 @@ const NeighbouringNumbers = () => {
         const isRight = selectedOption === currentQ.correct;
         setIsCorrect(isRight);
         setIsSubmitted(true);
-
         if (isRight) {
+            setScore(s => s + 1);
             setFeedback('correct');
-            setScore(prev => prev + 1);
         } else {
             setFeedback('wrong');
             setShowExplanationModal(true);
         }
+
+        setHistory(prev => ({ 
+            ...prev, 
+            [currentQIndex]: { 
+                text: currentQ.question,
+                selected: selectedOption,
+                correctAnswer: currentQ.correct,
+                isCorrect: isRight,
+                isSubmitted: true
+            } 
+        }));
     };
 
     const handleNext = () => {
-        setHistory(prev => ({ ...prev, [currentQIndex]: { feedback, isSubmitted, isCorrect, selectedOption } }));
         setShowExplanationModal(false);
 
         if (currentQIndex < questions.length - 1) {
@@ -159,7 +169,6 @@ const NeighbouringNumbers = () => {
             setShowResult(true);
         }
     };
-
 
     useEffect(() => {
         if (history[currentQIndex]) {
@@ -178,7 +187,6 @@ const NeighbouringNumbers = () => {
 
     const handlePrevious = () => {
         if (currentQIndex > 0) {
-            setHistory(prev => ({ ...prev, [currentQIndex]: { feedback, isSubmitted, isCorrect, selectedOption } }));
             setCurrentQIndex(prev => prev - 1);
             setShowExplanationModal(false);
         }
@@ -193,43 +201,18 @@ const NeighbouringNumbers = () => {
         setIsCorrect(false);
         setSelectedOption(null);
         setHistory({});
-};
+        setTimeElapsed(0);
+    };
 
     if (showResult) {
-        // ... [Result view unchanged]
-        
-    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
-    if (showRes) {
-        const scoreVal = typeof score !== 'undefined' 
-            ? score 
-            : (typeof stats !== 'undefined' && stats.correct !== undefined 
-                ? stats.correct 
-                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
-        const totalVal = typeof questions !== 'undefined' 
-            ? questions.length 
-            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
-                ? sessionQuestions.length 
-                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
-        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
-    }
-
-    return (
-            <div className="junior-practice-page results-view">
-                <div className="practice-content-wrapper flex-col">
-                    <h1 className="text-4xl font-black text-[#31326F] mb-6">Discovery Complete! 🌟</h1>
-                    <div className="bg-white p-8 rounded-[2rem] shadow-xl border-4 border-white text-center max-w-md w-full">
-                        <div className="flex justify-center mb-6">
-                            <span className="text-8xl">🗺️</span>
-                        </div>
-                        <h2 className="text-3xl font-bold text-[#31326F] mb-2">{score} / {questions.length} Correct</h2>
-                        <p className="text-gray-500 mb-8 font-medium">You're a master of numerical neighbourhoods!</p>
-                        <div className="grid grid-cols-2 gap-4">
-                            <button onClick={handleRestart} className="py-3 rounded-xl bg-[#31326F] text-white font-bold text-lg hover:bg-[#25265E] transition-all">Play Again</button>
-                            <button onClick={() => navigate(-1)} className="py-3 rounded-xl border-2 border-[#31326F] text-[#31326F] font-bold text-lg hover:bg-blue-50 transition-all">Exit</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        return (
+            <GenericReportCard 
+                score={score} 
+                totalQuestions={questions.length} 
+                onRestart={handleRestart} 
+                timeElapsed={timeElapsed} 
+                summaryData={Object.values(history)} 
+            />
         );
     }
 
@@ -265,9 +248,6 @@ const NeighbouringNumbers = () => {
                             <div className="interaction-area-modern">
                                 <div className="options-grid-modern">
                                     {currentQ.options.map((opt, i) => {
-                                        const isRight = isSubmitted && opt === currentQ.correct;
-                                        const isWrong = isSubmitted && selectedOption === opt && opt !== currentQ.correct;
-
                                         return (
                                             <button
                                                 key={i}
@@ -332,7 +312,7 @@ const NeighbouringNumbers = () => {
                                 <button
                                     className="nav-pill-submit-btn"
                                     onClick={handleCheckAnswer}
-                                    disabled={isSubmitted || (typeof selectedOption !== 'undefined' ? !selectedOption && typeof dragItems === 'undefined' : false)}
+                                    disabled={isSubmitted || !selectedOption}
                                 >
                                     SUBMIT <Check size={24} strokeWidth={3} />
                                 </button>
@@ -374,7 +354,7 @@ const NeighbouringNumbers = () => {
                                     {currentQIndex < questions.length - 1 ? "NEXT" : "DONE"}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheckAnswer} disabled={isSubmitted || (typeof selectedOption !== 'undefined' ? !selectedOption && typeof dragItems === 'undefined' : false)}>SUBMIT</button>
+                                <button className="nav-pill-submit-btn" onClick={handleCheckAnswer} disabled={isSubmitted || !selectedOption}>SUBMIT</button>
                             )}
                         </div>
                     </div>
