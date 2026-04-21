@@ -14,9 +14,9 @@ const GRADE_9_TOPIC_SKILL_COUNTS = {
     'Number System': 5,
     Polynomials: 4,
     'Coordinate Geometry': 4,
-    'Lines and Angles': 4,
     'Linear Equations in Two Variables': 4,
     "Introduction to Euclid's Geometry": 3,
+    'Lines and Angles': 4,
     Triangles: 4,
     Quadrilaterals: 3,
     Circles: 3,
@@ -164,14 +164,14 @@ const SeniorGradeSyllabus = () => {
                         // Coordinate Geometry Hub
                         { skill_id: 1242, skill_name: 'Coordinate Geometry: Master Hub', topic: 'Coordinate Geometry', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/coordinate-geometry', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS['Coordinate Geometry'] },
 
-                        // Lines and Angles Hub
-                        { skill_id: 1243, skill_name: 'Lines and Angles: Master Hub', topic: 'Lines and Angles', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/lines-and-angles', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS['Lines and Angles'] },
-
                         // Linear Equations in Two Variables Hub
                         { skill_id: 1244, skill_name: 'Linear Equations in Two Variables: Master Hub', topic: 'Linear Equations in Two Variables', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/linear-equations-two-variables', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS['Linear Equations in Two Variables'] },
 
                         // Euclid's Geometry Hub
                         { skill_id: 1245, skill_name: 'Introduction to Euclid\'s Geometry: Master Hub', topic: 'Introduction to Euclid\'s Geometry', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/euclids-geometry', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS["Introduction to Euclid's Geometry"] },
+
+                        // Lines and Angles Hub
+                        { skill_id: 1243, skill_name: 'Lines and Angles: Master Hub', topic: 'Lines and Angles', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/lines-and-angles', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS['Lines and Angles'] },
 
                         // Triangles Hub
                         { skill_id: 1246, skill_name: 'Triangles: Master Hub', topic: 'Triangles', subtopic: 'Complete Chapter', isLocal: true, path: '/practice/class-9/triangles', displaySkillCount: GRADE_9_TOPIC_SKILL_COUNTS.Triangles },

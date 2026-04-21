@@ -236,83 +236,83 @@ const MiddleGradeSyllabus = () => {
                     fetched = [
                         {
                             skill_id: 'local-patterns-in-mathematics',
-                            skill_name: 'Patterns in Mathematics: Interactive Chapter',
-                            topic: 'Patterns',
+                            skill_name: 'Patterns in Mathematics 1',
+                            topic: 'Patterns in Mathematics 1',
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/6/patterns-in-mathematics'
                         },
                         {
                             skill_id: 'local-lines-and-angles',
-                            skill_name: 'Lines and Angles: Interactive Chapter',
-                            topic: 'Lines and Angles',
+                            skill_name: 'Lines and Angles 13',
+                            topic: 'Lines and Angles 13',
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/6/lines-and-angles'
                         },
                         {
                             skill_id: 'local-number-play-chapter',
-                            skill_name: 'Number Play: Interactive Chapter',
-                            topic: 'Number Play',
+                            skill_name: 'Number Play 55',
+                            topic: 'Number Play 55',
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/6/number-play-chapter'
                         },
                         {
                             skill_id: 'local-data-handling-6-chapter',
-                            skill_name: 'Data Handling and Presentation: Interactive Chapter',
-                            topic: 'Data Handling',
+                            skill_name: 'Data Handling and Presentation 74',
+                            topic: 'Data Handling and Presentation 74',
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/6/data-handling-6'
                         },
                         {
-                            skill_id: 'local-the-other-side-of-zero-chapter',
-                            skill_name: 'The Other Side of Zero: Interactive Chapter',
-                            topic: 'The Other Side of Zero',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/middle/grade/6/the-other-side-of-zero'
-                        },
-                        {
-                            skill_id: 'local-fractions-6-chapter',
-                            skill_name: 'Fractions: Interactive Chapter',
-                            topic: 'Fractions',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/middle/grade/6/fractions-6'
-                        },
-                        {
                             skill_id: 'local-prime-time-6-chapter',
-                            skill_name: 'Prime Time: Interactive Chapter',
-                            topic: 'Prime Time',
+                            skill_name: 'Prime Time 107',
+                            topic: 'Prime Time 107',
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/6/prime-time'
                         },
                         {
                             skill_id: 'local-mensuration-6-chapter',
-                            skill_name: 'Perimeter and Area: Interactive Chapter',
-                            topic: 'Perimeter and Area',
+                            skill_name: 'Perimeter and Area 129',
+                            topic: 'Perimeter and Area 129',
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/6/mensuration-6'
                         },
                         {
+                            skill_id: 'local-fractions-6-chapter',
+                            skill_name: 'Fractions 151',
+                            topic: 'Fractions 151',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/6/fractions-6'
+                        },
+                        {
                             skill_id: 'local-constructions-8-chapter',
-                            skill_name: 'Playing with Constructions: Interactive Chapter',
-                            topic: 'Playing with Constructions',
+                            skill_name: 'Playing with Constructions 187',
+                            topic: 'Playing with Constructions 187',
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/6/playing-with-constructions'
                         },
                         {
                             skill_id: 'local-symmetry-6-chapter',
-                            skill_name: 'Symmetry: Interactive Chapter',
-                            topic: 'Symmetry',
+                            skill_name: 'Symmetry 217',
+                            topic: 'Symmetry 217',
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/6/symmetry-6'
+                        },
+                        {
+                            skill_id: 'local-the-other-side-of-zero-chapter',
+                            skill_name: 'The Other Side of Zero',
+                            topic: 'The Other Side of Zero',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/6/the-other-side-of-zero'
                         }
                     ];
                 }
@@ -1314,6 +1314,23 @@ const MiddleGradeSyllabus = () => {
 
                         return (
                             <div key={topic} className="middle-topic-card" style={{ '--card-accent': accentColor }}>
+                                {(gradeInt === 5 || gradeInt === 6 || gradeInt === 7) && activeSubject === 'mathematics' && (
+                                    <div style={{
+                                        fontSize: '0.7rem',
+                                        fontWeight: 800,
+                                        color: accentColor,
+                                        background: `${accentColor}15`,
+                                        padding: '4px 12px',
+                                        borderRadius: '100px',
+                                        width: 'fit-content',
+                                        marginBottom: '1.2rem',
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '1px',
+                                        border: `1px solid ${accentColor}30`
+                                    }}>
+                                        Chapter {index + 1}
+                                    </div>
+                                )}
                                 <div className="topic-header">
                                     <div className="topic-icon-wrapper">
                                         {getTopicIcon(topic)}
