@@ -16,6 +16,15 @@ const chapters = [
         shadow: 'rgba(30,60,114,0.35)',
     },
     {
+        key: 'motion-in-a-straight-line',
+        title: 'Motion in a Straight Line',
+        desc: 'Kinematics: distance, displacement, velocity, acceleration, equations of motion, and motion graphs.',
+        icon: '📐',
+        questions: 30,
+        gradient: 'linear-gradient(135deg, #0f4c4c 0%, #0d9488 100%)',
+        shadow: 'rgba(13,148,136,0.35)',
+    },
+    {
         key: 'work-energy-power',
         title: 'Work, Energy and Power',
         desc: 'Work-energy theorem, conservative forces, potential energy, mechanical energy conservation, and collisions.',
@@ -25,6 +34,7 @@ const chapters = [
         shadow: 'rgba(15, 23, 42, 0.35)',
     },
     // Future chapters can be added here
+
 ];
 
 const PhysicsChapters = () => {

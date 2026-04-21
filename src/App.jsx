@@ -125,6 +125,12 @@ import LawsOfMotionTerminology from './components/Physics-Branches/Laws-Of-Motio
 import LawsOfMotionSkills from './components/Physics-Branches/Laws-Of-Motion/Topics/Skills/LawsOfMotionSkills';
 import LawsOfMotionConnectomics from './components/Physics-Branches/Laws-Of-Motion/Topics/Connectomics/LawsOfMotionConnectomics';
 import LawsOfMotionExamEdge from './components/Physics-Branches/Laws-Of-Motion/Topics/ExamEdge/LawsOfMotionExamEdge';
+import MotionInAStraightLineDashboard from './components/Physics-Branches/Motion-In-A-Straight-Line/MotionInAStraightLineDashboard';
+import MSLIntro from './components/Physics-Branches/Motion-In-A-Straight-Line/Topics/Introduction/MSLIntro';
+import MSLTerminology from './components/Physics-Branches/Motion-In-A-Straight-Line/Topics/Terminology/MSLTerminology';
+import MSLSkills from './components/Physics-Branches/Motion-In-A-Straight-Line/Topics/Skills/MSLSkills';
+import MSLConnectomics from './components/Physics-Branches/Motion-In-A-Straight-Line/Topics/Connectomics/MSLConnectomics';
+import MSLExamEdge from './components/Physics-Branches/Motion-In-A-Straight-Line/Topics/ExamEdge/MSLExamEdge';
 
 import ChemistryChapters from './components/practice/class-11/chemistry/ChemistryChapters';
 import StructureOfAtomDashboard from './components/Chemistry-Branches/Structure-of-Atom/StructureOfAtomDashboard';
@@ -1228,6 +1234,15 @@ function App() {
           <Route path="senior/grade/11/physics/laws-of-motion/skills" element={<ProtectedRoute redirectTo="/login"><LawsOfMotionSkills /></ProtectedRoute>} />
           <Route path="senior/grade/11/physics/laws-of-motion/connectomics" element={<ProtectedRoute redirectTo="/login"><LawsOfMotionConnectomics /></ProtectedRoute>} />
           <Route path="senior/grade/11/physics/laws-of-motion/exam-edge" element={<ProtectedRoute redirectTo="/login"><LawsOfMotionExamEdge /></ProtectedRoute>} />
+
+          {/* Class 11 Physics: Motion in a Straight Line */}
+          <Route path="senior/grade/11/physics/motion-in-a-straight-line" element={<ProtectedRoute redirectTo="/login"><MotionInAStraightLineDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/motion-in-a-straight-line/introduction" element={<ProtectedRoute redirectTo="/login"><MSLIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/motion-in-a-straight-line/terminology" element={<ProtectedRoute redirectTo="/login"><MSLTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/motion-in-a-straight-line/skills" element={<ProtectedRoute redirectTo="/login"><MSLSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/motion-in-a-straight-line/connectomics" element={<ProtectedRoute redirectTo="/login"><MSLConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/motion-in-a-straight-line/exam-edge" element={<ProtectedRoute redirectTo="/login"><MSLExamEdge /></ProtectedRoute>} />
+
           <Route path="senior/grade/11/physics/work-energy-power" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerDashboard /></ProtectedRoute>} />
           <Route path="senior/grade/11/physics/work-energy-power/introduction" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerIntro /></ProtectedRoute>} />
           <Route path="senior/grade/11/physics/work-energy-power/terminology" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerTerminology /></ProtectedRoute>} />

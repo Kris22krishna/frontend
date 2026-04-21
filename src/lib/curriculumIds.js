@@ -931,6 +931,19 @@ export const NODE_IDS = {
   // Terminology Quiz
   g11PhysLOMTerminologyQuiz:               'd4111505-0010-0000-0000-000000000000',
 
+  // Ch 3: Motion in a Straight Line
+  g11PhysicsMSL:                           'd3111503-0000-0000-0000-000000000001',
+
+  // Skills (5 skills)
+  g11PhysMSLDistanceDisplacement:          'd4111503-0001-0000-0000-000000000000',
+  g11PhysMSLVelocityAcceleration:          'd4111503-0002-0000-0000-000000000000',
+  g11PhysMSLKinematicEquations:            'd4111503-0003-0000-0000-000000000000',
+  g11PhysMSLMotionGraphs:                  'd4111503-0004-0000-0000-000000000000',
+  g11PhysMSLRelativeVelocity:              'd4111503-0005-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11PhysMSLTerminologyQuiz:               'd4111503-0010-0000-0000-000000000000',
+
   // Ch 6: Work, Energy and Power
   g11PhysicsWEP:                           'd3111506-0000-0000-0000-000000000001',
 
@@ -1120,6 +1133,15 @@ export const SLUG_TO_NODE_ID = {
   'g11-phys-lom-friction':                     NODE_IDS.g11PhysLOMFriction,
   'g11-phys-lom-circular-motion':              NODE_IDS.g11PhysLOMCircularMotion,
   'g11-phys-lom-terminology':                  NODE_IDS.g11PhysLOMTerminologyQuiz,
+
+  // Grade 11 Physics: Motion in a Straight Line
+  'g11-phys-msl':                              NODE_IDS.g11PhysicsMSL,
+  'g11-phys-msl-distance-displacement':        NODE_IDS.g11PhysMSLDistanceDisplacement,
+  'g11-phys-msl-velocity-acceleration':        NODE_IDS.g11PhysMSLVelocityAcceleration,
+  'g11-phys-msl-kinematic-equations':          NODE_IDS.g11PhysMSLKinematicEquations,
+  'g11-phys-msl-motion-graphs':                NODE_IDS.g11PhysMSLMotionGraphs,
+  'g11-phys-msl-relative-velocity':            NODE_IDS.g11PhysMSLRelativeVelocity,
+  'g11-phys-msl-terminology':                  NODE_IDS.g11PhysMSLTerminologyQuiz,
 
   // Grade 11 Physics: Work, Energy and Power
   'g11-phys-wep':                              NODE_IDS.g11PhysicsWEP,
