@@ -623,6 +623,12 @@ import Grade6DataHandlingIntro from './components/practice/grade-6/DataHandling6
 import Grade6DataHandlingTerminology from './components/practice/grade-6/DataHandling6/Topics/Terminology/DataHandling6Terminology';
 import Grade6DataHandlingSkills from './components/practice/grade-6/DataHandling6/Topics/Skills/DataHandling6Skills';
 
+// Grade 6 The Other Side of Zero
+import Grade6TheOtherSideOfZero from './components/practice/grade-6/TheOtherSideOfZero6/TheOtherSideOfZero6';
+import Grade6TheOtherSideOfZeroIntro from './components/practice/grade-6/TheOtherSideOfZero6/Topics/5W1H/TheOtherSideOfZero6Intro';
+import Grade6TheOtherSideOfZeroTerminology from './components/practice/grade-6/TheOtherSideOfZero6/Topics/Terminology/TheOtherSideOfZero6Terminology';
+import Grade6TheOtherSideOfZeroSkills from './components/practice/grade-6/TheOtherSideOfZero6/Topics/Skills/TheOtherSideOfZero6Skills';
+
 // Grade 6 Fractions Chapter
 import Grade6Fractions from './components/practice/grade-6/Fractions6/Fractions6';
 import Grade6FractionsIntro from './components/practice/grade-6/Fractions6/Topics/5W1H/Fractions6Intro';
@@ -1768,6 +1774,11 @@ function App() {
           <Route path="middle/grade/6/data-handling-6/introduction" element={<Grade6DataHandlingIntro />} />
           <Route path="middle/grade/6/data-handling-6/terminology" element={<Grade6DataHandlingTerminology />} />
           <Route path="middle/grade/6/data-handling-6/skills" element={<Grade6DataHandlingSkills />} />
+
+          <Route path="middle/grade/6/the-other-side-of-zero" element={<Grade6TheOtherSideOfZero />} />
+          <Route path="middle/grade/6/the-other-side-of-zero/introduction" element={<Grade6TheOtherSideOfZeroIntro />} />
+          <Route path="middle/grade/6/the-other-side-of-zero/terminology" element={<Grade6TheOtherSideOfZeroTerminology />} />
+          <Route path="middle/grade/6/the-other-side-of-zero/skills" element={<Grade6TheOtherSideOfZeroSkills />} />
 
           {/* Grade 6 Fractions Routes */}
           <Route path="middle/grade/6/fractions-6" element={<Grade6Fractions />} />
