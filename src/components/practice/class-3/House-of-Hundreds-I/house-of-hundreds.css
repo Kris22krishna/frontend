@@ -1,0 +1,305 @@
+/* ─── House of Hundreds I — Scoped Styles ─────────────────────────────────── */
+
+:root {
+  --hoh-blue:   #3b82f6;
+  --hoh-green:  #22c55e;
+  --hoh-amber:  #f59e0b;
+  --hoh-red:    #ef4444;
+  --hoh-purple: #8b5cf6;
+  --hoh-teal:   #14b8a6;
+  --hoh-navy:   #1e40af;
+  --hoh-card:   #ffffff;
+  --hoh-text:   #1e293b;
+  --hoh-muted:  #64748b;
+  --hoh-r:      16px;
+}
+
+/* ── Card ─────────────────────────────────────────────────────────────────── */
+.hoh-qcard {
+  padding: 4px 0;
+}
+.hoh-qtext {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: var(--hoh-text);
+  margin: 8px 0 14px;
+  line-height: 1.5;
+}
+
+/* ── MCQ Options ──────────────────────────────────────────────────────────── */
+.hoh-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+.hoh-opt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  border-radius: 14px;
+  border: 2.5px solid #e2e8f0;
+  background: #fff;
+  cursor: pointer;
+  font-family: 'Baloo 2', cursive;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #334155;
+  transition: all 0.18s ease;
+  user-select: none;
+}
+.hoh-opt:hover       { border-color: var(--hoh-blue); background: #eff6ff; }
+.hoh-opt.hoh-selected { border-color: var(--hoh-blue); background: #dbeafe; color: var(--hoh-navy); }
+.hoh-opt.hoh-correct  { border-color: var(--hoh-green) !important; background: #dcfce7 !important; color: #166534 !important; }
+.hoh-opt.hoh-wrong    { border-color: var(--hoh-red) !important; background: #fee2e2 !important; color: #991b1b !important; }
+
+.hoh-opt-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #64748b;
+  flex-shrink: 0;
+}
+.hoh-selected .hoh-opt-letter { background: var(--hoh-blue); color: #fff; }
+.hoh-correct .hoh-opt-letter  { background: var(--hoh-green); color: #fff; }
+.hoh-wrong .hoh-opt-letter    { background: var(--hoh-red); color: #fff; }
+
+/* ── True / False ─────────────────────────────────────────────────────────── */
+.hoh-tfopts {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 14px;
+}
+.hoh-tfbtn {
+  padding: 12px 32px;
+  border-radius: 14px;
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+  border: 2.5px solid #e2e8f0;
+  background: #fff;
+  transition: all 0.2s;
+}
+.hoh-tfbtn.hoh-t:hover, .hoh-tfbtn.hoh-t.hoh-selected { border-color: var(--hoh-green); background: #f0fdf4; color: #166534; }
+.hoh-tfbtn.hoh-f:hover, .hoh-tfbtn.hoh-f.hoh-selected { border-color: var(--hoh-red); background: #fef2f2; color: #991b1b; }
+.hoh-tfbtn.hoh-correct { border-color: var(--hoh-green) !important; background: #dcfce7 !important; color: #166534 !important; }
+.hoh-tfbtn.hoh-wrong   { border-color: var(--hoh-red) !important; background: #fee2e2 !important; color: #991b1b !important; }
+
+/* ── Fill-in input ────────────────────────────────────────────────────────── */
+.hoh-fill-input {
+  display: inline-block;
+  padding: 6px 10px;
+  border: 2.5px solid #cbd5e1;
+  border-radius: 10px;
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--hoh-text);
+  background: #f8fafc;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.hoh-fill-input:focus  { border-color: var(--hoh-blue); background: #eff6ff; }
+.hoh-fill-input.hoh-correct { border-color: var(--hoh-green); background: #dcfce7; color: #166534; }
+.hoh-fill-input.hoh-wrong   { border-color: var(--hoh-red); background: #fee2e2; color: #991b1b; }
+
+/* ── Number Line ──────────────────────────────────────────────────────────── */
+.hoh-number-line-wrap {
+  margin: 14px 0;
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+}
+
+/* ── HTO Block Display ────────────────────────────────────────────────────── */
+.hoh-hto-display {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: flex-end;
+  margin: 16px 0;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 16px;
+  border: 2px solid #e2e8f0;
+}
+.hoh-hto-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.hoh-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  color: #fff;
+}
+.hoh-block span { font-size: 0.65rem; }
+.hoh-block-h {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg, var(--hoh-blue), #2563eb);
+  border: 2px solid #1d4ed8;
+}
+.hoh-block-t {
+  width: 42px; height: 18px;
+  background: linear-gradient(135deg, var(--hoh-green), #16a34a);
+  border: 2px solid #15803d;
+}
+.hoh-block-o {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--hoh-amber), #d97706);
+  border: 2px solid #b45309;
+}
+.hoh-hto-label {
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--hoh-muted);
+  margin-top: 4px;
+}
+
+/* ── Number Grid (Apartment) ──────────────────────────────────────────────── */
+.hoh-grid-wrap {
+  margin: 14px 0;
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+}
+.hoh-grid { display: flex; flex-direction: column; border: 2px solid #64748b; border-radius: 8px; overflow: hidden; }
+.hoh-grid-row { display: flex; }
+.hoh-grid-cell {
+  width: 36px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid #cbd5e1;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.72rem; font-weight: 700; color: #334155;
+  background: #fff;
+}
+.hoh-grid-cell.hoh-grid-shaded  { background: #dbeafe; color: #1e40af; font-weight: 800; }
+.hoh-grid-cell.hoh-grid-missing { background: #fef3c7; color: #d97706; font-weight: 800; font-size: 0.9rem; }
+
+/* ── Comparison Display ───────────────────────────────────────────────────── */
+.hoh-compare-wrap {
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+  margin: 16px 0; padding: 14px 20px;
+  background: #f8fafc; border-radius: 16px; border: 2px solid #e2e8f0;
+}
+.hoh-compare-num {
+  font-family: 'Baloo 2', cursive;
+  font-size: 2rem; font-weight: 800; color: var(--hoh-text);
+  padding: 8px 20px; background: #fff; border-radius: 14px;
+  border: 2px solid #e2e8f0; min-width: 80px; text-align: center;
+}
+.hoh-compare-symbol { font-size: 2.5rem; font-weight: 900; font-family: 'Baloo 2', cursive; }
+
+/* ── Tile Sequence ────────────────────────────────────────────────────────── */
+.hoh-tile-seq {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  justify-content: center; align-items: center; margin: 14px 0;
+}
+.hoh-tile {
+  width: 52px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border: 2px solid #93c5fd;
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.9rem; font-weight: 800; color: #1e40af;
+}
+.hoh-tile-blank {
+  background: linear-gradient(135deg, #fef3c7, #fde68a) !important;
+  border: 2.5px dashed var(--hoh-amber) !important;
+  color: #d97706; font-size: 1.1rem;
+}
+.hoh-tile-arrow { font-size: 1.2rem; color: #94a3b8; font-weight: 700; }
+
+/* ── Counting Objects ─────────────────────────────────────────────────────── */
+.hoh-counting-wrap {
+  margin: 14px 0; padding: 14px;
+  background: #fffbeb; border: 2px solid #fde68a; border-radius: 16px;
+}
+.hoh-counting-groups { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.hoh-counting-group {
+  display: flex; flex-wrap: wrap; gap: 2px;
+  padding: 6px 8px; background: #fff;
+  border-radius: 10px; border: 1.5px solid #fcd34d;
+  max-width: 120px; position: relative;
+}
+.hoh-counting-extra { border-style: dashed; }
+.hoh-counting-item { font-size: 0.85rem; }
+.hoh-counting-group-label {
+  position: absolute; bottom: -10px; right: 4px;
+  font-family: 'Nunito', sans-serif; font-size: 0.6rem; font-weight: 800; color: #92400e;
+  background: #fef3c7; padding: 0 4px; border-radius: 4px;
+}
+.hoh-counting-total {
+  text-align: center; margin-top: 12px;
+  font-family: 'Baloo 2', cursive; font-size: 0.9rem; font-weight: 700; color: #92400e;
+}
+
+/* ── Match Layout ─────────────────────────────────────────────────────────── */
+.hoh-match-wrap { display: flex; gap: 8px; justify-content: center; margin: 14px 0; }
+.hoh-match-col  { display: flex; flex-direction: column; gap: 8px; }
+.hoh-match-center { display: flex; flex-direction: column; gap: 8px; justify-content: center; color: #94a3b8; font-size: 1rem; }
+.hoh-match-line { text-align: center; padding: 8px 0; }
+.hoh-match-item {
+  padding: 8px 14px; border: 2px solid #e2e8f0; border-radius: 10px;
+  font-family: 'Baloo 2', cursive; font-size: 0.85rem; font-weight: 700; color: #334155;
+  background: #fff; cursor: pointer; transition: all 0.2s; text-align: center; user-select: none;
+}
+.hoh-match-item:hover  { border-color: var(--hoh-blue); background: #eff6ff; }
+.hoh-match-item.hoh-active   { border-color: var(--hoh-amber); background: #fffbeb; }
+.hoh-match-item.hoh-matched  { border-color: var(--hoh-green); background: #dcfce7; color: #166534; pointer-events: none; }
+
+/* ── Inline number sentence ───────────────────────────────────────────────── */
+.hoh-sentence {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.2rem; font-weight: 700; color: var(--hoh-text);
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  justify-content: center; margin: 10px 0;
+}
+.hoh-sentence span {
+  background: #eff6ff; border: 2px solid #bfdbfe;
+  border-radius: 8px; padding: 4px 10px;
+  color: var(--hoh-navy);
+}
+
+/* ── Number box (large emphasis) ──────────────────────────────────────────── */
+.hoh-num-box {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, var(--hoh-blue), var(--hoh-navy));
+  color: #fff; border-radius: 14px; padding: 10px 22px;
+  font-family: 'Baloo 2', cursive; font-size: 1.8rem; font-weight: 900;
+  box-shadow: 0 4px 12px rgba(59,130,246,.3);
+  margin: 8px 4px;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 520px) {
+  .hoh-opts { gap: 8px; }
+  .hoh-opt  { padding: 10px 12px; font-size: 0.92rem; }
+  .hoh-qtext { font-size: 1rem; }
+  .hoh-tfbtn { padding: 10px 20px; }
+  .hoh-compare-num { font-size: 1.5rem; padding: 6px 14px; }
+  .hoh-tile { width: 42px; height: 38px; font-size: 0.8rem; }
+}
+@media (max-width: 400px) {
+  .hoh-qcard { padding: 2px 0; }
+  .hoh-match-wrap { flex-direction: column; align-items: center; }
+}

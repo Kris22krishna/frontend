@@ -211,6 +211,20 @@ export const TOPIC_CONFIGS = {
             { id: "FCP-02", name: "Heights and Meters", route: "heights-and-meters" },
             { id: "FCP-TEST", name: "Chapter Test", route: "chapter-test" }
         ],
+        'House of Hundreds I': [
+            { id: "HOH-01", name: "Counting Beyond 200",        route: "house-of-hundreds-i/counting-beyond-200" },
+            { id: "HOH-02", name: "Number Sequences",           route: "house-of-hundreds-i/number-sequences" },
+            { id: "HOH-03", name: "Number Representation",      route: "house-of-hundreds-i/number-representation" },
+            { id: "HOH-04", name: "Number Line Skills",         route: "house-of-hundreds-i/number-line-skills" },
+            { id: "HOH-05", name: "Number Games & Patterns",    route: "house-of-hundreds-i/number-games-patterns" },
+            { id: "HOH-06", name: "Large Numbers in Context",   route: "house-of-hundreds-i/large-numbers-context" },
+            { id: "HOH-07", name: "Number Grid",                route: "house-of-hundreds-i/number-grid" },
+            { id: "HOH-08", name: "Place Value (H, T, O)",      route: "house-of-hundreds-i/place-value-hto" },
+            { id: "HOH-09", name: "Patterns & Groups",          route: "house-of-hundreds-i/patterns-groups" },
+            { id: "HOH-10", name: "Number Hunt Games",          route: "house-of-hundreds-i/number-hunt-games" },
+            { id: "HOH-11", name: "Comparing Numbers",          route: "house-of-hundreds-i/comparing-numbers" },
+            { id: "HOH-TEST", name: "Chapter Test",             route: "house-of-hundreds-i/chapter-test" },
+        ],
         'House of Hundreds II': [
             { id: "HH2-01", name: "Draw tiles" },
             { id: "HH2-02", name: "Neighbouring numbers" },
