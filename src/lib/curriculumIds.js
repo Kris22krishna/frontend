@@ -1215,6 +1215,51 @@ export const SLUG_TO_NODE_ID = {
   // Grade 11 Biology: Cell — Structure and Functions (legacy test)
   'g11-bio-cell-structure':                    NODE_IDS.g11BiologyCellStructure,
 
+  // Grade 12 Math: Relations
+  'g12-math-relations':                        NODE_IDS.g12MathRelations,
+  'g12-math-relations-cartesian':              NODE_IDS.g12MathRelationsCartesian,
+  'g12-math-relations-domain-range':           NODE_IDS.g12MathRelationsDomainRange,
+  'g12-math-relations-counting':               NODE_IDS.g12MathRelationsCounting,
+  'g12-math-relations-equivalence':            NODE_IDS.g12MathRelationsEquivalence,
+  'g12-math-relations-terminology':            NODE_IDS.g12MathRelationsTerminologyQuiz,
+
+  // Grade 12 Math: Functions
+  'g12-math-functions':                        NODE_IDS.g12MathFunctions,
+  'g12-math-functions-concept':                NODE_IDS.g12MathFunctionsConcept,
+  'g12-math-functions-types':                  NODE_IDS.g12MathFunctionsTypes,
+  'g12-math-functions-algebra':                NODE_IDS.g12MathFunctionsAlgebra,
+  'g12-math-functions-equations':              NODE_IDS.g12MathFunctionsEquations,
+  'g12-math-functions-domain-range':           NODE_IDS.g12MathFunctionsDomainRange,
+  'g12-math-functions-terminology':            NODE_IDS.g12MathFunctionsTerminologyQuiz,
+
+  // Grade 12 Math: Matrices
+  'g12-math-matrices':                         NODE_IDS.g12MathMatrices,
+  'g12-math-matrices-order':                   NODE_IDS.g12MathMatricesOrder,
+  'g12-math-matrices-types':                   NODE_IDS.g12MathMatricesTypes,
+  'g12-math-matrices-operations':              NODE_IDS.g12MathMatricesOperations,
+  'g12-math-matrices-multiplication':          NODE_IDS.g12MathMatricesMultiplication,
+  'g12-math-matrices-transpose':               NODE_IDS.g12MathMatricesTranspose,
+  'g12-math-matrices-inverse':                 NODE_IDS.g12MathMatricesInverse,
+  'g12-math-matrices-terminology':             NODE_IDS.g12MathMatricesTerminologyQuiz,
+
+  // Grade 12 Math: Determinants
+  'g12-math-determinants':                     NODE_IDS.g12MathDeterminants,
+  'g12-math-determinants-fundamentals':        NODE_IDS.g12MathDeterminantsFundamentals,
+  'g12-math-determinants-properties':          NODE_IDS.g12MathDeterminantsProperties,
+  'g12-math-determinants-area':                NODE_IDS.g12MathDeterminantsArea,
+  'g12-math-determinants-minors-cofactors':    NODE_IDS.g12MathDeterminantsMinorsCofactors,
+  'g12-math-determinants-adjoint-inverse':     NODE_IDS.g12MathDeterminantsAdjointInverse,
+  'g12-math-determinants-applications':        NODE_IDS.g12MathDeterminantsApplications,
+  'g12-math-determinants-terminology':         NODE_IDS.g12MathDeterminantsTerminologyQuiz,
+
+  // Grade 12 Math: Inverse Trigonometric Functions
+  'g12-math-itf':                              NODE_IDS.g12MathITF,
+  'g12-math-itf-concept':                      NODE_IDS.g12MathITFConcept,
+  'g12-math-itf-definitions':                  NODE_IDS.g12MathITFDefinitions,
+  'g12-math-itf-properties':                   NODE_IDS.g12MathITFProperties,
+  'g12-math-itf-principal':                    NODE_IDS.g12MathITFPrincipal,
+  'g12-math-itf-simplification':               NODE_IDS.g12MathITFSimplification,
+  'g12-math-itf-terminology':                  NODE_IDS.g12MathITFTerminologyQuiz,
 
   // Grade 9 Math: Polynomials
   'g9-math-polynomials':                NODE_IDS.g9MathPolynomials,
