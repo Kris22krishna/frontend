@@ -427,6 +427,26 @@ export const LAGraphMini = ({ config, onProtractorChange }) => {
         const topX = 150 + dx/2;
         const botX = 150 - dx/2;
 
+        const renderAngle = (loc, text, color) => {
+            const isTop = loc.startsWith('t-');
+            const cx = isTop ? topX : botX;
+            const cy = isTop ? 70 : 130;
+            const quad = loc.split('-')[1];
+
+            let startAngle, endAngle, midAngle;
+            if (quad === 'tr') { startAngle = 0; endAngle = tilt; midAngle = tilt / 2; }
+            else if (quad === 'tl') { startAngle = tilt; endAngle = 180; midAngle = 90 + tilt / 2; }
+            else if (quad === 'bl') { startAngle = 180; endAngle = 180 + tilt; midAngle = 180 + tilt / 2; }
+            else if (quad === 'br') { startAngle = 180 + tilt; endAngle = 360; midAngle = 360 - (180 - tilt) / 2; }
+
+            return (
+                <g key={loc}>
+                    <path d={describeArc(cx, cy, 25, startAngle, endAngle)} stroke={color} strokeWidth="2" fill="none" />
+                    <AngleLabel cx={cx} cy={cy} angleRadius={35} angleMid={midAngle} text={text} color={color} />
+                </g>
+            );
+        };
+
         return (
             <svg viewBox="0 0 300 200" width="100%" style={{ maxWidth: 280, maxHeight: 180, background: '#f8fafc', borderRadius: 12 }}>
                 <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="40" y1="70" x2="260" y2="70" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
@@ -436,17 +456,8 @@ export const LAGraphMini = ({ config, onProtractorChange }) => {
                 
                 <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1={botX - 40*Math.cos(rad)} y1={130 + 40*Math.sin(rad)} x2={topX + 40*Math.cos(rad)} y2={70 - 40*Math.sin(rad)} stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
                 
-                {knownLoc === 'top-right' && <path d={describeArc(topX, 70, 25, 0, tilt)} stroke="#0ea5e9" strokeWidth="2" fill="none" />}
-                <AngleLabel cx={topX} cy={70} angleRadius={35} angleMid={tilt/2} text={(knownLoc === 'top-right') ? `${knownVal}°` : ''} color="#0ea5e9" />
-                
-                {knownLoc === 'top-left' && <path d={describeArc(topX, 70, 25, tilt, 180)} stroke="#0ea5e9" strokeWidth="2" fill="none" />}
-                <AngleLabel cx={topX} cy={70} angleRadius={35} angleMid={90 + tilt/2} text={knownLoc === 'top-left' ? `${knownVal}°` : ''} color="#0ea5e9" />
-                
-                {(unknownLoc === 'bottom-left' || unknownLoc === 'bottom-left-out') && <path d={describeArc(botX, 130, 25, 180, 180+tilt)} stroke="#e11d48" strokeWidth="2" fill="none" />}
-                <AngleLabel cx={botX} cy={130} angleRadius={35} angleMid={180 + tilt/2} text={(unknownLoc === 'bottom-left' || unknownLoc === 'bottom-left-out') ? 'x' : ''} color="#e11d48" />
-                
-                {unknownLoc === 'bottom-right' && <path d={describeArc(botX, 130, 25, 180+tilt, 360)} stroke="#e11d48" strokeWidth="2" fill="none" />}
-                <AngleLabel cx={botX} cy={130} angleRadius={35} angleMid={360 - (180 - tilt)/2} text={unknownLoc === 'bottom-right' ? 'x' : ''} color="#e11d48" />
+                {knownLoc && renderAngle(knownLoc, `${knownVal}°`, "#0ea5e9")}
+                {unknownLoc && renderAngle(unknownLoc, "x", "#e11d48")}
             </svg>
         );
     }
@@ -461,27 +472,27 @@ export const LAGraphMini = ({ config, onProtractorChange }) => {
                 <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="30" y1="190" x2="330" y2="190" stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
 
                 <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="230" y1="60" x2="170" y2="125" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" />
-                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="170" y1="125" x2="130" y2="190" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" />
+                <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="170" y1="125" x2="230" y2="190" stroke="#0284c7" strokeWidth="2.5" strokeLinecap="round" />
                 <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1="60" y1="125" x2="300" y2="125" stroke="#059669" strokeWidth="1.5" strokeDasharray="6,4" />
                 <circle cx="170" cy="125" r="4" fill="#0f172a" />
 
                 <path d={describeArc(230, 60, 25, 225, 360)} stroke="#0ea5e9" strokeWidth="2" fill="none" />
-                <AngleLabel cx={230} cy={60} angleRadius={35} angleMid={225} text={`${mxq}°`} color="#0ea5e9" />
+                <AngleLabel cx={230} cy={60} angleRadius={35} angleMid={292.5} text={`${mxq}°`} color="#0ea5e9" />
                 
-                <path d={describeArc(130, 190, 25, 0, 45)} stroke="#0ea5e9" strokeWidth="2" fill="none" />
-                <AngleLabel cx={130} cy={190} angleRadius={35} angleMid={45} text={`${myr}°`} color="#0ea5e9" />
+                <path d={describeArc(230, 190, 25, 135, 180)} stroke="#0ea5e9" strokeWidth="2" fill="none" />
+                <AngleLabel cx={230} cy={190} angleRadius={40} angleMid={157.5} text={`${myr}°`} color="#0ea5e9" />
                 
-                <text x="170" y="105" fontSize="14" fill="#e11d48" fontWeight="bold">∠XMY = ?</text>
+                <text x="175" y="105" fontSize="14" fill="#e11d48" fontWeight="bold">∠XMY = ?</text>
 
                 <text x="25" y="45" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pP}</text>
                 <text x="325" y="45" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pQ}</text>
                 <text x="25" y="175" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pR}</text>
                 <text x="325" y="175" fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pS}</text>
-                <text x="175" y="142" fontSize="12" fill="#0f172a" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" textAnchor="middle">{pM}</text>
+                <text x="150" y="130" fontSize="12" fill="#0f172a" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" textAnchor="middle">{pM}</text>
                 <text x="225" y="50" fontSize="12" fill="#0f172a" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pX}</text>
-                <text x="125" y="205" fontSize="12" fill="#0f172a" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pY}</text>
+                <text x="225" y="210" fontSize="12" fill="#0f172a" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pY}</text>
                 <circle cx="230" cy="60" r="3" fill="#0f172a" />
-                <circle cx="130" cy="190" r="3" fill="#0f172a" />
+                <circle cx="230" cy="190" r="3" fill="#0f172a" />
             </svg>
         );
     }
@@ -576,8 +587,11 @@ export const LAGraphMini = ({ config, onProtractorChange }) => {
                 <text x="30" y="74" fontSize="11" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic">l</text>
                 <text x="30" y="134" fontSize="11" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic">m</text>
 
-                <AngleLabel cx={topX} cy={70} angleRadius={30} angleMid={180 + (tilt||65)/2} text={`${knownVal}°`} color="#7c3aed" />
-                <AngleLabel cx={botX} cy={130} angleRadius={30} angleMid={(tilt||65)/2} text="x" color="#e11d48" />
+                <path d={describeArc(topX, 70, 25, 0, (tilt||65))} stroke="#7c3aed" strokeWidth="2" fill="none" />
+                <AngleLabel cx={topX} cy={70} angleRadius={35} angleMid={(tilt||65)/2} text={`${knownVal}°`} color="#7c3aed" />
+                
+                <path d={describeArc(botX, 130, 25, 180, 180+(tilt||65))} stroke="#e11d48" strokeWidth="2" fill="none" />
+                <AngleLabel cx={botX} cy={130} angleRadius={35} angleMid={180 + (tilt||65)/2} text="x" color="#e11d48" />
             </svg>
         );
     }
