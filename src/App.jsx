@@ -145,6 +145,14 @@ import SurfaceAreasAndVolumes from './components/practice/class-10/SurfaceAreasA
 import SurfaceVolumesIntro from './components/practice/class-10/SurfaceAreasAndVolumes/Topics/5W1H/Intro5W1H';
 import SurfaceVolumesTerminology from './components/practice/class-10/SurfaceAreasAndVolumes/Topics/Terminology/Terminology';
 import SurfaceVolumesSkills from './components/practice/class-10/SurfaceAreasAndVolumes/Topics/Skills/Skills';
+import SomeApplicationsOfTrigonometry from './components/practice/class-10/SomeApplicationsOfTrigonometry/SomeApplicationsOfTrigonometry';
+import SomeApplicationsTrigIntro from './components/practice/class-10/SomeApplicationsOfTrigonometry/Topics/5W1H/Intro5W1H';
+import SomeApplicationsTrigTerminology from './components/practice/class-10/SomeApplicationsOfTrigonometry/Topics/Terminology/Terminology';
+import SomeApplicationsTrigSkills from './components/practice/class-10/SomeApplicationsOfTrigonometry/Topics/Skills/Skills';
+import Statistics from './components/practice/class-10/Statistics/Statistics';
+import StatisticsIntro from './components/practice/class-10/Statistics/Topics/5W1H/Intro5W1H';
+import StatisticsTerminology from './components/practice/class-10/Statistics/Topics/Terminology/Terminology';
+import StatisticsSkills from './components/practice/class-10/Statistics/Topics/Skills/Skills';
 
 import IntroductionToTrignometry from './components/practice/class-10/IntroductionToTrignometry/IntroductionToTrignometry';
 import TrignometryIntro5W1H from './components/practice/class-10/IntroductionToTrignometry/Topics/5W1H/Intro5W1H';
@@ -1480,6 +1488,24 @@ function App() {
           <Route path="surface areas and volumes/introduction" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesIntro /></ProtectedRoute>} />
           <Route path="surface areas and volumes/terminology" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesTerminology /></ProtectedRoute>} />
           <Route path="surface areas and volumes/skills" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesSkills /></ProtectedRoute>} />
+
+          {/* Some Applications of Trigonometry Routes */}
+          <Route path="some-applications-of-trigonometry" element={<ProtectedRoute redirectTo="/login"><SomeApplicationsOfTrigonometry /></ProtectedRoute>} />
+          <Route path="some-applications-of-trigonometry/introduction" element={<ProtectedRoute redirectTo="/login"><SomeApplicationsTrigIntro /></ProtectedRoute>} />
+          <Route path="some-applications-of-trigonometry/terminology" element={<ProtectedRoute redirectTo="/login"><SomeApplicationsTrigTerminology /></ProtectedRoute>} />
+          <Route path="some-applications-of-trigonometry/skills" element={<ProtectedRoute redirectTo="/login"><SomeApplicationsTrigSkills /></ProtectedRoute>} />
+
+          {/* Fallback for spaces in URL */}
+          <Route path="some applications of trigonometry" element={<ProtectedRoute redirectTo="/login"><SomeApplicationsOfTrigonometry /></ProtectedRoute>} />
+          <Route path="some applications of trigonometry/introduction" element={<ProtectedRoute redirectTo="/login"><SomeApplicationsTrigIntro /></ProtectedRoute>} />
+          <Route path="some applications of trigonometry/terminology" element={<ProtectedRoute redirectTo="/login"><SomeApplicationsTrigTerminology /></ProtectedRoute>} />
+          <Route path="some applications of trigonometry/skills" element={<ProtectedRoute redirectTo="/login"><SomeApplicationsTrigSkills /></ProtectedRoute>} />
+
+          {/* Statistics */}
+          <Route path="statistics" element={<ProtectedRoute redirectTo="/login"><Statistics /></ProtectedRoute>} />
+          <Route path="statistics/introduction" element={<ProtectedRoute redirectTo="/login"><StatisticsIntro /></ProtectedRoute>} />
+          <Route path="statistics/terminology" element={<ProtectedRoute redirectTo="/login"><StatisticsTerminology /></ProtectedRoute>} />
+          <Route path="statistics/skills" element={<ProtectedRoute redirectTo="/login"><StatisticsSkills /></ProtectedRoute>} />
 
           {/* Introduction to Trigonometry Routes */}
           <Route path="introduction-to-trigonometry" element={<ProtectedRoute redirectTo="/login"><IntroductionToTrignometry /></ProtectedRoute>} />

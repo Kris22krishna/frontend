@@ -4,6 +4,7 @@ import "../../Determinants.css";
 import MathRenderer from "../../../../../MathRenderer";
 import { LatexText } from "../../../../../LatexText";
 import DeterminantsTopNav from "../../DeterminantsTopNav";
+import { NODE_IDS } from "@/lib/curriculumIds";
 import {
   generateFundamentalsQuestions,
   generateFundamentalsAssessment,
@@ -290,6 +291,15 @@ export default function DeterminantsSkills() {
   const navigate = useNavigate();
   const [view, setView] = useState("list");
 
+  const skillMap = {
+    fundamentals: NODE_IDS.g12MathDeterminantsFundamentals,
+    properties: NODE_IDS.g12MathDeterminantsProperties,
+    area: NODE_IDS.g12MathDeterminantsArea,
+    "minors-cofactors": NODE_IDS.g12MathDeterminantsMinorsCofactors,
+    "adjoint-inverse": NODE_IDS.g12MathDeterminantsAdjointInverse,
+    applications: NODE_IDS.g12MathDeterminantsApplications,
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -298,6 +308,7 @@ export default function DeterminantsSkills() {
   const [selectedLearnIdx, setSelectedLearnIdx] = useState(0);
 
   const skill = activeSkill !== null ? SKILLS[activeSkill] : null;
+  const currentNodeId = React.useMemo(() => skill ? skillMap[skill.id] : null, [skill]);
 
   if (view !== "list" && skill) {
     return (
@@ -670,6 +681,7 @@ export default function DeterminantsSkills() {
               onBack={() => setView("list")}
               color={skill.color}
               prefix="det"
+              nodeId={currentNodeId}
             />
           ) : (
             <AssessmentEngine
@@ -678,6 +690,7 @@ export default function DeterminantsSkills() {
               onBack={() => setView("list")}
               color={skill.color}
               prefix="det"
+              nodeId={currentNodeId}
             />
           )}
         </div>

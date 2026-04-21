@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../../Matrices.css";
 import MathRenderer from "../../../../../MathRenderer";
 import { LatexText } from "../../../../../LatexText";
+import { NODE_IDS } from "@/lib/curriculumIds";
 import {
   generateOrderQuestions,
   generateOrderAssessment,
@@ -303,6 +304,15 @@ const SKILLS = [
 export default function MatricesSkills() {
   const navigate = useNavigate();
   const [view, setView] = useState("list");
+  
+  const skillMap = {
+    order: NODE_IDS.g12MathMatricesOrder,
+    types: NODE_IDS.g12MathMatricesTypes,
+    operations: NODE_IDS.g12MathMatricesOperations,
+    multiplication: NODE_IDS.g12MathMatricesMultiplication,
+    transpose: NODE_IDS.g12MathMatricesTranspose,
+    inverse: NODE_IDS.g12MathMatricesInverse,
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -312,6 +322,7 @@ export default function MatricesSkills() {
   const [selectedLearnIdx, setSelectedLearnIdx] = useState(0);
 
   const skill = activeSkill !== null ? SKILLS[activeSkill] : null;
+  const currentNodeId = React.useMemo(() => skill ? skillMap[skill.id] : null, [skill]);
 
   if (view !== "list" && skill) {
     return (
@@ -689,6 +700,7 @@ export default function MatricesSkills() {
               onBack={() => setView("list")}
               color={skill.color}
               prefix="mat"
+              nodeId={currentNodeId}
             />
           ) : (
             <AssessmentEngine
@@ -697,6 +709,7 @@ export default function MatricesSkills() {
               onBack={() => setView("list")}
               color={skill.color}
               prefix="mat"
+              nodeId={currentNodeId}
             />
           )}
         </div>

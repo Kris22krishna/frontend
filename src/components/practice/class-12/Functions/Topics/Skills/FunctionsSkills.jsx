@@ -3,6 +3,7 @@ import "../../Functions.css";
 import MathRenderer from "../../../../../MathRenderer";
 import { LatexText } from "../../../../../LatexText";
 import FunctionsTopNav from "../../FunctionsTopNav";
+import { NODE_IDS } from "@/lib/curriculumIds";
 import {
   generateFunctionBasicsQuestions,
   generateFunctionBasicsAssessment,
@@ -217,11 +218,20 @@ export default function FunctionsSkills() {
   const [activeSkill, setActiveSkill] = useState(null);
   const [selectedLearnIdx, setSelectedLearnIdx] = useState(0);
 
+  const skillMap = {
+    concept: NODE_IDS.g12MathFunctionsConcept,
+    types: NODE_IDS.g12MathFunctionsTypes,
+    algebra: NODE_IDS.g12MathFunctionsAlgebra,
+    equations: NODE_IDS.g12MathFunctionsEquations,
+    domain_range: NODE_IDS.g12MathFunctionsDomainRangeAdvanced,
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   const skill = activeSkill !== null ? SKILLS[activeSkill] : null;
+  const currentNodeId = React.useMemo(() => skill ? skillMap[skill.id] : null, [skill]);
 
   if (view !== "list" && skill) {
     return (
@@ -335,9 +345,9 @@ export default function FunctionsSkills() {
               </div>
             </div>
           ) : view === "practice" ? (
-            <QuizEngine questions={skill.practice} title={`Practice: ${skill.title}`} onBack={() => setView("list")} color={skill.color} prefix="rel" />
+            <QuizEngine questions={skill.practice} title={`Practice: ${skill.title}`} onBack={() => setView("list")} color={skill.color} prefix="rel" nodeId={currentNodeId} />
           ) : (
-            <AssessmentEngine questions={skill.assessment} title={`Assessment: ${skill.title}`} onBack={() => setView("list")} color={skill.color} prefix="rel" />
+            <AssessmentEngine questions={skill.assessment} title={`Assessment: ${skill.title}`} onBack={() => setView("list")} color={skill.color} prefix="rel" nodeId={currentNodeId} />
           )}
         </div>
       </div>
