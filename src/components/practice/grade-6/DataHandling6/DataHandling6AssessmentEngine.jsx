@@ -35,7 +35,13 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         const type = getQuestionType(question);
         if (type === 'text') return question.answer ?? 'No answer provided';
         if (['tally-draw', 'pictograph-draw', 'bar-graph-draw'].includes(type)) return '[Visual Drawing Activity]';
-        return question.options?.[question.correct] ?? 'No answer provided';
+                if (question.options && question.options[question.correct] !== undefined) {
+            return question.options[question.correct];
+        }
+        if (question.correct !== undefined && question.correct !== null) {
+            return String(question.correct);
+        }
+        return 'No answer provided';
     };
 
     const getUserAnswerLabel = (question, answer) => {
@@ -234,22 +240,59 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                                     )}
                                     <MathRenderer text={question.question} />
                                 </div>
-                                <div className={`${prefix}-summary-split`} style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 16 }}>
-                                    <div className={`${prefix}-summary-item`} style={{ background: '#fff', padding: 16, borderRadius: 12, border: '1px solid #e2e8f0' }}>
-                                        <strong style={{ color: '#10b981', display: 'block', marginBottom: 8, fontSize: 12, textTransform: 'uppercase', letterSpacing: 1 }}>Correct Answer</strong>
-                                        <div style={{ color: '#0f172a', fontWeight: 600, fontSize: 15 }}>
-                                            <MathRenderer text={String(correctOptText)} />
+                                {['tally-draw', 'pictograph-draw', 'bar-graph-draw'].includes(getQuestionType(question)) ? (
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: 16 }}>
+                                        <div style={{ background: '#fff', padding: 16, borderRadius: 12, border: '1px solid #e2e8f0', pointerEvents: 'none', overflow: 'hidden' }}>
+                                            <strong style={{ color: '#10b981', display: 'block', marginBottom: 16, fontSize: 12, textTransform: 'uppercase', letterSpacing: 1, textAlign: 'center' }}>Correct Answer</strong>
+                                            <div style={{ transform: 'scale(0.85)', transformOrigin: 'top center', display: 'flex', justifyContent: 'center' }}>
+                                                {getQuestionType(question) === 'tally-draw' && (
+                                                    <TallyDrawInteractive question={question} answered={true} userAnswer={question.targetCount} onChange={() => {}} color="#10b981" prefix={prefix} />
+                                                )}
+                                                {getQuestionType(question) === 'pictograph-draw' && (
+                                                    <PictographDrawInteractive question={question} answered={true} userAnswer={question.targetCounts} onChange={() => {}} color="#10b981" prefix={prefix} />
+                                                )}
+                                                {getQuestionType(question) === 'bar-graph-draw' && (
+                                                    <BarGraphDrawInteractive question={question} answered={true} userAnswer={question.targetCounts} onChange={() => {}} color="#10b981" prefix={prefix} />
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div style={{ background: '#fff', padding: 16, borderRadius: 12, border: '1px solid #e2e8f0', pointerEvents: 'none', overflow: 'hidden' }}>
+                                            <strong style={{ color: statusColor, display: 'block', marginBottom: 16, fontSize: 12, textTransform: 'uppercase', letterSpacing: 1, textAlign: 'center' }}>Your Answer</strong>
+                                            {userOptText === 'Not Answered' ? (
+                                                <div style={{ color: '#94a3b8', fontStyle: 'italic', textAlign: 'center', marginTop: 20 }}>Not Answered</div>
+                                            ) : (
+                                                <div style={{ transform: 'scale(0.85)', transformOrigin: 'top center', display: 'flex', justifyContent: 'center' }}>
+                                                    {getQuestionType(question) === 'tally-draw' && (
+                                                        <TallyDrawInteractive question={question} answered={true} userAnswer={answers[index]} onChange={() => {}} color={statusColor} prefix={prefix} />
+                                                    )}
+                                                    {getQuestionType(question) === 'pictograph-draw' && (
+                                                        <PictographDrawInteractive question={question} answered={true} userAnswer={answers[index]} onChange={() => {}} color={statusColor} prefix={prefix} />
+                                                    )}
+                                                    {getQuestionType(question) === 'bar-graph-draw' && (
+                                                        <BarGraphDrawInteractive question={question} answered={true} userAnswer={answers[index]} onChange={() => {}} color={statusColor} prefix={prefix} />
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
-                                    <div className={`${prefix}-summary-item user-ans`} style={{ background: '#fff', padding: 16, borderRadius: 12, border: '1px solid #e2e8f0' }}>
-                                        <strong style={{ color: statusColor, display: 'block', marginBottom: 8, fontSize: 12, textTransform: 'uppercase', letterSpacing: 1 }}>Your Answer</strong>
-                                        <div style={{ color: '#0f172a', fontWeight: 600, fontSize: 15 }}>
-                                            {userOptText === 'Not Answered'
-                                                ? <span style={{ color: '#94a3b8', fontStyle: 'italic' }}>Not Answered</span>
-                                                : <MathRenderer text={String(userOptText)} />}
+                                ) : (
+                                    <div className={`${prefix}-summary-split`} style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: 16 }}>
+                                        <div className={`${prefix}-summary-item`} style={{ background: '#fff', padding: 16, borderRadius: 12, border: '1px solid #e2e8f0' }}>
+                                            <strong style={{ color: '#10b981', display: 'block', marginBottom: 8, fontSize: 12, textTransform: 'uppercase', letterSpacing: 1 }}>Correct Answer</strong>
+                                            <div style={{ color: '#0f172a', fontWeight: 600, fontSize: 15 }}>
+                                                <MathRenderer text={String(correctOptText)} />
+                                            </div>
+                                        </div>
+                                        <div className={`${prefix}-summary-item user-ans`} style={{ background: '#fff', padding: 16, borderRadius: 12, border: '1px solid #e2e8f0' }}>
+                                            <strong style={{ color: statusColor, display: 'block', marginBottom: 8, fontSize: 12, textTransform: 'uppercase', letterSpacing: 1 }}>Your Answer</strong>
+                                            <div style={{ color: '#0f172a', fontWeight: 600, fontSize: 15 }}>
+                                                {userOptText === 'Not Answered'
+                                                    ? <span style={{ color: '#94a3b8', fontStyle: 'italic' }}>Not Answered</span>
+                                                    : <MathRenderer text={String(userOptText)} />}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                )}
                             </div>
                         );
                     })}

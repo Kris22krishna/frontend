@@ -9,9 +9,18 @@ function makeQ(question, correctVal, distractors, explanation) {
         const s = String(d);
         if (!opts.includes(s)) opts.push(s);
     }
-    // Fill remaining if needed, though we usually provide 3 distractors
+    // Fill remaining if needed with reasonable random distractors
     while (opts.length < 4) {
-        opts.push(String(Number(correctVal) + opts.length * 3 + 1));
+        let val = Number(correctVal);
+        let dist;
+        if (isNaN(val)) {
+            dist = String(correctVal) + opts.length;
+        } else {
+            // Generate a distractor nearby
+            const offset = (Math.random() > 0.5 ? 1 : -1) * (R(1, 5) + opts.length);
+            dist = String(val + offset);
+        }
+        if (!opts.includes(dist)) opts.push(dist);
     }
     const final = opts.slice(0, 4);
     const shuffled = [...final].sort(() => Math.random() - 0.5);
@@ -32,34 +41,42 @@ function gcd(a, b) {
 // ─── SKILL 1: TYPES OF FRACTIONS ──────────────────────────────────────────
 export function generateTypesQuestions() {
     const qs = [];
-    for (let i = 0; i < 10; i++) {
-        if (i < 3) {
+    const seen = new Set();
+    for (let i = 0; i < 40; i++) {
+        let q;
+        if (i < 13) {
             const num = R(1, 9);
             const den = R(num + 1, 15);
-            qs.push(makeQ(
+            q = makeQ(
                 `Is $\\frac{${num}}{${den}}$ a proper or improper fraction?`,
                 `Proper`, [`Improper`, `Mixed`, `Whole number`],
                 `Because ${num} < ${den}, it is a proper fraction.`
-            ));
-        } else if (i < 6) {
+            );
+        } else if (i < 26) {
             const num = R(6, 15);
             const den = R(2, num - 1);
-            qs.push(makeQ(
+            q = makeQ(
                 `Is $\\frac{${num}}{${den}}$ a proper or improper fraction?`,
                 `Improper`, [`Proper`, `Mixed`, `Unit fraction`],
                 `Because ${num} > ${den}, it is an improper fraction.`
-            ));
+            );
         } else {
             const whole = R(1, 5);
             const num = R(1, 5);
             const den = R(num + 1, 9);
-            qs.push(makeQ(
+            q = makeQ(
                 `Convert $${whole}\\frac{${num}}{${den}}$ into an improper fraction.`,
                 `$\\frac{${whole * den + num}}{${den}}$`,
                 [`$\\frac{${whole * den}}{${den}}$`, `$\\frac{${whole + num}}{${den}}$`, `$\\frac{${whole * num + den}}{${den}}$`],
                 `$(${whole} \\times ${den}) + ${num} = ${whole * den + num}$, so it is $\\frac{${whole * den + num}}{${den}}$.`
-            ));
+            );
         }
+        const key = q.question + '||' + q.correct;
+        if (!seen.has(key)) {
+            seen.add(key);
+            qs.push(q);
+        }
+        if (qs.length >= 10) break;
     }
     return qs;
 }
@@ -104,9 +121,10 @@ export function generateTypesAssessment() {
 // ─── SKILL 2: FRACTION ADD/SUB ─────────────────────────────────────────────
 export function generateAddSubQuestions() {
     const qs = [];
-    for (let i = 0; i < 10; i++) {
-        if (i < 5) {
-            // Like fractions
+    const seen = new Set();
+    for (let i = 0; i < 30; i++) {
+        let q;
+        if (i < 15) {
             const den = R(4, 12);
             const n1 = R(1, den - 1);
             const n2 = R(1, den - 1);
@@ -115,14 +133,13 @@ export function generateAddSubQuestions() {
             const ansNum = sum / g;
             const ansDen = den / g;
             const ansText = ansDen === 1 ? `${ansNum}` : `$\\frac{${ansNum}}{${ansDen}}$`;
-            qs.push(makeQ(
+            q = makeQ(
                 `Solve: $\\frac{${n1}}{${den}} + \\frac{${n2}}{${den}}$`,
                 ansText,
                 [`$\\frac{${n1 + n2}}{${den * 2}}$`, `$\\frac{${sum + 1}}{${den}}$`, `$\\frac{${Math.abs(n1 - n2)}}{${den}}$`],
                 `Keep denominator ${den}, add top: ${n1}+${n2} = ${sum}. Simplify to ${ansText}.`
-            ));
+            );
         } else {
-            // Unlike fractions (simple)
             const d1 = R(2, 5);
             const d2 = R(2, 5);
             const n1 = 1;
@@ -130,21 +147,29 @@ export function generateAddSubQuestions() {
             const ansNum = d2 + d1;
             const ansDen = d1 * d2;
             const g = gcd(ansNum, ansDen);
-            qs.push(makeQ(
+            q = makeQ(
                 `Solve: $\\frac{${n1}}{${d1}} + \\frac{${n2}}{${d2}}$`,
                 `$\\frac{${ansNum / g}}{${ansDen / g}}$`,
                 [`$\\frac{2}{${d1 + d2}}$`, `$\\frac{1}{${Math.abs(d1 - d2) || 1}}$`, `$\\frac{${ansNum + 1}}{${ansDen}}$`],
                 `Common denominator is ${ansDen}. $\\frac{${d2}}{${ansDen}} + \\frac{${d1}}{${ansDen}} = \\frac{${ansNum}}{${ansDen}}$.`
-            ));
+            );
         }
+        const key = q.question + '||' + q.correct;
+        if (!seen.has(key)) {
+            seen.add(key);
+            qs.push(q);
+        }
+        if (qs.length >= 10) break;
     }
     return qs;
 }
 
 export function generateAddSubAssessment() {
     const qs = [];
-    for (let i = 0; i < 10; i++) {
-        if (i < 5) {
+    const seen = new Set();
+    for (let i = 0; i < 40; i++) {
+        let q;
+        if (i < 20) {
             // Subtraction like
             const den = R(5, 15);
             const n1 = R(4, den + 5);
@@ -154,12 +179,12 @@ export function generateAddSubAssessment() {
             const ansNum = diff / g;
             const ansDen = den / g;
             const ansText = ansDen === 1 ? `${ansNum}` : `$\\frac{${ansNum}}{${ansDen}}$`;
-            qs.push(makeQ(
+            q = makeQ(
                 `Solve: $\\frac{${n1}}{${den}} - \\frac{${n2}}{${den}}$`,
                 ansText,
                 [`$\\frac{${n1 + n2}}{${den}}$`, `$\\frac{${diff}}{0}$`, `$\\frac{${diff + 1}}{${den}}$`],
                 `Keep denominator ${den}, subtract top: ${n1}-${n2} = ${diff}. Simplify to ${ansText}.`
-            ));
+            );
         } else {
             // Subtraction unlike
             const d1 = 2; // half
@@ -169,13 +194,19 @@ export function generateAddSubAssessment() {
             const num = (d2 * n1) - (d1 * n2);
             const den = d1 * d2;
             const g = gcd(Math.abs(num), den);
-            qs.push(makeQ(
+            q = makeQ(
                 `Solve: $\\frac{${n1}}{${d1}} - \\frac{${n2}}{${d2}}$`,
                 `$\\frac{${num / g}}{${den / g}}$`,
                 [`$\\frac{0}{${Math.abs(d1 - d2)}}$`, `$\\frac{1}{${d1 + d2}}$`, `$\\frac{2}{${den}}$`],
                 `Common denominator ${den}. $\\frac{${d2}}{${den}} - \\frac{${d1}}{${den}} = \\frac{${num}}{${den}}$.`
-            ));
+            );
         }
+        const key = q.question + '||' + q.correct;
+        if (!seen.has(key)) {
+            seen.add(key);
+            qs.push(q);
+        }
+        if (qs.length >= 10) break;
     }
     return qs;
 }
@@ -262,20 +293,22 @@ export function generateDecimalShiftQuestions() {
 
         if (i < 5) {
             // Multiply
-            const ans = (Number(num) * p).toFixed(Math.max(0, 2 - Math.log10(p)));
+            const rawAns = Number(num) * p;
+            const ans = rawAns.toFixed(Math.max(0, 2 - Math.log10(p)));
             qs.push(makeQ(
                 `$${num} \\times ${p} = ?$`,
-                ans.replace(/\.0+$/, ''),
+                ans.replace(/\.?0+$/, ''),
                 [
-                    (Number(num) * (p * 10)).toFixed(1).replace(/\.0+$/, ''),
-                    (Number(num) * (p / 10)).toFixed(3).replace(/\.0+$/, ''),
+                    (Number(num) * (p * 10)).toFixed(1).replace(/\.?0+$/, ''),
+                    (Number(num) * (p / 10)).toFixed(3).replace(/\.?0+$/, ''),
                     num
                 ],
                 `Multiplying by ${p} shifts the decimal point ${Math.log10(p)} place(s) right.`
             ));
         } else {
             // Divide
-            const ans = (Number(num) / p).toFixed(2 + Math.log10(p));
+            const rawAns = Number(num) / p;
+            const ans = rawAns.toFixed(2 + Math.log10(p));
             qs.push(makeQ(
                 `$${num} \\div ${p} = ?$`,
                 ans.replace(/\.?0+$/, ''),
@@ -353,27 +386,36 @@ export function generateDecimalMultiplyQuestions() {
 
 export function generateDecimalMultiplyAssessment() {
     const qs = [];
-    for (let i = 0; i < 10; i++) {
-        if (i < 5) {
-            const dp1 = R(1, 2);
-            const dp2 = R(1, 2);
-            qs.push(makeQ(
+    const seen = new Set();
+    
+    for (let i = 0; i < 40; i++) {
+        let q;
+        if (i < 20) {
+            const dp1 = R(1, 4);
+            const dp2 = R(1, 4);
+            q = makeQ(
                 `If you multiply a number with ${dp1} decimal place(s) by a number with ${dp2} decimal place(s), how many decimal places will the product usually have?`,
-                `${dp1 + dp2}`, [`${dp1}`, `${dp2}`, `${dp1 * dp2}`],
+                `${dp1 + dp2}`, [`${Math.max(1, dp1 + dp2 - 1)}`, `${dp1 + dp2 + 1}`, `${dp1}`, `${dp2}`],
                 `Add the decimal places: ${dp1} + ${dp2} = ${dp1 + dp2}.`
-            ));
+            );
         } else {
-            const n1 = R(1, 9) / 100; // 0.0x
-            const n2 = R(1, 9) / 10;  // 0.x
-            // JavaScript float issues, handle explicitly:
-            const numans = (n1 * 100) * (n2 * 10);
+            const n1 = R(1, 9) / 100;
+            const n2 = R(1, 9) / 10;
+            const numans = Math.round((n1 * 100) * (n2 * 10));
             const ansStr = (numans / 1000).toFixed(3);
-            qs.push(makeQ(
+            q = makeQ(
                 `$${n1.toFixed(2)} \\times ${n2.toFixed(1)} = ?$`,
-                ansStr, [`${(numans / 100).toFixed(2)}`, `${(numans / 10).toFixed(1)}`, `${numans}`],
-                `$${n1 * 100} \\times ${n2 * 10} = ${numans}$. 2 + 1 = 3 decimal places $\\rightarrow ${ansStr}$.`
-            ));
+                ansStr, [`${(numans / 100).toFixed(2)}`, `${(numans / 10).toFixed(1)}`, `${(numans / 10000).toFixed(4)}`],
+                `Multiply ignoring decimals: $${Math.round(n1 * 100)} \\times ${Math.round(n2 * 10)} = ${numans}$. Count 3 places $\\rightarrow ${ansStr}$.`
+            );
         }
+        
+        const key = q.question + '||' + q.correct;
+        if (!seen.has(key)) {
+            seen.add(key);
+            qs.push(q);
+        }
+        if (qs.length >= 10) break;
     }
     return qs;
 }

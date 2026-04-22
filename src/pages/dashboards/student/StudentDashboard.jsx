@@ -297,7 +297,7 @@ const ChronologicalSummary = ({ sessions }) => {
                                 </td>
                                 <td className="py-5 px-4 text-sm text-slate-800 font-bold">{session.skill_name}</td>
                                 <td className="py-5 px-4 text-sm text-slate-500 font-medium italic">{session.sub_skill_name || 'N/A'}</td>
-                                <td className="py-5 px-4 text-sm text-slate-700 font-black">{session.total_questions}</td>
+                                <td className="py-5 px-4 text-sm text-slate-700 font-black">{session.total_questions || (session.correct + session.incorrect + (session.skipped || 0))}</td>
                                 <td className="py-5 px-4 text-sm text-emerald-500 font-black">
                                     <div className="flex items-center gap-1">
                                         {session.correct}
