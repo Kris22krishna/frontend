@@ -23,9 +23,10 @@ const SKILLS = generateMSLSkillsData();
    PRACTICE ENGINE  (quadrilaterals-pattern)
    ═══════════════════════════════════════════════════ */
 function MSLPracticeEngine({ skill, onBack, nodeId }) {
-    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
     const answersPayload = useRef([]);
     const isFinishedRef = useRef(false);
+    const sessionStartedRef = useRef(false);
 
     const questions = skill.practice;
 
@@ -39,7 +40,16 @@ function MSLPracticeEngine({ skill, onBack, nodeId }) {
     useEffect(() => {
         if (!nodeId) return;
         startSession({ nodeId, sessionType: 'practice' });
+        sessionStartedRef.current = true;
     }, [nodeId]); // eslint-disable-line
+
+    useEffect(() => {
+        return () => {
+            if (sessionStartedRef.current && !isFinishedRef.current && answersPayload.current.length > 0) {
+                abandonSession({ totalQuestions: questions.length, answersPayload: answersPayload.current });
+            }
+        };
+    }, [abandonSession, questions.length]);
 
     useEffect(() => {
         if (finished) return;
@@ -59,17 +69,25 @@ function MSLPracticeEngine({ skill, onBack, nodeId }) {
         const correct = i === q.correctAnswer;
         if (correct) setScore(s => s + 1);
         if (nodeId) {
-            const d = { question_index: current, answer_json: { selected: i, correct: q.correctAnswer }, is_correct: correct, marks_awarded: correct ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
-            answersPayload.current[current] = d;
-            await logAnswer(d);
+            const entry = { question_index: current + 1, answer_json: { selected: i, correct: q.correctAnswer }, is_correct: correct ? 1.0 : 0.0, marks_awarded: correct ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+            answersPayload.current.push(entry);
+            await logAnswer({ questionIndex: entry.question_index, answerJson: entry.answer_json, isCorrect: entry.is_correct });
         }
+    };
+
+    const handleExit = async () => {
+        if (nodeId && !isFinishedRef.current) {
+            isFinishedRef.current = true;
+            await abandonSession({ totalQuestions: questions.length, answersPayload: answersPayload.current });
+        }
+        onBack();
     };
 
     const handleNext = async () => {
         if (current + 1 >= questions.length) {
             if (nodeId && !isFinishedRef.current) {
                 isFinishedRef.current = true;
-                await finishSession({ totalQuestions: questions.length, questionsAnswered: answersPayload.current.filter(Boolean).length, answersPayload: answersPayload.current.filter(Boolean) });
+                await finishSession({ totalQuestions: questions.length, questionsAnswered: answersPayload.current.length, answersPayload: answersPayload.current });
             }
             setFinished(true);
         } else {
@@ -119,7 +137,7 @@ function MSLPracticeEngine({ skill, onBack, nodeId }) {
                         <div style={{ fontSize: 13, color: skill.color, fontWeight: 800, background: `${skill.color}15`, padding: '3px 10px', borderRadius: 8, marginBottom: 3 }}>{fmt(timeTaken)}</div>
                         <div style={{ fontSize: 13, color: '#64748b', fontWeight: 700 }}>Q <span style={{ color: skill.color }}>{current + 1}</span> / {questions.length}</div>
                     </div>
-                    <button className={styles['msl-btn-exit']} onClick={onBack}><span>✕</span> Exit</button>
+                    <button className={styles['msl-btn-exit']} onClick={handleExit}><span>✕</span> Exit</button>
                 </div>
             </div>
 
@@ -179,9 +197,10 @@ function MSLPracticeEngine({ skill, onBack, nodeId }) {
    ASSESSMENT ENGINE  (quadrilaterals-pattern + palette)
    ═══════════════════════════════════════════════════ */
 function MSLAssessEngine({ skill, onBack, nodeId }) {
-    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
     const answersPayload = useRef([]);
     const isFinishedRef = useRef(false);
+    const sessionStartedRef = useRef(false);
     const qStartRef = useRef(Date.now());
 
     const questions = skill.assessment;
@@ -195,8 +214,17 @@ function MSLAssessEngine({ skill, onBack, nodeId }) {
     useEffect(() => {
         if (!nodeId) return;
         startSession({ nodeId, sessionType: 'assessment' });
-        answersPayload.current = Array(questions.length).fill(null);
+        sessionStartedRef.current = true;
+        answersPayload.current = [];
     }, [nodeId]); // eslint-disable-line
+
+    useEffect(() => {
+        return () => {
+            if (sessionStartedRef.current && !isFinishedRef.current && answersPayload.current.length > 0) {
+                abandonSession({ totalQuestions: questions.length, answersPayload: answersPayload.current });
+            }
+        };
+    }, [abandonSession, questions.length]);
 
     useEffect(() => {
         if (finished) return;
@@ -211,6 +239,14 @@ function MSLAssessEngine({ skill, onBack, nodeId }) {
         setSelected(responses[idx]?.selected ?? null);
     };
 
+    const handleExit = () => {
+        if (nodeId && !isFinishedRef.current && answersPayload.current.length > 0) {
+            isFinishedRef.current = true;
+            abandonSession({ totalQuestions: questions.length, answersPayload: answersPayload.current });
+        }
+        onBack();
+    };
+
     const handleSelect = async (i) => {
         const timeSpent = Date.now() - qStartRef.current;
         setSelected(i);
@@ -218,9 +254,9 @@ function MSLAssessEngine({ skill, onBack, nodeId }) {
         setResponses(p => ({ ...p, [qIdx]: { selected: i, isCorrect: correct } }));
         qStartRef.current = Date.now();
         if (nodeId) {
-            const d = { question_index: qIdx + 1, answer_json: { selected: i, text: questions[qIdx].options[i] }, is_correct: correct ? 1.0 : 0.0, marks_awarded: correct ? 1 : 0, marks_possible: 1, time_taken_ms: timeSpent };
-            answersPayload.current[qIdx] = d;
-            await logAnswer({ questionIndex: d.question_index, answerJson: d.answer_json, isCorrect: d.is_correct });
+            const entry = { question_index: qIdx + 1, answer_json: { selected: i, text: questions[qIdx].options[i] }, is_correct: correct ? 1.0 : 0.0, marks_awarded: correct ? 1 : 0, marks_possible: 1, time_taken_ms: timeSpent };
+            answersPayload.current.push(entry);
+            await logAnswer({ questionIndex: entry.question_index, answerJson: entry.answer_json, isCorrect: entry.is_correct });
         }
     };
 
@@ -231,8 +267,7 @@ function MSLAssessEngine({ skill, onBack, nodeId }) {
             setFinished(true);
             if (nodeId && !isFinishedRef.current) {
                 isFinishedRef.current = true;
-                const fp = answersPayload.current.filter(Boolean);
-                await finishSession({ totalQuestions: questions.length, questionsAnswered: fp.length, answersPayload: fp });
+                await finishSession({ totalQuestions: questions.length, questionsAnswered: answersPayload.current.length, answersPayload: answersPayload.current });
             }
         }
     };
@@ -316,7 +351,7 @@ function MSLAssessEngine({ skill, onBack, nodeId }) {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div style={{ background: '#fff', padding: '6px 14px', borderRadius: 10, border: '2px solid #e2e8f0', fontFamily: 'Outfit, monospace', fontSize: 15, fontWeight: 900, color: '#1e293b' }}>⏱ {fmt(timeTaken)}</div>
-                    <button className={styles['msl-btn-exit']} onClick={onBack}><span>✕</span> Exit</button>
+                    <button className={styles['msl-btn-exit']} onClick={handleExit}><span>✕</span> Exit</button>
                 </div>
             </div>
 
