@@ -83,7 +83,7 @@ export const generateLinearPairScenarios = () => {
                 expl: `By the Linear Pair Axiom, $x = 180^{\\circ} - ${knownAngle}^{\\circ} = ${qAngle}^{\\circ}$.`,
                 svg: {
                     type: "linear-pair",
-                    data: { a1: unknown === 1 ? "x" : `${a1}°`, a2: unknown === 2 ? "x" : `${a2}°`, splitAngle: a1 }
+                    data: { a1: unknown === 1 ? "x" : `${a1}°`, a2: unknown === 2 ? "x" : `${a2}°`, splitAngle: a1, pointLabels: ['P', 'O', 'Q', ''] }
                 }
             });
         } else if (tpl === 'ratio') {
@@ -159,7 +159,7 @@ export const generateLinearPairScenarios = () => {
                 expl: `Supplementary angles sum to $180^{\\circ}$. So the supplement of $${a}^{\\circ}$ is $180 - ${a} = ${supp}^{\\circ}$.`,
                 svg: {
                     type: "linear-pair",
-                    data: { a1: `${a}°`, a2: '?', splitAngle: a }
+                    data: { a1: `${a}°`, a2: '?', splitAngle: a, pointLabels: ['', '', '', ''] }
                 }
             });
         } else if (tpl === 'expr-x') {
@@ -383,7 +383,7 @@ export const generateParallelLinesScenarios = () => {
                 q: `Lines $l$ and $m$ are parallel. A transversal cuts them forming the angle shown. Find the alternate interior angle $x$.`,
                 type: "mcq", opts: options, ans: ansIndex,
                 expl: `Alternate interior angles are equal when lines are parallel. $x = ${acute}^{\\circ}$.`,
-                svg: { type: "parallel", data: { knownLoc: "top-right", unknownLoc: "bottom-left", knownVal: acute, tilt: acute } }
+                svg: { type: "parallel", data: { knownLoc: "t-bl", unknownLoc: "b-tr", knownVal: acute, tilt: acute } }
             });
         } else if (tpl === 'corr') {
             const { options, ansIndex } = generateOptions(obtuse);
@@ -391,7 +391,7 @@ export const generateParallelLinesScenarios = () => {
                 q: `Lines $l$ and $m$ are parallel. A transversal cuts them. Find the corresponding angle $x$.`,
                 type: "mcq", opts: options, ans: ansIndex,
                 expl: `Corresponding angles are equal. $x = ${obtuse}^{\\circ}$.`,
-                svg: { type: "parallel", data: { knownLoc: "top-left", unknownLoc: "bottom-left-out", knownVal: obtuse, tilt: acute } }
+                svg: { type: "parallel", data: { knownLoc: "t-tl", unknownLoc: "b-tl", knownVal: obtuse, tilt: acute } }
             });
         } else if (tpl === 'co-int') {
             const { options, ansIndex } = generateOptions(obtuse);
@@ -399,7 +399,7 @@ export const generateParallelLinesScenarios = () => {
                 q: `Lines $l$ and $m$ are parallel. Find the co-interior angle $x$ on the same side of the transversal.`,
                 type: "mcq", opts: options, ans: ansIndex,
                 expl: `Co-interior angles sum to $180^{\\circ}$. $x = 180 - ${acute} = ${obtuse}^{\\circ}$.`,
-                svg: { type: "parallel", data: { knownLoc: "top-right", unknownLoc: "bottom-right", knownVal: acute, tilt: acute } }
+                svg: { type: "parallel", data: { knownLoc: "b-tr", unknownLoc: "t-br", knownVal: acute, tilt: acute } }
             });
         } else if (tpl === 'aux-line') {
             // Ex.4 style: PQ || RS, find ∠XMY using auxiliary line

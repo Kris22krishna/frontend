@@ -263,9 +263,9 @@ export default function LinesAndAngles9Terminology() {
     ];
 
     return (
-        <div className={styles['page']} style={window.innerWidth > 900 ? { height: 'calc(100vh - 140px)', display: 'flex', flexDirection: 'column', overflow: 'hidden' } : { display: 'flex', flexDirection: 'column' }}>
+        <div className={styles['page']} style={{ display: 'flex', flexDirection: 'column' }}>
             {/* ── TOP NAV ─────────────────────────────────── */}
-            <nav className={styles['nav']} style={{ position: 'sticky', top: 0, zIndex: 100 }}>
+            <nav className={styles['nav']} style={{ position: 'sticky', top: 80, zIndex: 100 }}>
                 <button className={styles['nav-back']} onClick={() => navigate('/practice/class-9/lines-and-angles')}>
                     ← Back to Module
                 </button>
@@ -276,7 +276,7 @@ export default function LinesAndAngles9Terminology() {
                 </div>
             </nav>
 
-            <div style={{ flex: 1, overflowY: 'auto' }}>
+            <div style={{ flex: 1 }}>
                 {/* ── HEADER ──────────────────────────────────── */}
                 <div style={{ padding: '10px 12px 10px', textAlign: 'center' }}>
                     <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 900, color: '#0f172a', margin: '0 0 10px' }}>

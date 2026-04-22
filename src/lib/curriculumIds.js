@@ -28,6 +28,9 @@ export const NODE_IDS = {
   grade2:  'a2000000-0000-0000-0000-000000000002',
   grade3:  'a2000000-0000-0000-0000-000000000003',
   grade4:  'a2000000-0000-0000-0000-000000000004',
+  grade5:  'a2000000-0000-0000-0000-000000000005',
+  grade6:  'a2000000-0000-0000-0000-000000000006',
+  grade7:  'a2000000-0000-0000-0000-000000000007',
   grade8:  'a2000000-0000-0000-0000-000000000008',
   grade9:  'a2000000-0000-0000-0000-000000000009',
   grade10: 'a2000000-0000-0000-0000-000000000010',
@@ -890,6 +893,51 @@ export const NODE_IDS = {
   g9MathPolyZeroes:                        'a4091002-0002-0000-0000-000000000000',
   g9MathPolyFactorisation:                 'a4091002-0003-0000-0000-000000000000',
   g9MathPolyIdentities:                    'a4091002-0004-0000-0000-000000000000',
+  // ── GRADE 12 MATH: RELATIONS ──────────────────────────────────────────────
+  g12MathRelations:                      'a3121001-0000-0000-0000-000000000001',
+  g12MathRelationsCartesian:             'a4121001-0001-0000-0000-000000000000',
+  g12MathRelationsDomainRange:           'a4121001-0002-0000-0000-000000000000',
+  g12MathRelationsCounting:              'a4121001-0003-0000-0000-000000000000',
+  g12MathRelationsEquivalence:           'a4121001-0004-0000-0000-000000000000',
+  g12MathRelationsTerminologyQuiz:       'a4121001-0010-0000-0000-000000000000',
+
+  // ── GRADE 12 MATH: FUNCTIONS ──────────────────────────────────────────────
+  g12MathFunctions:                      'a3121002-0000-0000-0000-000000000001',
+  g12MathFunctionsConcept:               'a4121002-0001-0000-0000-000000000000',
+  g12MathFunctionsTypes:                 'a4121002-0002-0000-0000-000000000000',
+  g12MathFunctionsAlgebra:               'a4121002-0003-0000-0000-000000000000',
+  g12MathFunctionsEquations:             'a4121002-0004-0000-0000-000000000000',
+  g12MathFunctionsDomainRange:           'a4121002-0005-0000-0000-000000000000',
+  g12MathFunctionsTerminologyQuiz:       'a4121002-0010-0000-0000-000000000000',
+
+  // ── GRADE 12 MATH: MATRICES ───────────────────────────────────────────────
+  g12MathMatrices:                       'a3121003-0000-0000-0000-000000000001',
+  g12MathMatricesOrder:                  'a4121003-0001-0000-0000-000000000000',
+  g12MathMatricesTypes:                  'a4121003-0002-0000-0000-000000000000',
+  g12MathMatricesOperations:             'a4121003-0003-0000-0000-000000000000',
+  g12MathMatricesMultiplication:         'a4121003-0004-0000-0000-000000000000',
+  g12MathMatricesTranspose:              'a4121003-0005-0000-0000-000000000000',
+  g12MathMatricesInverse:                'a4121003-0006-0000-0000-000000000000',
+  g12MathMatricesTerminologyQuiz:        'a4121003-0010-0000-0000-000000000000',
+
+  // ── GRADE 12 MATH: DETERMINANTS ───────────────────────────────────────────
+  g12MathDeterminants:                   'a3121004-0000-0000-0000-000000000001',
+  g12MathDeterminantsFundamentals:       'a4121004-0001-0000-0000-000000000000',
+  g12MathDeterminantsProperties:         'a4121004-0002-0000-0000-000000000000',
+  g12MathDeterminantsArea:               'a4121004-0003-0000-0000-000000000000',
+  g12MathDeterminantsMinorsCofactors:    'a4121004-0004-0000-0000-000000000000',
+  g12MathDeterminantsAdjointInverse:     'a4121004-0005-0000-0000-000000000000',
+  g12MathDeterminantsApplications:       'a4121004-0006-0000-0000-000000000000',
+  g12MathDeterminantsTerminologyQuiz:    'a4121004-0010-0000-0000-000000000000',
+
+  // ── GRADE 12 MATH: INVERSE TRIGONOMETRIC FUNCTIONS ────────────────────────
+  g12MathITF:                            'a3121005-0000-0000-0000-000000000001',
+  g12MathITFConcept:                     'a4121005-0001-0000-0000-000000000000',
+  g12MathITFDefinitions:                 'a4121005-0002-0000-0000-000000000000',
+  g12MathITFProperties:                  'a4121005-0003-0000-0000-000000000000',
+  g12MathITFPrincipal:                   'a4121005-0004-0000-0000-000000000000',
+  g12MathITFSimplification:              'a4121005-0005-0000-0000-000000000000',
+  g12MathITFTerminologyQuiz:             'a4121005-0010-0000-0000-000000000000',
   g9MathPolyTerminologyQuiz:               'a4091002-0010-0000-0000-000000000000',
 
   // ── 7. GRADE 11 CHEMISTRY ─────────────────────────────────────────────────
@@ -1189,6 +1237,51 @@ export const SLUG_TO_NODE_ID = {
   // Grade 11 Biology: Cell — Structure and Functions (legacy test)
   'g11-bio-cell-structure':                    NODE_IDS.g11BiologyCellStructure,
 
+  // Grade 12 Math: Relations
+  'g12-math-relations':                        NODE_IDS.g12MathRelations,
+  'g12-math-relations-cartesian':              NODE_IDS.g12MathRelationsCartesian,
+  'g12-math-relations-domain-range':           NODE_IDS.g12MathRelationsDomainRange,
+  'g12-math-relations-counting':               NODE_IDS.g12MathRelationsCounting,
+  'g12-math-relations-equivalence':            NODE_IDS.g12MathRelationsEquivalence,
+  'g12-math-relations-terminology':            NODE_IDS.g12MathRelationsTerminologyQuiz,
+
+  // Grade 12 Math: Functions
+  'g12-math-functions':                        NODE_IDS.g12MathFunctions,
+  'g12-math-functions-concept':                NODE_IDS.g12MathFunctionsConcept,
+  'g12-math-functions-types':                  NODE_IDS.g12MathFunctionsTypes,
+  'g12-math-functions-algebra':                NODE_IDS.g12MathFunctionsAlgebra,
+  'g12-math-functions-equations':              NODE_IDS.g12MathFunctionsEquations,
+  'g12-math-functions-domain-range':           NODE_IDS.g12MathFunctionsDomainRange,
+  'g12-math-functions-terminology':            NODE_IDS.g12MathFunctionsTerminologyQuiz,
+
+  // Grade 12 Math: Matrices
+  'g12-math-matrices':                         NODE_IDS.g12MathMatrices,
+  'g12-math-matrices-order':                   NODE_IDS.g12MathMatricesOrder,
+  'g12-math-matrices-types':                   NODE_IDS.g12MathMatricesTypes,
+  'g12-math-matrices-operations':              NODE_IDS.g12MathMatricesOperations,
+  'g12-math-matrices-multiplication':          NODE_IDS.g12MathMatricesMultiplication,
+  'g12-math-matrices-transpose':               NODE_IDS.g12MathMatricesTranspose,
+  'g12-math-matrices-inverse':                 NODE_IDS.g12MathMatricesInverse,
+  'g12-math-matrices-terminology':             NODE_IDS.g12MathMatricesTerminologyQuiz,
+
+  // Grade 12 Math: Determinants
+  'g12-math-determinants':                     NODE_IDS.g12MathDeterminants,
+  'g12-math-determinants-fundamentals':        NODE_IDS.g12MathDeterminantsFundamentals,
+  'g12-math-determinants-properties':          NODE_IDS.g12MathDeterminantsProperties,
+  'g12-math-determinants-area':                NODE_IDS.g12MathDeterminantsArea,
+  'g12-math-determinants-minors-cofactors':    NODE_IDS.g12MathDeterminantsMinorsCofactors,
+  'g12-math-determinants-adjoint-inverse':     NODE_IDS.g12MathDeterminantsAdjointInverse,
+  'g12-math-determinants-applications':        NODE_IDS.g12MathDeterminantsApplications,
+  'g12-math-determinants-terminology':         NODE_IDS.g12MathDeterminantsTerminologyQuiz,
+
+  // Grade 12 Math: Inverse Trigonometric Functions
+  'g12-math-itf':                              NODE_IDS.g12MathITF,
+  'g12-math-itf-concept':                      NODE_IDS.g12MathITFConcept,
+  'g12-math-itf-definitions':                  NODE_IDS.g12MathITFDefinitions,
+  'g12-math-itf-properties':                   NODE_IDS.g12MathITFProperties,
+  'g12-math-itf-principal':                    NODE_IDS.g12MathITFPrincipal,
+  'g12-math-itf-simplification':               NODE_IDS.g12MathITFSimplification,
+  'g12-math-itf-terminology':                  NODE_IDS.g12MathITFTerminologyQuiz,
 
   // Grade 9 Math: Polynomials
   'g9-math-polynomials':                NODE_IDS.g9MathPolynomials,

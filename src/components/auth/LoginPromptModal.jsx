@@ -14,6 +14,8 @@ const LoginPromptModal = ({ isOpen, onClose, onLoginSuccess }) => {
     const [error, setError] = useState('');
     const [pendingGoogleUser, setPendingGoogleUser] = useState(null); // Holds Google user object when needs_role
 
+    const [profilesList, setProfilesList] = useState([]);
+
     useEffect(() => {
         if (isOpen) {
             setMode('PROMPT');
@@ -21,18 +23,43 @@ const LoginPromptModal = ({ isOpen, onClose, onLoginSuccess }) => {
             setIdentifier('');
             setPassword('');
             setPendingGoogleUser(null);
+            setProfilesList([]);
         }
     }, [isOpen]);
 
+    const performEmailLogin = async (loginIdentifier, loginPassword) => {
+        const response = await authService.loginWithEmail(loginIdentifier, loginPassword);
+        window.dispatchEvent(new Event('auth-change'));
+        if (onLoginSuccess) onLoginSuccess(response);
+        onClose();
+    };
+
     const handleLogin = async (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         setIsLoading(true);
         setError('');
         try {
-            const response = await authService.loginWithEmail(identifier, password);
-            window.dispatchEvent(new Event('auth-change'));
-            if (onLoginSuccess) onLoginSuccess(response);
-            onClose();
+            // Check if identifier looks like a phone number
+            if (/^\+?\d{10,14}$/.test(identifier)) {
+                try {
+                    const profiles = await authService.fetchPhoneAccounts(identifier);
+                    if (profiles.length > 1) {
+                        setProfilesList(profiles);
+                        setMode('PROFILE_SELECT');
+                        setIsLoading(false);
+                        return;
+                    } else if (profiles.length === 1) {
+                        setIdentifier(profiles[0].username);
+                        await performEmailLogin(profiles[0].username, password);
+                        setIsLoading(false);
+                        return;
+                    }
+                } catch (phoneErr) {
+                    console.log("Phone check failed or returned no accounts, falling back to standard login:", phoneErr);
+                }
+            }
+
+            await performEmailLogin(identifier, password);
         } catch (err) {
             console.error('Login Error:', err);
             setError(err.message || 'Login failed. Please check your credentials.');
@@ -268,6 +295,54 @@ const LoginPromptModal = ({ isOpen, onClose, onLoginSuccess }) => {
                     </div>
                 )}
 
+                {mode === 'PROFILE_SELECT' && (
+                    <div style={{ textAlign: 'left' }}>
+                        <h3 style={{ fontSize: '1.4rem', fontWeight: 'bold', color: '#1e293b', marginBottom: '0.4rem', textAlign: 'center' }}>
+                            Select Account
+                        </h3>
+                        <p style={{ color: '#64748b', marginBottom: '1.5rem', textAlign: 'center', lineHeight: '1.5' }}>
+                            Multiple accounts found. Please choose one to log in.
+                        </p>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                            {profilesList.map((profile) => (
+                                <button
+                                    key={profile.username}
+                                    onClick={async () => {
+                                        setIdentifier(profile.username);
+                                        await performEmailLogin(profile.username, password);
+                                    }}
+                                    disabled={isLoading}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        padding: '0.875rem 1rem',
+                                        borderRadius: '10px',
+                                        border: '1.5px solid #e2e8f0',
+                                        backgroundColor: 'white',
+                                        cursor: isLoading ? 'not-allowed' : 'pointer',
+                                        textAlign: 'left',
+                                        width: '100%',
+                                        transition: 'all 0.15s ease'
+                                    }}
+                                >
+                                    <div>
+                                        <div style={{ fontWeight: '600', color: '#1e293b', fontSize: '0.95rem' }}>{profile.name}</div>
+                                        <div style={{ color: '#64748b', fontSize: '0.82rem' }}>@{profile.username}</div>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                        <div style={{ textAlign: 'center', marginTop: '1.25rem' }}>
+                            <button
+                                onClick={() => setMode('LOGIN')}
+                                style={{ background: 'none', border: 'none', color: '#94a3b8', fontSize: '0.85rem', cursor: 'pointer', textDecoration: 'underline' }}
+                            >
+                                Back
+                            </button>
+                        </div>
+                    </div>
+                )}
+
                 {mode === 'ROLE_SELECT' && (
                     <div style={{ textAlign: 'left' }}>
                         <div style={{
@@ -292,9 +367,7 @@ const LoginPromptModal = ({ isOpen, onClose, onLoginSuccess }) => {
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                             {[
                                 { id: 'student', label: 'Student', desc: 'I want to learn and practice', icon: '🎓' },
-                                { id: 'parent', label: 'Parent', desc: 'I want to track my child\'s progress', icon: '👨‍👩‍👧‍👦' },
-                                { id: 'mentor', label: 'Mentor', desc: 'I want to guide students', icon: '👨‍🏫' },
-                                { id: 'guest', label: 'Guest', desc: 'I\'m just exploring', icon: '👀' }
+                                { id: 'mentor', label: 'Teacher', desc: 'I want to guide students', icon: '👨‍🏫' }
                             ].map((role) => (
                                 <button
                                     key={role.id}

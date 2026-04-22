@@ -109,6 +109,7 @@ export default function QuizEngine({
     const handleNext = async () => {
         if (current + 1 >= questionSet.length) {
             setFinished(true);
+            isFinishedRef.current = true; // Sync update to prevent cleanup race
             if (nodeId) {
                 await finishSession({
                     totalQuestions: questionSet.length,

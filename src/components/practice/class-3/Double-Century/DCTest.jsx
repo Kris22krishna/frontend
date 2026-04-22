@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Timer, Star, ChevronRight, Check, RefreshCw, FileText } from 'lucide-react';
+import { Timer, Star, ChevronLeft, ChevronRight, Check, X, RefreshCw, FileText } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
 import { NODE_IDS } from '@/lib/curriculumIds';
 import Navbar from '../../../Navbar';
-import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
+import { LatexText } from '../../../LatexText';
 import avatarImg from '../../../../assets/avatar.png';
 import { BundleDisplay, NumberLineDC, TalkingPot, HTODisplay, NumberBond100, StonePath, DCOption, StoryBox, AchievementBadge, shuffle } from './DCSharedComponents';
 import '../../../../pages/juniors/class-1/Grade1Practice.css';
@@ -14,12 +14,13 @@ import '../../../../pages/juniors/grade3/time-goes-ontest.css';
 import './double-century.css';
 
 const TOPIC_URL = encodeURIComponent('Double Century');
+const SKILL_NAME = 'Double Century — Chapter Test';
 const TOTAL_QUESTIONS = 10;
 
 const ALL_QUESTIONS = [
   // DC-01 Counting and Groups
   {
-    id: 'dct_1', correct: '50', explanation: '5 bundles of 10 = 5 × 10 = 50 sticks!', correctLabel: '50',
+    id: 'dct_1', correct: '50', explanation: '5 bundles of 10 = 5 × 10 = 50 sticks!', correctLabel: '50', text: 'How many sticks in 5 bundles of 10?',
     render: (sel, onSel) => (
       <div className="dc-qcard dc-s1">
         <AchievementBadge icon="🪵" label="BUNDLE BUILDER" color="#16a34a" />
@@ -35,7 +36,7 @@ const ALL_QUESTIONS = [
     ),
   },
   {
-    id: 'dct_2', correct: '47', explanation: '4 bundles of 10 = 40, plus 7 loose sticks = 47!', correctLabel: '47',
+    id: 'dct_2', correct: '47', explanation: '4 bundles of 10 = 40, plus 7 loose sticks = 47!', correctLabel: '47', text: '4 bundles of 10 and 7 loose sticks — total?',
     render: (sel, onSel) => (
       <div className="dc-qcard dc-s1">
         <AchievementBadge icon="🔢" label="COUNT THE STICKS" color="#16a34a" />
@@ -52,7 +53,7 @@ const ALL_QUESTIONS = [
   },
   // DC-03 Number Before/After
   {
-    id: 'dct_3', correct: '40', explanation: 'The Talking Pot always says ONE MORE! 39 + 1 = 40!', correctLabel: '40',
+    id: 'dct_3', correct: '40', explanation: 'The Talking Pot always says ONE MORE! 39 + 1 = 40!', correctLabel: '40', text: 'The Pot says ONE MORE. I said 39. Pot says…?',
     render: (sel, onSel) => (
       <div className="dc-qcard dc-s3">
         <AchievementBadge icon="🏺" label="MAGIC POT CHALLENGE" color="#7c3aed" />
@@ -68,7 +69,7 @@ const ALL_QUESTIONS = [
     ),
   },
   {
-    id: 'dct_4', correct: '99', explanation: 'The number just before 100 is 99. And 99 + 1 = 100!', correctLabel: '99',
+    id: 'dct_4', correct: '99', explanation: 'The number just before 100 is 99. And 99 + 1 = 100!', correctLabel: '99', text: 'What number comes just before 100?',
     render: (sel, onSel) => (
       <div className="dc-qcard dc-s3">
         <AchievementBadge icon="🎯" label="CENTURY MOMENT!" color="#dc2626" />
@@ -91,7 +92,7 @@ const ALL_QUESTIONS = [
   },
   // DC-04 Making 100
   {
-    id: 'dct_5', correct: '40', explanation: '60 + 40 = 100! They fit together like puzzle pieces.', correctLabel: '40',
+    id: 'dct_5', correct: '40', explanation: '60 + 40 = 100! They fit together like puzzle pieces.', correctLabel: '40', text: '60 + ? = 100',
     render: (sel, onSel) => (
       <div className="dc-qcard dc-s4">
         <AchievementBadge icon="🏏" label="CENTURY CLUB" color="#d97706" />
@@ -107,7 +108,7 @@ const ALL_QUESTIONS = [
     ),
   },
   {
-    id: 'dct_6', correct: '75', explanation: '75 + 25 = 100! If you have 25, you need 75 more to reach 100.', correctLabel: '75',
+    id: 'dct_6', correct: '75', explanation: '75 + 25 = 100! If you have 25, you need 75 more to reach 100.', correctLabel: '75', text: '? + 25 = 100',
     render: (sel, onSel) => (
       <div className="dc-qcard dc-s4">
         <AchievementBadge icon="🌸" label="FLOWER PETALS" color="#ec4899" />
@@ -124,7 +125,7 @@ const ALL_QUESTIONS = [
   },
   // DC-05 Numbers 101–150
   {
-    id: 'dct_7', correct: '123', explanation: '1 hundred = 100, 2 tens = 20, 3 ones = 3. 100+20+3 = 123!', correctLabel: '123',
+    id: 'dct_7', correct: '123', explanation: '1 hundred = 100, 2 tens = 20, 3 ones = 3. 100+20+3 = 123!', correctLabel: '123', text: '1 hundred + 2 tens + 3 ones = ____?',
     render: (sel, onSel) => (
       <div className="dc-qcard dc-s5">
         <AchievementBadge icon="🧩" label="H-T-O PUZZLE" color="#0891b2" />
@@ -141,7 +142,7 @@ const ALL_QUESTIONS = [
   },
   // DC-06 Place Value
   {
-    id: 'dct_8', correct: '4', explanation: '147 → H=1, T=4, O=7. The tens digit is 4!', correctLabel: '4',
+    id: 'dct_8', correct: '4', explanation: '147 → H=1, T=4, O=7. The tens digit is 4!', correctLabel: '4', text: 'What is the tens digit of 147?',
     render: (sel, onSel) => (
       <div className="dc-qcard dc-s6">
         <AchievementBadge icon="🔍" label="DETECTIVE RAJU" color="#1d4ed8" />
@@ -158,7 +159,7 @@ const ALL_QUESTIONS = [
   },
   // DC-07 Numbers 150–200
   {
-    id: 'dct_9', correct: '157', explanation: '155, 156, 157, 158 — stepping one by one towards 200!', correctLabel: '157',
+    id: 'dct_9', correct: '157', explanation: '155, 156, 157, 158 — stepping one by one towards 200!', correctLabel: '157', text: '155, 156, ____, 158. Hop the missing stone!',
     render: (sel, onSel) => (
       <div className="dc-qcard dc-s7">
         <AchievementBadge icon="🪨" label="STONE HOPPER" color="#64748b" />
@@ -175,7 +176,7 @@ const ALL_QUESTIONS = [
   },
   // DC-08 Jumping Game
   {
-    id: 'dct_10', correct: '115', explanation: 'Jump by 5: 100, 105, 110, 115, 120. Each hop is 5 steps!', correctLabel: '115',
+    id: 'dct_10', correct: '115', explanation: 'Jump by 5: 100, 105, 110, 115, 120. Each hop is 5 steps!', correctLabel: '115', text: '100, 105, 110, ____, 120. Jump by 5!',
     render: (sel, onSel) => (
       <div className="dc-qcard dc-s8">
         <AchievementBadge icon="🐸" label="FROG JUMP CHAMP!" color="#16a34a" />
@@ -192,7 +193,7 @@ const ALL_QUESTIONS = [
   },
   // Extra questions for variety
   {
-    id: 'dct_11', correct: '35', explanation: '65 + 35 = 100! Bholu jumped 65, then 35 more to reach 100!', correctLabel: '35',
+    id: 'dct_11', correct: '35', explanation: '65 + 35 = 100! Bholu jumped 65, then 35 more to reach 100!', correctLabel: '35', text: 'Bholu jumped 65, then how much more to reach 100?',
     render: (sel, onSel) => (
       <div className="dc-qcard dc-s4">
         <AchievementBadge icon="🐶" label="BHOLU'S JUMP" color="#7c3aed" />
@@ -208,7 +209,7 @@ const ALL_QUESTIONS = [
     ),
   },
   {
-    id: 'dct_12', correct: '140', explanation: 'Jump by 20: 100, 120, 140, 160. Each big jump is 20!', correctLabel: '140',
+    id: 'dct_12', correct: '140', explanation: 'Jump by 20: 100, 120, 140, 160. Each big jump is 20!', correctLabel: '140', text: '100, 120, ____, 160. Jump by 20!',
     render: (sel, onSel) => (
       <div className="dc-qcard dc-s8">
         <AchievementBadge icon="🦘" label="GIANT JUMP!" color="#7c3aed" />
@@ -224,7 +225,7 @@ const ALL_QUESTIONS = [
     ),
   },
   {
-    id: 'dct_13', correct: '128', explanation: '127 + 1 = 128. One more than 127 is 128!', correctLabel: '128',
+    id: 'dct_13', correct: '128', explanation: '127 + 1 = 128. One more than 127 is 128!', correctLabel: '128', text: 'I said 127. Pot said…?',
     render: (sel, onSel) => (
       <div className="dc-qcard dc-s3">
         <AchievementBadge icon="🏺" label="MAGIC POT CHALLENGE" color="#7c3aed" />
@@ -240,7 +241,7 @@ const ALL_QUESTIONS = [
     ),
   },
   {
-    id: 'dct_14', correct: '30', explanation: 'In 138, the digit 3 is in the tens place. 3 tens = 30!', correctLabel: '30',
+    id: 'dct_14', correct: '30', explanation: 'In 138, the digit 3 is in the tens place. 3 tens = 30!', correctLabel: '30', text: 'In 138, what is the value of digit 3?',
     render: (sel, onSel) => (
       <div className="dc-qcard dc-s6">
         <AchievementBadge icon="💎" label="DIGIT VALUE" color="#7c3aed" />
@@ -256,7 +257,7 @@ const ALL_QUESTIONS = [
     ),
   },
   {
-    id: 'dct_15', correct: '50', explanation: '150 + 50 = 200! Just like 50 + 50 = 100, double that is 200!', correctLabel: '50',
+    id: 'dct_15', correct: '50', explanation: '150 + 50 = 200! Just like 50 + 50 = 100, double that is 200!', correctLabel: '50', text: '150 + ? = 200',
     render: (sel, onSel) => (
       <div className="dc-qcard dc-s7">
         <AchievementBadge icon="🏏" label="DOUBLE CENTURY!" color="#f59e0b" />
@@ -283,16 +284,13 @@ const DCTest = () => {
   const questions = questionsRef.current;
 
   const [qIndex, setQIndex] = useState(0);
-  const [selections, setSelections] = useState({});
-  const [answered, setAnswered] = useState({});
+  const [answers, setAnswers] = useState({});
   const [score, setScore] = useState(0);
   const [timer, setTimer] = useState(0);
   const [showResults, setShowResults] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [modalData, setModalData] = useState({ isCorrect: false, explanation: '', correctAnswer: '' });
 
   useEffect(() => {
-    startSession({ nodeId: NODE_IDS.g3MathDCTest, sessionType: 'test' });
+    startSession({ nodeId: NODE_IDS.g3MathDCTest, sessionType: 'assessment' });
   }, [startSession]);
 
   useEffect(() => {
@@ -302,30 +300,57 @@ const DCTest = () => {
   }, [showResults]);
 
   const currentQ = questions[qIndex];
-  const currentSel = selections[currentQ?.id] || null;
-  const isAnswered = !!answered[currentQ?.id];
+  const isAnswered = !!answers[qIndex]?.selectedOption;
+  const currentSel = answers[qIndex]?.tempSelection || (isAnswered ? answers[qIndex].selectedOption : null);
 
   const handleSelect = (val) => {
     if (isAnswered) return;
-    setSelections(prev => ({ ...prev, [currentQ.id]: val }));
+    setAnswers(prev => ({
+       ...prev,
+       [qIndex]: { ...(prev[qIndex] || {}), tempSelection: val }
+    }));
   };
 
+  const tempSel = currentSel;
+
   const handleSubmit = () => {
-    if (!currentSel || isAnswered) return;
-    const isCorrect = currentSel === currentQ.correct;
+    if (!tempSel || isAnswered) return;
+    const isCorrect = tempSel === currentQ.correct;
     if (isCorrect) setScore(s => s + 1);
-    setAnswered(prev => ({ ...prev, [currentQ.id]: true }));
-    setModalData({ isCorrect, explanation: currentQ.explanation, correctAnswer: currentQ.correctLabel });
-    logAnswer({ question_index: qIndex, answer_json: { selected: currentSel, correct: currentQ.correctLabel, isCorrect }, is_correct: isCorrect ? 1 : 0 });
-    setShowModal(true);
+    
+    logAnswer({ 
+      question_index: qIndex, 
+      answer_json: { selected: tempSel, correct: currentQ.correctLabel, isCorrect }, 
+      is_correct: isCorrect ? 1 : 0 
+    });
+    
+    setAnswers(prev => ({
+      ...prev,
+      [qIndex]: {
+        selectedOption: tempSel,
+        isCorrect,
+        questionText: currentQ.text,
+        correctAnswer: currentQ.correctLabel,
+        explanation: currentQ.explanation
+      }
+    }));
+    handleNext();
+  };
+
+  const handleSkip = () => {
+    logAnswer({ question_index: qIndex, answer_json: { selected: 'Skipped', correct: currentQ.correctLabel, isCorrect: false }, is_correct: 0 });
+    setAnswers(prev => ({
+      ...prev,
+      [qIndex]: { selectedOption: 'Skipped', isCorrect: false, questionText: currentQ.text, correctAnswer: currentQ.correctLabel, explanation: currentQ.explanation }
+    }));
+    handleNext();
   };
 
   const handleNext = () => {
-    setShowModal(false);
     if (qIndex < TOTAL_QUESTIONS - 1) {
       setQIndex(v => v + 1);
     } else {
-      finishSession({ totalQuestions: TOTAL_QUESTIONS, questionsAnswered: Object.keys(answered).length + 1, answersPayload: answered });
+      finishSession({ totalQuestions: TOTAL_QUESTIONS, questionsAnswered: Object.keys(answers).length + 1, answersPayload: answers });
       setShowResults(true);
     }
   };
@@ -358,9 +383,47 @@ const DCTest = () => {
               <div className="stat-card"><span className="stat-label">Accuracy</span><span className="stat-value-large">{pct}%</span></div>
             </div>
           </div>
+
+          <div className="detailed-breakdown">
+            <h3 className="breakdown-title">Quest Log 📜</h3>
+            <div className="quest-log-list">
+              {questions.map((q, idx) => {
+                const ans = answers[idx];
+                if (!ans || !ans.selectedOption) return null;
+                return (
+                  <motion.div key={idx} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="quest-log-item">
+                    <div className={`log-number ${!ans.isCorrect ? 'wrong' : ''}`}>{idx + 1}</div>
+                    <div className="log-content">
+                      <div className="log-question"><LatexText text={ans.questionText} /></div>
+                      <div className="log-answers">
+                        <div className={`log-answer-box ${ans.isCorrect ? 'correct-box' : 'wrong-box'}`}>
+                          <span className="log-label">Your Answer</span>
+                          <span className="log-value">{ans.selectedOption}</span>
+                        </div>
+                        {!ans.isCorrect && (
+                          <div className="log-answer-box correct-box">
+                            <span className="log-label">Correct Answer</span>
+                            <span className="log-value">{ans.correctAnswer}</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="log-explanation">
+                        <span className="log-label" style={{ color: '#4C51BF' }}>Explain? 💡</span>
+                        <LatexText text={ans.explanation} />
+                      </div>
+                    </div>
+                    <div className="log-icon">
+                      {ans.isCorrect ? <Check size={32} color="#4FB7B3" strokeWidth={3} /> : <X size={32} color="#FF6B6B" strokeWidth={3} />}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="results-actions">
-            <button className="action-btn-large retake-skill-btn" onClick={() => window.location.reload()}><RefreshCw size={24} /> Retake</button>
-            <button className="action-btn-large back-topics-btn" onClick={() => navigate(`/junior/grade/3/topic/${TOPIC_URL}`)}><FileText size={24} /> Back to Skills</button>
+            <button className="action-btn-large retake-skill-btn" onClick={() => window.location.reload()}><RefreshCw size={24} /> Retake Test</button>
+            <button className="action-btn-large back-topics-btn" onClick={() => navigate(`/junior/grade/3/topic/${TOPIC_URL}`)}><FileText size={24} /> Back to Topics</button>
           </div>
         </main>
       </div>
@@ -377,41 +440,49 @@ const DCTest = () => {
       <div className="g1-practice-container">
         <div className="g1-header-nav">
           <div className="g1-timer-badge"><Timer size={18} /> {formatTime(timer)}</div>
-          <div className="g1-progress-container">
-            <div className="g1-progress-fill" style={{ width: `${((qIndex + 1) / TOTAL_QUESTIONS) * 100}%` }}></div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', flex: 1, minWidth: 0, paddingLeft: 10 }}>
+            <span style={{ fontWeight: 400, color: '#666', fontSize: '1rem', background: 'white', padding: '8px 15px', borderRadius: '15px', boxShadow: '0 4px 10px rgba(0,0,0,0.05)', whiteSpace: 'nowrap' }}>
+              Q {qIndex + 1}/{TOTAL_QUESTIONS}
+            </span>
+            <span style={{ fontWeight: 400, color: '#2D3436', fontSize: '1rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {SKILL_NAME}
+            </span>
           </div>
-          <div className="exit-practice-sticker">
+          {!isAnswered && (
+            <button className="g1-skip-btn" onClick={handleSkip} style={{ marginLeft: '15px' }}>Skip ⏭️</button>
+          )}
+          <div className="exit-practice-sticker" style={{ marginLeft: 'auto' }}>
             <StickerExit onClick={() => navigate(`/junior/grade/3/topic/${TOPIC_URL}`)} />
           </div>
         </div>
-        <div className="g1-topic-header-compact" style={{ textAlign: 'center', margin: '10px 0', fontSize: '0.9rem', color: '#64748B', textTransform: 'uppercase', letterSpacing: '2px' }}>
-          Double Century — Chapter Test
+        <div className="g1-progress-container" style={{ margin: '0 0 10px 0' }}>
+          <div className="g1-progress-fill" style={{ width: `${((qIndex + 1) / TOTAL_QUESTIONS) * 100}%` }}></div>
+        </div>
+        <div className="g1-topic-header-compact" style={{ textAlign: 'center', margin: '5px 0', fontSize: '0.8rem', color: '#64748B', textTransform: 'uppercase', letterSpacing: '2px' }}>
+          Double Century
         </div>
         <motion.div key={qIndex} initial={{ x: 50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="g1-question-card">
           <div className="custom-html-question-content">
-            {currentQ.render(currentSel, isAnswered ? () => {} : handleSelect)}
+            {currentQ.render(tempSel, isAnswered ? () => {} : handleSelect)}
           </div>
-          <div className="g1-navigation-footer" style={{ marginTop: '30px', display: 'flex', justifyContent: 'flex-end' }}>
-            {!isAnswered ? (
-              <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={!currentSel}>
-                Submit <Check size={24} />
-              </button>
-            ) : (
-              <button className="g1-nav-btn next-btn" onClick={handleNext}>
-                {qIndex === TOTAL_QUESTIONS - 1 ? 'Finish' : 'Next'} <ChevronRight size={24} />
-              </button>
-            )}
+          <div className="g1-navigation-footer" style={{ marginTop: '30px', display: 'flex', justifyContent: 'space-between' }}>
+            <button className="g1-nav-btn prev-btn" onClick={() => qIndex > 0 && setQIndex(qIndex - 1)} disabled={qIndex === 0}>
+              <ChevronLeft size={24} /> Prev
+            </button>
+            <div>
+              {!isAnswered ? (
+                <button className="g1-nav-btn submit-btn" onClick={handleSubmit} disabled={!tempSel}>
+                  {qIndex === TOTAL_QUESTIONS - 1 ? 'Finish Test' : 'Submit'} <Check size={24} />
+                </button>
+              ) : (
+                <button className="g1-nav-btn next-btn" onClick={handleNext}>
+                  {qIndex === TOTAL_QUESTIONS - 1 ? 'Finish Test' : 'Next Question'} <ChevronRight size={24} />
+                </button>
+              )}
+            </div>
           </div>
         </motion.div>
       </div>
-      <ExplanationModal
-        isOpen={showModal}
-        isCorrect={modalData.isCorrect}
-        correctAnswer={modalData.correctAnswer}
-        explanation={modalData.explanation}
-        onClose={() => setShowModal(false)}
-        onNext={handleNext}
-      />
     </div>
   );
 };
