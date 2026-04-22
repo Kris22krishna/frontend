@@ -240,14 +240,14 @@ const MiddleGradeSyllabus = () => {
                         { topic: 'Parts and Wholes', skill_id: 'pw-5', skill_name: 'Introduction', isLocal: true, path: '/middle/grade/5/parts-and-wholes/introduction' },
                         { topic: 'Does it Look the Same?', skill_id: 'dils-5', skill_name: 'Introduction', isLocal: true, path: '/middle/grade/5/does-it-look-same/introduction' },
                         { topic: 'Be My Multiple, I’ll be Your Factor', skill_id: 'bmf-5', skill_name: 'Introduction', isLocal: true, path: '/middle/grade/5/be-my-multiple/introduction' },
-                        { topic: 'Can You See the Pattern?', skill_id: 'pattern-5', skill_name: 'Pattern Recognition', topic: 'Can You See the Pattern?', sub_topic: 'Pattern Recognition', isLocal: true, path: '/middle/grade/5/can-you-see-pattern' },
+                        { topic: 'Can You See the Pattern?', skill_id: 'pattern-5', skill_name: 'Pattern Recognition', sub_topic: 'Pattern Recognition', isLocal: true, path: '/middle/grade/5/can-you-see-pattern' },
                         { topic: 'Mapping Your Way', skill_id: 'myw-5', skill_name: 'Introduction', isLocal: true, path: '/middle/grade/5/mapping-your-way/introduction' },
-                        { topic: 'Boxes and Sketches', skill_id: 'bs-5', skill_name: 'Boxes and Sketches', topic: 'Boxes and Sketches', sub_topic: 'Main', isLocal: true, path: '/middle/grade/5/boxes-sketches' },
-                        { topic: 'Tenths and Hundredths', skill_id: 'th-5', skill_name: 'Decimals', topic: 'Tenths and Hundredths', sub_topic: 'Decimals', isLocal: true, path: '/middle/grade/5/tenths-hundredths/place-values' },
-                        { topic: 'Area and its Boundary', skill_id: 'ab-5', skill_name: 'Finding Area', topic: 'Area and its Boundary', sub_topic: 'Area', isLocal: true, path: '/middle/grade/5/area-boundary/area/finding-area' },
-                        { topic: 'Smart Charts', skill_id: 'sc-5', skill_name: 'Smart Charts', topic: 'Smart Charts', sub_topic: 'Main', isLocal: true, path: '/middle/grade/5/smart-charts' },
-                        { topic: 'Ways to Multiply and Divide', skill_id: 'wmd-5', skill_name: 'Multiplication', topic: 'Ways to Multiply and Divide', sub_topic: 'Multiplication', isLocal: true, path: '/middle/practice/9003' },
-                        { topic: 'How Big? How Heavy?', skill_id: 'hbh-5', skill_name: 'Volume Measurement', topic: 'How Big? How Heavy?', sub_topic: 'Volume Measurement', isLocal: true, path: '/middle/grade/5/how-big-how-heavy/volume-by-displacement' }
+                        { topic: 'Boxes and Sketches', skill_id: 'bs-5', skill_name: 'Boxes and Sketches', sub_topic: 'Main', isLocal: true, path: '/middle/grade/5/boxes-sketches' },
+                        { topic: 'Tenths and Hundredths', skill_id: 'th-5', skill_name: 'Decimals', sub_topic: 'Decimals', isLocal: true, path: '/middle/grade/5/tenths-hundredths/place-values' },
+                        { topic: 'Area and its Boundary', skill_id: 'ab-5', skill_name: 'Finding Area', sub_topic: 'Area', isLocal: true, path: '/middle/grade/5/area-boundary/area/finding-area' },
+                        { topic: 'Smart Charts', skill_id: 'sc-5', skill_name: 'Smart Charts', sub_topic: 'Main', isLocal: true, path: '/middle/grade/5/smart-charts' },
+                        { topic: 'Ways to Multiply and Divide', skill_id: 'wmd-5', skill_name: 'Multiplication', sub_topic: 'Multiplication', isLocal: true, path: '/middle/practice/9003' },
+                        { topic: 'How Big? How Heavy?', skill_id: 'hbh-5', skill_name: 'Volume Measurement', sub_topic: 'Volume Measurement', isLocal: true, path: '/middle/grade/5/how-big-how-heavy/volume-by-displacement' }
                     ];
                 } else if (gradeNum === '6') {
                     fetched = [
