@@ -372,6 +372,18 @@ import SortingGrouping from './components/practice/class-3/Whats-in-a-Name/Sorti
 import DataCollection from './components/practice/class-3/Whats-in-a-Name/DataCollection';
 import WINTest from './components/practice/class-3/Whats-in-a-Name/WINTest';
 
+// Filling and Lifting
+import FLComparingCapacity from './components/practice/class-3/Filling-and-Lifting/ComparingCapacity';
+import FLEstimatingCapacity from './components/practice/class-3/Filling-and-Lifting/EstimatingCapacity';
+import FLMeasuringByFilling from './components/practice/class-3/Filling-and-Lifting/MeasuringByFilling';
+import FLUnderstandingLitre from './components/practice/class-3/Filling-and-Lifting/UnderstandingLitre';
+import FLHeavyAndLight from './components/practice/class-3/Filling-and-Lifting/HeavyAndLight';
+import FLMeasuringWithBalance from './components/practice/class-3/Filling-and-Lifting/MeasuringWithBalance';
+import FLUnderstandingKilogram from './components/practice/class-3/Filling-and-Lifting/UnderstandingKilogram';
+import FLHalfAndQuarterKg from './components/practice/class-3/Filling-and-Lifting/HalfAndQuarterKg';
+import FLWeightPuzzles from './components/practice/class-3/Filling-and-Lifting/WeightPuzzles';
+import FLTest from './components/practice/class-3/Filling-and-Lifting/FLTest';
+
 // Double Century
 import DCCountingAndGroups from './components/practice/class-3/Double-Century/CountingAndGroups';
 import DCNumberBoard from './components/practice/class-3/Double-Century/NumberBoard';
@@ -382,6 +394,17 @@ import DCPlaceValue from './components/practice/class-3/Double-Century/PlaceValu
 import DCNumbers150to200 from './components/practice/class-3/Double-Century/Numbers150to200';
 import DCJumpingGame from './components/practice/class-3/Double-Century/JumpingGame';
 import DCTest from './components/practice/class-3/Double-Century/DCTest';
+
+// Give and Take (Class 3 Ch 12)
+import GTAdditionHTO from './components/practice/class-3/Give-and-Take/AdditionHTO';
+import GTSubtractionBorrowing from './components/practice/class-3/Give-and-Take/SubtractionBorrowing';
+import GTNumberLineMethod from './components/practice/class-3/Give-and-Take/NumberLineMethod';
+import GTWordProblems from './components/practice/class-3/Give-and-Take/WordProblems';
+import GTMoneyExchange from './components/practice/class-3/Give-and-Take/MoneyExchange';
+import GTMakingAmounts from './components/practice/class-3/Give-and-Take/MakingAmounts';
+import GTNumberPatterns from './components/practice/class-3/Give-and-Take/NumberPatterns';
+import GTMentalMath from './components/practice/class-3/Give-and-Take/MentalMath';
+import GTTest from './components/practice/class-3/Give-and-Take/GTTest';
 
 // Fun with Shapes
 import {
@@ -2138,6 +2161,18 @@ function App() {
         <Route path="/junior/grade/:grade/whats-in-a-name/data-collection" element={<ProtectedRoute redirectTo="/login"><DataCollection /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/whats-in-a-name/chapter-test" element={<ProtectedRoute redirectTo="/login"><WINTest /></ProtectedRoute>} />
 
+        {/* Filling and Lifting Routes */}
+        <Route path="/junior/grade/:grade/filling-and-lifting/comparing-capacity" element={<ProtectedRoute redirectTo="/login"><FLComparingCapacity /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/filling-and-lifting/estimating-capacity" element={<ProtectedRoute redirectTo="/login"><FLEstimatingCapacity /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/filling-and-lifting/measuring-by-filling" element={<ProtectedRoute redirectTo="/login"><FLMeasuringByFilling /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/filling-and-lifting/understanding-litre" element={<ProtectedRoute redirectTo="/login"><FLUnderstandingLitre /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/filling-and-lifting/heavy-and-light" element={<ProtectedRoute redirectTo="/login"><FLHeavyAndLight /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/filling-and-lifting/measuring-with-balance" element={<ProtectedRoute redirectTo="/login"><FLMeasuringWithBalance /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/filling-and-lifting/understanding-kilogram" element={<ProtectedRoute redirectTo="/login"><FLUnderstandingKilogram /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/filling-and-lifting/half-and-quarter-kg" element={<ProtectedRoute redirectTo="/login"><FLHalfAndQuarterKg /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/filling-and-lifting/weight-puzzles" element={<ProtectedRoute redirectTo="/login"><FLWeightPuzzles /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/filling-and-lifting/chapter-test" element={<ProtectedRoute redirectTo="/login"><FLTest /></ProtectedRoute>} />
+
         {/* Double Century Routes */}
         <Route path="/junior/grade/:grade/double-century/counting-and-groups" element={<ProtectedRoute redirectTo="/login"><DCCountingAndGroups /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/double-century/number-board" element={<ProtectedRoute redirectTo="/login"><DCNumberBoard /></ProtectedRoute>} />
@@ -2148,6 +2183,17 @@ function App() {
         <Route path="/junior/grade/:grade/double-century/numbers-150-to-200" element={<ProtectedRoute redirectTo="/login"><DCNumbers150to200 /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/double-century/jumping-game" element={<ProtectedRoute redirectTo="/login"><DCJumpingGame /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/double-century/chapter-test" element={<ProtectedRoute redirectTo="/login"><DCTest /></ProtectedRoute>} />
+
+        {/* Give and Take (Class 3 Ch 12) */}
+        <Route path="/junior/grade/:grade/give-and-take/addition-hto" element={<ProtectedRoute redirectTo="/login"><GTAdditionHTO /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/give-and-take/subtraction-borrowing" element={<ProtectedRoute redirectTo="/login"><GTSubtractionBorrowing /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/give-and-take/number-line-method" element={<ProtectedRoute redirectTo="/login"><GTNumberLineMethod /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/give-and-take/word-problems" element={<ProtectedRoute redirectTo="/login"><GTWordProblems /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/give-and-take/money-exchange" element={<ProtectedRoute redirectTo="/login"><GTMoneyExchange /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/give-and-take/making-amounts" element={<ProtectedRoute redirectTo="/login"><GTMakingAmounts /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/give-and-take/number-patterns" element={<ProtectedRoute redirectTo="/login"><GTNumberPatterns /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/give-and-take/mental-math" element={<ProtectedRoute redirectTo="/login"><GTMentalMath /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/give-and-take/chapter-test" element={<ProtectedRoute redirectTo="/login"><GTTest /></ProtectedRoute>} />
 
         {/* Fun with Shapes Routes */}
         <Route path="/junior/grade/:grade/fun-with-shapes/recognising-shapes" element={<ProtectedRoute redirectTo="/login"><RecognisingShapes /></ProtectedRoute>} />
