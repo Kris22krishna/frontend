@@ -1,0 +1,20 @@
+/*
+ * ElectricChargesAndFieldsBranch.css
+ *
+ * This file is used ONLY by ElectricChargesDashboard.jsx
+ * which uses lom-* classes from Laws of Motion.
+ *
+ * All ECF sub-pages (Intro, Terminology, Skills, Connectomics, ExamEdge)
+ * use the dedicated CSS Module: ecf.module.css (ecf-* classes).
+ */
+
+@import url('../Laws-Of-Motion/LawsOfMotionBranch.css');
+
+/* ECF Dashboard deep-violet left panel override */
+.ecf-left {
+    background: linear-gradient(145deg,
+        #120a2e 0%,
+        #1e0a4a 40%,
+        #311b92 75%,
+        #1a1040 100%) !important;
+}

@@ -992,6 +992,16 @@ export const NODE_IDS = {
   // Terminology Quiz
   g11PhysMSLTerminologyQuiz:               'd4111503-0010-0000-0000-000000000000',
 
+  // ── GRADE 12 PHYSICS: Electric Charges and Fields (Chapter 1) ────────────
+  g12PhysECFChapter:               'b3121001-0000-0000-0000-000000000001',
+  g12PhysECFElectricChargeProps:   'b4121001-0001-0000-0000-000000000000',
+  g12PhysECFCoulombsLaw:           'b4121001-0002-0000-0000-000000000000',
+  g12PhysECFElectricField:         'b4121001-0003-0000-0000-000000000000',
+  g12PhysECFFieldLinesFlux:        'b4121001-0004-0000-0000-000000000000',
+  g12PhysECFElectricDipole:        'b4121001-0005-0000-0000-000000000000',
+  g12PhysECFGaussLaw:              'b4121001-0006-0000-0000-000000000000',
+  g12PhysECFChargeDistributions:   'b4121001-0007-0000-0000-000000000000',
+
   // Ch 6: Work, Energy and Power
   g11PhysicsWEP:                           'd3111506-0000-0000-0000-000000000001',
 

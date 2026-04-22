@@ -136,6 +136,12 @@ import MSLTerminology from './components/Physics-Branches/Motion-In-A-Straight-L
 import MSLSkills from './components/Physics-Branches/Motion-In-A-Straight-Line/Topics/Skills/MSLSkills';
 import MSLConnectomics from './components/Physics-Branches/Motion-In-A-Straight-Line/Topics/Connectomics/MSLConnectomics';
 import MSLExamEdge from './components/Physics-Branches/Motion-In-A-Straight-Line/Topics/ExamEdge/MSLExamEdge';
+import ElectricChargesDashboard from './components/Physics-Branches/Electric-Charges-And-Fields/ElectricChargesDashboard';
+import ECFIntro from './components/Physics-Branches/Electric-Charges-And-Fields/Topics/Introduction/ECFIntro';
+import ECFTerminology from './components/Physics-Branches/Electric-Charges-And-Fields/Topics/Terminology/ECFTerminology';
+import ECFSkills from './components/Physics-Branches/Electric-Charges-And-Fields/Topics/Skills/ECFSkills';
+import ECFConnectomics from './components/Physics-Branches/Electric-Charges-And-Fields/Topics/Connectomics/ECFConnectomics';
+import ECFExamEdge from './components/Physics-Branches/Electric-Charges-And-Fields/Topics/ExamEdge/ECFExamEdge';
 
 import ChemistryChapters from './components/practice/class-11/chemistry/ChemistryChapters';
 import StructureOfAtomDashboard from './components/Chemistry-Branches/Structure-of-Atom/StructureOfAtomDashboard';
@@ -1338,6 +1344,12 @@ function App() {
           <Route path="senior/grade/11/physics/work-energy-power/exam-edge" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerExamEdge /></ProtectedRoute>} />
           <Route path="senior/grade/11/physics/work-energy-power/mind-map" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerMindMap /></ProtectedRoute>} />
           <Route path="senior/grade/11/physics/work-energy-power/derivations" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerDerivations /></ProtectedRoute>} />
+          <Route path="senior/grade/12/physics/electric-charges-and-fields" element={<ProtectedRoute redirectTo="/login"><ElectricChargesDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/12/physics/electric-charges-and-fields/introduction" element={<ProtectedRoute redirectTo="/login"><ECFIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/12/physics/electric-charges-and-fields/terminology" element={<ProtectedRoute redirectTo="/login"><ECFTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/12/physics/electric-charges-and-fields/skills" element={<ProtectedRoute redirectTo="/login"><ECFSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/12/physics/electric-charges-and-fields/connectomics" element={<ProtectedRoute redirectTo="/login"><ECFConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/12/physics/electric-charges-and-fields/exam-edge" element={<ProtectedRoute redirectTo="/login"><ECFExamEdge /></ProtectedRoute>} />
 
           {/* Class 11 Chemistry */}
           <Route path="senior/grade/11/chemistry" element={<ChemistryChapters />} />
