@@ -381,6 +381,17 @@ import DCNumbers150to200 from './components/practice/class-3/Double-Century/Numb
 import DCJumpingGame from './components/practice/class-3/Double-Century/JumpingGame';
 import DCTest from './components/practice/class-3/Double-Century/DCTest';
 
+// Give and Take (Class 3 Ch 12)
+import GTAdditionHTO from './components/practice/class-3/Give-and-Take/AdditionHTO';
+import GTSubtractionBorrowing from './components/practice/class-3/Give-and-Take/SubtractionBorrowing';
+import GTNumberLineMethod from './components/practice/class-3/Give-and-Take/NumberLineMethod';
+import GTWordProblems from './components/practice/class-3/Give-and-Take/WordProblems';
+import GTMoneyExchange from './components/practice/class-3/Give-and-Take/MoneyExchange';
+import GTMakingAmounts from './components/practice/class-3/Give-and-Take/MakingAmounts';
+import GTNumberPatterns from './components/practice/class-3/Give-and-Take/NumberPatterns';
+import GTMentalMath from './components/practice/class-3/Give-and-Take/MentalMath';
+import GTTest from './components/practice/class-3/Give-and-Take/GTTest';
+
 // Fun with Shapes
 import {
   RecognisingShapes,
@@ -2028,6 +2039,17 @@ function App() {
         <Route path="/junior/grade/:grade/double-century/numbers-150-to-200" element={<ProtectedRoute redirectTo="/login"><DCNumbers150to200 /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/double-century/jumping-game" element={<ProtectedRoute redirectTo="/login"><DCJumpingGame /></ProtectedRoute>} />
         <Route path="/junior/grade/:grade/double-century/chapter-test" element={<ProtectedRoute redirectTo="/login"><DCTest /></ProtectedRoute>} />
+
+        {/* Give and Take (Class 3 Ch 12) */}
+        <Route path="/junior/grade/:grade/give-and-take/addition-hto" element={<ProtectedRoute redirectTo="/login"><GTAdditionHTO /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/give-and-take/subtraction-borrowing" element={<ProtectedRoute redirectTo="/login"><GTSubtractionBorrowing /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/give-and-take/number-line-method" element={<ProtectedRoute redirectTo="/login"><GTNumberLineMethod /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/give-and-take/word-problems" element={<ProtectedRoute redirectTo="/login"><GTWordProblems /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/give-and-take/money-exchange" element={<ProtectedRoute redirectTo="/login"><GTMoneyExchange /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/give-and-take/making-amounts" element={<ProtectedRoute redirectTo="/login"><GTMakingAmounts /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/give-and-take/number-patterns" element={<ProtectedRoute redirectTo="/login"><GTNumberPatterns /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/give-and-take/mental-math" element={<ProtectedRoute redirectTo="/login"><GTMentalMath /></ProtectedRoute>} />
+        <Route path="/junior/grade/:grade/give-and-take/chapter-test" element={<ProtectedRoute redirectTo="/login"><GTTest /></ProtectedRoute>} />
 
         {/* Fun with Shapes Routes */}
         <Route path="/junior/grade/:grade/fun-with-shapes/recognising-shapes" element={<ProtectedRoute redirectTo="/login"><RecognisingShapes /></ProtectedRoute>} />

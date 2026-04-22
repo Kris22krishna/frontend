@@ -284,6 +284,17 @@ export const TOPIC_CONFIGS = {
             { id: "FL-08", name: "Half and Quarter kg",      route: "filling-and-lifting/half-and-quarter-kg" },
             { id: "FL-09", name: "Logical Weight Puzzles",   route: "filling-and-lifting/weight-puzzles" },
             { id: "FL-TEST", name: "Chapter Test",           route: "filling-and-lifting/chapter-test" },
+        ],
+        'Give and Take': [
+            { id: "GT-01", name: "Addition with H-T-O",          route: "give-and-take/addition-hto" },
+            { id: "GT-02", name: "Subtraction with Borrowing",    route: "give-and-take/subtraction-borrowing" },
+            { id: "GT-03", name: "Number Line Method",            route: "give-and-take/number-line-method" },
+            { id: "GT-04", name: "Word Problems",                 route: "give-and-take/word-problems" },
+            { id: "GT-05", name: "Money & Exchange",              route: "give-and-take/money-exchange" },
+            { id: "GT-06", name: "Making Amounts",                route: "give-and-take/making-amounts" },
+            { id: "GT-07", name: "Number Patterns",               route: "give-and-take/number-patterns" },
+            { id: "GT-08", name: "Mental Math & Estimation",      route: "give-and-take/mental-math" },
+            { id: "GT-TEST", name: "Chapter Test",                route: "give-and-take/chapter-test" },
         ]
     },
 
