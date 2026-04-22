@@ -67,6 +67,49 @@ export default function MotionInAStraightLineDashboard() {
                 <div className="lom-deco lom-deco-a" />
                 <div className="lom-deco lom-deco-b" />
                 <div className="lom-left-content">
+                    <button
+                        className="lom-nav-back"
+                        onClick={() => navigate('/senior/grade/11')}
+                        style={{
+                            marginBottom: '40px',
+                            background: 'rgba(255,255,255,0.1)',
+                            color: '#fff',
+                            border: '1px solid rgba(255,255,255,0.2)',
+                            cursor: 'pointer',
+                            borderRadius: '100px',
+                            padding: '8px 18px',
+                            fontSize: '13px',
+                            fontWeight: '700',
+                            width: 'fit-content',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            transition: 'all 0.2s ease'
+                        }}
+                        onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.2)'}
+                        onMouseLeave={(e) => e.target.style.background = 'rgba(255,255,255,0.1)'}
+                    >
+                        ← Back to Grade 11
+                    </button>
+                    <button
+                        className="lom-nav-back"
+                        onClick={() => navigate('/senior/grade/11/physics')}
+                        style={{
+                            marginBottom: '20px',
+                            marginTop: '-30px',
+                            background: 'transparent',
+                            color: 'rgba(255,255,255,0.6)',
+                            border: 'none',
+                            cursor: 'pointer',
+                            fontSize: '12px',
+                            fontWeight: '600',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px'
+                        }}
+                    >
+                        Physics Chapters
+                    </button>
                     <h1 className="lom-main-title">
                         Motion in a{' '}
                         <span className="lom-title-accent">Straight Line</span>
