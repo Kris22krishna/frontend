@@ -275,6 +275,12 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
         count + (isAnswerComplete(question, answers[index]) ? 1 : 0)
     ), 0);
 
+    const handleExit = () => {
+        if (window.confirm('Are you sure you want to exit? Your progress will be lost.')) {
+            onBack();
+        }
+    };
+
     if (finished) {
         let score = 0;
         answers.forEach((ans, index) => {
@@ -352,7 +358,6 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
 
     const palette = (
         <div className={`${prefix}-assessment-palette`}>
-
             <div
                 style={{
                     display: 'flex',
@@ -467,11 +472,8 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
                         <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 22, fontWeight: 800, margin: 0, color: `var(--${prefix}-text, #1e293b)` }}>{title}</h3>
                     </div>
                     <button
-                        onClick={() => {
-                            if (window.confirm('Are you sure you want to exit? Your progress will be lost.')) {
-                                onBack();
-                            }
-                        }}
+                        type="button"
+                        onClick={handleExit}
                         style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -485,10 +487,11 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
                             fontWeight: '700',
                             cursor: 'pointer',
                             transition: 'all 0.2s',
-                            boxShadow: '0 2px 4px rgba(239,68,68,0.1)'
+                            boxShadow: '0 2px 4px rgba(239,68,68,0.1)',
+                            flexShrink: 0
                         }}
                     >
-                        Exit
+                        Exit Assessment
                     </button>
                 </div>
 

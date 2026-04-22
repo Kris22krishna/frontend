@@ -341,7 +341,7 @@ export default function SolutionsCoreConcepts() {
         return (
             <div className={styles['sol-page']} style={{ background: '#f8fafc', minHeight: '100vh', overflowY: 'auto' }}>
                 {NAV}
-                <main className={styles['sol-topic-shell']} style={{ maxWidth: '1180px', margin: '0 auto', padding: '32px 24px 60px' }}>
+                <main className={styles['sol-topic-shell']} style={{ maxWidth: '1180px', margin: '0 auto', padding: '96px 24px 60px' }}>
                     <div className="skills-page chem-skills-stage" style={{ minHeight: 'auto', background: 'transparent', padding: 0 }}>
                         <AssessmentEngine
                             questions={() => buildQuestionSession(skill.assessment, ASSESSMENT_QUESTION_COUNT)}

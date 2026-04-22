@@ -347,8 +347,8 @@
 }
 
 .chemtest-assessment-palette {
-  position: sticky;
-  top: 96px;
+  position: static;
+  top: auto;
   align-self: flex-start;
   width: 264px;
   max-width: 264px;
