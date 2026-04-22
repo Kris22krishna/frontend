@@ -4,9 +4,24 @@ import { SKILLS } from './SetsSkillsData';
 import '../../SetsBranch.css';
 import MathRenderer from '../../../../MathRenderer';
 import { LatexText } from '../../../../LatexText';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 import QuizEngine from './Engines/QuizEngine';
 import AssessmentEngine from './Engines/AssessmentEngine';
+import VennDiagram from './VennDiagram';
+
+// ─── Skill-ID → canonical node-ID map ────────────────────────────────────────
+const SKILL_NODE_ID_MAP = {
+  'what-is-set':          NODE_IDS.g11MathSetsWhatIsSet,
+  'types-of-sets':        NODE_IDS.g11MathSetsTypes,
+  'equal-equivalent':     NODE_IDS.g11MathSetsEqualEquivalent,
+  'subsets-intervals':    NODE_IDS.g11MathSetsSubsetsIntervals,
+  'universal-complement': NODE_IDS.g11MathSetsUniversalComplement,
+  'set-operations':       NODE_IDS.g11MathSetsOperations,
+  'venn-diagrams':        NODE_IDS.g11MathSetsVennDiagrams,
+  'laws-properties':      NODE_IDS.g11MathSetsLawsProperties,
+  'cardinality-problems': NODE_IDS.g11MathSetsCardinality,
+};
 
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────
 export default function SetsSkills() {
@@ -109,9 +124,17 @@ export default function SetsSkills() {
                                             <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: 'var(--sets-muted)', marginBottom: 10 }}>
                                                 Explanation
                                             </h4>
-                                            <p style={{ fontSize: 17, lineHeight: 1.6, margin: 0, color: 'var(--sets-text)' }}>
-                                                {skill.learn.rules[selectedLearnIdx].d}
-                                            </p>
+                                            <div style={{ fontSize: 17, lineHeight: 1.6, margin: 0, color: 'var(--sets-text)', whiteSpace: 'pre-line' }}>
+                                                <LatexText text={skill.learn.rules[selectedLearnIdx].d} />
+                                            </div>
+                                            {skill.learn.rules[selectedLearnIdx].diagram && (
+                                                <div style={{ marginTop: 24, padding: 20, background: '#fff', borderRadius: 20, border: `2px dashed ${skill.color}30`, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                                    <div style={{ width: '100%', maxWidth: 300 }}>
+                                                        <VennDiagram type={skill.learn.rules[selectedLearnIdx].diagram} color={skill.color} />
+                                                    </div>
+                                                    <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--sets-muted)', marginTop: 12 }}>Visual Representation</span>
+                                                </div>
+                                            )}
                                             <div style={{ marginTop: 24, background: 'rgba(13,148,136,0.05)', padding: 16, borderRadius: 16, border: '1px solid rgba(13,148,136,0.1)' }}>
                                                 <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: 'var(--sets-muted)' }}>
                                                     <span style={{ fontWeight: 800, color: 'var(--sets-teal)' }}>🛡️ Survival Tip: </span>
@@ -152,6 +175,8 @@ export default function SetsSkills() {
                             onBack={() => setView('list')}
                             color={skill.color}
                             prefix="sets"
+                            nodeId={SKILL_NODE_ID_MAP[skill.id]}
+                            sessionType="practice"
                         />
                     ) : (
                         <AssessmentEngine
@@ -160,6 +185,8 @@ export default function SetsSkills() {
                             onBack={() => setView('list')}
                             color={skill.color}
                             prefix="sets"
+                            nodeId={SKILL_NODE_ID_MAP[skill.id]}
+                            sessionType="assessment"
                         />
                     )}
                 </div>

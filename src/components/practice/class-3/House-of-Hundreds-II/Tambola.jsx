@@ -108,11 +108,12 @@ const Tambola = () => {
     const currentQ = questions[currentQIndex];
 
     useEffect(() => {
+        if (showResult) return;
         const timer = setInterval(() => {
             setTimeElapsed(prev => prev + 1);
         }, 1000);
         return () => clearInterval(timer);
-    }, []);
+    }, [showResult]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -138,10 +139,20 @@ const Tambola = () => {
             setFeedback('wrong');
             setShowExplanationModal(true);
         }
+
+        setHistory(prev => ({ 
+            ...prev, 
+            [currentQIndex]: { 
+                text: "Pick the correct number on the Tambola ticket",
+                selected: selectedOption,
+                correctAnswer: currentQ.correct,
+                isCorrect: isRight,
+                isSubmitted: true
+            } 
+        }));
     };
 
     const handleNext = () => {
-        setHistory(prev => ({ ...prev, [currentQIndex]: { feedback, isSubmitted, isCorrect, selectedOption } }));
         setShowExplanationModal(false);
 
         if (currentQIndex < questions.length - 1) {
@@ -169,7 +180,6 @@ const Tambola = () => {
 
     const handlePrevious = () => {
         if (currentQIndex > 0) {
-            setHistory(prev => ({ ...prev, [currentQIndex]: { feedback, isSubmitted, isCorrect, selectedOption } }));
             setCurrentQIndex(prev => prev - 1);
             setShowExplanationModal(false);
         }
@@ -188,19 +198,16 @@ const Tambola = () => {
 };
 
     
-    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
-    if (showRes) {
-        const scoreVal = typeof score !== 'undefined' 
-            ? score 
-            : (typeof stats !== 'undefined' && stats.correct !== undefined 
-                ? stats.correct 
-                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
-        const totalVal = typeof questions !== 'undefined' 
-            ? questions.length 
-            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
-                ? sessionQuestions.length 
-                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
-        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
+    if (showResult) {
+        return (
+            <GenericReportCard 
+                score={score} 
+                totalQuestions={questions.length} 
+                onRestart={handleRestart} 
+                timeElapsed={timeElapsed} 
+                summaryData={Object.values(history)} 
+            />
+        );
     }
 
     return (

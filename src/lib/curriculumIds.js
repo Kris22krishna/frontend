@@ -28,9 +28,13 @@ export const NODE_IDS = {
   grade2:  'a2000000-0000-0000-0000-000000000002',
   grade3:  'a2000000-0000-0000-0000-000000000003',
   grade4:  'a2000000-0000-0000-0000-000000000004',
+  grade5:  'a2000000-0000-0000-0000-000000000005',
+  grade6:  'a2000000-0000-0000-0000-000000000006',
+  grade7:  'a2000000-0000-0000-0000-000000000007',
   grade8:  'a2000000-0000-0000-0000-000000000008',
   grade9:  'a2000000-0000-0000-0000-000000000009',
   grade10: 'a2000000-0000-0000-0000-000000000010',
+  grade11: 'a2000000-0000-0000-0000-000000000011',
 
   // ── GRADE 4: ELEPHANTS, TIGERS AND LEOPARDS (CHAPTER 3) ───────────────────
   g4MathElephantsChapter:          'a3041003-0000-0000-0000-000000000001',
@@ -889,7 +893,159 @@ export const NODE_IDS = {
   g9MathPolyZeroes:                        'a4091002-0002-0000-0000-000000000000',
   g9MathPolyFactorisation:                 'a4091002-0003-0000-0000-000000000000',
   g9MathPolyIdentities:                    'a4091002-0004-0000-0000-000000000000',
+  // ── GRADE 12 MATH: RELATIONS ──────────────────────────────────────────────
+  g12MathRelations:                      'a3121001-0000-0000-0000-000000000001',
+  g12MathRelationsCartesian:             'a4121001-0001-0000-0000-000000000000',
+  g12MathRelationsDomainRange:           'a4121001-0002-0000-0000-000000000000',
+  g12MathRelationsCounting:              'a4121001-0003-0000-0000-000000000000',
+  g12MathRelationsEquivalence:           'a4121001-0004-0000-0000-000000000000',
+  g12MathRelationsTerminologyQuiz:       'a4121001-0010-0000-0000-000000000000',
+
+  // ── GRADE 12 MATH: FUNCTIONS ──────────────────────────────────────────────
+  g12MathFunctions:                      'a3121002-0000-0000-0000-000000000001',
+  g12MathFunctionsConcept:               'a4121002-0001-0000-0000-000000000000',
+  g12MathFunctionsTypes:                 'a4121002-0002-0000-0000-000000000000',
+  g12MathFunctionsAlgebra:               'a4121002-0003-0000-0000-000000000000',
+  g12MathFunctionsEquations:             'a4121002-0004-0000-0000-000000000000',
+  g12MathFunctionsDomainRange:           'a4121002-0005-0000-0000-000000000000',
+  g12MathFunctionsTerminologyQuiz:       'a4121002-0010-0000-0000-000000000000',
+
+  // ── GRADE 12 MATH: MATRICES ───────────────────────────────────────────────
+  g12MathMatrices:                       'a3121003-0000-0000-0000-000000000001',
+  g12MathMatricesOrder:                  'a4121003-0001-0000-0000-000000000000',
+  g12MathMatricesTypes:                  'a4121003-0002-0000-0000-000000000000',
+  g12MathMatricesOperations:             'a4121003-0003-0000-0000-000000000000',
+  g12MathMatricesMultiplication:         'a4121003-0004-0000-0000-000000000000',
+  g12MathMatricesTranspose:              'a4121003-0005-0000-0000-000000000000',
+  g12MathMatricesInverse:                'a4121003-0006-0000-0000-000000000000',
+  g12MathMatricesTerminologyQuiz:        'a4121003-0010-0000-0000-000000000000',
+
+  // ── GRADE 12 MATH: DETERMINANTS ───────────────────────────────────────────
+  g12MathDeterminants:                   'a3121004-0000-0000-0000-000000000001',
+  g12MathDeterminantsFundamentals:       'a4121004-0001-0000-0000-000000000000',
+  g12MathDeterminantsProperties:         'a4121004-0002-0000-0000-000000000000',
+  g12MathDeterminantsArea:               'a4121004-0003-0000-0000-000000000000',
+  g12MathDeterminantsMinorsCofactors:    'a4121004-0004-0000-0000-000000000000',
+  g12MathDeterminantsAdjointInverse:     'a4121004-0005-0000-0000-000000000000',
+  g12MathDeterminantsApplications:       'a4121004-0006-0000-0000-000000000000',
+  g12MathDeterminantsTerminologyQuiz:    'a4121004-0010-0000-0000-000000000000',
+
+  // ── GRADE 12 MATH: INVERSE TRIGONOMETRIC FUNCTIONS ────────────────────────
+  g12MathITF:                            'a3121005-0000-0000-0000-000000000001',
+  g12MathITFConcept:                     'a4121005-0001-0000-0000-000000000000',
+  g12MathITFDefinitions:                 'a4121005-0002-0000-0000-000000000000',
+  g12MathITFProperties:                  'a4121005-0003-0000-0000-000000000000',
+  g12MathITFPrincipal:                   'a4121005-0004-0000-0000-000000000000',
+  g12MathITFSimplification:              'a4121005-0005-0000-0000-000000000000',
+  g12MathITFTerminologyQuiz:             'a4121005-0010-0000-0000-000000000000',
   g9MathPolyTerminologyQuiz:               'a4091002-0010-0000-0000-000000000000',
+
+  // ── 7. GRADE 11 CHEMISTRY ─────────────────────────────────────────────────
+  // Prefix convention: c=Chemistry, d=Physics, a=Maths, e=Biology (all hex-safe)
+  // Format: [subject][level][Grade][SubjectCode][Chapter#] where level 3=chapter, 4=skill
+  // Chemistry subject code: 14
+
+  // Ch 1: Structure of Atom
+  g11ChemistryStructureOfAtom:             'c3111401-0000-0000-0000-000000000001',
+
+  // Skills (9 skills)
+  g11ChemSOASubAtomicParticles:            'c4111401-0001-0000-0000-000000000000',
+  g11ChemSOAAtomicModels:                  'c4111401-0002-0000-0000-000000000000',
+  g11ChemSOABohrModel:                     'c4111401-0003-0000-0000-000000000000',
+  g11ChemSOAHydrogenSpectrum:              'c4111401-0004-0000-0000-000000000000',
+  g11ChemSOADualNature:                    'c4111401-0005-0000-0000-000000000000',
+  g11ChemSOAHeisenberg:                    'c4111401-0006-0000-0000-000000000000',
+  g11ChemSOAQuantumNumbers:                'c4111401-0007-0000-0000-000000000000',
+  g11ChemSOAShapesOfOrbitals:              'c4111401-0008-0000-0000-000000000000',
+  g11ChemSOAElectronicConfig:              'c4111401-0009-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11ChemSOATerminologyQuiz:               'c4111401-0010-0000-0000-000000000000',
+
+  // ── 8. GRADE 11 PHYSICS ───────────────────────────────────────────────────
+  // Prefix: d = Physics (hex-safe) | Physics subject code: 15
+
+  // Ch 5: Laws of Motion
+  g11PhysicsLOM:                           'd3111505-0000-0000-0000-000000000001',
+
+  // Skills (6 skills)
+  g11PhysLOMNewtons3Laws:                  'd4111505-0001-0000-0000-000000000000',
+  g11PhysLOMMomentumImpulse:               'd4111505-0002-0000-0000-000000000000',
+  g11PhysLOMConservationMomentum:          'd4111505-0003-0000-0000-000000000000',
+  g11PhysLOMEquilibriumForces:             'd4111505-0004-0000-0000-000000000000',
+  g11PhysLOMFriction:                      'd4111505-0005-0000-0000-000000000000',
+  g11PhysLOMCircularMotion:                'd4111505-0006-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11PhysLOMTerminologyQuiz:               'd4111505-0010-0000-0000-000000000000',
+
+  // Ch 6: Work, Energy and Power
+  g11PhysicsWEP:                           'd3111506-0000-0000-0000-000000000001',
+
+  // Skills (4 skills)
+  g11PhysWEPWorkCalc:                      'd4111506-0001-0000-0000-000000000000',
+  g11PhysWEPWorkEnergyTheorem:             'd4111506-0002-0000-0000-000000000000',
+  g11PhysWEPPotentialEnergy:               'd4111506-0003-0000-0000-000000000000',
+  g11PhysWEPConservation:                  'd4111506-0004-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11PhysWEPTerminologyQuiz:               'd4111506-0010-0000-0000-000000000000',
+
+  // ── 9. GRADE 11 MATHS ─────────────────────────────────────────────────────
+  // Prefix: a = Maths | Maths subject code: 10
+
+  // Ch 1: Sets
+  g11MathsSets:                            'a3111001-0000-0000-0000-000000000001',
+
+  // Skills (9 skills)
+  g11MathSetsWhatIsSet:                    'a4111001-0001-0000-0000-000000000000',
+  g11MathSetsTypes:                        'a4111001-0002-0000-0000-000000000000',
+  g11MathSetsEqualEquivalent:              'a4111001-0003-0000-0000-000000000000',
+  g11MathSetsSubsetsIntervals:             'a4111001-0004-0000-0000-000000000000',
+  g11MathSetsUniversalComplement:          'a4111001-0005-0000-0000-000000000000',
+  g11MathSetsOperations:                   'a4111001-0006-0000-0000-000000000000',
+  g11MathSetsVennDiagrams:                 'a4111001-0007-0000-0000-000000000000',
+  g11MathSetsLawsProperties:               'a4111001-0008-0000-0000-000000000000',
+  g11MathSetsCardinality:                  'a4111001-0009-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11MathSetsTerminologyQuiz:              'a4111001-0010-0000-0000-000000000000',
+
+  // Ch 2: Relations and Functions
+  g11MathsRAF:                             'a3111002-0000-0000-0000-000000000001',
+
+  // Skills (6 skills)
+  g11MathRAFCartesian:                     'a4111002-0001-0000-0000-000000000000',
+  g11MathRAFRelations:                     'a4111002-0002-0000-0000-000000000000',
+  g11MathRAFCounting:                      'a4111002-0003-0000-0000-000000000000',
+  g11MathRAFFunctions:                     'a4111002-0004-0000-0000-000000000000',
+  g11MathRAFSpecial:                       'a4111002-0005-0000-0000-000000000000',
+  g11MathRAFAlgebra:                       'a4111002-0006-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11MathRAFTerminologyQuiz:               'a4111002-0010-0000-0000-000000000000',
+
+  // ── 10. GRADE 11 BIOLOGY ──────────────────────────────────────────────────
+  // Prefix: e = Biology (hex-safe) | Biology subject code: 16
+
+  // Ch 4: The Cell — The Unit of Life
+  g11BiologyTheCell:                       'e3111604-0000-0000-0000-000000000001',
+
+  // Skills (8 skills)
+  g11BiolTheCellCellTheory:                'e4111604-0001-0000-0000-000000000000',
+  g11BiolTheCellProkEuk:                   'e4111604-0002-0000-0000-000000000000',
+  g11BiolTheCellMembrane:                  'e4111604-0003-0000-0000-000000000000',
+  g11BiolTheCellWall:                      'e4111604-0004-0000-0000-000000000000',
+  g11BiolTheCellEndomembrane:              'e4111604-0005-0000-0000-000000000000',
+  g11BiolTheCellOrganelles:               'e4111604-0006-0000-0000-000000000000',
+  g11BiolTheCellNucleus:                   'e4111604-0007-0000-0000-000000000000',
+  g11BiolTheCellPlantVsAnimal:             'e4111604-0008-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11BiolTheCellTerminologyQuiz:           'e4111604-0010-0000-0000-000000000000',
+
+  // Ch 8: Cell — Structure and Functions (legacy test)
+  g11BiologyCellStructure:                 'e4111608-0001-0000-0000-000000000000',
 };
 
 /**
@@ -989,6 +1145,121 @@ export const SLUG_TO_NODE_ID = {
   'g8-science-eis-measurements':       NODE_IDS.g8ScienceInvestigativeMeasurements,
   'g8-science-eis-analysis':           NODE_IDS.g8ScienceInvestigativeAnalysis,
   'g8-science-eis-terminology':         NODE_IDS.g8ScienceInvestigativeTerminologyQuiz,
+
+  // Grade 11 Chemistry: Structure of Atom
+  'g11-chem-structure-of-atom':                NODE_IDS.g11ChemistryStructureOfAtom,
+  'g11-chem-soa-sub-atomic-particles':         NODE_IDS.g11ChemSOASubAtomicParticles,
+  'g11-chem-soa-atomic-models':                NODE_IDS.g11ChemSOAAtomicModels,
+  'g11-chem-soa-bohr-model':                   NODE_IDS.g11ChemSOABohrModel,
+  'g11-chem-soa-hydrogen-spectrum':            NODE_IDS.g11ChemSOAHydrogenSpectrum,
+  'g11-chem-soa-dual-nature':                  NODE_IDS.g11ChemSOADualNature,
+  'g11-chem-soa-heisenberg':                   NODE_IDS.g11ChemSOAHeisenberg,
+  'g11-chem-soa-quantum-numbers':              NODE_IDS.g11ChemSOAQuantumNumbers,
+  'g11-chem-soa-shapes-of-orbitals':           NODE_IDS.g11ChemSOAShapesOfOrbitals,
+  'g11-chem-soa-electronic-config':            NODE_IDS.g11ChemSOAElectronicConfig,
+  'g11-chem-soa-terminology':                  NODE_IDS.g11ChemSOATerminologyQuiz,
+
+  // Grade 11 Physics: Laws of Motion
+  'g11-phys-lom':                              NODE_IDS.g11PhysicsLOM,
+  'g11-phys-lom-newtons-3-laws':               NODE_IDS.g11PhysLOMNewtons3Laws,
+  'g11-phys-lom-momentum-impulse':             NODE_IDS.g11PhysLOMMomentumImpulse,
+  'g11-phys-lom-conservation-momentum':        NODE_IDS.g11PhysLOMConservationMomentum,
+  'g11-phys-lom-equilibrium-forces':           NODE_IDS.g11PhysLOMEquilibriumForces,
+  'g11-phys-lom-friction':                     NODE_IDS.g11PhysLOMFriction,
+  'g11-phys-lom-circular-motion':              NODE_IDS.g11PhysLOMCircularMotion,
+  'g11-phys-lom-terminology':                  NODE_IDS.g11PhysLOMTerminologyQuiz,
+
+  // Grade 11 Physics: Work, Energy and Power
+  'g11-phys-wep':                              NODE_IDS.g11PhysicsWEP,
+  'g11-phys-wep-work-calc':                    NODE_IDS.g11PhysWEPWorkCalc,
+  'g11-phys-wep-work-energy-theorem':          NODE_IDS.g11PhysWEPWorkEnergyTheorem,
+  'g11-phys-wep-potential-energy':             NODE_IDS.g11PhysWEPPotentialEnergy,
+  'g11-phys-wep-conservation':                 NODE_IDS.g11PhysWEPConservation,
+  'g11-phys-wep-terminology':                  NODE_IDS.g11PhysWEPTerminologyQuiz,
+
+  // Grade 11 Maths: Sets
+  'g11-math-sets':                             NODE_IDS.g11MathsSets,
+  'g11-math-sets-what-is-set':                 NODE_IDS.g11MathSetsWhatIsSet,
+  'g11-math-sets-types':                       NODE_IDS.g11MathSetsTypes,
+  'g11-math-sets-equal-equivalent':            NODE_IDS.g11MathSetsEqualEquivalent,
+  'g11-math-sets-subsets-intervals':           NODE_IDS.g11MathSetsSubsetsIntervals,
+  'g11-math-sets-universal-complement':        NODE_IDS.g11MathSetsUniversalComplement,
+  'g11-math-sets-operations':                  NODE_IDS.g11MathSetsOperations,
+  'g11-math-sets-venn-diagrams':               NODE_IDS.g11MathSetsVennDiagrams,
+  'g11-math-sets-laws-properties':             NODE_IDS.g11MathSetsLawsProperties,
+  'g11-math-sets-cardinality':                 NODE_IDS.g11MathSetsCardinality,
+  'g11-math-sets-terminology':                 NODE_IDS.g11MathSetsTerminologyQuiz,
+
+  // Grade 11 Maths: Relations and Functions
+  'g11-math-raf':                              NODE_IDS.g11MathsRAF,
+  'g11-math-raf-cartesian':                    NODE_IDS.g11MathRAFCartesian,
+  'g11-math-raf-relations':                    NODE_IDS.g11MathRAFRelations,
+  'g11-math-raf-counting':                     NODE_IDS.g11MathRAFCounting,
+  'g11-math-raf-functions':                    NODE_IDS.g11MathRAFFunctions,
+  'g11-math-raf-special':                      NODE_IDS.g11MathRAFSpecial,
+  'g11-math-raf-algebra':                      NODE_IDS.g11MathRAFAlgebra,
+  'g11-math-raf-terminology':                  NODE_IDS.g11MathRAFTerminologyQuiz,
+
+  // Grade 11 Biology: The Cell — The Unit of Life
+  'g11-bio-the-cell':                          NODE_IDS.g11BiologyTheCell,
+  'g11-bio-the-cell-cell-theory':              NODE_IDS.g11BiolTheCellCellTheory,
+  'g11-bio-the-cell-prok-euk':                 NODE_IDS.g11BiolTheCellProkEuk,
+  'g11-bio-the-cell-membrane':                 NODE_IDS.g11BiolTheCellMembrane,
+  'g11-bio-the-cell-wall':                     NODE_IDS.g11BiolTheCellWall,
+  'g11-bio-the-cell-endomembrane':             NODE_IDS.g11BiolTheCellEndomembrane,
+  'g11-bio-the-cell-organelles':               NODE_IDS.g11BiolTheCellOrganelles,
+  'g11-bio-the-cell-nucleus':                  NODE_IDS.g11BiolTheCellNucleus,
+  'g11-bio-the-cell-plant-vs-animal':          NODE_IDS.g11BiolTheCellPlantVsAnimal,
+  'g11-bio-the-cell-terminology':              NODE_IDS.g11BiolTheCellTerminologyQuiz,
+
+  // Grade 11 Biology: Cell — Structure and Functions (legacy test)
+  'g11-bio-cell-structure':                    NODE_IDS.g11BiologyCellStructure,
+
+  // Grade 12 Math: Relations
+  'g12-math-relations':                        NODE_IDS.g12MathRelations,
+  'g12-math-relations-cartesian':              NODE_IDS.g12MathRelationsCartesian,
+  'g12-math-relations-domain-range':           NODE_IDS.g12MathRelationsDomainRange,
+  'g12-math-relations-counting':               NODE_IDS.g12MathRelationsCounting,
+  'g12-math-relations-equivalence':            NODE_IDS.g12MathRelationsEquivalence,
+  'g12-math-relations-terminology':            NODE_IDS.g12MathRelationsTerminologyQuiz,
+
+  // Grade 12 Math: Functions
+  'g12-math-functions':                        NODE_IDS.g12MathFunctions,
+  'g12-math-functions-concept':                NODE_IDS.g12MathFunctionsConcept,
+  'g12-math-functions-types':                  NODE_IDS.g12MathFunctionsTypes,
+  'g12-math-functions-algebra':                NODE_IDS.g12MathFunctionsAlgebra,
+  'g12-math-functions-equations':              NODE_IDS.g12MathFunctionsEquations,
+  'g12-math-functions-domain-range':           NODE_IDS.g12MathFunctionsDomainRange,
+  'g12-math-functions-terminology':            NODE_IDS.g12MathFunctionsTerminologyQuiz,
+
+  // Grade 12 Math: Matrices
+  'g12-math-matrices':                         NODE_IDS.g12MathMatrices,
+  'g12-math-matrices-order':                   NODE_IDS.g12MathMatricesOrder,
+  'g12-math-matrices-types':                   NODE_IDS.g12MathMatricesTypes,
+  'g12-math-matrices-operations':              NODE_IDS.g12MathMatricesOperations,
+  'g12-math-matrices-multiplication':          NODE_IDS.g12MathMatricesMultiplication,
+  'g12-math-matrices-transpose':               NODE_IDS.g12MathMatricesTranspose,
+  'g12-math-matrices-inverse':                 NODE_IDS.g12MathMatricesInverse,
+  'g12-math-matrices-terminology':             NODE_IDS.g12MathMatricesTerminologyQuiz,
+
+  // Grade 12 Math: Determinants
+  'g12-math-determinants':                     NODE_IDS.g12MathDeterminants,
+  'g12-math-determinants-fundamentals':        NODE_IDS.g12MathDeterminantsFundamentals,
+  'g12-math-determinants-properties':          NODE_IDS.g12MathDeterminantsProperties,
+  'g12-math-determinants-area':                NODE_IDS.g12MathDeterminantsArea,
+  'g12-math-determinants-minors-cofactors':    NODE_IDS.g12MathDeterminantsMinorsCofactors,
+  'g12-math-determinants-adjoint-inverse':     NODE_IDS.g12MathDeterminantsAdjointInverse,
+  'g12-math-determinants-applications':        NODE_IDS.g12MathDeterminantsApplications,
+  'g12-math-determinants-terminology':         NODE_IDS.g12MathDeterminantsTerminologyQuiz,
+
+  // Grade 12 Math: Inverse Trigonometric Functions
+  'g12-math-itf':                              NODE_IDS.g12MathITF,
+  'g12-math-itf-concept':                      NODE_IDS.g12MathITFConcept,
+  'g12-math-itf-definitions':                  NODE_IDS.g12MathITFDefinitions,
+  'g12-math-itf-properties':                   NODE_IDS.g12MathITFProperties,
+  'g12-math-itf-principal':                    NODE_IDS.g12MathITFPrincipal,
+  'g12-math-itf-simplification':               NODE_IDS.g12MathITFSimplification,
+  'g12-math-itf-terminology':                  NODE_IDS.g12MathITFTerminologyQuiz,
 
   // Grade 9 Math: Polynomials
   'g9-math-polynomials':                NODE_IDS.g9MathPolynomials,

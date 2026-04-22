@@ -232,19 +232,36 @@ const MiddleGradeSyllabus = () => {
                     const response = await api.getSkills(gradeNum);
                     fetched = response || [];
 
-                if (gradeNum === '6') {
+                if (gradeNum === '5' && activeSubject === 'mathematics') {
+                    fetched = [
+                        { topic: 'The Fish Tale', skill_id: 'ft-5', skill_name: 'Introduction', isLocal: true, path: '/the-fish-tale/introduction' },
+                        { topic: 'Shapes and Angles', skill_id: 'sa-5', skill_name: 'Introduction', isLocal: true, path: '/shapes-and-angles/introduction' },
+                        { topic: 'How Many Squares?', skill_id: 'hms-5', skill_name: 'Introduction', isLocal: true, path: '/middle/grade/5/how-many-squares/introduction' },
+                        { topic: 'Parts and Wholes', skill_id: 'pw-5', skill_name: 'Introduction', isLocal: true, path: '/middle/grade/5/parts-and-wholes/introduction' },
+                        { topic: 'Does it Look the Same?', skill_id: 'dils-5', skill_name: 'Introduction', isLocal: true, path: '/middle/grade/5/does-it-look-same/introduction' },
+                        { topic: 'Be My Multiple, I’ll be Your Factor', skill_id: 'bmf-5', skill_name: 'Introduction', isLocal: true, path: '/middle/grade/5/be-my-multiple/introduction' },
+                        { topic: 'Can You See the Pattern?', skill_id: 'pattern-5', skill_name: 'Pattern Recognition', sub_topic: 'Pattern Recognition', isLocal: true, path: '/middle/grade/5/can-you-see-pattern' },
+                        { topic: 'Mapping Your Way', skill_id: 'myw-5', skill_name: 'Introduction', isLocal: true, path: '/middle/grade/5/mapping-your-way/introduction' },
+                        { topic: 'Boxes and Sketches', skill_id: 'bs-5', skill_name: 'Boxes and Sketches', sub_topic: 'Main', isLocal: true, path: '/middle/grade/5/boxes-sketches' },
+                        { topic: 'Tenths and Hundredths', skill_id: 'th-5', skill_name: 'Decimals', sub_topic: 'Decimals', isLocal: true, path: '/middle/grade/5/tenths-hundredths/place-values' },
+                        { topic: 'Area and its Boundary', skill_id: 'ab-5', skill_name: 'Finding Area', sub_topic: 'Area', isLocal: true, path: '/middle/grade/5/area-boundary/area/finding-area' },
+                        { topic: 'Smart Charts', skill_id: 'sc-5', skill_name: 'Smart Charts', sub_topic: 'Main', isLocal: true, path: '/middle/grade/5/smart-charts' },
+                        { topic: 'Ways to Multiply and Divide', skill_id: 'wmd-5', skill_name: 'Multiplication', sub_topic: 'Multiplication', isLocal: true, path: '/middle/practice/9003' },
+                        { topic: 'How Big? How Heavy?', skill_id: 'hbh-5', skill_name: 'Volume Measurement', sub_topic: 'Volume Measurement', isLocal: true, path: '/middle/grade/5/how-big-how-heavy/volume-by-displacement' }
+                    ];
+                } else if (gradeNum === '6') {
                     fetched = [
                         {
                             skill_id: 'local-patterns-in-mathematics',
-                            skill_name: 'Patterns in Mathematics: Interactive Chapter',
-                            topic: 'Patterns',
+                            skill_name: 'Patterns in Mathematics',
+                            topic: 'Patterns in Mathematics',
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/6/patterns-in-mathematics'
                         },
                         {
                             skill_id: 'local-lines-and-angles',
-                            skill_name: 'Lines and Angles: Interactive Chapter',
+                            skill_name: 'Lines and Angles',
                             topic: 'Lines and Angles',
                             sub_topic: 'Main',
                             isLocal: true,
@@ -252,7 +269,7 @@ const MiddleGradeSyllabus = () => {
                         },
                         {
                             skill_id: 'local-number-play-chapter',
-                            skill_name: 'Number Play: Interactive Chapter',
+                            skill_name: 'Number Play',
                             topic: 'Number Play',
                             sub_topic: 'Main',
                             isLocal: true,
@@ -260,15 +277,15 @@ const MiddleGradeSyllabus = () => {
                         },
                         {
                             skill_id: 'local-data-handling-6-chapter',
-                            skill_name: 'Data Handling and Presentation: Interactive Chapter',
-                            topic: 'Data Handling',
+                            skill_name: 'Data Handling and Presentation',
+                            topic: 'Data Handling and Presentation',
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/6/data-handling-6'
                         },
                         {
                             skill_id: 'local-prime-time-6-chapter',
-                            skill_name: 'Prime Time: Interactive Chapter',
+                            skill_name: 'Prime Time',
                             topic: 'Prime Time',
                             sub_topic: 'Main',
                             isLocal: true,
@@ -276,26 +293,50 @@ const MiddleGradeSyllabus = () => {
                         },
                         {
                             skill_id: 'local-mensuration-6-chapter',
-                            skill_name: 'Perimeter and Area: Interactive Chapter',
+                            skill_name: 'Perimeter and Area',
                             topic: 'Perimeter and Area',
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/6/mensuration-6'
+                        },
+                        {
+                            skill_id: 'local-fractions-6-chapter',
+                            skill_name: 'Fractions',
+                            topic: 'Fractions',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/6/fractions-6'
+                        },
+                        {
+                            skill_id: 'local-constructions-8-chapter',
+                            skill_name: 'Playing with Constructions',
+                            topic: 'Playing with Constructions',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/6/playing-with-constructions'
+                        },
+                        {
+                            skill_id: 'local-symmetry-6-chapter',
+                            skill_name: 'Symmetry',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/6/symmetry-6'
+                        },
+                        {
+                            skill_id: 'local-the-other-side-of-zero-chapter',
+                            skill_name: 'The Other Side of Zero',
+                            topic: 'The Other Side of Zero',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/6/the-other-side-of-zero'
                         }
                     ];
                 }
 
                 if (gradeNum === '7') {
                     fetched = [
-                        ...fetched,
-                        {
-                            skill_id: 'local-percent',
-                            skill_name: 'Percentage',
-                            topic: 'Comparing Quantities',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/middle/grade/7/comparing-quantities/percentage'
-                        },
+                        // Chapter 1: Integers
                         {
                             skill_id: 'local-integers-chapter',
                             skill_name: 'Integers: Interactive Chapter',
@@ -304,6 +345,8 @@ const MiddleGradeSyllabus = () => {
                             isLocal: true,
                             path: '/middle/grade/7/integers'
                         },
+
+                        // Chapter 2: Fractions and Decimals
                         {
                             skill_id: 'local-fractions-decimals-chapter',
                             skill_name: 'Fractions and Decimals: Interactive Chapter',
@@ -312,14 +355,18 @@ const MiddleGradeSyllabus = () => {
                             isLocal: true,
                             path: '/middle/grade/7/fractions-and-decimals'
                         },
+
+                        // Chapter 3: Data Handling
                         {
-                            skill_id: 'local-lines-angles-chapter',
-                            skill_name: 'Lines and Angles: Interactive Chapter',
-                            topic: 'Lines and Angles',
+                            skill_id: 'local-data-handling-chapter',
+                            skill_name: 'Data Handling: Interactive Chapter',
+                            topic: 'Data Handling',
                             sub_topic: 'Main',
                             isLocal: true,
-                            path: '/middle/grade/7/lines-and-angles'
+                            path: '/middle/grade/7/data-handling'
                         },
+
+                        // Chapter 4: Simple Equations
                         {
                             skill_id: 'local-simple-equations-chapter',
                             skill_name: 'Simple Equations: Interactive Chapter',
@@ -328,6 +375,18 @@ const MiddleGradeSyllabus = () => {
                             isLocal: true,
                             path: '/middle/grade/7/simple-equations'
                         },
+
+                        // Chapter 5: Lines and Angles
+                        {
+                            skill_id: 'local-lines-angles-chapter',
+                            skill_name: 'Lines and Angles: Interactive Chapter',
+                            topic: 'Lines and Angles',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/lines-and-angles'
+                        },
+
+                        // Chapter 6: The Triangle and Its Properties
                         {
                             skill_id: 'local-triangles-properties-chapter',
                             skill_name: 'The Triangle and Its Properties: Interactive Chapter',
@@ -335,6 +394,16 @@ const MiddleGradeSyllabus = () => {
                             sub_topic: 'Main',
                             isLocal: true,
                             path: '/middle/grade/7/the-triangle-and-its-properties'
+                        },
+
+                        // Chapter 7: Comparing Quantities
+                        {
+                            skill_id: 'local-percent',
+                            skill_name: 'Percentage',
+                            topic: 'Comparing Quantities',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/comparing-quantities/percentage'
                         },
                         {
                             skill_id: 'local-use-percent',
@@ -368,46 +437,8 @@ const MiddleGradeSyllabus = () => {
                             isLocal: true,
                             path: '/middle/grade/7/comparing-quantities/chapter-test'
                         },
-                        {
-                            skill_id: 'local-exp-basics',
-                            skill_name: 'Exponents Basics',
-                            topic: 'Exponents and Powers',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/middle/grade/7/exponents-and-powers/basics'
-                        },
-                        {
-                            skill_id: 'local-exp-laws',
-                            skill_name: 'Laws of Exponents',
-                            topic: 'Exponents and Powers',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/middle/grade/7/exponents-and-powers/laws'
-                        },
-                        {
-                            skill_id: 'local-exp-decimal',
-                            skill_name: 'Decimal Number System',
-                            topic: 'Exponents and Powers',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/middle/grade/7/exponents-and-powers/decimal-system'
-                        },
-                        {
-                            skill_id: 'local-exp-standard',
-                            skill_name: 'Standard Form',
-                            topic: 'Exponents and Powers',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/middle/grade/7/exponents-and-powers/standard-form'
-                        },
-                        {
-                            skill_id: 'local-ep-test',
-                            skill_name: 'Chapter Test',
-                            topic: 'Exponents and Powers',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/middle/grade/7/exponents-and-powers/chapter-test'
-                        },
+
+                        // Chapter 8: Rational Numbers
                         {
                             skill_id: 'local-rn-need',
                             skill_name: 'Need For Rational Numbers',
@@ -480,54 +511,8 @@ const MiddleGradeSyllabus = () => {
                             isLocal: true,
                             path: '/middle/grade/7/rational-numbers/chapter-test'
                         },
-                        {
-                            skill_id: 'local-plane-solid',
-                            skill_name: 'Plane Figures and Solid Shapes',
-                            topic: 'Visualising Solid Shapes',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/middle/grade/7/visualising-solid-shapes/plane-figures-solid-shapes'
-                        },
-                        {
-                            skill_id: 'local-fev',
-                            skill_name: 'Faces, Edges and Vertices',
-                            topic: 'Visualising Solid Shapes',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/middle/grade/7/visualising-solid-shapes/faces-edges-vertices'
-                        },
-                        {
-                            skill_id: 'local-nets',
-                            skill_name: 'Nets for Building 3-D Shapes',
-                            topic: 'Visualising Solid Shapes',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/middle/grade/7/visualising-solid-shapes/nets'
-                        },
-                        {
-                            skill_id: 'local-drawing',
-                            skill_name: 'Drawing Solids on a Flat Surface',
-                            topic: 'Visualising Solid Shapes',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/middle/grade/7/visualising-solid-shapes/drawing-solids'
-                        },
-                        {
-                            skill_id: 'local-sections',
-                            skill_name: 'Viewing Different Sections of a Solid',
-                            topic: 'Visualising Solid Shapes',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/middle/grade/7/visualising-solid-shapes/viewing-sections'
-                        },
-                        {
-                            skill_id: 'local-vss-test',
-                            skill_name: 'Chapter Test',
-                            topic: 'Visualising Solid Shapes',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/middle/grade/7/visualising-solid-shapes/chapter-test'
-                        },
+
+                        // Chapter 9: Perimeter and Area
                         {
                             skill_id: 'local-pa-parallel',
                             skill_name: 'Area of Parallelogram',
@@ -560,54 +545,8 @@ const MiddleGradeSyllabus = () => {
                             isLocal: true,
                             path: '/middle/grade/7/perimeter-area/chapter-test'
                         },
-                        {
-                            skill_id: 'local-sym-line',
-                            skill_name: 'Line Symmetry',
-                            topic: 'Symmetry',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/middle/grade/7/symmetry/line-symmetry'
-                        },
-                        {
-                            skill_id: 'local-sym-poly',
-                            skill_name: 'Regular Polygons',
-                            topic: 'Symmetry',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/middle/grade/7/symmetry/regular-polygons'
-                        },
-                        {
-                            skill_id: 'local-sym-mirror',
-                            skill_name: 'Mirror Reflection',
-                            topic: 'Symmetry',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/middle/grade/7/symmetry/mirror-reflection'
-                        },
-                        {
-                            skill_id: 'local-sym-rot',
-                            skill_name: 'Rotational Symmetry',
-                            topic: 'Symmetry',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/middle/grade/7/symmetry/rotational'
-                        },
-                        {
-                            skill_id: 'local-sym-rel',
-                            skill_name: 'Line & Rotational Relationship',
-                            topic: 'Symmetry',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/middle/grade/7/symmetry/relationship'
-                        },
-                        {
-                            skill_id: 'local-sym-test',
-                            skill_name: 'Chapter Test',
-                            topic: 'Symmetry',
-                            sub_topic: 'Main',
-                            isLocal: true,
-                            path: '/middle/grade/7/symmetry/chapter-test'
-                        },
+
+                        // Chapter 10: Algebraic Expressions
                         {
                             skill_id: '1094',
                             skill_name: 'Formation of Algebraic Expressions',
@@ -664,13 +603,147 @@ const MiddleGradeSyllabus = () => {
                             isLocal: true,
                             path: '/middle/grade/7/algebraic-expressions/chapter-test'
                         },
+
+                        // Chapter 11: Exponents and Powers
                         {
-                            skill_id: 'local-data-handling-chapter',
-                            skill_name: 'Data Handling: Interactive Chapter',
-                            topic: 'Data Handling',
+                            skill_id: 'local-exp-basics',
+                            skill_name: 'Exponents Basics',
+                            topic: 'Exponents and Powers',
                             sub_topic: 'Main',
                             isLocal: true,
-                            path: '/middle/grade/7/data-handling'
+                            path: '/middle/grade/7/exponents-and-powers/basics'
+                        },
+                        {
+                            skill_id: 'local-exp-laws',
+                            skill_name: 'Laws of Exponents',
+                            topic: 'Exponents and Powers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/exponents-and-powers/laws'
+                        },
+                        {
+                            skill_id: 'local-exp-decimal',
+                            skill_name: 'Decimal Number System',
+                            topic: 'Exponents and Powers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/exponents-and-powers/decimal-system'
+                        },
+                        {
+                            skill_id: 'local-exp-standard',
+                            skill_name: 'Standard Form',
+                            topic: 'Exponents and Powers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/exponents-and-powers/standard-form'
+                        },
+                        {
+                            skill_id: 'local-ep-test',
+                            skill_name: 'Chapter Test',
+                            topic: 'Exponents and Powers',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/exponents-and-powers/chapter-test'
+                        },
+
+                        // Chapter 12: Symmetry
+                        {
+                            skill_id: 'local-sym-line',
+                            skill_name: 'Line Symmetry',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/symmetry/line-symmetry'
+                        },
+                        {
+                            skill_id: 'local-sym-poly',
+                            skill_name: 'Regular Polygons',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/symmetry/regular-polygons'
+                        },
+                        {
+                            skill_id: 'local-sym-mirror',
+                            skill_name: 'Mirror Reflection',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/symmetry/mirror-reflection'
+                        },
+                        {
+                            skill_id: 'local-sym-rot',
+                            skill_name: 'Rotational Symmetry',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/symmetry/rotational'
+                        },
+                        {
+                            skill_id: 'local-sym-rel',
+                            skill_name: 'Line & Rotational Relationship',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/symmetry/relationship'
+                        },
+                        {
+                            skill_id: 'local-sym-test',
+                            skill_name: 'Chapter Test',
+                            topic: 'Symmetry',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/symmetry/chapter-test'
+                        },
+
+                        // Chapter 13: Visualising Solid Shapes
+                        {
+                            skill_id: 'local-plane-solid',
+                            skill_name: 'Plane Figures and Solid Shapes',
+                            topic: 'Visualising Solid Shapes',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/visualising-solid-shapes/plane-figures-solid-shapes'
+                        },
+                        {
+                            skill_id: 'local-fev',
+                            skill_name: 'Faces, Edges and Vertices',
+                            topic: 'Visualising Solid Shapes',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/visualising-solid-shapes/faces-edges-vertices'
+                        },
+                        {
+                            skill_id: 'local-nets',
+                            skill_name: 'Nets for Building 3-D Shapes',
+                            topic: 'Visualising Solid Shapes',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/visualising-solid-shapes/nets'
+                        },
+                        {
+                            skill_id: 'local-drawing',
+                            skill_name: 'Drawing Solids on a Flat Surface',
+                            topic: 'Visualising Solid Shapes',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/visualising-solid-shapes/drawing-solids'
+                        },
+                        {
+                            skill_id: 'local-sections',
+                            skill_name: 'Viewing Different Sections of a Solid',
+                            topic: 'Visualising Solid Shapes',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/visualising-solid-shapes/viewing-sections'
+                        },
+                        {
+                            skill_id: 'local-vss-test',
+                            skill_name: 'Chapter Test',
+                            topic: 'Visualising Solid Shapes',
+                            sub_topic: 'Main',
+                            isLocal: true,
+                            path: '/middle/grade/7/visualising-solid-shapes/chapter-test'
                         }
                     ];
                 }
@@ -696,7 +769,7 @@ const MiddleGradeSyllabus = () => {
 
         if (gradeNum === 5) return acc; // Hide all default skills for Grade 5 (handled by overrides)
         if (activeSubject === 'mathematics') {
-            if (gradeNum === 6 && !["arithmetic", "perimeter and area", "pattern", "number play", "data handling", "symmetry", "lines and angles", "prime time"].some(t => topicName.includes(t.toLowerCase()))) return acc;
+            if (gradeNum === 6 && !["arithmetic", "perimeter and area", "pattern", "number play", "data handling", "symmetry", "lines and angles", "prime time", "fractions", "playing with constructions", "the other side of zero"].some(t => topicName.includes(t.toLowerCase()))) return acc;
             if (gradeNum === 7 && topicName !== "integers" && topicName !== "comparing quantities" && topicName !== "exponents and powers" && topicName !== "rational numbers" && topicName !== "visualising solid shapes" && topicName !== "symmetry" && topicName !== "algebraic expressions" && topicName !== "perimeter and area" && topicName !== "fractions and decimals" && topicName !== "data handling" && topicName !== "arithmetic") return acc;
             if (gradeNum === 7 && (topicName === "integers" || topicName === "exponents and powers" || topicName === "rational numbers" || topicName === "visualising solid shapes" || topicName === "symmetry" || topicName === "perimeter and area" || topicName === "algebraic expressions" || topicName === "fractions and decimals" || topicName === "data handling" || topicName === "arithmetic") && !skill.isLocal) return acc;
         }
@@ -1266,8 +1339,10 @@ const MiddleGradeSyllabus = () => {
                     </div>
                 ) : (
                     <div className="middle-masonry-grid">
-                        {Object.entries(skillsByTopic).map(([topic, subTopics], index) => {
-                        const accentColor = getAccentColor(index);
+                        {[...new Set(skills.map(s => s.topic))].map((topic, index) => {
+                            const subTopics = skillsByTopic[topic];
+                            if (!subTopics) return null;
+                            const accentColor = getAccentColor(index);
 
                         // Define fixed order for sub-topics
                         const subTopicOrder = ["Pattern Recognition", "Number properties", "Logical Reasoning", "Multiplication", "Division", "Decimals", "Area", "Perimeter", "Area-Perimeter Relationship", "Volume Measurement", "Mass Measurement", "Measurement Based Reasoning", "Skill Application Problems", "Chapter Test"];
@@ -1282,6 +1357,23 @@ const MiddleGradeSyllabus = () => {
 
                         return (
                             <div key={topic} className="middle-topic-card" style={{ '--card-accent': accentColor }}>
+                                {(gradeInt === 5 || gradeInt === 6 || gradeInt === 7) && activeSubject === 'mathematics' && (
+                                    <div style={{
+                                        fontSize: '0.7rem',
+                                        fontWeight: 800,
+                                        color: accentColor,
+                                        background: `${accentColor}15`,
+                                        padding: '4px 12px',
+                                        borderRadius: '100px',
+                                        width: 'fit-content',
+                                        marginBottom: '1.2rem',
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '1px',
+                                        border: `1px solid ${accentColor}30`
+                                    }}>
+                                        Chapter {index + 1}
+                                    </div>
+                                )}
                                 <div className="topic-header">
                                     <div className="topic-icon-wrapper">
                                         {getTopicIcon(topic)}
