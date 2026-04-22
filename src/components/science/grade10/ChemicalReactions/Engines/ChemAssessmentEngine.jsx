@@ -27,6 +27,7 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
     const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
     const isFinishedRef = useRef(false);
     const sessionStartedRef = useRef(false);
+    const answersPayload = useRef([]);
     const getQuestionType = (question) => {
         if (question?.type === 'text') return 'text';
         if (question?.type === 'msq') return 'msq';
@@ -92,15 +93,19 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
 
     useEffect(() => {
         if (nodeId && !sessionStartedRef.current) {
-            startSession({ nodeId, sessionType: 'assessment' });
-            sessionStartedRef.current = true;
+            const sessionId = startSession({ nodeId, sessionType: 'assessment' });
+            sessionStartedRef.current = Boolean(sessionId);
+            answersPayload.current = Array(questionSet.length).fill(null);
         }
-    }, [nodeId, startSession]);
+    }, [nodeId, questionSet.length, startSession]);
 
     useEffect(() => {
         return () => {
-            if (sessionStartedRef.current && !isFinishedRef.current) {
-                abandonSession({ totalQuestions: questionSet.length });
+            if (sessionStartedRef.current && !isFinishedRef.current && answersPayload.current.some(Boolean)) {
+                abandonSession({
+                    answersPayload: answersPayload.current.filter(Boolean),
+                    totalQuestions: questionSet.length
+                });
             }
         };
     }, [abandonSession, questionSet.length]);
@@ -113,6 +118,7 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
         setMarkedForReview(Array(newQs.length).fill(false));
         setTimeLeft(newQs.length * 60);
         setFinished(false);
+        answersPayload.current = Array(newQs.length).fill(null);
     }, [questions]);
 
     useEffect(() => {
@@ -128,10 +134,7 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
 
     useEffect(() => {
         if (finished) return;
-        if (timeLeft <= 0) {
-            setFinished(true);
-            return;
-        }
+        if (timeLeft <= 0) return;
         const timer = setInterval(() => {
             setTimeLeft((prev) => prev - 1);
         }, 1000);
@@ -146,41 +149,70 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
 
     const q = questionSet[current];
 
-    const handleSelect = (optIdx) => {
+    const buildAnswerData = (question, answer, questionIndex) => {
+        const qType = getQuestionType(question);
+        const isCorrect = isAnswerCorrect(question, answer);
+        const payloadKey = qType === 'text' ? 'text' : (qType === 'msq' ? 'selections' : 'selection');
+
+        return {
+            question_index: questionIndex + 1,
+            answer_json: {
+                question_text: question.question,
+                question_type: qType,
+                options: question.options,
+                [payloadKey]: answer,
+                selected_answer: getUserAnswerLabel(question, answer),
+                correct_index: question.correct,
+                correct_answer: getCorrectAnswerLabel(question),
+                is_correct: isCorrect,
+                explanation: question.explanation
+            },
+            is_correct: isCorrect ? 1.0 : 0.0,
+            marks_awarded: isCorrect ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        };
+    };
+
+    const startNewAssessmentAttempt = () => {
+        const newQs = resolveQuestions(questions);
+        if (nodeId) {
+            const sessionId = startSession({ nodeId, sessionType: 'assessment' });
+            sessionStartedRef.current = Boolean(sessionId);
+        }
+        answersPayload.current = Array(newQs.length).fill(null);
+        setQuestionSet(newQs);
+        setCurrent(0);
+        setAnswers(Array(newQs.length).fill(null));
+        setMarkedForReview(Array(newQs.length).fill(false));
+        setTimeLeft(newQs.length * 60);
+        setFinished(false);
+        isFinishedRef.current = false;
+    };
+
+    const handleSelect = async (optIdx) => {
         if (finished) return;
         const newAns = [...answers];
         newAns[current] = optIdx;
         setAnswers(newAns);
 
-        const correct = isAnswerCorrect(q, optIdx);
-        logAnswer({
-            question_index: current + 1,
-            answer_json: { selection: optIdx },
-            is_correct: correct ? 1.0 : 0.0,
-            marks_awarded: correct ? 1 : 0,
-            marks_possible: 1,
-            time_taken_ms: 0
-        });
+        const answerData = buildAnswerData(q, optIdx, current);
+        answersPayload.current[current] = answerData;
+        await logAnswer(answerData);
     };
 
-    const handleTextAnswerChange = (value) => {
+    const handleTextAnswerChange = async (value) => {
         if (finished) return;
         const newAns = [...answers];
         newAns[current] = value;
         setAnswers(newAns);
 
-        const correct = isAnswerCorrect(q, value);
-        logAnswer({
-            question_index: current + 1,
-            answer_json: { text: value },
-            is_correct: correct ? 1.0 : 0.0,
-            marks_awarded: correct ? 1 : 0,
-            marks_possible: 1,
-            time_taken_ms: 0
-        });
+        const answerData = buildAnswerData(q, value, current);
+        answersPayload.current[current] = answerData;
+        await logAnswer(answerData);
     };
 
-    const handleMsqToggle = (optIdx) => {
+    const handleMsqToggle = async (optIdx) => {
         if (finished) return;
         const currentAnswer = Array.isArray(answers[current]) ? answers[current] : [];
         const nextAnswer = currentAnswer.includes(optIdx)
@@ -190,15 +222,9 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
         newAns[current] = nextAnswer;
         setAnswers(newAns);
 
-        const correct = isAnswerCorrect(q, nextAnswer);
-        logAnswer({
-            question_index: current + 1,
-            answer_json: { selections: nextAnswer },
-            is_correct: correct ? 1.0 : 0.0,
-            marks_awarded: correct ? 1 : 0,
-            marks_possible: 1,
-            time_taken_ms: 0
-        });
+        const answerData = buildAnswerData(q, nextAnswer, current);
+        answersPayload.current[current] = answerData;
+        await logAnswer(answerData);
     };
 
     const handleNext = () => {
@@ -218,8 +244,8 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
         });
     };
 
-    const handleSubmit = () => {
-        if (questionSet.some((question, index) => !isAnswerComplete(question, answers[index]))) {
+    const handleSubmit = async (forceSubmit = false) => {
+        if (!forceSubmit && questionSet.some((question, index) => !isAnswerComplete(question, answers[index]))) {
             if (!window.confirm('You have unanswered questions. Are you sure you want to submit?')) return;
         }
         setFinished(true);
@@ -230,25 +256,20 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
             if (isAnswerCorrect(questionSet[index], ans)) finalScore++;
         });
 
-        const payload = answers.map((ans, idx) => {
-            if (!isAnswerComplete(questionSet[idx], ans)) return null;
-            const qType = getQuestionType(questionSet[idx]);
-            return {
-                question_index: idx + 1,
-                answer_json: qType === 'text' ? { text: ans } : (qType === 'msq' ? { selections: ans } : { selection: ans }),
-                is_correct: isAnswerCorrect(questionSet[idx], ans) ? 1.0 : 0.0,
-                marks_awarded: isAnswerCorrect(questionSet[idx], ans) ? 1 : 0,
-                marks_possible: 1,
-                time_taken_ms: 0
-            };
-        }).filter(Boolean);
+        const payload = answersPayload.current.filter(Boolean);
 
-        finishSession({
+        await finishSession({
             totalQuestions: questionSet.length,
             questionsAnswered: payload.length,
             answersPayload: payload
         });
     };
+
+    useEffect(() => {
+        if (!finished && timeLeft <= 0) {
+            handleSubmit(true);
+        }
+    }, [finished, timeLeft]);
 
     const answeredCount = questionSet.reduce((count, question, index) => (
         count + (isAnswerComplete(question, answers[index]) ? 1 : 0)
@@ -270,14 +291,7 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
                     <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 20, flexWrap: 'wrap' }}>
                         <button
                             className={`${prefix}-btn-primary`}
-                            onClick={() => {
-                                const newQs = typeof questions === 'function' ? questions() : questions;
-                                setQuestionSet(newQs);
-                                setCurrent(0);
-                                setAnswers(Array(newQs.length).fill(null));
-                                setTimeLeft(newQs.length * 60);
-                                setFinished(false);
-                            }}
+                            onClick={startNewAssessmentAttempt}
                             style={{ padding: '10px 20px', background: color, border: 'none', color: '#fff', borderRadius: 8, fontWeight: 700, cursor: 'pointer' }}
                         >
                             Retake Assessment
@@ -438,7 +452,7 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
                 </div>
             </div>
 
-            <button onClick={handleSubmit} style={{ marginTop: 24, width: '100%', padding: '12px', background: `var(--${prefix}-red, #ef4444)`, color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, cursor: 'pointer' }}>
+            <button onClick={() => handleSubmit()} style={{ marginTop: 24, width: '100%', padding: '12px', background: `var(--${prefix}-red, #ef4444)`, color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700, cursor: 'pointer' }}>
                 Submit Assessment
             </button>
         </div>
@@ -603,7 +617,7 @@ export default function ChemAssessmentEngine({ questions, title, onBack, onSecon
                     </button>
                     {current + 1 === questionSet.length ? (
                         <button
-                            onClick={handleSubmit}
+                            onClick={() => handleSubmit()}
                             className={`${prefix}-btn-primary`}
                             style={{ background: `var(--${prefix}-blue, #2563eb)`, border: 'none', color: '#fff', padding: '12px 28px', fontSize: 15, borderRadius: 100, flex: '1 1 120px', fontWeight: 600 }}
                         >

@@ -1046,6 +1046,19 @@ export const NODE_IDS = {
 
   // Ch 8: Cell — Structure and Functions (legacy test)
   // g11BiologyCellStructure:                 'e4111608-0001-0000-0000-000000000000',
+  // Grade 12 Chemistry: Solutions
+  g12ChemSolutions:                            'e3121601-0000-0000-0000-000000000001',
+  g12ChemSolutionsTypes:                       'e4121601-0001-0000-0000-000000000000',
+  g12ChemSolutionsConcentration:               'e4121601-0002-0000-0000-000000000000',
+  g12ChemSolutionsSolubility:                  'e4121601-0003-0000-0000-000000000000',
+  g12ChemSolutionsVapourPressure:              'e4121601-0004-0000-0000-000000000000',
+  g12ChemSolutionsIdeal:                       'e4121601-0005-0000-0000-000000000000',
+  g12ChemSolutionsColligative:                 'e4121601-0006-0000-0000-000000000000',
+  g12ChemSolutionsTerminologyQuiz:             'e4121601-0010-0000-0000-000000000000',
+  g12ChemSolutionsIntro:                       'e4121601-0011-0000-0000-000000000000',
+  g12ChemSolutionsConnectomics:                'e4121601-0012-0000-0000-000000000000',
+  g12ChemSolutionsVirtualLab:                  'e4121601-0013-0000-0000-000000000000',
+  g12ChemSolutionsExamEdge:                    'e4121601-0014-0000-0000-000000000000',
 };
 
 /**
@@ -1374,4 +1387,18 @@ export const SLUG_TO_NODE_ID = {
   'g1-math-numbers-51-100-comparison': NODE_IDS.g1MathNumbers51100Comparison,
   'g1-math-numbers-51-100-skip':       NODE_IDS.g1MathNumbers51100Skip,
   'g1-math-numbers-51-100-mixed':      NODE_IDS.g1MathNumbers51100Mixed,
+
+  // Grade 12 Chemistry: Solutions
+  'g12-chem-solutions':                        NODE_IDS.g12ChemSolutions,
+  'g12-chem-solutions-types':                  NODE_IDS.g12ChemSolutionsTypes,
+  'g12-chem-solutions-concentration':          NODE_IDS.g12ChemSolutionsConcentration,
+  'g12-chem-solutions-solubility':             NODE_IDS.g12ChemSolutionsSolubility,
+  'g12-chem-solutions-vapour-pressure':        NODE_IDS.g12ChemSolutionsVapourPressure,
+  'g12-chem-solutions-ideal':                  NODE_IDS.g12ChemSolutionsIdeal,
+  'g12-chem-solutions-colligative':            NODE_IDS.g12ChemSolutionsColligative,
+  'g12-chem-solutions-terminology':            NODE_IDS.g12ChemSolutionsTerminologyQuiz,
+  'g12-chem-solutions-introduction':           NODE_IDS.g12ChemSolutionsIntro,
+  'g12-chem-solutions-connectomics':           NODE_IDS.g12ChemSolutionsConnectomics,
+  'g12-chem-solutions-virtual-lab':            NODE_IDS.g12ChemSolutionsVirtualLab,
+  'g12-chem-solutions-exam-edge':               NODE_IDS.g12ChemSolutionsExamEdge,
 };
