@@ -1045,7 +1045,7 @@ export const NODE_IDS = {
   g11BiolTheCellTerminologyQuiz:           'e4111604-0010-0000-0000-000000000000',
 
   // Ch 8: Cell — Structure and Functions (legacy test)
-  g11BiologyCellStructure:                 'e4111608-0001-0000-0000-000000000000',
+  // g11BiologyCellStructure:                 'e4111608-0001-0000-0000-000000000000',
 };
 
 /**
@@ -1213,7 +1213,7 @@ export const SLUG_TO_NODE_ID = {
   'g11-bio-the-cell-terminology':              NODE_IDS.g11BiolTheCellTerminologyQuiz,
 
   // Grade 11 Biology: Cell — Structure and Functions (legacy test)
-  'g11-bio-cell-structure':                    NODE_IDS.g11BiologyCellStructure,
+  // 'g11-bio-cell-structure':                    NODE_IDS.g11BiologyCellStructure,
 
   // Grade 12 Math: Relations
   'g12-math-relations':                        NODE_IDS.g12MathRelations,
