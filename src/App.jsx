@@ -111,8 +111,13 @@ import RelFuncTerminology from './components/practice/class-11/maths/RelationsAn
 import RelFuncSkills from './components/practice/class-11/maths/RelationsAndFunctions/Topics/Skills/RelFuncSkills';
 import RelFuncConnectomics from './components/practice/class-11/maths/RelationsAndFunctions/Topics/Connectomics/RelFuncConnectomics';
 import RelFuncExamEdge from './components/practice/class-11/maths/RelationsAndFunctions/Topics/ExamEdge/RelFuncExamEdge';
+import MathsChapters12 from './components/practice/class-12/maths/MathsChapters12';
 
 import TheCellDashboard from './components/Biology-Branches/The-Cell/TheCellDashboard';
+import PhysicsChapters12 from './components/practice/class-12/physics/PhysicsChapters12';
+import ChemistryChapters12 from './components/practice/class-12/chemistry/ChemistryChapters12';
+import BiologyChapters12 from './components/practice/class-12/biology/BiologyChapters12';
+
 import TheCellIntro from './components/Biology-Branches/The-Cell/Topics/Introduction/TheCellIntro';
 import TheCellTerminology from './components/Biology-Branches/The-Cell/Topics/Terminology/TheCellTerminology';
 import TheCellSkills from './components/Biology-Branches/The-Cell/Topics/Skills/TheCellSkills';
@@ -1274,6 +1279,7 @@ function App() {
 
           {/* Class 11 Biology */}
           <Route path="senior/grade/11/biology" element={<BiologyChapters />} />
+          <Route path="senior/grade/12/biology" element={<BiologyChapters12 />} />
           <Route path="senior/grade/11/biology/cell-structure" element={<ProtectedRoute redirectTo="/login"><CellStructureTest /></ProtectedRoute>} />
           <Route path="senior/grade/11/biology/the-cell" element={<ProtectedRoute redirectTo="/login"><TheCellDashboard /></ProtectedRoute>} />
           <Route path="senior/grade/11/biology/the-cell/introduction" element={<ProtectedRoute redirectTo="/login"><TheCellIntro /></ProtectedRoute>} />
@@ -1284,6 +1290,7 @@ function App() {
 
           {/* Class 11 Maths */}
           <Route path="senior/grade/11/maths" element={<MathsChapters />} />
+          <Route path="senior/grade/12/maths" element={<MathsChapters12 />} />
           <Route path="senior/grade/11/maths/sets" element={<ProtectedRoute redirectTo="/login"><SetsDashboard /></ProtectedRoute>} />
           <Route path="senior/grade/11/maths/sets/introduction" element={<ProtectedRoute redirectTo="/login"><SetsIntro /></ProtectedRoute>} />
           <Route path="senior/grade/11/maths/sets/terminology" element={<ProtectedRoute redirectTo="/login"><SetsTerminology /></ProtectedRoute>} />
@@ -1301,6 +1308,7 @@ function App() {
 
           {/* Class 11 Physics */}
           <Route path="senior/grade/11/physics" element={<PhysicsChapters />} />
+          <Route path="senior/grade/12/physics" element={<PhysicsChapters12 />} />
           <Route path="senior/grade/11/physics/laws-of-motion" element={<ProtectedRoute redirectTo="/login"><LawsOfMotionDashboard /></ProtectedRoute>} />
           <Route path="senior/grade/11/physics/laws-of-motion/introduction" element={<ProtectedRoute redirectTo="/login"><LawsOfMotionIntro /></ProtectedRoute>} />
           <Route path="senior/grade/11/physics/laws-of-motion/terminology" element={<ProtectedRoute redirectTo="/login"><LawsOfMotionTerminology /></ProtectedRoute>} />
@@ -1318,6 +1326,7 @@ function App() {
 
           {/* Class 11 Chemistry */}
           <Route path="senior/grade/11/chemistry" element={<ChemistryChapters />} />
+          <Route path="senior/grade/12/chemistry" element={<ChemistryChapters12 />} />
           <Route path="senior/grade/11/chemistry/structure-of-atom" element={<ProtectedRoute redirectTo="/login"><StructureOfAtomDashboard /></ProtectedRoute>} />
           <Route path="senior/grade/11/chemistry/structure-of-atom/introduction" element={<ProtectedRoute redirectTo="/login"><StructureOfAtomIntro /></ProtectedRoute>} />
           <Route path="senior/grade/11/chemistry/structure-of-atom/terminology" element={<ProtectedRoute redirectTo="/login"><StructureOfAtomTerminology /></ProtectedRoute>} />

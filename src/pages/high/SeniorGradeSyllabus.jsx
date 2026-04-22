@@ -74,23 +74,40 @@ const SeniorGradeSyllabus = () => {
                     setSkills([]);
                 } else if (grade === '12') {
                     setSkills([
-                        { skill_id: 12000, skill_name: 'Matrices: Interactive Chapter', topic: 'Matrices', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/matrices' },
-                        { skill_id: 12100, skill_name: 'Determinants: Interactive Chapter', topic: 'Determinants', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/determinants' },
+                        // Chapter 1: Relations and Functions (Split into Relations and Functions hubs)
                         { skill_id: 12200, skill_name: 'Relations: Interactive Chapter', topic: 'Relations', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/relations' },
                         { skill_id: 12300, skill_name: 'Functions: Interactive Chapter', topic: 'Functions', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/functions' },
-                        { skill_id: 12400, skill_name: 'Inverse Trigonometric Functions: Interactive Chapter', topic: 'Inverse Trigonometric Functions', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/inverse-trigonometric-functions' }
+
+                        // Chapter 2: Inverse Trigonometric Functions
+                        { skill_id: 12400, skill_name: 'Inverse Trigonometric Functions: Interactive Chapter', topic: 'Inverse Trigonometric Functions', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/inverse-trigonometric-functions' },
+
+                        // Chapter 3: Matrices
+                        { skill_id: 12000, skill_name: 'Matrices: Interactive Chapter', topic: 'Matrices', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/matrices' },
+
+                        // Chapter 4: Determinants
+                        { skill_id: 12100, skill_name: 'Determinants: Interactive Chapter', topic: 'Determinants', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/12/determinants' }
                     ]);
                 } else if (grade === '10') {
                     setSkills([
+                        // Chapter 1: Real Numbers
+                        { skill_id: 10149, skill_name: 'Real Numbers: Interactive Chapter', topic: 'Real Numbers', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/real-numbers' },
+
+                        // Chapter 2: Polynomials
+                        { skill_id: 1233, skill_name: 'Understanding Polynomials and Their Degrees', topic: 'Polynomials', subtopic: 'Understanding Types and Degrees of Polynomials' },
+                        { skill_id: 1234, skill_name: 'Evaluating Polynomials and Identifying Zeroes', topic: 'Polynomials', subtopic: 'Evaluating Polynomials and Identifying Zeroes' },
+                        { skill_id: 1235, skill_name: 'Geometrical Interpretation of Zeroes', topic: 'Polynomials', subtopic: 'Geometrical Interpretation of Zeroes' },
+                        { skill_id: 1236, skill_name: 'Number of Zeroes from Graphical Behaviour', topic: 'Polynomials', subtopic: 'Number of Zeroes from Graphical Behaviour' },
+                        { skill_id: 1237, skill_name: 'Relationship Between Zeroes and Coefficients (Quadratic)', topic: 'Polynomials', subtopic: 'Relationship Between Zeroes and Coefficients (Quadratic)' },
+                        { skill_id: 1238, skill_name: 'Constructing Quadratic Polynomials from Given Conditions', topic: 'Polynomials', subtopic: 'Constructing Quadratic Polynomials from Given Conditions' },
+                        { skill_id: 1239, skill_name: 'Relationship Between Zeroes and Coefficients (Cubic)', topic: 'Polynomials', subtopic: 'Relationship Between Zeroes and Coefficients (Cubic)' },
+                        { skill_id: 1240, skill_name: 'Polynomials Chapter Assessment', topic: 'Polynomials', subtopic: 'Polynomials Chapter Assessment' },
+
+                        // Chapter 3: Pair of Linear Equations in Two Variables
                         { skill_id: 10031, skill_name: 'Form a pair of linear equations from word problems', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Forming Linear Equations from Real-Life Situations' },
-
                         { skill_id: 10041, skill_name: 'Rewrite linear equations in the form ax + by + c = 0', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Rewriting Linear Equations in Standard Form' },
-
                         { skill_id: 10021, skill_name: 'Identify the Number of Solutions from Line Relationships', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Number of Solutions of a Pair of Linear Equations' },
                         { skill_id: 10022, skill_name: 'Identify the number of solutions using algebraic conditions', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Number of Solutions of a Pair of Linear Equations' },
-
                         { skill_id: 10011, skill_name: 'Solve a pair of linear equations by graphing', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Pair of Linear Equations – Graphical Representation' },
-
                         { skill_id: 10051, skill_name: 'Check whether a given ordered pair is a solution', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Solving Pair of Linear Equations Algebraically' },
                         { skill_id: 10052, skill_name: 'Solve equations using substitution (no word problems)', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Solving Pair of Linear Equations Algebraically' },
                         { skill_id: 10053, skill_name: 'Solve word problems using substitution', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Solving Pair of Linear Equations Algebraically' },
@@ -98,17 +115,7 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 10055, skill_name: 'Solve word problems using elimination', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Solving Pair of Linear Equations Algebraically' },
                         { skill_id: 1209, skill_name: 'Pair of Linear Equations Chapter Assessment', topic: 'Pair of Linear Equations in Two Variables', subtopic: 'Pair of Linear Equations Chapter Assessment' },
 
-
-
-                        // Arithmetic Progressions
-                        { skill_id: 1105, skill_name: 'Number Patterns Recognition', topic: 'Arithmetic Progressions', subtopic: 'Patterns and AP Fundamentals' },
-                        { skill_id: 1106, skill_name: 'Understanding Arithmetic Progressions', topic: 'Arithmetic Progressions', subtopic: 'Patterns and AP Fundamentals' },
-                        { skill_id: 1107, skill_name: 'Identifying Terms and Common Difference', topic: 'Arithmetic Progressions', subtopic: 'Identifying Terms and Common Difference' },
-                        { skill_id: 1108, skill_name: 'Finding Specific Terms of an AP', topic: 'Arithmetic Progressions', subtopic: 'Finding Specific Terms of an AP' },
-                        { skill_id: 1109, skill_name: 'Finding the Sum of Terms of an AP', topic: 'Arithmetic Progressions', subtopic: 'Finding the Sum of Terms of an AP' },
-                        { skill_id: 1110, skill_name: 'Arithmetic Progressions Chapter Assessment', topic: 'Arithmetic Progressions', subtopic: 'Chapter Test' },
-
-                        // Quadratic Equations
+                        // Chapter 4: Quadratic Equations
                         { skill_id: 1120, skill_name: 'Understanding Quadratic Equations', topic: 'Quadratic Equations', subtopic: 'Foundations and Meaning of Quadratic Equations' },
                         { skill_id: 1121, skill_name: 'Forming Quadratic Equations', topic: 'Quadratic Equations', subtopic: 'Representing Real-Life Situations Mathematically' },
                         { skill_id: 1122, skill_name: 'Checking Whether an Equation Is Quadratic', topic: 'Quadratic Equations', subtopic: 'Identifying and Verifying Quadratic Equations' },
@@ -119,45 +126,40 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: 1127, skill_name: 'Real-Life Applications of Quadratic Equations', topic: 'Quadratic Equations', subtopic: 'Applying Quadratic Equations to Real-Life Situations' },
                         { skill_id: 1128, skill_name: 'Quadratic Equations Chapter Assessment', topic: 'Quadratic Equations', subtopic: 'Quadratic Equations Chapter Assessment' },
 
-                        // Polynomials
-                        { skill_id: 1233, skill_name: 'Understanding Polynomials and Their Degrees', topic: 'Polynomials', subtopic: 'Understanding Types and Degrees of Polynomials' },
-                        { skill_id: 1234, skill_name: 'Evaluating Polynomials and Identifying Zeroes', topic: 'Polynomials', subtopic: 'Evaluating Polynomials and Identifying Zeroes' },
-                        { skill_id: 1235, skill_name: 'Geometrical Interpretation of Zeroes', topic: 'Polynomials', subtopic: 'Geometrical Interpretation of Zeroes' },
-                        { skill_id: 1236, skill_name: 'Number of Zeroes from Graphical Behaviour', topic: 'Polynomials', subtopic: 'Number of Zeroes from Graphical Behaviour' },
-                        { skill_id: 1237, skill_name: 'Relationship Between Zeroes and Coefficients (Quadratic)', topic: 'Polynomials', subtopic: 'Relationship Between Zeroes and Coefficients (Quadratic)' },
-                        { skill_id: 1238, skill_name: 'Constructing Quadratic Polynomials from Given Conditions', topic: 'Polynomials', subtopic: 'Constructing Quadratic Polynomials from Given Conditions' },
-                        { skill_id: 1239, skill_name: 'Relationship Between Zeroes and Coefficients (Cubic)', topic: 'Polynomials', subtopic: 'Relationship Between Zeroes and Coefficients (Cubic)' },
-                        { skill_id: 1240, skill_name: 'Polynomials Chapter Assessment', topic: 'Polynomials', subtopic: 'Polynomials Chapter Assessment' },
+                        // Chapter 5: Arithmetic Progressions
+                        { skill_id: 1105, skill_name: 'Number Patterns Recognition', topic: 'Arithmetic Progressions', subtopic: 'Patterns and AP Fundamentals' },
+                        { skill_id: 1106, skill_name: 'Understanding Arithmetic Progressions', topic: 'Arithmetic Progressions', subtopic: 'Patterns and AP Fundamentals' },
+                        { skill_id: 1107, skill_name: 'Identifying Terms and Common Difference', topic: 'Arithmetic Progressions', subtopic: 'Identifying Terms and Common Difference' },
+                        { skill_id: 1108, skill_name: 'Finding Specific Terms of an AP', topic: 'Arithmetic Progressions', subtopic: 'Finding Specific Terms of an AP' },
+                        { skill_id: 1109, skill_name: 'Finding the Sum of Terms of an AP', topic: 'Arithmetic Progressions', subtopic: 'Finding the Sum of Terms of an AP' },
+                        { skill_id: 1110, skill_name: 'Arithmetic Progressions Chapter Assessment', topic: 'Arithmetic Progressions', subtopic: 'Chapter Test' },
 
-                        // Surface Areas and Volumes
-                        { skill_id: 1300, skill_name: 'Surface Areas and Volumes: Interactive Chapter', topic: 'Surface Areas and Volumes', subtopic: 'Complete Chapter', isLocal: true, path: '/surface-areas-and-volumes' },
-
-                        // Introduction to Trigonometry
-                        { skill_id: 1400, skill_name: 'Introduction to Trigonometry: Interactive Chapter', topic: 'Introduction to Trigonometry', subtopic: 'Complete Chapter', isLocal: true, path: '/introduction-to-trigonometry' },
-
-                        // Some Applications of Trigonometry
-                        { skill_id: 1401, skill_name: 'Some Applications of Trigonometry: Interactive Chapter', topic: 'Some Applications of Trigonometry', subtopic: 'Complete Chapter', isLocal: true, path: '/some-applications-of-trigonometry' },
-
-                        // Statistics
-                        { skill_id: 1500, skill_name: 'Statistics: Interactive Chapter', topic: 'Statistics', subtopic: 'Complete Chapter', isLocal: true, path: '/statistics' },
-
-                        // Probability
-                        { skill_id: 10148, skill_name: 'Probability: Interactive Chapter', topic: 'Probability', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/probability' },
-
-                        // Real Numbers
-                        { skill_id: 10149, skill_name: 'Real Numbers: Interactive Chapter', topic: 'Real Numbers', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/real-numbers' },
-
-                        // Triangles
+                        // Chapter 6: Triangles
                         { skill_id: 10150, skill_name: 'Triangles: Interactive Chapter', topic: 'Triangles', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/triangles' },
 
-                        // Coordinate Geometry
+                        // Chapter 7: Coordinate Geometry
                         { skill_id: 10151, skill_name: 'Coordinate Geometry: Interactive Chapter', topic: 'Coordinate Geometry', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/coordinate-geometry' },
 
-                        // Circles
+                        // Chapter 8: Introduction to Trigonometry
+                        { skill_id: 1400, skill_name: 'Introduction to Trigonometry: Interactive Chapter', topic: 'Introduction to Trigonometry', subtopic: 'Complete Chapter', isLocal: true, path: '/introduction-to-trigonometry' },
+
+                        // Chapter 9: Some Applications of Trigonometry
+                        { skill_id: 1401, skill_name: 'Some Applications of Trigonometry: Interactive Chapter', topic: 'Some Applications of Trigonometry', subtopic: 'Complete Chapter', isLocal: true, path: '/some-applications-of-trigonometry' },
+
+                        // Chapter 10: Circles
                         { skill_id: 10152, skill_name: 'Circles: Interactive Chapter', topic: 'Circles', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/circles' },
 
-                        // Areas Related to Circles
-                        { skill_id: 10153, skill_name: 'Areas Related to Circles: Interactive Chapter', topic: 'Areas Related to Circles', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/areas-related-to-circles' }
+                        // Chapter 11: Areas Related to Circles
+                        { skill_id: 10153, skill_name: 'Areas Related to Circles: Interactive Chapter', topic: 'Areas Related to Circles', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/areas-related-to-circles' },
+
+                        // Chapter 12: Surface Areas and Volumes
+                        { skill_id: 1300, skill_name: 'Surface Areas and Volumes: Interactive Chapter', topic: 'Surface Areas and Volumes', subtopic: 'Complete Chapter', isLocal: true, path: '/surface-areas-and-volumes' },
+
+                        // Chapter 13: Statistics
+                        { skill_id: 1500, skill_name: 'Statistics: Interactive Chapter', topic: 'Statistics', subtopic: 'Complete Chapter', isLocal: true, path: '/statistics' },
+
+                        // Chapter 14: Probability
+                        { skill_id: 10148, skill_name: 'Probability: Interactive Chapter', topic: 'Probability', subtopic: 'Complete Chapter', isLocal: true, path: '/senior/grade/10/probability' }
                     ]);
                 } else if (grade === '9') {
                     setSkills([
@@ -199,36 +201,25 @@ const SeniorGradeSyllabus = () => {
 
                     ]);
                 } else if (grade === '8') {
-                    // Set all 9 Grade 8 skills for proper counting
+                    // Set Grade 8 Mathematics skills in NCERT order
                     setSkills([
-                        { skill_id: 'local-8-exp-negative', skill_name: 'Powers with Negative Exponents', topic: 'Exponents and Powers' },
-                        { skill_id: 'local-8-exp-laws', skill_name: 'Laws of Exponents', topic: 'Exponents and Powers' },
-                        { skill_id: 'local-8-exp-application', skill_name: 'Application of Laws of Exponents', topic: 'Exponents and Powers' },
-                        { skill_id: 'local-8-exp-standard', skill_name: 'Standard Form for Small Numbers', topic: 'Exponents and Powers' },
-                        { skill_id: 'local-8-exp-comparing', skill_name: 'Comparing Large and Small Numbers', topic: 'Exponents and Powers' },
+                        // Chapter 1: Rational Numbers
                         { skill_id: 'local-8-rn-commutativity', skill_name: 'Commutativity', topic: 'Rational Numbers' },
                         { skill_id: 'local-8-rn-associativity', skill_name: 'Associativity', topic: 'Rational Numbers' },
                         { skill_id: 'local-8-rn-identity', skill_name: 'Additive and Multiplicative Identity', topic: 'Rational Numbers' },
                         { skill_id: 'local-8-rn-distributivity', skill_name: 'Distributivity', topic: 'Rational Numbers' },
-                        { skill_id: 'local-8-mens-polygon', skill_name: 'Area of Polygon', topic: 'Mensuration' },
-                        { skill_id: 'local-8-mens-sa-cuboid', skill_name: 'Surface Area of Cuboid', topic: 'Mensuration' },
-                        { skill_id: 'local-8-mens-sa-cube', skill_name: 'Surface Area of Cube', topic: 'Mensuration' },
-                        { skill_id: 'local-8-mens-sa-cylinder', skill_name: 'Surface Area of Cylinder', topic: 'Mensuration' },
-                        { skill_id: 'local-8-mens-vol-cube', skill_name: 'Volume of Cube', topic: 'Mensuration' },
-                        { skill_id: 'local-8-mens-vol-cuboid', skill_name: 'Volume of Cuboid', topic: 'Mensuration' },
-                        { skill_id: 'local-8-mens-vol-cylinder', skill_name: 'Volume of Cylinder', topic: 'Mensuration' },
-                        { skill_id: 'local-8-mens-vol-capacity', skill_name: 'Volume and Capacity', topic: 'Mensuration' },
-                        { skill_id: 'local-8-fact-common', skill_name: 'Method of Common Factors', topic: 'Factorisation' },
-                        { skill_id: 'local-8-fact-regrouping', skill_name: 'Factorisation by Regrouping', topic: 'Factorisation' },
-                        { skill_id: 'local-8-fact-identities', skill_name: 'Factorisation Using Identities', topic: 'Factorisation' },
-                        { skill_id: 'local-8-fact-form-xpla-xplb', skill_name: 'Factors of the form (x+a)(x+b)', topic: 'Factorisation' },
-                        { skill_id: 'local-8-fact-div-mono-mono', skill_name: 'Division of Monomial by Monomial', topic: 'Factorisation' },
-                        { skill_id: 'local-8-fact-div-poly-mono', skill_name: 'Division of Polynomial by Monomial', topic: 'Factorisation' },
-                        { skill_id: 'local-8-fact-div-poly-poly', skill_name: 'Division of Polynomial by Polynomial', topic: 'Factorisation' },
-                        { skill_id: 'local-8-exp-test', skill_name: 'Exponents and Powers Chapter Assessment', topic: 'Exponents and Powers' },
                         { skill_id: 'local-8-rn-test', skill_name: 'Rational Numbers Chapter Assessment', topic: 'Rational Numbers' },
-                        { skill_id: 'local-8-mens-test', skill_name: 'Mensuration Chapter Assessment', topic: 'Mensuration' },
-                        { skill_id: 'local-8-fact-test', skill_name: 'Factorisation Chapter Assessment', topic: 'Factorisation' },
+
+                        // Chapter 2: Linear Equations in One Variable
+                        { skill_id: 'local-8-leq-landing', skill_name: 'Linear Equations in One Variable Hub', topic: 'Linear Equations in One Variable', isLocal: true, path: '/senior/grade/8/linear-equations' },
+
+                        // Chapter 3: Understanding Quadrilaterals
+                        { skill_id: 'local-8-uq-landing', skill_name: 'Understanding Quadrilaterals Hub', topic: 'Understanding Quadrilaterals', isLocal: true, path: '/senior/grade/8/understanding-quadrilaterals' },
+
+                        // Chapter 4: Data Handling
+                        { skill_id: 'local-8-dh-landing', skill_name: 'Data Handling Hub', topic: 'Data Handling', isLocal: true, path: '/senior/grade/8/data-handling' },
+
+                        // Chapter 5: Squares and Square Roots
                         { skill_id: '1247', skill_name: 'Identify Perfect Squares', topic: 'Squares and Square Roots' },
                         { skill_id: '1248', skill_name: 'Properties of Square Numbers', topic: 'Squares and Square Roots' },
                         { skill_id: '1249', skill_name: 'Square Using Identity Patterns', topic: 'Squares and Square Roots' },
@@ -238,13 +229,50 @@ const SeniorGradeSyllabus = () => {
                         { skill_id: '1253', skill_name: 'Square Root via Long Division', topic: 'Squares and Square Roots' },
                         { skill_id: '1254', skill_name: 'Square Root of Decimals', topic: 'Squares and Square Roots' },
                         { skill_id: '1255', skill_name: 'Squares and Square Roots Test', topic: 'Squares and Square Roots' },
-                        { skill_id: 'local-8-graphs-landing', skill_name: 'Introduction to Graphs Chapter', topic: 'Introduction to Graphs' },
-                        { skill_id: 'local-8-dh-landing', skill_name: 'Data Handling Chapter', topic: 'Data Handling' },
-                        { skill_id: 'local-8-proportions-landing', skill_name: 'Direct and Inverse Proportions Chapter', topic: 'Direct and Inverse Proportions' },
-                        { skill_id: 'local-8-cq-landing', skill_name: 'Comparing Quantities Chapter', topic: 'Comparing Quantities' },
-                        { skill_id: 'local-8-leq-landing', skill_name: 'Linear Equations Chapter', topic: 'Linear Equations in One Variable' },
-                        { skill_id: 'local-8-ccr-landing', skill_name: 'Cubes and Cube Roots Chapter', topic: 'Cubes and Cube Roots' },
-                        { skill_id: 'local-8-aei-landing', skill_name: 'Algebraic Expressions and Identities Chapter', topic: 'Algebraic Expressions and Identities' },
+
+                        // Chapter 6: Cubes and Cube Roots
+                        { skill_id: 'local-8-ccr-landing', skill_name: 'Cubes and Cube Roots Hub', topic: 'Cubes and Cube Roots', isLocal: true, path: '/senior/grade/8/cubes-and-cube-roots' },
+
+                        // Chapter 7: Comparing Quantities
+                        { skill_id: 'local-8-cq-landing', skill_name: 'Comparing Quantities Hub', topic: 'Comparing Quantities', isLocal: true, path: '/senior/grade/8/comparing-quantities' },
+
+                        // Chapter 8: Algebraic Expressions and Identities
+                        { skill_id: 'local-8-aei-landing', skill_name: 'Algebraic Expressions and Identities Hub', topic: 'Algebraic Expressions and Identities', isLocal: true, path: '/senior/grade/8/algebraic-expressions-and-identities' },
+
+                        // Chapter 9: Mensuration
+                        { skill_id: 'local-8-mens-polygon', skill_name: 'Area of Polygon', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-sa-cuboid', skill_name: 'Surface Area of Cuboid', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-sa-cube', skill_name: 'Surface Area of Cube', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-sa-cylinder', skill_name: 'Surface Area of Cylinder', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-vol-cube', skill_name: 'Volume of Cube', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-vol-cuboid', skill_name: 'Volume of Cuboid', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-vol-cylinder', skill_name: 'Volume of Cylinder', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-vol-capacity', skill_name: 'Volume and Capacity', topic: 'Mensuration' },
+                        { skill_id: 'local-8-mens-test', skill_name: 'Mensuration Chapter Assessment', topic: 'Mensuration' },
+
+                        // Chapter 10: Exponents and Powers
+                        { skill_id: 'local-8-exp-negative', skill_name: 'Powers with Negative Exponents', topic: 'Exponents and Powers' },
+                        { skill_id: 'local-8-exp-laws', skill_name: 'Laws of Exponents', topic: 'Exponents and Powers' },
+                        { skill_id: 'local-8-exp-application', skill_name: 'Application of Laws of Exponents', topic: 'Exponents and Powers' },
+                        { skill_id: 'local-8-exp-standard', skill_name: 'Standard Form for Small Numbers', topic: 'Exponents and Powers' },
+                        { skill_id: 'local-8-exp-comparing', skill_name: 'Comparing Large and Small Numbers', topic: 'Exponents and Powers' },
+                        { skill_id: 'local-8-exp-test', skill_name: 'Exponents and Powers Chapter Assessment', topic: 'Exponents and Powers' },
+
+                        // Chapter 11: Direct and Inverse Proportions
+                        { skill_id: 'local-8-proportions-landing', skill_name: 'Direct and Inverse Proportions Hub', topic: 'Direct and Inverse Proportions', isLocal: true, path: '/senior/grade/8/direct-and-inverse-proportions' },
+
+                        // Chapter 12: Factorisation
+                        { skill_id: 'local-8-fact-common', skill_name: 'Method of Common Factors', topic: 'Factorisation' },
+                        { skill_id: 'local-8-fact-regrouping', skill_name: 'Factorisation by Regrouping', topic: 'Factorisation' },
+                        { skill_id: 'local-8-fact-identities', skill_name: 'Factorisation Using Identities', topic: 'Factorisation' },
+                        { skill_id: 'local-8-fact-form-xpla-xplb', skill_name: 'Factors of the form (x+a)(x+b)', topic: 'Factorisation' },
+                        { skill_id: 'local-8-fact-div-mono-mono', skill_name: 'Division of Monomial by Monomial', topic: 'Factorisation' },
+                        { skill_id: 'local-8-fact-div-poly-mono', skill_name: 'Division of Polynomial by Monomial', topic: 'Factorisation' },
+                        { skill_id: 'local-8-fact-div-poly-poly', skill_name: 'Division of Polynomial by Polynomial', topic: 'Factorisation' },
+                        { skill_id: 'local-8-fact-test', skill_name: 'Factorisation Chapter Assessment', topic: 'Factorisation' },
+
+                        // Chapter 13: Introduction to Graphs
+                        { skill_id: 'local-8-graphs-landing', skill_name: 'Introduction to Graphs Hub', topic: 'Introduction to Graphs', isLocal: true, path: '/senior/grade/8/introduction-to-graphs' }
                     ]);
                 } else {
                     const response = await api.getSkills(grade);
@@ -715,7 +743,10 @@ const SeniorGradeSyllabus = () => {
         ];
     }
 
-    const topics = Object.keys(skillsByTopic);
+    // Derive topics while preserving order from the skills array
+    const topics = activeSubject === 'mathematics' 
+        ? [...new Set(skills.map(s => s.topic))]
+        : Object.keys(skillsByTopic);
 
     const getTopicDisplaySkillCount = (topic) =>
         (skillsByTopic[topic] || []).reduce(
@@ -751,8 +782,8 @@ const SeniorGradeSyllabus = () => {
         );
     }
 
-    /* ─── Grade 11 Subject Picker ─── */
-    if (grade === '11') {
+    /* ─── Grade 11 & 12 Subject Picker ─── */
+    if (grade === '11' || grade === '12') {
         const subjects = [
             { key: 'maths', label: 'Mathematics', icon: '📐', desc: 'Algebra, Trigonometry, Calculus & more', gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', shadow: 'rgba(102,126,234,0.4)' },
             { key: 'physics', label: 'Physics', icon: '⚛️', desc: 'Mechanics, Waves, Thermodynamics & more', gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)', shadow: 'rgba(245,87,108,0.4)' },
@@ -761,16 +792,16 @@ const SeniorGradeSyllabus = () => {
         ];
         return (
             <div className="senior-syllabus-page">
-                <SEO title="Grade 11 — Choose Your Subject" description="Pick a subject to start practising Grade 11 topics." />
+                <SEO title={`Grade ${grade} — Choose Your Subject`} description={`Pick a subject to start practising Grade ${grade} topics.`} />
                 <header className="senior-header-container">
                     <div className="header-inner">
                         <nav className="breadcrumb">
                             <Link to="/" className="home-link">Home</Link>
                             <ChevronRight size={14} />
-                            <span>Grade 11</span>
+                            <span>Grade {grade}</span>
                         </nav>
                         <div className="page-title">
-                            <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#4F46E5', background: '#EEF2FF', padding: '4px 12px', borderRadius: '20px', marginBottom: '10px', display: 'inline-block', letterSpacing: '0.05em' }}>GRADE 11</span>
+                            <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#4F46E5', background: '#EEF2FF', padding: '4px 12px', borderRadius: '20px', marginBottom: '10px', display: 'inline-block', letterSpacing: '0.05em' }}>GRADE {grade}</span>
                             <h1>Choose Your Subject</h1>
                         </div>
                         <p style={{ color: '#64748b', fontSize: '1.05rem', marginTop: '0.5rem' }}>Select a subject to explore chapters, practice skills and take tests.</p>
@@ -779,7 +810,7 @@ const SeniorGradeSyllabus = () => {
                 <main className="senior-content-grid">
                     <div className="g11-subject-grid">
                         {subjects.map(s => (
-                            <div key={s.key} className="g11-subject-card" style={{ '--card-gradient': s.gradient, '--card-shadow': s.shadow }} onClick={() => navigate(`/senior/grade/11/${s.key}`)}>
+                            <div key={s.key} className="g11-subject-card" style={{ '--card-gradient': s.gradient, '--card-shadow': s.shadow }} onClick={() => navigate(`/senior/grade/${grade}/${s.key}`)}>
                                 <div className="g11-card-bg"></div>
                                 <div className="g11-card-content">
                                     <span className="g11-icon">{s.icon}</span>
@@ -986,7 +1017,7 @@ const SeniorGradeSyllabus = () => {
                     </div>
                 ) : (
                     <div className="topics-grid-container">
-                        {topics.map(topic => (
+                        {topics.map((topic, index) => (
                             <div
                                 key={topic}
                                 className="topic-card"
@@ -999,6 +1030,23 @@ const SeniorGradeSyllabus = () => {
                                     }
                                 }}
                             >
+                                {activeSubject === 'mathematics' && (
+                                    <div style={{
+                                        display: 'inline-block',
+                                        fontSize: '0.65rem',
+                                        fontWeight: '800',
+                                        letterSpacing: '0.1em',
+                                        textTransform: 'uppercase',
+                                        background: 'rgba(79, 70, 229, 0.1)',
+                                        color: '#4F46E5',
+                                        border: '1px solid rgba(79, 70, 229, 0.2)',
+                                        padding: '4px 12px',
+                                        borderRadius: '100px',
+                                        marginBottom: '16px'
+                                    }}>
+                                        Chapter {index + 1}
+                                    </div>
+                                )}
                                 <div className="topic-card-icon">
                                     <Layout size={32} />
                                 </div>
