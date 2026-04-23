@@ -169,9 +169,11 @@ function ConcentrationScene({ phase }) {
             <rect x="123" y="26" width="24" height="14" fill="#475569" rx="4"/>
             <rect x="129" y="18" width="12" height="12" fill="#334155" rx="3"/>
             {/* Neck graduation */}
-            <line x1="107" y1="72" x2="116" y2="72" stroke="#0ea5e9" strokeWidth="1.8"/>
-            <text x="102" y="75" fontSize="7" fill="#0ea5e9" fontWeight="800"
-                fontFamily="Outfit,sans-serif" textAnchor="end">250 mL</text>
+            <g style={{ opacity: isDone ? 0 : 1, transition: 'opacity 0.3s ease' }}>
+                <line x1="107" y1="72" x2="116" y2="72" stroke="#0ea5e9" strokeWidth="1.8"/>
+                <text x="102" y="75" fontSize="7" fill="#0ea5e9" fontWeight="800"
+                    fontFamily="Outfit,sans-serif" textAnchor="end">250 mL</text>
+            </g>
 
             {/* Flask body */}
             <path d="M110 82 L110 114 L65 212 Q62 228 77 228 L193 228 Q208 228 205 212 L160 114 L160 82 Z"
@@ -412,7 +414,8 @@ function DilutionScene({ phase }) {
 
             {/* Labels */}
             <g fontSize="9" fill="#475569" fontWeight="700" fontFamily="Outfit,sans-serif">
-                <text x="38" y="104" textAnchor="middle" fontSize="7.5" fill="#64748b">Wash Bottle</text>
+                <text x="38" y="104" textAnchor="middle" fontSize="7.5" fill="#64748b"
+                    style={{ opacity: isDone ? 0 : 1, transition: 'opacity 0.3s ease' }}>Wash Bottle</text>
                 <line x1="222" y1="165" x2="196" y2="165" stroke="#94a3b8" strokeWidth="1" strokeDasharray="2,2"/>
                 <text x="227" y="168" textAnchor="start">250 mL Flask</text>
                 <line x1="45" y1="200" x2="74" y2="194" stroke="#94a3b8" strokeWidth="1" strokeDasharray="2,2"/>
@@ -985,6 +988,7 @@ export default function SolutionsVirtualLab() {
     const [activeExp, setActiveExp] = useState(0);
     const [phase,     setPhase]     = useState('idle');
 
+    const exp = EXPERIMENTS[activeExp];
     const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
     const nodeId = SLUG_TO_NODE_ID['g12-chem-solutions-virtual-lab'];
     const sessionStartedRef = useRef(false);
@@ -1017,6 +1021,8 @@ export default function SolutionsVirtualLab() {
     const handleExpChange = (idx) => { setActiveExp(idx); setPhase('idle'); };
     const handleRun       = () => { setPhase('running'); setTimeout(() => setPhase('done'), 2800); };
     const handleReset     = () => setPhase('idle');
+
+    const LabScene = SVG_MAP[exp.id];
 
     return (
         <div className={styles['chem-page']}>

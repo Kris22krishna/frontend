@@ -2248,3 +2248,26 @@
   }
 }
 
+@media (max-width: 960px) {
+  .sol-fullpage {
+    flex-direction: column;
+    min-height: auto;
+  }
+  .sol-left {
+    flex: none;
+    width: 100%;
+    padding: 40px 32px;
+  }
+  .sol-right {
+    flex: none;
+    width: 100%;
+    padding: 40px 32px;
+  }
+  .sol-main-title {
+    font-size: clamp(2.2rem, 8vw, 3rem);
+  }
+  .sol-cards-col {
+    gap: 12px;
+  }
+}
+
