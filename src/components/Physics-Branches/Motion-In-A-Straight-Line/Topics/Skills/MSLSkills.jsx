@@ -22,7 +22,7 @@ const SKILLS = generateMSLSkillsData();
 /* ═══════════════════════════════════════════════════
    PRACTICE ENGINE  (quadrilaterals-pattern)
    ═══════════════════════════════════════════════════ */
-function MSLPracticeEngine({ skill, onBack, nodeId }) {
+function MSLPracticeEngine({ skill, onBack, nodeId, onRetry }) {
     const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
     const answersPayload = useRef([]);
     const isFinishedRef = useRef(false);
@@ -99,6 +99,7 @@ function MSLPracticeEngine({ skill, onBack, nodeId }) {
         answersPayload.current = []; isFinishedRef.current = false;
         setCurrent(0); setSelected(null); setAnswered(false);
         setScore(0); setFinished(false); setTimeTaken(0);
+        if (onRetry) onRetry();
         if (nodeId) startSession({ nodeId, sessionType: 'practice' });
     };
 
@@ -151,9 +152,12 @@ function MSLPracticeEngine({ skill, onBack, nodeId }) {
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: `${skill.color}15`, padding: '4px 12px', borderRadius: 8, fontSize: 12, fontWeight: 800, color: skill.color, marginBottom: 14 }}>
                     QUESTION {current + 1}
                 </div>
-                <div style={{ fontSize: 16, fontWeight: 600, color: '#1e293b', lineHeight: 1.65, marginBottom: 4 }}>
+                <div style={{ fontSize: 16, fontWeight: 600, color: '#1e293b', lineHeight: 1.65, marginBottom: q.graphSvg ? 12 : 4 }}>
                     <MathRenderer text={q.question} />
                 </div>
+                {q.graphSvg && (
+                    <div style={{ marginBottom: 18 }} dangerouslySetInnerHTML={{ __html: q.graphSvg }} />
+                )}
 
                 <div className={styles['msl-quiz-options']}>
                     {q.options.map((opt, oi) => {
@@ -196,7 +200,7 @@ function MSLPracticeEngine({ skill, onBack, nodeId }) {
 /* ═══════════════════════════════════════════════════
    ASSESSMENT ENGINE  (quadrilaterals-pattern + palette)
    ═══════════════════════════════════════════════════ */
-function MSLAssessEngine({ skill, onBack, nodeId }) {
+function MSLAssessEngine({ skill, onBack, nodeId, onRetry }) {
     const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
     const answersPayload = useRef([]);
     const isFinishedRef = useRef(false);
@@ -208,6 +212,7 @@ function MSLAssessEngine({ skill, onBack, nodeId }) {
     const [qIdx, setQIdx]           = useState(0);
     const [selected, setSelected]   = useState(null);
     const [responses, setResponses] = useState({});
+    const [marked, setMarked]       = useState({});
     const [finished, setFinished]   = useState(false);
     const [timeTaken, setTimeTaken] = useState(0);
 
@@ -264,12 +269,20 @@ function MSLAssessEngine({ skill, onBack, nodeId }) {
         if (qIdx + 1 < questions.length) {
             goTo(qIdx + 1);
         } else {
-            setFinished(true);
-            if (nodeId && !isFinishedRef.current) {
-                isFinishedRef.current = true;
-                await finishSession({ totalQuestions: questions.length, questionsAnswered: answersPayload.current.length, answersPayload: answersPayload.current });
-            }
+            handleFinalSubmit();
         }
+    };
+
+    const handleFinalSubmit = async () => {
+        setFinished(true);
+        if (nodeId && !isFinishedRef.current) {
+            isFinishedRef.current = true;
+            await finishSession({ totalQuestions: questions.length, questionsAnswered: answersPayload.current.length, answersPayload: answersPayload.current });
+        }
+    };
+
+    const toggleMark = () => {
+        setMarked(m => ({ ...m, [qIdx]: !m[qIdx] }));
     };
 
     if (finished) {
@@ -309,7 +322,12 @@ function MSLAssessEngine({ skill, onBack, nodeId }) {
                         <div key={idx} style={{ background: '#fff', borderRadius: 14, padding: 20, marginBottom: 14, border: `2px solid ${isCorrect ? '#dcfce7' : '#fee2e2'}` }}>
                             <div style={{ display: 'flex', gap: 10, marginBottom: 12, alignItems: 'flex-start' }}>
                                 <span style={{ width: 26, height: 26, borderRadius: '50%', background: isCorrect ? '#22c55e' : '#ef4444', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 13, flexShrink: 0 }}>{idx + 1}</span>
-                                <div style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', lineHeight: 1.5 }}><MathRenderer text={question.question} /></div>
+                                <div style={{ fontSize: 15, fontWeight: 700, color: '#1e293b', lineHeight: 1.5 }}>
+                                    <MathRenderer text={question.question} />
+                                    {question.graphSvg && (
+                                        <div style={{ marginTop: 12, marginBottom: 6, transform: 'scale(0.9)', transformOrigin: 'top left' }} dangerouslySetInnerHTML={{ __html: question.graphSvg }} />
+                                    )}
+                                </div>
                             </div>
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10, marginLeft: 36 }}>
                                 <div style={{ padding: 12, borderRadius: 10, background: isCorrect ? '#f0fdf4' : '#fef2f2' }}>
@@ -332,7 +350,12 @@ function MSLAssessEngine({ skill, onBack, nodeId }) {
                 })}
 
                 <div style={{ textAlign: 'center', marginTop: 28, display: 'flex', gap: 14, justifyContent: 'center' }}>
-                    <button className={styles['msl-btn-secondary']} onClick={() => window.location.reload()}>Retake Test</button>
+                    <button className={styles['msl-btn-secondary']} onClick={() => {
+                        if (onRetry) onRetry();
+                        answersPayload.current = []; isFinishedRef.current = false;
+                        setQIdx(0); setSelected(null); setResponses({}); setMarked({}); setFinished(false); setTimeTaken(0);
+                        if (nodeId) startSession({ nodeId, sessionType: 'assessment' });
+                    }}>Retake Test</button>
                     <button className={styles['msl-btn-primary']} onClick={onBack} style={{ background: skill.color }}>Return to Skills</button>
                 </div>
             </div>
@@ -362,9 +385,12 @@ function MSLAssessEngine({ skill, onBack, nodeId }) {
                         <div style={{ display: 'inline-block', padding: '3px 12px', borderRadius: 8, background: `${skill.color}15`, color: skill.color, fontSize: 10, fontWeight: 800, textTransform: 'uppercase', marginBottom: 12 }}>
                             Question {qIdx + 1} of {questions.length}
                         </div>
-                        <div style={{ fontSize: 16, fontWeight: 600, color: '#1e293b', lineHeight: 1.6, marginBottom: 20 }}>
+                        <div style={{ fontSize: 16, fontWeight: 600, color: '#1e293b', lineHeight: 1.6, marginBottom: q.graphSvg ? 12 : 20 }}>
                             <MathRenderer text={q.question} />
                         </div>
+                        {q.graphSvg && (
+                            <div style={{ marginBottom: 20 }} dangerouslySetInnerHTML={{ __html: q.graphSvg }} />
+                        )}
                         <div className={styles['msl-quiz-options']}>
                             {q.options.map((opt, i) => {
                                 const isSelected = selected === i;
@@ -380,13 +406,20 @@ function MSLAssessEngine({ skill, onBack, nodeId }) {
                             })}
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 20, paddingTop: 16, borderTop: '2px dashed #f1f5f9' }}>
-                            <button onClick={() => goTo(Math.max(0, qIdx - 1))} disabled={qIdx === 0}
-                                className={styles['msl-btn-secondary']}
-                                style={{ padding: '8px 18px', opacity: qIdx === 0 ? 0.4 : 1, cursor: qIdx === 0 ? 'not-allowed' : 'pointer' }}>
-                                ← Previous
-                            </button>
+                            <div style={{ display: 'flex', gap: 10 }}>
+                                <button onClick={() => goTo(Math.max(0, qIdx - 1))} disabled={qIdx === 0}
+                                    className={styles['msl-btn-secondary']}
+                                    style={{ padding: '8px 18px', opacity: qIdx === 0 ? 0.4 : 1, cursor: qIdx === 0 ? 'not-allowed' : 'pointer' }}>
+                                    ← Previous
+                                </button>
+                                <button onClick={toggleMark} 
+                                    className={styles['msl-btn-secondary']}
+                                    style={{ padding: '8px 18px', background: marked[qIdx] ? '#f59e0b' : '#fff', color: marked[qIdx] ? '#fff' : '#0f172a', borderColor: marked[qIdx] ? '#f59e0b' : '#e2e8f0' }}>
+                                    {marked[qIdx] ? '★ Marked' : '☆ Mark for Review'}
+                                </button>
+                            </div>
                             <button onClick={handleNext} className={styles['msl-btn-primary']} style={{ padding: '8px 22px', background: skill.color }}>
-                                {qIdx === questions.length - 1 ? 'Submit →' : 'Next →'}
+                                {qIdx === questions.length - 1 ? 'Go to Submit →' : 'Next →'}
                             </button>
                         </div>
                     </div>
@@ -399,25 +432,40 @@ function MSLAssessEngine({ skill, onBack, nodeId }) {
                         {questions.map((_, i) => {
                             const isAns = responses[i] !== undefined;
                             const isCur = i === qIdx;
+                            const isMarked = marked[i];
                             let bg = '#f8fafc', clr = '#64748b', border = '#e2e8f0';
                             if (isAns) { bg = skill.color; clr = '#fff'; border = skill.color; }
+                            if (isMarked) { border = '#f59e0b'; if (!isAns) { clr = '#f59e0b'; } }
                             return (
                                 <button key={i} onClick={() => goTo(i)}
                                     className={`${styles['msl-palette-btn']}${isCur ? ` ${styles['msl-palette-btn--current']}` : ''}${isAns ? ` ${styles['msl-palette-btn--answered']}` : ''}`}
-                                    style={{ background: bg, color: clr, borderColor: border, boxShadow: isCur ? `0 0 0 3px ${isCur ? '#0f172a' : 'transparent'}` : undefined }}>
+                                    style={{ background: bg, color: clr, borderColor: border, boxShadow: isCur ? `0 0 0 2px #fff, 0 0 0 4px #0f172a` : undefined }}>
                                     {i + 1}
+                                    {isMarked && (
+                                        <div style={{ position: 'absolute', top: -5, right: -5, width: 14, height: 14, background: '#fff', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                                            <span style={{ fontSize: 9, color: '#f59e0b' }}>★</span>
+                                        </div>
+                                    )}
                                 </button>
                             );
                         })}
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, fontSize: 12 }}>
-                        {[{ bg: skill.color, label: 'Answered', clr: '#fff' }, { bg: '#f8fafc', label: 'Not Answered', clr: '#64748b' }].map(l => (
-                            <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                <div style={{ width: 14, height: 14, borderRadius: 4, background: l.bg, border: '2px solid #e2e8f0' }} />
-                                <span style={{ fontWeight: 600, color: '#334155' }}>{l.label}</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 13, marginTop: 4 }}>
+                        {[
+                            { bg: skill.color, border: skill.color, label: 'Answered' }, 
+                            { bg: '#f8fafc', border: '#e2e8f0', label: 'Not Answered' },
+                            { bg: '#f8fafc', border: '#f59e0b', label: 'Marked' }
+                        ].map(l => (
+                            <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <div style={{ width: 16, height: 16, borderRadius: 4, background: l.bg, border: `1.5px solid ${l.border}` }} />
+                                <span style={{ fontWeight: 600, color: '#475569' }}>{l.label}</span>
                             </div>
                         ))}
                     </div>
+                    <button className={styles['msl-btn-primary']} onClick={handleFinalSubmit} 
+                        style={{ background: '#ef4444', width: '100%', padding: '12px', marginTop: 28, fontSize: 14, boxShadow: '0 4px 12px rgba(239,68,68,0.2)' }}>
+                        Final Submit
+                    </button>
                 </div>
             </div>
         </div>
@@ -513,22 +561,30 @@ function MSLLearnView({ skill, onPractice }) {
    ═══════════════════════════════════════════════════ */
 export default function MSLSkills() {
     const navigate = useNavigate();
+    const [skillsList, setSkillsList] = useState(generateMSLSkillsData());
     const [view, setView] = useState('list');
-    const [activeSkill, setActiveSkill] = useState(null);
+    const [activeSkillId, setActiveSkillId] = useState(null);
 
-    useEffect(() => { window.scrollTo(0, 0); }, [view, activeSkill]);
+    const activeSkill = activeSkillId ? skillsList.find(s => s.id === activeSkillId) : null;
+
+    useEffect(() => { window.scrollTo(0, 0); }, [view, activeSkillId]);
 
     const nodeId = activeSkill ? SKILL_NODE_ID_MAP[activeSkill.id] : null;
 
+    const refreshSkillsData = () => {
+        setSkillsList(generateMSLSkillsData());
+    };
+
     const openSkill = (skill, mode) => {
-        setActiveSkill(skill);
+        if (mode === 'practice' || mode === 'assess') refreshSkillsData();
+        setActiveSkillId(skill.id);
         setView(mode);
         window.scrollTo(0, 0);
     };
 
     const backToList = () => {
         setView('list');
-        setActiveSkill(null);
+        setActiveSkillId(null);
         window.scrollTo(0, 0);
     };
 
@@ -543,12 +599,12 @@ export default function MSLSkills() {
                 </div>
                 <div className={styles['msl-section']}>
                     <div className={styles['msl-skills-list']}>
-                        {SKILLS.map(skill => (
+                        {skillsList.map(skill => (
                             <div key={skill.id} className={styles['msl-skill-card']} style={{ '--msl-skill-color': skill.color }}>
                                 <div className={styles['msl-skill-info']}>
                                     <div className={styles['msl-skill-icon']} style={{ background: `${skill.color}15`, color: skill.color }}>{skill.icon}</div>
                                     <div>
-                                        <div className={styles['msl-skill-meta']} style={{ color: skill.color }}>Skill {SKILLS.indexOf(skill) + 1}</div>
+                                        <div className={styles['msl-skill-meta']} style={{ color: skill.color }}>Skill {skillsList.findIndex(s => s.id === skill.id) + 1}</div>
                                         <div className={styles['msl-skill-title']}>{skill.title}</div>
                                         <div className={styles['msl-skill-desc']}><MathRenderer text={skill.desc} /></div>
                                     </div>
@@ -589,8 +645,8 @@ export default function MSLSkills() {
             </div>
             <div className={styles['msl-section']}>
                 {view === 'learn' && <MSLLearnView skill={activeSkill} onPractice={() => openSkill(activeSkill, 'practice')} />}
-                {view === 'practice' && <MSLPracticeEngine skill={activeSkill} onBack={backToList} nodeId={nodeId} />}
-                {view === 'assess' && <MSLAssessEngine skill={activeSkill} onBack={backToList} nodeId={nodeId} />}
+                {view === 'practice' && <MSLPracticeEngine skill={activeSkill} onBack={backToList} nodeId={nodeId} onRetry={refreshSkillsData} />}
+                {view === 'assess' && <MSLAssessEngine skill={activeSkill} onBack={backToList} nodeId={nodeId} onRetry={refreshSkillsData} />}
             </div>
         </div>
     );
