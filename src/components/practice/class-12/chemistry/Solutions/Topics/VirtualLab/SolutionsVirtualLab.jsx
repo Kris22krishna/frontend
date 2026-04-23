@@ -723,8 +723,8 @@ function HenrysLawScene({ phase }) {
             <line x1="60" y1={pistonY+12} x2="204" y2={pistonY+12}
                 stroke="#10b981" strokeWidth="2" strokeDasharray="5,4"
                 style={{ transition:'y 1.8s ease', animation:'hlIfaceRipple 1.5s ease-in-out infinite'}}/>
-            <text x="207" y={pistonY+16} fontSize="7" fill="#059669" fontWeight="700"
-                fontFamily="Outfit,sans-serif"
+            <text x="200" y={pistonY+20} fontSize="6.5" fill="#047857" fontWeight="700"
+                fontFamily="Outfit,sans-serif" textAnchor="end"
                 style={{ transition:'y 1.8s ease'}}>interface</text>
 
             {/* Dissolved CO₂ particles */}
@@ -795,8 +795,8 @@ function HenrysLawScene({ phase }) {
                     style={{ transition:'y 1.8s ease'}}/>
                 <text x="220" y={pistonY-15} textAnchor="start"
                     style={{ transition:'y 1.8s ease'}}>CO₂ gas</text>
-                <text x="235" y="86" textAnchor="start" fontSize="7.5">Pressure</text>
-                <text x="235" y="96" textAnchor="start" fontSize="7.5">Gauge</text>
+                <text x="235" y="116" textAnchor="middle" fontSize="7.5">Pressure</text>
+                <text x="235" y="126" textAnchor="middle" fontSize="7.5">Gauge</text>
             </g>
         </svg>
     );
@@ -857,7 +857,7 @@ function BoilingPointScene({ phase }) {
                     style={{ animation:`bpSteamPuff 1.0s ${i*0.28}s infinite`}}/>
             ))}
             {/* Left thermometer */}
-            <rect x="141" y="114" width="10" height="76" rx="5"
+            <rect x="141" y="45" width="10" height="145" rx="5"
                 fill="white" stroke="#94a3b8" strokeWidth="1.6"/>
             <rect x="143" y={pureTempY} width="6" height={192-pureTempY} rx="3"
                 fill="#3b82f6" style={{ transition:'height 2.2s ease, y 2.2s ease'}}/>
@@ -866,10 +866,10 @@ function BoilingPointScene({ phase }) {
                 fill="#2563eb" fontFamily="Outfit,sans-serif" textAnchor="end"
                 style={{ transition:'y 2.2s ease'}}>{pureTemp}°C</text>
             {/* Pure water labels */}
-            <text x="103" y="252" textAnchor="middle" fontSize="9" fontWeight="800"
-                fill="#1d4ed8" fontFamily="Outfit,sans-serif">Pure Water</text>
-            <text x="103" y="263" textAnchor="middle" fontSize="7.5" fontWeight="600"
-                fill="#64748b" fontFamily="Outfit,sans-serif">BP = 100 °C</text>
+            <text x="103" y="145" textAnchor="middle" fontSize="9.5" fontWeight="800"
+                fill="#2563eb" fontFamily="Outfit,sans-serif">Pure Water</text>
+            <text x="103" y="156" textAnchor="middle" fontSize="8" fontWeight="700"
+                fill="#3b82f6" fontFamily="Outfit,sans-serif">BP = 100 °C</text>
 
             {/* ── RIGHT — NaCl Solution ── */}
             <path d="M158 122 L158 228 Q158 238 168 238 L240 238 Q250 238 250 228 L250 122 Z"
@@ -897,7 +897,7 @@ function BoilingPointScene({ phase }) {
                     style={{ animation:`bpSteamPuff 1.18s ${i*0.28}s infinite`}}/>
             ))}
             {/* Right thermometer */}
-            <rect x="233" y="114" width="10" height="76" rx="5"
+            <rect x="233" y="45" width="10" height="145" rx="5"
                 fill="white" stroke="#94a3b8" strokeWidth="1.6"/>
             <rect x="235" y={solTempY} width="6" height={192-solTempY} rx="3"
                 fill="#f59e0b" style={{ transition:'height 2.2s ease, y 2.2s ease'}}/>
@@ -906,10 +906,10 @@ function BoilingPointScene({ phase }) {
                 fill="#d97706" fontFamily="Outfit,sans-serif"
                 style={{ transition:'y 2.2s ease'}}>{solTemp}°C</text>
             {/* NaCl solution labels */}
-            <text x="200" y="252" textAnchor="middle" fontSize="9" fontWeight="800"
+            <text x="200" y="145" textAnchor="middle" fontSize="9.5" fontWeight="800"
                 fill="#d97706" fontFamily="Outfit,sans-serif">NaCl Solution</text>
-            <text x="200" y="263" textAnchor="middle" fontSize="7.5" fontWeight="600"
-                fill="#64748b" fontFamily="Outfit,sans-serif">BP = 100.51 °C</text>
+            <text x="200" y="156" textAnchor="middle" fontSize="8" fontWeight="700"
+                fill="#f59e0b" fontFamily="Outfit,sans-serif">BP = 100.51 °C</text>
 
             {/* Two Bunsen burners */}
             {/* Left */}
@@ -966,9 +966,7 @@ function BoilingPointScene({ phase }) {
                 </g>
             )}
 
-            {/* Centre divider label */}
-            <text x="155" y="110" textAnchor="middle" fontSize="7.5"
-                fill="#94a3b8" fontFamily="Outfit,sans-serif" fontWeight="700">← pure  |  NaCl →</text>
+
         </svg>
     );
 }
