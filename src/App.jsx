@@ -139,6 +139,15 @@ import StructureOfAtomSkills from './components/Chemistry-Branches/Structure-of-
 import StructureOfAtomConnectomics from './components/Chemistry-Branches/Structure-of-Atom/Topics/Connectomics/StructureOfAtomConnectomics';
 import StructureOfAtomExamEdge from './components/Chemistry-Branches/Structure-of-Atom/Topics/ExamEdge/StructureOfAtomExamEdge';
 
+// Class 12 Chemistry
+import SolutionsDashboard from './components/practice/class-12/chemistry/Solutions/SolutionsDashboard';
+import SolutionsIntro from './components/practice/class-12/chemistry/Solutions/Topics/Introduction/SolutionsIntro';
+import SolutionsTerminology from './components/practice/class-12/chemistry/Solutions/Topics/Terminology/SolutionsTerminology';
+import SolutionsCoreConcepts from './components/practice/class-12/chemistry/Solutions/Topics/CoreConcepts/SolutionsCoreConcepts';
+import SolutionsConnectomics from './components/practice/class-12/chemistry/Solutions/Topics/Connectomics/SolutionsConnectomics';
+import SolutionsExamEdge from './components/practice/class-12/chemistry/Solutions/Topics/ExamEdge/SolutionsExamEdge';
+import SolutionsVirtualLab from './components/practice/class-12/chemistry/Solutions/Topics/VirtualLab/SolutionsVirtualLab';
+
 import TheFishTaleLanding from './components/practice/class-5/The_Fish_Tale/TheFishTale';
 import FishTaleIntro5W1H from './components/practice/class-5/The_Fish_Tale/Topics/5W1H/FishTaleIntro5W1H';
 import FishTaleTerminology from './components/practice/class-5/The_Fish_Tale/Topics/Terminology/FishTaleTerminology';
@@ -1333,6 +1342,15 @@ function App() {
           <Route path="senior/grade/11/chemistry/structure-of-atom/skills" element={<ProtectedRoute redirectTo="/login"><StructureOfAtomSkills /></ProtectedRoute>} />
           <Route path="senior/grade/11/chemistry/structure-of-atom/connectomics" element={<ProtectedRoute redirectTo="/login"><StructureOfAtomConnectomics /></ProtectedRoute>} />
           <Route path="senior/grade/11/chemistry/structure-of-atom/exam-edge" element={<ProtectedRoute redirectTo="/login"><StructureOfAtomExamEdge /></ProtectedRoute>} />
+          
+          {/* Class 12 Chemistry */}
+          <Route path="senior/grade/12/chemistry/solutions" element={<ProtectedRoute redirectTo="/login"><SolutionsDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/12/chemistry/solutions/introduction" element={<ProtectedRoute redirectTo="/login"><SolutionsIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/12/chemistry/solutions/terminology" element={<ProtectedRoute redirectTo="/login"><SolutionsTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/12/chemistry/solutions/core-concepts" element={<ProtectedRoute redirectTo="/login"><SolutionsCoreConcepts /></ProtectedRoute>} />
+          <Route path="senior/grade/12/chemistry/solutions/connectomics" element={<ProtectedRoute redirectTo="/login"><SolutionsConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/12/chemistry/solutions/exam-edge" element={<ProtectedRoute redirectTo="/login"><SolutionsExamEdge /></ProtectedRoute>} />
+          <Route path="senior/grade/12/chemistry/solutions/virtual-lab" element={<ProtectedRoute redirectTo="/login"><SolutionsVirtualLab /></ProtectedRoute>} />
           
           {/* Grade 7 Science */}
           <Route path="/middle/grade/7/science/wonderful-world-science" element={<EverEvolvingScienceDashboard />} />
