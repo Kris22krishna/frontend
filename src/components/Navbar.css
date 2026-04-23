@@ -128,6 +128,7 @@
     font-size: 0.9rem;
     transition: all 0.2s;
     text-decoration: none;
+    white-space: nowrap;
 }
 
 .nav-link-item.active {
@@ -202,7 +203,7 @@
     transform: scale(0.96);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .hidden-mobile {
         display: none !important;
     }
