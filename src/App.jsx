@@ -123,6 +123,13 @@ import TheCellTerminology from './components/Biology-Branches/The-Cell/Topics/Te
 import TheCellSkills from './components/Biology-Branches/The-Cell/Topics/Skills/TheCellSkills';
 import TheCellConnectomics from './components/Biology-Branches/The-Cell/Topics/Connectomics/TheCellConnectomics';
 import TheCellExamEdge from './components/Biology-Branches/The-Cell/Topics/ExamEdge/TheCellExamEdge';
+
+import SexualReproductionDashboard from './components/practice/class-12/biology/SexualReproduction/SexualReproductionDashboard';
+import SexualReproductionIntro from './components/practice/class-12/biology/SexualReproduction/Topics/Introduction/SexualReproductionIntro';
+import SexualReproductionTerminology from './components/practice/class-12/biology/SexualReproduction/Topics/Terminology/SexualReproductionTerminology';
+import SexualReproductionSkills from './components/practice/class-12/biology/SexualReproduction/Topics/Skills/SexualReproductionSkills';
+import SexualReproductionConnectomics from './components/practice/class-12/biology/SexualReproduction/Topics/Connectomics/SexualReproductionConnectomics';
+import SexualReproductionExamEdge from './components/practice/class-12/biology/SexualReproduction/Topics/ExamEdge/SexualReproductionExamEdge';
 import PhysicsChapters from './components/practice/class-11/physics/PhysicsChapters';
 import LawsOfMotionDashboard from './components/Physics-Branches/Laws-Of-Motion/LawsOfMotionDashboard';
 import LawsOfMotionIntro from './components/Physics-Branches/Laws-Of-Motion/Topics/Introduction/LawsOfMotionIntro';
@@ -1287,6 +1294,14 @@ function App() {
           <Route path="senior/grade/11/biology/the-cell/skills" element={<ProtectedRoute redirectTo="/login"><TheCellSkills /></ProtectedRoute>} />
           <Route path="senior/grade/11/biology/the-cell/connectomics" element={<ProtectedRoute redirectTo="/login"><TheCellConnectomics /></ProtectedRoute>} />
           <Route path="senior/grade/11/biology/the-cell/exam-edge" element={<ProtectedRoute redirectTo="/login"><TheCellExamEdge /></ProtectedRoute>} />
+
+          {/* Class 12 Biology: Sexual Reproduction */}
+          <Route path="senior/grade/12/biology/sexual-reproduction" element={<ProtectedRoute redirectTo="/login"><SexualReproductionDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/12/biology/sexual-reproduction/introduction" element={<ProtectedRoute redirectTo="/login"><SexualReproductionIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/12/biology/sexual-reproduction/terminology" element={<ProtectedRoute redirectTo="/login"><SexualReproductionTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/12/biology/sexual-reproduction/skills" element={<ProtectedRoute redirectTo="/login"><SexualReproductionSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/12/biology/sexual-reproduction/connectomics" element={<ProtectedRoute redirectTo="/login"><SexualReproductionConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/12/biology/sexual-reproduction/exam-edge" element={<ProtectedRoute redirectTo="/login"><SexualReproductionExamEdge /></ProtectedRoute>} />
 
           {/* Class 11 Maths */}
           <Route path="senior/grade/11/maths" element={<MathsChapters />} />

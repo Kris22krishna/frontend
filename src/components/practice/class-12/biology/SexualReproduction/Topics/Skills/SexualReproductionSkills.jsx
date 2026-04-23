@@ -1,0 +1,906 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { generateSexualReproductionSkillsData } from './SexualReproductionSkillsData';
+import '../../SexualReproductionBranch.css';
+
+/* ═══════════════════════════════════════════════════════════════
+   SHUFFLE UTILITIES
+   ═══════════════════════════════════════════════════════════════ */
+const shuffleArray = (array) => {
+    let shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+};
+
+const useShuffledQuestions = (sourceQuestions, amount = 15) => {
+    const [questions, setQuestions] = useState([]);
+
+    useEffect(() => {
+        if (!sourceQuestions) return;
+        let shuffledQs = shuffleArray(sourceQuestions).slice(0, amount);
+
+        shuffledQs = shuffledQs.map(q => {
+            if (q.type === 'multiple-choice') {
+                const originalCorrectOption = q.options[q.correctAnswer];
+                const shuffledOptions = shuffleArray(q.options);
+                const newCorrectAnswerIndex = shuffledOptions.indexOf(originalCorrectOption);
+                return {
+                    ...q,
+                    options: shuffledOptions,
+                    correctAnswer: newCorrectAnswerIndex
+                };
+            }
+            return q;
+        });
+        setQuestions(shuffledQs);
+    }, [sourceQuestions, amount]);
+
+    return questions;
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   QUESTION CARD
+   ═══════════════════════════════════════════════════════════════ */
+function QuestionCard({ type, question, options, answer, onAnswer, disabled, selectedOption, image, showCorrect = true }) {
+    const [val, setVal] = useState('');
+
+    if (type === 'multiple-choice') {
+        return (
+            <div style={{ marginBottom: 20 }}>
+                {image && <div style={{ fontSize: 48, textAlign: 'center', marginBottom: 12, padding: 16, background: '#f8fafc', borderRadius: 16 }}>{image}</div>}
+                <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 16 }}>{question}</p>
+                <div style={{ display: 'grid', gap: 10 }}>
+                    {options.map((opt, i) => {
+                        let bg = '#fff';
+                        let bdr = '#e2e8f0';
+                        let clr = '#0f172a';
+                        const letter = String.fromCharCode(65 + i); // A, B, C, D
+
+                        if (disabled && showCorrect) {
+                            if (i === answer) { bg = '#f0fdf4'; bdr = '#10b981'; }
+                            else if (i === selectedOption) { bg = '#fef2f2'; bdr = '#ef4444'; }
+                            else { clr = '#94a3b8'; }
+                        } else if (disabled && !showCorrect) {
+                            if (i === selectedOption) { bg = '#eff6ff'; bdr = '#3b82f6'; }
+                        } else if (i === selectedOption) {
+                            bg = 'rgba(5, 150, 105, 0.05)';
+                            bdr = 'var(--sr-indigo)';
+                        }
+
+                        return (
+                            <button
+                                key={i}
+                                onClick={() => onAnswer(i)}
+                                disabled={disabled}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: 12,
+                                    padding: '14px 16px', borderRadius: 12, border: `2px solid ${bdr}`,
+                                    background: bg, textAlign: 'left', fontWeight: 600, fontSize: 15,
+                                    cursor: disabled ? 'default' : 'pointer', transition: 'all 0.2s', color: clr
+                                }}
+                            >
+                                <span style={{
+                                    width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    fontSize: 13, fontWeight: 800, flexShrink: 0,
+                                    background: i === selectedOption ? (showCorrect ? (i === answer ? '#10b981' : '#ef4444') : 'var(--sr-indigo)') : '#f1f5f9',
+                                    color: i === selectedOption ? '#fff' : '#64748b'
+                                }}>{letter}</span>
+                                {opt}
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+        );
+    }
+
+    // Short answer fallback
+    return (
+        <div style={{ marginBottom: 20 }}>
+            {image && <div style={{ fontSize: 48, textAlign: 'center', marginBottom: 12, padding: 16, background: '#f8fafc', borderRadius: 16 }}>{image}</div>}
+            <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 16 }}>{question}</p>
+            <div style={{ display: 'flex', gap: 10 }}>
+                <input type="text" value={disabled ? (selectedOption || '') : val} onChange={e => setVal(e.target.value)} disabled={disabled}
+                    placeholder="Type answer..." style={{ padding: '12px 16px', borderRadius: 12, border: '2px solid #e2e8f0', fontSize: 16, flex: 1 }} />
+                <button disabled={disabled || !val} onClick={() => onAnswer(val.trim())}
+                    style={{ padding: '0 20px', background: disabled ? '#e2e8f0' : 'var(--sr-indigo)', color: '#fff', borderRadius: 12, fontWeight: 600, border: 'none', cursor: disabled ? 'default' : 'pointer' }}>Submit</button>
+            </div>
+        </div>
+    );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CIRCULAR SCORE RING
+   ═══════════════════════════════════════════════════════════════ */
+function ScoreRing({ score, total, color }) {
+    const pct = total > 0 ? score / total : 0;
+    const r = 70, circ = 2 * Math.PI * r;
+    const offset = circ * (1 - pct);
+    return (
+        <svg width="180" height="180" viewBox="0 0 180 180" style={{ display: 'block', margin: '0 auto' }}>
+            <circle cx="90" cy="90" r={r} fill="none" stroke="#e2e8f0" strokeWidth="10" />
+            <circle cx="90" cy="90" r={r} fill="none" stroke={color} strokeWidth="10"
+                strokeDasharray={circ} strokeDashoffset={offset}
+                strokeLinecap="round" transform="rotate(-90 90 90)"
+                style={{ transition: 'stroke-dashoffset 1s ease' }} />
+            <text x="90" y="85" textAnchor="middle" dominantBaseline="central" fontSize="40" fontWeight="900" fill="#0f172a">{score}</text>
+            <text x="90" y="115" textAnchor="middle" dominantBaseline="central" fontSize="14" fontWeight="600" fill="#64748b">out of {total}</text>
+        </svg>
+    );
+}
+
+function fmtTime(ms) {
+    const sec = Math.floor(ms / 1000);
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+
+
+/* ═══════════════════════════════════════════════════════════════
+   LEARN MODE — Left sidebar + Right content panel
+   ═══════════════════════════════════════════════════════════════ */
+function LearnMode({ skill, onBack }) {
+    const [activeIdx, setActiveIdx] = useState(0);
+    const [viewMode, setViewMode] = useState('content');
+    const [pyqExam, setPyqExam] = useState('neet');
+    const sec = skill.learnSections && skill.learnSections[activeIdx];
+
+    const topColors = ['#2563eb', '#f59e0b', '#10b981', '#7c3aed', '#ec4899', '#0d9488', '#e05a47', '#059669', '#ea580c', '#6366f1'];
+
+    const renderCardContent = (sec, idx) => {
+        if (!sec) return null;
+        const cardColor = topColors[idx % topColors.length] || skill.color;
+
+        let keyIcon = '💡', keyTitle = 'Key Fact:', keyBg = '#f8fafc', keyBorder = '#cbd5e1', keyColor = '#0f172a';
+        if (sec?.keyLabel === 'neet-trap') { keyIcon = '⚠️'; keyTitle = 'NEET Trap:'; keyBg = '#fff1f2'; keyBorder = '#f43f5e'; keyColor = '#9f1239'; }
+        else if (sec?.keyLabel === 'misconception') { keyIcon = '⚠️'; keyTitle = 'Classic Misconception:'; keyBg = '#fffbeb'; keyBorder = '#fbbf24'; keyColor = '#92400e'; }
+        else if (sec?.keyLabel === 'neet-note') { keyIcon = '📌'; keyTitle = 'NEET Note:'; keyBg = '#f0fdf4'; keyBorder = '#10b981'; keyColor = '#065f46'; }
+
+        const headingParts = sec.heading.split('—').map(s => s.trim());
+        const smallCaps = headingParts.length > 1 ? headingParts[0] : `Topic ${idx + 1}`;
+        const mainHeading = headingParts.length > 1 ? headingParts[1] : sec.heading;
+
+        return (
+            <div style={{ background: '#fff', borderRadius: 24, padding: 40, boxShadow: '0 10px 40px rgba(0,0,0,0.06)', borderTop: `8px solid ${cardColor}`, display: 'flex', flexDirection: 'column', gap: 20, borderLeft: '1px solid #f1f5f9', borderRight: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 8 }}>
+                    {sec.icon && <div style={{ fontSize: 40 }}>{sec.icon}</div>}
+                    <div>
+                        <div style={{ textTransform: 'uppercase', letterSpacing: '1.5px', fontSize: 13, fontWeight: 800, color: cardColor, marginBottom: 6 }}>{smallCaps}</div>
+                        <h3 style={{ fontFamily: '"Playfair Display", "Merriweather", serif', fontSize: 32, fontWeight: 900, color: '#0f172a', margin: 0, lineHeight: 1.3 }}>{mainHeading}</h3>
+                    </div>
+                </div>
+
+                {/* Styled Content */}
+                {sec?.content && (() => {
+                    const blocks = sec.content.split('\n\n');
+                    return blocks.map((block, bi) => {
+                        const lines = block.split('\n');
+                        return (
+                            <div key={bi} style={{ marginBottom: 16 }}>
+                                {lines.map((line, li) => {
+                                    let t = line.trim();
+                                    if (!t) return null;
+
+                                    // Bold text
+                                    t = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+                                    if ((t.endsWith(':') || t.endsWith('):')) && t.length < 100) {
+                                        return <h4 key={li} style={{ fontFamily: 'Outfit, sans-serif', fontSize: 19, fontWeight: 800, color: '#1e293b', margin: '20px 0 10px', letterSpacing: '-0.3px', borderBottom: `2px solid ${cardColor}20`, paddingBottom: 6, display: 'inline-block' }} dangerouslySetInnerHTML={{ __html: t }}></h4>;
+                                    }
+                                    if (t.startsWith('•') && (t.includes('=') || t.includes('→') || t.includes('⇒') || t.includes(':'))) {
+                                        let cleanT = t.slice(1).trim();
+                                        let sep = '';
+                                        const match = cleanT.match(/(?![^<]*>)([=:])/);
+                                        if (match) {
+                                            sep = match[1];
+                                            if (sep !== '=' && sep !== ':') sep = '';
+                                        }
+                                        let contentHTML;
+                                        if (sep) {
+                                            const exactMatchIndex = cleanT.match(/(?![^<]*>)([=:])/)?.index;
+                                            if (exactMatchIndex !== undefined) {
+                                                const left = cleanT.substring(0, exactMatchIndex).trim();
+                                                const right = cleanT.substring(exactMatchIndex + 1).trim();
+                                                contentHTML = `<span style="font-family: 'Outfit', sans-serif;">${left}</span> <span style="font-family: 'Courier New', monospace;">${sep} ${right}</span>`;
+                                            } else {
+                                                contentHTML = `<span style="font-family: 'Courier New', monospace;">${cleanT}</span>`;
+                                            }
+                                        } else {
+                                            contentHTML = `<span style="font-family: 'Courier New', monospace;">${cleanT}</span>`;
+                                        }
+                                        return (
+                                            <div key={li} style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '16px 0' }}>
+                                                <div style={{ padding: '14px 36px', background: '#f8fafc', borderRadius: 12, fontSize: 17, fontWeight: 800, color: cardColor, border: '2px solid #e2e8f0', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.02)' }}
+                                                    dangerouslySetInnerHTML={{ __html: contentHTML }}
+                                                ></div>
+                                            </div>
+                                        );
+                                    }
+                                    if (t.startsWith('•')) {
+                                        return (
+                                            <div key={li} style={{ display: 'flex', gap: 12, marginBottom: 10, fontSize: 16, color: '#475569', lineHeight: 1.6 }}>
+                                                <span style={{ color: cardColor, fontWeight: 900, fontSize: 20, lineHeight: '1.4' }}>•</span>
+                                                <span dangerouslySetInnerHTML={{ __html: t.slice(1).trim() }}></span>
+                                            </div>
+                                        );
+                                    }
+                                    return <p key={li} style={{ margin: '0 0 10px', fontSize: 16, color: '#475569', lineHeight: 1.7 }} dangerouslySetInnerHTML={{ __html: t }}></p>;
+                                })}
+                            </div>
+                        );
+                    });
+                })()}
+
+                {/* Table */}
+                {sec?.table && (
+                    <div style={{ overflowX: 'auto', margin: '20px 0', width: '100%' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 15, background: '#fff', borderRadius: 12, overflow: 'hidden', border: '1px solid #e2e8f0' }}>
+                            <thead>
+                                <tr>
+                                    {sec.table.headers.map((h, hi) => (
+                                        <th key={hi} style={{ padding: '14px 18px', textAlign: 'left', background: `${cardColor}15`, color: cardColor, fontWeight: 800, fontSize: 14, letterSpacing: '0.5px', textTransform: 'uppercase', borderBottom: `2px solid ${cardColor}40` }} dangerouslySetInnerHTML={{ __html: h }}></th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {sec.table.rows.map((row, ri) => (
+                                    <tr key={ri} style={{ borderBottom: '1px solid #f1f5f9', background: ri % 2 === 0 ? '#fff' : '#f8fafc' }}>
+                                        {row.map((cell, ci) => (
+                                            <td key={ci} style={{ padding: '14px 18px', color: ci === 0 ? '#0f172a' : '#475569', fontWeight: ci === 0 ? 700 : 400 }} dangerouslySetInnerHTML={{ __html: cell }}></td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+
+                {/* Key Fact / NEET Trap callout */}
+                {sec?.example && (
+                    <div style={{ background: keyBg, borderLeft: `5px solid ${keyBorder}`, padding: '20px 24px', borderRadius: '0 12px 12px 0', marginTop: 'auto' }}>
+                        <div style={{ fontWeight: 800, fontSize: 15, color: keyColor, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <span style={{ fontSize: 18 }}>{keyIcon}</span> {keyTitle}
+                        </div>
+                        <p style={{ margin: 0, fontSize: 15, color: keyColor, lineHeight: 1.6 }} dangerouslySetInnerHTML={{ __html: sec.example.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>') }}></p>
+                    </div>
+                )}
+            </div>
+        );
+    };
+
+    return (
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+                <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: '#64748b', fontWeight: 600, cursor: 'pointer' }}>← Back to Skills</button>
+                
+                {skill.pyqs && (
+                    <div style={{ display: 'flex', background: '#f1f5f9', padding: '6px', borderRadius: '100px', width: 'max-content' }}>
+                        <button onClick={() => setViewMode('content')} style={{ padding: '8px 24px', borderRadius: '100px', border: 'none', background: viewMode === 'content' ? '#fff' : 'transparent', color: viewMode === 'content' ? skill.color : '#64748b', fontWeight: 800, fontSize: 15, cursor: 'pointer', boxShadow: viewMode === 'content' ? '0 4px 12px rgba(0,0,0,0.05)' : 'none', transition: 'all 0.2s' }}>Learn Content</button>
+                        <button onClick={() => setViewMode('pyqs')} style={{ padding: '8px 24px', borderRadius: '100px', border: 'none', background: viewMode === 'pyqs' ? '#fff' : 'transparent', color: viewMode === 'pyqs' ? skill.color : '#64748b', fontWeight: 800, fontSize: 15, cursor: 'pointer', boxShadow: viewMode === 'pyqs' ? '0 4px 12px rgba(0,0,0,0.05)' : 'none', transition: 'all 0.2s' }}>PYQs</button>
+                    </div>
+                )}
+                
+                <div style={{ width: 100 }}></div> {/* spacer to center the toggle */}
+            </div>
+
+            <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start' }}>
+                {/* LEFT SIDEBAR */}
+                <div style={{ flex: '0 0 300px', position: 'sticky', top: 80 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24, padding: '0 12px' }}>
+                        <div style={{ fontSize: 36 }}>{viewMode === 'content' ? skill.icon : '🎯'}</div>
+                        <h2 style={{ fontFamily: '"Playfair Display", "Merriweather", serif', fontSize: 28, fontWeight: 900, color: '#0f172a', margin: 0, letterSpacing: '-0.5px', lineHeight: 1.2 }}>{viewMode === 'content' ? skill.title : 'Past Year Qs'}</h2>
+                    </div>
+
+                    <div style={{ background: '#fff', borderRadius: 20, padding: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.04)', border: '1px solid #f1f5f9' }}>
+                        {viewMode === 'content' ? (
+                            skill.learnSections && skill.learnSections.map((s, i) => {
+                                const active = i === activeIdx;
+                                const itemColor = active ? topColors[i % topColors.length] : '#f8fafc';
+                                const textColor = active ? '#fff' : '#475569';
+                                return (
+                                    <button key={i} onClick={() => setActiveIdx(i)} style={{
+                                        width: '100%', textAlign: 'left', padding: '14px 16px', borderRadius: 12,
+                                        border: 'none', cursor: 'pointer', transition: 'all 0.2s',
+                                        background: itemColor, color: textColor,
+                                        fontWeight: active ? 800 : 600, fontSize: 15,
+                                        display: 'flex', alignItems: 'center', gap: 12,
+                                        marginBottom: i === skill.learnSections.length - 1 ? 0 : 6,
+                                        boxShadow: active ? `0 4px 12px ${itemColor}40` : 'none'
+                                    }}>
+                                        <span style={{ fontSize: 18, opacity: active ? 1 : 0.6 }}>{s.icon || '📄'}</span>
+                                        <span style={{ lineHeight: 1.3 }}>{s.heading.split('—')[0].trim()}</span>
+                                    </button>
+                                );
+                            })
+                        ) : (
+                            [
+                                { id: 'neet', label: 'NEET PYQs', icon: '🔵', desc: 'Concept + Tricky' },
+                                { id: 'cet', label: 'CET PYQs', icon: '🟢', desc: 'Direct + Factual' },
+                                { id: 'board', label: 'Board PYQs', icon: '🟡', desc: 'Descriptive' }
+                            ].map((exam, i) => {
+                                const active = exam.id === pyqExam;
+                                const itemColor = active ? topColors[i % topColors.length] : '#f8fafc';
+                                const textColor = active ? '#fff' : '#475569';
+                                return (
+                                    <button key={exam.id} onClick={() => setPyqExam(exam.id)} style={{
+                                        width: '100%', textAlign: 'left', padding: '14px 16px', borderRadius: 12,
+                                        border: 'none', cursor: 'pointer', transition: 'all 0.2s',
+                                        background: itemColor, color: textColor,
+                                        fontWeight: active ? 800 : 600, fontSize: 15,
+                                        display: 'flex', alignItems: 'center', gap: 12,
+                                        marginBottom: i === 2 ? 0 : 6,
+                                        boxShadow: active ? `0 4px 12px ${itemColor}40` : 'none'
+                                    }}>
+                                        <span style={{ fontSize: 18, opacity: active ? 1 : 0.6 }}>{exam.icon}</span>
+                                        <div style={{ lineHeight: 1.3 }}>
+                                            <div>{exam.label}</div>
+                                            <div style={{ fontSize: 12, fontWeight: 500, opacity: active ? 0.9 : 0.6, marginTop: 2 }}>{exam.desc}</div>
+                                        </div>
+                                    </button>
+                                );
+                            })
+                        )}
+                    </div>
+                </div>
+
+                {/* RIGHT CONTENT PANEL */}
+                <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 24 }}>
+                    {viewMode === 'content' ? (
+                        <>
+                            {renderCardContent(sec, activeIdx)}
+
+                            {/* Navigation */}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 16 }}>
+                                <button onClick={() => setActiveIdx(Math.max(0, activeIdx - 1))} disabled={activeIdx === 0}
+                                    style={{ padding: '14px 28px', borderRadius: 100, border: `2px solid ${activeIdx === 0 ? '#e2e8f0' : skill.color}`, background: '#fff', color: activeIdx === 0 ? '#cbd5e1' : skill.color, fontWeight: 800, fontSize: 15, cursor: activeIdx === 0 ? 'default' : 'pointer', transition: 'all 0.2s' }}>← Previous</button>
+
+                                {activeIdx < skill.learnSections.length - 1 ? (
+                                    <button onClick={() => setActiveIdx(activeIdx + 1)}
+                                        style={{ padding: '14px 32px', borderRadius: 100, border: 'none', background: skill.color, color: '#fff', fontWeight: 800, fontSize: 16, cursor: 'pointer', boxShadow: `0 4px 14px ${skill.color}40`, transition: 'all 0.2s' }}>Next Topic →</button>
+                                ) : (
+                                    <button onClick={onBack}
+                                        style={{ padding: '14px 32px', borderRadius: 100, border: 'none', background: '#10b981', color: '#fff', fontWeight: 800, fontSize: 16, cursor: 'pointer', boxShadow: `0 4px 14px #10b98140`, transition: 'all 0.2s' }}>Got it! ✓</button>
+                                )}
+                            </div>
+                        </>
+                    ) : (
+                        <div style={{ background: '#fff', borderRadius: 24, padding: 40, boxShadow: '0 10px 40px rgba(0,0,0,0.06)', borderTop: `8px solid ${skill.color}`, display: 'flex', flexDirection: 'column', gap: 20, borderLeft: '1px solid #f1f5f9', borderRight: '1px solid #f1f5f9', borderBottom: '1px solid #f1f5f9' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 8 }}>
+                                <div style={{ fontSize: 40 }}>📝</div>
+                                <div>
+                                    <div style={{ textTransform: 'uppercase', letterSpacing: '1.5px', fontSize: 13, fontWeight: 800, color: skill.color, marginBottom: 6 }}>QUESTIONS</div>
+                                    <h3 style={{ fontFamily: '"Playfair Display", "Merriweather", serif', fontSize: 32, fontWeight: 900, color: '#0f172a', margin: 0, lineHeight: 1.3 }}>{pyqExam === 'neet' ? 'NEET PYQs' : pyqExam === 'cet' ? 'CET PYQs' : 'Board PYQs'}</h3>
+                                </div>
+                            </div>
+
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                                {skill.pyqs && skill.pyqs[pyqExam] && skill.pyqs[pyqExam].questions.map((q, idx) => (
+                                    <div key={idx} style={{ padding: '16px 20px', background: '#f8fafc', borderRadius: 12, fontSize: 16, color: '#1e293b', fontWeight: 600, display: 'flex', gap: 16, alignItems: 'flex-start', border: '1px solid #f1f5f9' }}>
+                                        <span style={{ background: `${skill.color}20`, color: skill.color, width: 28, height: 28, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 800, flexShrink: 0 }}>{idx + 1}</span>
+                                        <span style={{ lineHeight: 1.5 }}>{q}</span>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {skill.pyqs && skill.pyqs[pyqExam] && skill.pyqs[pyqExam].trap && (
+                                <div style={{ background: pyqExam === 'board' ? '#fffbeb' : '#fff1f2', borderLeft: `5px solid ${pyqExam === 'board' ? '#fbbf24' : '#f43f5e'}`, padding: '20px 24px', borderRadius: '0 12px 12px 0', marginTop: 20 }}>
+                                    <div style={{ fontWeight: 800, fontSize: 15, color: pyqExam === 'board' ? '#92400e' : '#9f1239', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+                                        <span style={{ fontSize: 18 }}>👉</span> Exam Trap:
+                                    </div>
+                                    <p style={{ margin: 0, fontSize: 15, color: pyqExam === 'board' ? '#92400e' : '#9f1239', lineHeight: 1.6 }}>{skill.pyqs[pyqExam].trap}</p>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+
+
+/* ═══════════════════════════════════════════════════════════════
+   PRACTICE MODE
+   ═══════════════════════════════════════════════════════════════ */
+function PracticeMode({ skill, onBack, onAssess }) {
+    const questions = useShuffledQuestions(skill.practice, skill.practice.length);
+
+    const [qIdx, setQIdx] = useState(0);
+    const [answersMap, setAnswersMap] = useState({});
+    const [finished, setFinished] = useState(false);
+    const startTime = useRef(Date.now());
+
+    // v4 Session Logging
+    const nodeId = null;
+    
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
+
+    useEffect(() => {
+        isFinishedRef.current = finished;
+    }, [finished]);
+
+    useEffect(() => {
+        if (!nodeId || !questions || questions.length === 0) return;
+        startSession({ nodeId, sessionType: 'practice' });
+        answersPayload.current = [];
+        return () => {
+            if (!isFinishedRef.current && answersPayload.current.length > 0) {
+                abandonSession({ answersPayload: answersPayload.current, totalQuestions: questions.length });
+            }
+        };
+    }, [nodeId, questions]);
+
+    if (!questions || questions.length === 0) return <div>Loading...</div>;
+
+    const q = questions[qIdx];
+    const currentAnswer = answersMap[qIdx];
+    const answered = !!currentAnswer;
+    const isCorrect = currentAnswer?.isCorrect ?? false;
+    const selectedOpt = currentAnswer?.selectedOpt ?? null;
+
+    const handleAnswer = async (val) => {
+        if (answered) return;
+        let correct = false;
+        if (q.type === 'multiple-choice') correct = val === q.correctAnswer;
+        else correct = val.toString().toLowerCase() === q.correctAnswer.toString().toLowerCase();
+        setAnswersMap(prev => ({ ...prev, [qIdx]: { selectedOpt: val, isCorrect: correct } }));
+        if (nodeId) {
+            const entry = { question_index: qIdx + 1, answer_json: { selected: val }, is_correct: correct ? 1.0 : 0.0, marks_awarded: correct ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+            answersPayload.current.push(entry);
+            await logAnswer({ questionIndex: entry.question_index, answerJson: entry.answer_json, isCorrect: entry.is_correct });
+        }
+    };
+
+    const nextQ = async () => {
+        if (qIdx + 1 < questions.length) {
+            setQIdx(qIdx + 1);
+        } else {
+            setFinished(true);
+            isFinishedRef.current = true;
+            if (nodeId) await finishSession({ totalQuestions: questions.length, questionsAnswered: answersPayload.current.length, answersPayload: answersPayload.current });
+        }
+    };
+    const prevQ = () => { if (qIdx > 0) setQIdx(qIdx - 1); };
+
+
+    if (finished) {
+        const totalTime = Date.now() - startTime.current;
+        const score = Object.values(answersMap).filter(a => a.isCorrect).length;
+        const total = questions.length;
+        const pct = Math.round((score / total) * 100);
+        let msg = 'Keep Learning!', emoji = '💪', sub = 'Review the concepts and try again for 100%.';
+        if (pct >= 90) { msg = 'Excellent!'; emoji = '🏆'; sub = 'You\'ve mastered this skill!'; }
+        else if (pct >= 70) { msg = 'Great Job!'; emoji = '🌟'; sub = 'You\'re almost there, keep going!'; }
+
+        return (
+            <div style={{ maxWidth: 600, margin: '0 auto', textAlign: 'center', padding: '40px 24px', background: '#fff', borderRadius: 24, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
+                <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: skill.color, fontWeight: 700, cursor: 'pointer', marginBottom: 16, fontSize: 14 }}>← Back to Skills</button>
+                <ScoreRing score={score} total={total} color={skill.color} />
+                <div style={{ margin: '16px 0 8px', padding: '8px 24px', background: '#f8fafc', borderRadius: 100, display: 'inline-flex', alignItems: 'center', gap: 8, fontWeight: 700, color: '#64748b', fontSize: 14 }}>
+                    ⏱️ Time Taken: {fmtTime(totalTime)}
+                </div>
+                <div style={{ fontSize: 48, marginTop: 16 }}>{emoji}</div>
+                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 28, fontWeight: 900, color: '#0f172a', margin: '8px 0 4px' }}>{msg}</h2>
+                <p style={{ color: '#64748b', fontSize: 15, margin: '0 0 24px' }}>{sub}</p>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: 12 }}>
+                    <button onClick={onBack} style={{ padding: '12px 28px', borderRadius: 100, border: `2px solid ${skill.color}`, background: '#fff', color: skill.color, fontWeight: 800, fontSize: 15, cursor: 'pointer' }}>Back to Skills</button>
+                    <button onClick={onAssess} style={{ padding: '12px 28px', borderRadius: 100, border: 'none', background: skill.color, color: '#fff', fontWeight: 800, fontSize: 15, cursor: 'pointer', boxShadow: `0 4px 14px ${skill.color}40` }}>Take Assessment 🏆</button>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div style={{ maxWidth: 700, margin: '0 auto', background: '#fff', padding: 32, borderRadius: 24, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+                <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: '#64748b', fontWeight: 600, cursor: 'pointer' }}>← Exit Practice</button>
+                <div style={{ fontWeight: 800, color: skill.color }}>Practice {qIdx + 1}/{questions.length}</div>
+            </div>
+            <QuestionCard key={qIdx} type={q.type} question={q.question} options={q.options} answer={q.correctAnswer} onAnswer={handleAnswer} disabled={answered} selectedOption={selectedOpt} image={q.image} />
+            {answered && (
+                <div style={{ padding: 16, borderRadius: 12, marginBottom: 20, background: isCorrect ? '#f0fdf4' : '#fef2f2', border: `2px solid ${isCorrect ? '#10b981' : '#ef4444'}` }}>
+                    <div style={{ fontSize: 18, fontWeight: 800, color: isCorrect ? '#059669' : '#dc2626', marginBottom: 6 }}>{isCorrect ? '🎉 Correct!' : '❌ Not quite!'}</div>
+                    <p style={{ margin: 0, fontSize: 15, color: '#334155', lineHeight: 1.5 }}>{q.explanation}</p>
+                </div>
+            )}
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                {qIdx > 0 ? (
+                    <button onClick={prevQ} style={{ padding: '12px 32px', borderRadius: 100, fontWeight: 800, fontSize: 16, border: `2px solid ${skill.color}`, background: '#fff', color: skill.color, cursor: 'pointer' }}>← Previous</button>
+                ) : <div />}
+                <button onClick={nextQ} disabled={!answered} style={{ padding: '12px 32px', borderRadius: 100, fontWeight: 800, fontSize: 16, border: 'none', background: answered ? skill.color : '#e2e8f0', color: answered ? '#fff' : '#94a3b8', cursor: answered ? 'pointer' : 'default', transition: 'all 0.2s' }}>
+                    {qIdx + 1 === questions.length ? 'Finish →' : 'Next Question →'}
+                </button>
+            </div>
+        </div>
+    );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ASSESS MODE
+   ═══════════════════════════════════════════════════════════════ */
+function AssessMode({ skill, onBack }) {
+    const questions = useShuffledQuestions(skill.assess, skill.assess.length);
+
+    const [qIdx, setQIdx] = useState(0);
+    const [answersMap, setAnswersMap] = useState({});
+    const [marked, setMarked] = useState({});
+    const [finished, setFinished] = useState(false);
+    const [elapsed, setElapsed] = useState(0);
+    const [expandedSolution, setExpandedSolution] = useState({});
+    const startRef = useRef(Date.now());
+    const qStartRef = useRef(Date.now());
+    const [qTimes, setQTimes] = useState({});
+
+    // v4 Session Logging
+    const nodeId = null;
+    
+    const answersPayload = useRef([]);
+    const isFinishedRef = useRef(false);
+
+    useEffect(() => {
+        isFinishedRef.current = finished;
+    }, [finished]);
+
+    useEffect(() => {
+        if (!nodeId || !questions || questions.length === 0) return;
+        startSession({ nodeId, sessionType: 'assessment' });
+        answersPayload.current = [];
+        return () => {
+            if (!isFinishedRef.current && answersPayload.current.length > 0) {
+                abandonSession({ answersPayload: answersPayload.current, totalQuestions: questions.length });
+            }
+        };
+    }, [nodeId, questions]);
+
+    // Timer tick
+    useEffect(() => {
+        if (finished) return;
+        const iv = setInterval(() => setElapsed(Date.now() - startRef.current), 1000);
+        return () => clearInterval(iv);
+    }, [finished]);
+
+    if (!questions || questions.length === 0) return <div>Loading...</div>;
+
+    const q = questions[qIdx];
+
+    const handleAnswer = (val) => {
+        const now = Date.now();
+        const timeSpent = now - qStartRef.current;
+        setAnswersMap(prev => ({ ...prev, [qIdx]: val }));
+        setQTimes(prev => ({ ...prev, [qIdx]: (prev[qIdx] || 0) + timeSpent }));
+        qStartRef.current = now;
+        if (nodeId) {
+            const q_now = questions[qIdx];
+            const correct = q_now.type === 'multiple-choice' ? val === q_now.correctAnswer : val?.toString().toLowerCase() === q_now.correctAnswer?.toString().toLowerCase();
+            const entry = { question_index: qIdx + 1, answer_json: { selected: val }, is_correct: correct ? 1.0 : 0.0, marks_awarded: correct ? 1 : 0, marks_possible: 1, time_taken_ms: timeSpent };
+            answersPayload.current.push(entry);
+            logAnswer({ questionIndex: entry.question_index, answerJson: entry.answer_json, isCorrect: entry.is_correct });
+        }
+    };
+
+    const goTo = (idx) => {
+        const now = Date.now();
+        setQTimes(prev => ({ ...prev, [qIdx]: (prev[qIdx] || 0) + (now - qStartRef.current) }));
+        qStartRef.current = now;
+        setQIdx(idx);
+    };
+
+    const toggleMark = () => setMarked(prev => ({ ...prev, [qIdx]: !prev[qIdx] }));
+
+    const submitAssessment = async () => {
+        const now = Date.now();
+        setQTimes(prev => ({ ...prev, [qIdx]: (prev[qIdx] || 0) + (now - qStartRef.current) }));
+        setFinished(true);
+        isFinishedRef.current = true;
+        if (nodeId) await finishSession({ totalQuestions: questions.length, questionsAnswered: answersPayload.current.length, answersPayload: answersPayload.current });
+    };
+
+
+    if (finished) {
+        const totalTime = Date.now() - startRef.current;
+        let score = 0;
+        questions.forEach((qq, i) => {
+            const ans = answersMap[i];
+            if (ans !== undefined) {
+                if (qq.type === 'multiple-choice' && ans === qq.correctAnswer) score++;
+                else if (qq.type !== 'multiple-choice' && ans?.toString().toLowerCase() === qq.correctAnswer?.toString().toLowerCase()) score++;
+            }
+        });
+        const accuracy = Math.round((score / questions.length) * 100);
+
+        return (
+            <div style={{ maxWidth: 900, margin: '0 auto', padding: '32px 24px', background: '#fff', borderRadius: 24 }}>
+                {/* Header */}
+                <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 32, fontWeight: 900, color: '#0f172a', display: 'flex', alignItems: 'center', gap: 12, margin: '0 0 28px' }}>
+                    📊 Assessment Report
+                </h1>
+
+                {/* Stat cards */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 32 }}>
+                    <div style={{ textAlign: 'center', padding: '20px 16px', borderRadius: 16, border: '1px solid #e2e8f0', background: '#f8fafc' }}>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: '#64748b', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>Total Score</div>
+                        <div><span style={{ fontSize: 36, fontWeight: 900, color: skill.color }}>{score}</span><span style={{ fontSize: 18, color: '#94a3b8', fontWeight: 700 }}> / {questions.length}</span></div>
+                    </div>
+                    <div style={{ textAlign: 'center', padding: '20px 16px', borderRadius: 16, border: '1px solid #e2e8f0', background: '#f8fafc' }}>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: '#64748b', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>Accuracy</div>
+                        <div style={{ fontSize: 36, fontWeight: 900, color: accuracy >= 70 ? '#059669' : '#dc2626' }}>{accuracy}%</div>
+                    </div>
+                    <div style={{ textAlign: 'center', padding: '20px 16px', borderRadius: 16, border: '1px solid #e2e8f0', background: '#f8fafc' }}>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: '#64748b', marginBottom: 8, textTransform: 'uppercase', letterSpacing: 1 }}>Time Taken</div>
+                        <div style={{ fontSize: 36, fontWeight: 900, color: '#d97706' }}>⏱️ {fmtTime(totalTime)}</div>
+                    </div>
+                </div>
+
+                {/* Question Breakdown */}
+                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 22, fontWeight: 900, margin: '0 0 16px', color: '#0f172a' }}>Question Breakdown</h2>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    {questions.map((qq, i) => {
+                        const userAns = answersMap[i];
+                        const skipped = userAns === undefined;
+                        let correct = false;
+                        if (!skipped) {
+                            if (qq.type === 'multiple-choice') correct = userAns === qq.correctAnswer;
+                            else correct = userAns?.toString().toLowerCase() === qq.correctAnswer?.toString().toLowerCase();
+                        }
+                        const pillColor = skipped ? '#f59e0b' : correct ? '#10b981' : '#ef4444';
+                        const showSol = expandedSolution[i];
+
+                        return (
+                            <div key={i} style={{ background: '#fff', border: `1px solid ${skipped ? '#fde68a' : correct ? '#bbf7d0' : '#fecaca'}`, borderRadius: 16, padding: '20px 24px' }}>
+                                {/* Question header */}
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
+                                    <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', flex: 1 }}>
+                                        <span style={{ width: 28, height: 28, borderRadius: '50%', background: pillColor, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 13, flexShrink: 0 }}>{i + 1}</span>
+                                        <div>
+                                            {qq.image && <div style={{ fontSize: 32, marginBottom: 8 }}>{qq.image}</div>}
+                                            <p style={{ margin: 0, fontWeight: 700, fontSize: 15, color: '#0f172a', lineHeight: 1.5 }}>{qq.question}</p>
+                                        </div>
+                                    </div>
+                                    <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: 12 }}>
+                                        <div style={{ fontSize: 13, fontWeight: 700, color: skipped ? '#d97706' : correct ? '#059669' : '#dc2626' }}>
+                                            {skipped ? '⏩ Skipped' : correct ? '✅ Correct' : '❌ Wrong'}
+                                        </div>
+                                        <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 2 }}>⏱️ {qTimes[i] ? Math.round(qTimes[i] / 1000) : 0}s</div>
+                                    </div>
+                                </div>
+
+                                {/* Options grid */}
+                                {qq.type === 'multiple-choice' && (
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 8 }}>
+                                        {qq.options.map((opt, oi) => {
+                                            const letter = String.fromCharCode(65 + oi);
+                                            const isUserPick = userAns === oi;
+                                            const isCorrectOpt = oi === qq.correctAnswer;
+                                            let bg = '#f8fafc', bdr = '#e2e8f0', clr = '#334155';
+                                            if (isCorrectOpt) { bg = '#f0fdf4'; bdr = '#10b981'; }
+                                            else if (isUserPick && !isCorrectOpt) { bg = '#fef2f2'; bdr = '#ef4444'; }
+                                            return (
+                                                <div key={oi} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 10, border: `2px solid ${bdr}`, background: bg, fontSize: 14, fontWeight: 600, color: clr }}>
+                                                    <span style={{ width: 24, height: 24, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800, flexShrink: 0, background: isCorrectOpt ? '#10b981' : isUserPick ? '#ef4444' : '#e2e8f0', color: (isCorrectOpt || isUserPick) ? '#fff' : '#64748b' }}>{letter}</span>
+                                                    <span style={{ flex: 1 }}>{opt}</span>
+                                                    {isCorrectOpt && <span style={{ color: '#10b981', fontWeight: 800 }}>✓</span>}
+                                                    {isUserPick && !isCorrectOpt && <span style={{ color: '#ef4444', fontWeight: 800 }}>✗</span>}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )}
+
+                                {/* Check Solution toggle */}
+                                {qq.explanation && (
+                                    <div>
+                                        <button onClick={() => setExpandedSolution(prev => ({ ...prev, [i]: !prev[i] }))} style={{ background: 'none', border: 'none', color: skill.color, fontWeight: 700, fontSize: 14, cursor: 'pointer', padding: 0 }}>
+                                            {showSol ? '∧ Hide Solution' : '∨ Check Solution'}
+                                        </button>
+                                        {showSol && (
+                                            <div style={{ marginTop: 8, padding: '12px 16px', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 12 }}>
+                                                <div style={{ fontWeight: 700, color: skill.color, marginBottom: 4 }}>💡 Step-by-Step Logic</div>
+                                                <p style={{ margin: 0, fontSize: 14, color: '#334155', lineHeight: 1.6 }}>{qq.explanation}</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+
+                <div style={{ marginTop: 32, display: 'flex', justifyContent: 'center' }}>
+                    <button onClick={onBack} style={{ padding: '14px 40px', background: skill.color, color: '#fff', borderRadius: 100, fontWeight: 800, fontSize: 16, border: 'none', cursor: 'pointer', boxShadow: `0 4px 14px ${skill.color}40` }}>Back to Skills</button>
+                </div>
+            </div>
+        );
+    }
+    const currentAnswered = answersMap[qIdx] !== undefined;
+
+    return (
+        <div style={{ display: 'flex', gap: 24, maxWidth: 1100, margin: '0 auto', alignItems: 'flex-start' }}>
+            {/* LEFT: Question panel */}
+            <div style={{ flex: '1 1 60%', background: '#fff', borderRadius: 24, padding: 32, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
+                <div style={{ display: 'inline-block', padding: '4px 14px', borderRadius: 100, border: '2px solid #0f172a', fontWeight: 800, fontSize: 12, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16 }}>Question {qIdx + 1}</div>
+
+                <QuestionCard
+                    key={qIdx}
+                    type={q.type}
+                    question={q.question}
+                    options={q.options}
+                    answer={q.correctAnswer}
+                    onAnswer={handleAnswer}
+                    disabled={false} // Users can change answers in Assess mode
+                    selectedOption={answersMap[qIdx] ?? null}
+                    image={q.image}
+                    showCorrect={false}
+                />
+
+                {/* Navigation buttons */}
+                <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 16 }}>
+                    <button onClick={() => goTo(Math.max(0, qIdx - 1))} disabled={qIdx === 0}
+                        style={{ padding: '10px 24px', borderRadius: 100, border: '2px solid #e2e8f0', background: '#fff', fontWeight: 700, fontSize: 14, color: qIdx === 0 ? '#cbd5e1' : '#334155', cursor: qIdx === 0 ? 'default' : 'pointer' }}>← Previous</button>
+                    <button onClick={toggleMark}
+                        style={{ padding: '10px 24px', borderRadius: 100, border: `2px solid ${marked[qIdx] ? '#f59e0b' : '#e2e8f0'}`, background: marked[qIdx] ? '#fef3c7' : '#fff', fontWeight: 700, fontSize: 14, color: marked[qIdx] ? '#92400e' : '#334155', cursor: 'pointer', transition: 'all 0.2s' }}>
+                        {marked[qIdx] ? '★ Marked' : 'Mark for Review'}
+                    </button>
+                    <button onClick={() => goTo(Math.min(questions.length - 1, qIdx + 1))} disabled={qIdx === questions.length - 1}
+                        style={{ padding: '10px 24px', borderRadius: 100, border: 'none', background: skill.color, fontWeight: 700, fontSize: 14, color: '#fff', cursor: qIdx === questions.length - 1 ? 'default' : 'pointer', opacity: qIdx === questions.length - 1 ? 0.5 : 1, transition: 'all 0.2s' }}>Next →</button>
+                </div>
+            </div>
+
+            {/* RIGHT: Sidebar (timer + palette) */}
+            <div className="cell-details-window" style={{ flex: '0 0 280px', background: '#f8fafc', borderRadius: 24, padding: 24, position: 'sticky', top: 80 }}>
+                {/* Timer */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 20 }}>
+                    <span style={{ fontSize: 28 }}>⏱️</span>
+                    <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: 32, fontWeight: 900, color: '#0f172a' }}>{fmtTime(elapsed)}</span>
+                </div>
+
+                {/* Question Palette */}
+                <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 16, fontWeight: 800, color: '#0f172a', marginBottom: 12 }}>Question Palette</div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8, marginBottom: 20 }}>
+                    {questions.map((_, i) => {
+                        const isAnswered = answersMap[i] !== undefined;
+                        const isMarked = !!marked[i];
+                        const isCurrent = i === qIdx;
+                        let bg = '#fff', bdr = '#e2e8f0', clr = '#64748b';
+                        if (isMarked) { bg = '#fef3c7'; bdr = '#f59e0b'; clr = '#92400e'; }
+                        if (isAnswered) { bg = skill.color; bdr = skill.color; clr = '#fff'; }
+                        if (isCurrent) { bdr = '#0f172a'; }
+                        return (
+                            <button key={i} onClick={() => goTo(i)} style={{
+                                width: 40, height: 40, borderRadius: 8, border: `2px solid ${bdr}`, background: bg,
+                                color: clr, fontWeight: 800, fontSize: 14, cursor: 'pointer', transition: 'all 0.15s',
+                                boxShadow: isCurrent ? '0 0 0 2px #0f172a' : 'none'
+                            }}>{i + 1}</button>
+                        );
+                    })}
+                </div>
+
+                {/* Legend */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 20, fontSize: 13 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><div style={{ width: 16, height: 16, borderRadius: 4, background: skill.color }} /><span style={{ fontWeight: 600, color: '#334155' }}>Answered</span></div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><div style={{ width: 16, height: 16, borderRadius: 4, background: '#fff', border: '2px solid #e2e8f0' }} /><span style={{ fontWeight: 600, color: '#334155' }}>Not Answered</span></div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><div style={{ width: 16, height: 16, borderRadius: 4, background: '#fef3c7', border: '2px solid #f59e0b' }} /><span style={{ fontWeight: 600, color: '#334155' }}>Marked for Review</span></div>
+                </div>
+
+                {/* Submit button */}
+                <button onClick={submitAssessment} style={{
+                    width: '100%', padding: '14px 0', borderRadius: 12, border: 'none',
+                    background: '#ef4444', color: '#fff', fontFamily: 'Outfit, sans-serif',
+                    fontWeight: 800, fontSize: 16, cursor: 'pointer',
+                    boxShadow: '0 4px 14px rgba(239,68,68,0.35)', transition: 'all 0.2s'
+                }}>Submit Assessment</button>
+            </div >
+        </div >
+    );
+}
+
+
+
+
+/* ═══════════════════════════════════════════════════════════════
+   MAIN COMPONENT
+   ═══════════════════════════════════════════════════════════════ */
+export default function SexualReproductionSkills() {
+    const navigate = useNavigate();
+    const [view, setView] = useState('list');
+    const [activeSkillId, setActiveSkillId] = useState(null);
+    const [cellSkillsData, setCellSkillsData] = useState([]);
+    
+    useEffect(() => { 
+        setCellSkillsData(generateSexualReproductionSkillsData()); 
+    }, []);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [view]);
+    
+    const activeSkill = cellSkillsData.find(s => s.id === activeSkillId);
+
+    const openMode = (skill, mode) => { 
+        setActiveSkillId(skill.id); 
+        setView(mode); 
+    };
+
+    const returnToList = () => setView('list');
+
+    return (
+        <div className="sr-page">
+            <nav className="sr-nav">
+                {view === 'list' ? (
+                    <button className="sr-nav-back" onClick={() => navigate('/senior/grade/12/biology/sexual-reproduction')}>← Back to Dashboard</button>
+                ) : (
+                    <button className="sr-nav-back" onClick={returnToList}>← Back to Skills</button>
+                )}
+                <div className="sr-nav-links">
+                    <button className="sr-nav-link" onClick={() => navigate('/senior/grade/12/biology/sexual-reproduction/introduction')}>Introduction</button>
+                    <button className="sr-nav-link" onClick={() => navigate('/senior/grade/12/biology/sexual-reproduction/terminology')}>Terminology</button>
+                    <button className="sr-nav-link active" onClick={returnToList}>Skills</button>
+                </div>
+            </nav>
+
+            <div style={{ padding: '40px 24px', maxWidth: 1100, margin: '0 auto' }}>
+                
+                {/* Header */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 40, background: '#fff', padding: '24px 32px', borderRadius: 24, boxShadow: '0 10px 40px rgba(0,0,0,0.04)' }}>
+                    <button
+                        onClick={() => navigate('/senior/grade/12/biology/sexual-reproduction')}
+                        style={{
+                            width: 48, height: 48, borderRadius: 24, border: '1px solid #e2e8f0', background: '#fff',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 20,
+                            transition: 'all 0.2s', color: '#64748b'
+                        }}
+                    >
+                        ←
+                    </button>
+                    <div>
+                        <div style={{ textTransform: 'uppercase', letterSpacing: '1.5px', fontSize: 13, fontWeight: 800, color: '#e05a47', marginBottom: 6 }}>Class 12 • Biology</div>
+                        <h1 style={{ fontFamily: '"Playfair Display", "Merriweather", serif', fontSize: 36, fontWeight: 900, color: '#0f172a', margin: 0 }}>Sexual Reproduction</h1>
+                    </div>
+                </div>
+
+                {/* List View */}
+                {view === 'list' && (
+                    <div>
+                        <p style={{ fontSize: 18, color: '#475569', margin: '0 auto 32px', lineHeight: 1.6, maxWidth: 720, textAlign: 'center' }}>
+                            Master the mechanics of reproduction in flowering plants through structured learning, PYQ practice, and robust assessment.
+                        </p>
+                        
+                        <div className="sr-skills-grid">
+                            {cellSkillsData.map(skill => (
+                                <div key={skill.id} className="sr-skill-card" style={{ '--skill-color': skill.color, position: 'relative', overflow: 'hidden' }}>
+                                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 6, background: skill.color }} />
+                                    
+                                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, flex: 1 }}>
+                                        <div className="sr-skill-icon" style={{ background: `${skill.color}15`, color: skill.color }}>
+                                            {skill.icon}
+                                        </div>
+                                        <div className="sr-skill-info">
+                                            <h3 className="sr-skill-title">{skill.title}</h3>
+                                            <p className="sr-skill-desc">{skill.desc}</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="sr-skill-actions">
+                                        <button onClick={() => openMode(skill, 'learn')} className="sr-btn sr-btn-outline">Learn</button>
+                                        <button onClick={() => openMode(skill, 'practice')} className="sr-btn sr-btn-outline">Practice</button>
+                                        <button onClick={() => openMode(skill, 'assess')} className="sr-btn sr-btn-filled" style={{ '--skill-color': skill.color }}>Assess</button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
+                {view === 'learn' && activeSkill && <LearnMode skill={activeSkill} onBack={returnToList} />}
+                {view === 'practice' && activeSkill && <PracticeMode skill={activeSkill} onBack={returnToList} onAssess={() => openMode(activeSkill, 'assess')} />}
+                {view === 'assess' && activeSkill && <AssessMode skill={activeSkill} onBack={returnToList} />}
+            </div>
+        </div>
+    );
+}
