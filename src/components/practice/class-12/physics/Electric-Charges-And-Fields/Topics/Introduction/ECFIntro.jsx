@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ECFIntroData } from './ECFIntroData';
-import MathRenderer from '../../../../MathRenderer';
+import MathRenderer from '../../../../../../MathRenderer';
 import ECFNav from '../../ECFNav';
 import styles from '../../ecf.module.css';
 

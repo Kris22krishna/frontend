@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ECFNav from '../../ECFNav';
 import styles from '../../ecf.module.css';
-import MathRenderer from '../../../../MathRenderer';
+import MathRenderer from '../../../../../../MathRenderer';
 import {
     ecfExamEdgeData,
     ecfFormulaSheet,

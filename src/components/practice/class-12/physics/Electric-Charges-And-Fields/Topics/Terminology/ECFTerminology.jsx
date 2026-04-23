@@ -5,7 +5,7 @@ import {
     ECF_RULES,
     ECF_VOCAB_QUIZ,
 } from './ECFTerminologyData';
-import MathRenderer from '../../../../MathRenderer';
+import MathRenderer from '../../../../../../MathRenderer';
 import ECFNav from '../../ECFNav';
 import styles from '../../ecf.module.css';
 

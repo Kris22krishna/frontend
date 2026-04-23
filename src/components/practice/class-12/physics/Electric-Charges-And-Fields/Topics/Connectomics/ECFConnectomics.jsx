@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Share2 } from 'lucide-react';
 import { ECFClusters, ECFBridges } from './ECFConnectomicsData';
 import styles from '../../ecf.module.css';
-import MathRenderer from '../../../../MathRenderer';
+import MathRenderer from '../../../../../../MathRenderer';
 import ECFNav from '../../ECFNav';
 
 const coreConnections = ECFClusters.map(cluster => {

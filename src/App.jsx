@@ -136,12 +136,12 @@ import MSLTerminology from './components/Physics-Branches/Motion-In-A-Straight-L
 import MSLSkills from './components/Physics-Branches/Motion-In-A-Straight-Line/Topics/Skills/MSLSkills';
 import MSLConnectomics from './components/Physics-Branches/Motion-In-A-Straight-Line/Topics/Connectomics/MSLConnectomics';
 import MSLExamEdge from './components/Physics-Branches/Motion-In-A-Straight-Line/Topics/ExamEdge/MSLExamEdge';
-import ElectricChargesDashboard from './components/Physics-Branches/Electric-Charges-And-Fields/ElectricChargesDashboard';
-import ECFIntro from './components/Physics-Branches/Electric-Charges-And-Fields/Topics/Introduction/ECFIntro';
-import ECFTerminology from './components/Physics-Branches/Electric-Charges-And-Fields/Topics/Terminology/ECFTerminology';
-import ECFSkills from './components/Physics-Branches/Electric-Charges-And-Fields/Topics/Skills/ECFSkills';
-import ECFConnectomics from './components/Physics-Branches/Electric-Charges-And-Fields/Topics/Connectomics/ECFConnectomics';
-import ECFExamEdge from './components/Physics-Branches/Electric-Charges-And-Fields/Topics/ExamEdge/ECFExamEdge';
+import ElectricChargesDashboard from './components/practice/class-12/physics/Electric-Charges-And-Fields/ElectricChargesDashboard';
+import ECFIntro from './components/practice/class-12/physics/Electric-Charges-And-Fields/Topics/Introduction/ECFIntro';
+import ECFTerminology from './components/practice/class-12/physics/Electric-Charges-And-Fields/Topics/Terminology/ECFTerminology';
+import ECFSkills from './components/practice/class-12/physics/Electric-Charges-And-Fields/Topics/Skills/ECFSkills';
+import ECFConnectomics from './components/practice/class-12/physics/Electric-Charges-And-Fields/Topics/Connectomics/ECFConnectomics';
+import ECFExamEdge from './components/practice/class-12/physics/Electric-Charges-And-Fields/Topics/ExamEdge/ECFExamEdge';
 
 import ChemistryChapters from './components/practice/class-11/chemistry/ChemistryChapters';
 import StructureOfAtomDashboard from './components/Chemistry-Branches/Structure-of-Atom/StructureOfAtomDashboard';

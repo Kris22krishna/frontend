@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { generateECFSkillsData } from './ECFSkillsData';
-import MathRenderer from '../../../../MathRenderer';
+import MathRenderer from '../../../../../../MathRenderer';
 import ECFNav from '../../ECFNav';
 import styles from '../../ecf.module.css';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
