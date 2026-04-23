@@ -5,7 +5,17 @@ import { useAuth } from '../../../../contexts/AuthContext';
 import LoginPromptModal from '../../../auth/LoginPromptModal';
 import '../../../../pages/high/SeniorGradeSyllabus.css';
 
-const chapters = []; // Coming soon
+const chapters = [
+    {
+        key: 'electric-charges-and-fields',
+        title: 'Electric Charges and Fields',
+        icon: '⚡',
+        desc: "Coulomb's Law, Electric Field, Gauss's Law, Electric Dipole — the electrostatics foundation of Grade 12 Physics.",
+        questions: 70,
+        gradient: 'linear-gradient(135deg, #4a2c8a, #1a3a6e)',
+        shadow: 'rgba(74,44,138,0.3)',
+    },
+];
 
 const PhysicsChapters12 = () => {
     const navigate = useNavigate();

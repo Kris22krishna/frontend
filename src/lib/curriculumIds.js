@@ -979,6 +979,29 @@ export const NODE_IDS = {
   // Terminology Quiz
   g11PhysLOMTerminologyQuiz:               'd4111505-0010-0000-0000-000000000000',
 
+  // Ch 3: Motion in a Straight Line
+  g11PhysicsMSL:                           'd3111503-0000-0000-0000-000000000001',
+
+  // Skills (5 skills)
+  g11PhysMSLDistanceDisplacement:          'd4111503-0001-0000-0000-000000000000',
+  g11PhysMSLVelocityAcceleration:          'd4111503-0002-0000-0000-000000000000',
+  g11PhysMSLKinematicEquations:            'd4111503-0003-0000-0000-000000000000',
+  g11PhysMSLMotionGraphs:                  'd4111503-0004-0000-0000-000000000000',
+  g11PhysMSLRelativeVelocity:              'd4111503-0005-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11PhysMSLTerminologyQuiz:               'd4111503-0010-0000-0000-000000000000',
+
+  // ── GRADE 12 PHYSICS: Electric Charges and Fields (Chapter 1) ────────────
+  g12PhysECFChapter:               'b3121001-0000-0000-0000-000000000001',
+  g12PhysECFElectricChargeProps:   'b4121001-0001-0000-0000-000000000000',
+  g12PhysECFCoulombsLaw:           'b4121001-0002-0000-0000-000000000000',
+  g12PhysECFElectricField:         'b4121001-0003-0000-0000-000000000000',
+  g12PhysECFFieldLinesFlux:        'b4121001-0004-0000-0000-000000000000',
+  g12PhysECFElectricDipole:        'b4121001-0005-0000-0000-000000000000',
+  g12PhysECFGaussLaw:              'b4121001-0006-0000-0000-000000000000',
+  g12PhysECFChargeDistributions:   'b4121001-0007-0000-0000-000000000000',
+  g12PhysECFTerminologyQuiz:      'b4121001-0010-0000-0000-000000000000',
   // Ch 6: Work, Energy and Power
   g11PhysicsWEP:                           'd3111506-0000-0000-0000-000000000001',
 
@@ -1169,6 +1192,15 @@ export const SLUG_TO_NODE_ID = {
   'g11-phys-lom-circular-motion':              NODE_IDS.g11PhysLOMCircularMotion,
   'g11-phys-lom-terminology':                  NODE_IDS.g11PhysLOMTerminologyQuiz,
 
+  // Grade 11 Physics: Motion in a Straight Line
+  'g11-phys-msl':                              NODE_IDS.g11PhysicsMSL,
+  'g11-phys-msl-distance-displacement':        NODE_IDS.g11PhysMSLDistanceDisplacement,
+  'g11-phys-msl-velocity-acceleration':        NODE_IDS.g11PhysMSLVelocityAcceleration,
+  'g11-phys-msl-kinematic-equations':          NODE_IDS.g11PhysMSLKinematicEquations,
+  'g11-phys-msl-motion-graphs':                NODE_IDS.g11PhysMSLMotionGraphs,
+  'g11-phys-msl-relative-velocity':            NODE_IDS.g11PhysMSLRelativeVelocity,
+  'g11-phys-msl-terminology':                  NODE_IDS.g11PhysMSLTerminologyQuiz,
+
   // Grade 11 Physics: Work, Energy and Power
   'g11-phys-wep':                              NODE_IDS.g11PhysicsWEP,
   'g11-phys-wep-work-calc':                    NODE_IDS.g11PhysWEPWorkCalc,
@@ -1214,6 +1246,17 @@ export const SLUG_TO_NODE_ID = {
 
   // Grade 11 Biology: Cell — Structure and Functions (legacy test)
   'g11-bio-cell-structure':                    NODE_IDS.g11BiologyCellStructure,
+
+  // Grade 12 Physics: Electric Charges and Fields
+  'g12-phys-ecf':                       NODE_IDS.g12PhysECFChapter,
+  'g12-phys-ecf-charge-props':          NODE_IDS.g12PhysECFElectricChargeProps,
+  'g12-phys-ecf-coulombs-law':          NODE_IDS.g12PhysECFCoulombsLaw,
+  'g12-phys-ecf-electric-field':        NODE_IDS.g12PhysECFElectricField,
+  'g12-phys-ecf-field-lines-flux':      NODE_IDS.g12PhysECFFieldLinesFlux,
+  'g12-phys-ecf-electric-dipole':       NODE_IDS.g12PhysECFElectricDipole,
+  'g12-phys-ecf-gauss-law':             NODE_IDS.g12PhysECFGaussLaw,
+  'g12-phys-ecf-charge-distributions':  NODE_IDS.g12PhysECFChargeDistributions,
+  'g12-phys-ecf-terminology':           NODE_IDS.g12PhysECFTerminologyQuiz,
 
   // Grade 12 Math: Relations
   'g12-math-relations':                        NODE_IDS.g12MathRelations,

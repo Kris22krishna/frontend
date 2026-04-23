@@ -1,0 +1,21 @@
+/*
+ * MotionInAStraightLineBranch.css
+ *
+ * This file is now used ONLY by MotionInAStraightLineDashboard.jsx
+ * which uses lom-* classes from Laws of Motion.
+ *
+ * All MSL sub-pages (Intro, Terminology, Skills, Connectomics, ExamEdge)
+ * use the dedicated CSS Module: msl.module.css (msl-* classes).
+ * No cross-chapter class leakage.
+ */
+
+@import url('../Laws-Of-Motion/LawsOfMotionBranch.css');
+
+/* MSL Dashboard teal override for the left panel gradient */
+.msl-left {
+    background: linear-gradient(145deg,
+        #0f2a2a 0%,
+        #0d4444 25%,
+        #0d9488 60%,
+        #134e4a 100%) !important;
+}
