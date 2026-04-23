@@ -1001,7 +1001,7 @@ export const NODE_IDS = {
   g12PhysECFElectricDipole:        'b4121001-0005-0000-0000-000000000000',
   g12PhysECFGaussLaw:              'b4121001-0006-0000-0000-000000000000',
   g12PhysECFChargeDistributions:   'b4121001-0007-0000-0000-000000000000',
-
+  g12PhysECFTerminologyQuiz:      'b4121001-0010-0000-0000-000000000000',
   // Ch 6: Work, Energy and Power
   g11PhysicsWEP:                           'd3111506-0000-0000-0000-000000000001',
 
@@ -1246,6 +1246,17 @@ export const SLUG_TO_NODE_ID = {
 
   // Grade 11 Biology: Cell — Structure and Functions (legacy test)
   'g11-bio-cell-structure':                    NODE_IDS.g11BiologyCellStructure,
+
+  // Grade 12 Physics: Electric Charges and Fields
+  'g12-phys-ecf':                       NODE_IDS.g12PhysECFChapter,
+  'g12-phys-ecf-charge-props':          NODE_IDS.g12PhysECFElectricChargeProps,
+  'g12-phys-ecf-coulombs-law':          NODE_IDS.g12PhysECFCoulombsLaw,
+  'g12-phys-ecf-electric-field':        NODE_IDS.g12PhysECFElectricField,
+  'g12-phys-ecf-field-lines-flux':      NODE_IDS.g12PhysECFFieldLinesFlux,
+  'g12-phys-ecf-electric-dipole':       NODE_IDS.g12PhysECFElectricDipole,
+  'g12-phys-ecf-gauss-law':             NODE_IDS.g12PhysECFGaussLaw,
+  'g12-phys-ecf-charge-distributions':  NODE_IDS.g12PhysECFChargeDistributions,
+  'g12-phys-ecf-terminology':           NODE_IDS.g12PhysECFTerminologyQuiz,
 
   // Grade 12 Math: Relations
   'g12-math-relations':                        NODE_IDS.g12MathRelations,
