@@ -17,10 +17,10 @@ export default function ECFExamEdge() {
             <ECFNav activeTab="exam-edge" />
 
             <div className={styles['ecf-examedge-hero']}>
-                <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 'clamp(1.4rem, 4vw, 1.9rem)', fontWeight: 900, color: '#fff', margin: '0 0 6px' }}>
-                    Prepare for the <span style={{ color: '#c4b5fd' }}>Edge</span>
+                <h1 className={styles['ecf-hero-title']}>
+                    Prepare for the <span className={styles['ecf-hero-accent']}>Edge</span>
                 </h1>
-                <p style={{ color: 'rgba(255,255,255,0.78)', fontSize: 14, margin: 0, fontWeight: 500 }}>
+                <p className={styles['ecf-hero-sub']}>
                     Electric Charges &amp; Fields in JEE &amp; NEET — strategy, PYQs, formula sheet, quick revision.
                 </p>
             </div>
@@ -153,9 +153,7 @@ export default function ECFExamEdge() {
                     <div style={{ marginTop: 28, background: '#120a2e', borderRadius: 18, padding: '22px 26px' }}>
                         <div style={{ fontSize: 11, fontWeight: 800, color: '#c4b5fd', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 8 }}>📌 Final Exam Strategy</div>
                         <p style={{ margin: 0, fontSize: 15, color: 'rgba(255,255,255,0.78)', lineHeight: 1.8 }}>
-                            Start every problem by identifying symmetry and vector direction. In objective questions, first eliminate options using
-                            scaling ($1/r^2$ vs $1/r^3$), sign logic, and units. For numericals, write knowns with SI units, then apply one clean formula
-                            path. This chapter is high-return when your fundamentals are error-free.
+                            <MathRenderer text="Start every problem by identifying symmetry and vector direction. In objective questions, first eliminate options using scaling ($1/r^2$ vs $1/r^3$), sign logic, and units. For numericals, write knowns with SI units, then apply one clean formula path. This chapter is high-return when your fundamentals are error-free." />
                         </p>
                     </div>
                 </div>

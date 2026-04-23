@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ElectricChargesAndFieldsBranch.css';
 
@@ -10,7 +10,7 @@ const cards = [
         label: 'Connectomics',
         tagline: 'Big Picture First',
         desc: 'See how Charge, Coulomb\'s Law, E-Field, Flux, Dipole, and Gauss\'s Law all interlock before diving in.',
-        icon: 'C',
+        icon: '🌐',
         strip: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
         iconBg: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
         path: `${BASE}/connectomics`,
@@ -20,7 +20,7 @@ const cards = [
         label: 'Introduction',
         tagline: '5W1H Framework',
         desc: 'What is electric charge? Who discovered Coulomb\'s Law? Why does charge quantisation matter? Six key questions answered.',
-        icon: 'I',
+        icon: '🧠',
         strip: 'linear-gradient(135deg, #0ea5e9, #38bdf8)',
         iconBg: 'linear-gradient(135deg, #0ea5e9, #38bdf8)',
         path: `${BASE}/introduction`,
@@ -30,7 +30,7 @@ const cards = [
         label: 'Terminology',
         tagline: 'Master the Language',
         desc: 'Coulomb\'s constant, epsilon_0, electric flux, Gaussian surface, electric dipole - every term with NEET examples.',
-        icon: 'T',
+        icon: '📖',
         strip: 'linear-gradient(135deg, #10b981, #34d399)',
         iconBg: 'linear-gradient(135deg, #10b981, #34d399)',
         path: `${BASE}/terminology`,
@@ -40,7 +40,7 @@ const cards = [
         label: 'Skills',
         tagline: 'Learn · Practice · Assess',
         desc: 'Seven problem-solving skills: electric charge, Coulomb\'s Law, E-field, flux, dipole, Gauss\'s Law, and continuous distributions.',
-        icon: 'S',
+        icon: '🎯',
         strip: 'linear-gradient(135deg, #f59e0b, #fcd34d)',
         iconBg: 'linear-gradient(135deg, #f59e0b, #fcd34d)',
         path: `${BASE}/skills`,
@@ -50,7 +50,7 @@ const cards = [
         label: 'Exam Edge',
         tagline: 'Crack JEE & NEET',
         desc: 'PYQ strategy, formula sheet, comparison checkpoints, and revision blocks aligned to exam patterns.',
-        icon: 'E',
+        icon: '⚡',
         strip: 'linear-gradient(135deg, #ef4444, #f87171)',
         iconBg: 'linear-gradient(135deg, #ef4444, #f87171)',
         path: `${BASE}/exam-edge`,
@@ -61,13 +61,12 @@ export default function ElectricChargesDashboard() {
     const navigate = useNavigate();
 
     return (
-        <div className="lom-fullpage">
-            <div className="lom-left ecf-left">
-                <div className="lom-deco lom-deco-a" />
-                <div className="lom-deco lom-deco-b" />
-                <div className="lom-left-content">
+        <div className="ecf-dashboard-fullpage">
+            <div className="ecf-dashboard-left">
+                <div className="ecf-dashboard-deco ecf-dashboard-deco-a" />
+                <div className="ecf-dashboard-deco ecf-dashboard-deco-b" />
+                <div className="ecf-dashboard-left-content">
                     <button
-                        className="lom-nav-back"
                         onClick={() => navigate('/senior/grade/12')}
                         style={{
                             marginBottom: '40px',
@@ -88,10 +87,9 @@ export default function ElectricChargesDashboard() {
                         onMouseEnter={(e) => e.target.style.background = 'rgba(255,255,255,0.2)'}
                         onMouseLeave={(e) => e.target.style.background = 'rgba(255,255,255,0.1)'}
                     >
-                        Back to Grade 12
+                        ← Back to Grade 12
                     </button>
                     <button
-                        className="lom-nav-back"
                         onClick={() => navigate('/senior/grade/12/physics')}
                         style={{
                             marginBottom: '20px',
@@ -109,50 +107,50 @@ export default function ElectricChargesDashboard() {
                     >
                         Physics Chapters
                     </button>
-                    <h1 className="lom-main-title">
+                    <h1 className="ecf-dashboard-main-title">
                         Electric Charges{' '}
-                        <span className="lom-title-accent">&amp; Fields</span>
+                        <span className="ecf-dashboard-title-accent">&amp; Fields</span>
                     </h1>
-                    <p className="lom-main-sub">
+                    <p className="ecf-dashboard-main-sub">
                         The invisible force that holds atoms together, powers every electronic
                         device, and is the gateway to all of Grade 12 Physics. Master
                         electrostatics and you own the entire electromagnetic spectrum.
                     </p>
-                    <div className="lom-stats-grid">
+                    <div className="ecf-dashboard-stats-grid">
                         {[
                             { num: '7', lbl: 'Core Skills' },
-                            { num: 'k, epsilon_0', lbl: 'Key Constants' },
-                            { num: '6', lbl: 'Field Laws' },
-                            { num: '5/5', lbl: 'NEET Weight' },
+                            { num: '4', lbl: 'Field Laws' },
+                            { num: '3', lbl: 'Key Proofs' },
+                            { num: '30+', lbl: 'PYQs' },
                         ].map(s => (
-                            <div className="lom-stat" key={s.lbl}>
-                                <span className="lom-stat-num" style={{ fontSize: s.num.length > 3 ? '14px' : undefined }}>{s.num}</span>
-                                <span className="lom-stat-lbl">{s.lbl}</span>
+                            <div className="ecf-dashboard-stat" key={s.lbl}>
+                                <span className="ecf-dashboard-stat-num">{s.num}</span>
+                                <span className="ecf-dashboard-stat-lbl">{s.lbl}</span>
                             </div>
                         ))}
                     </div>
                 </div>
             </div>
 
-            <div className="lom-right">
-                <p className="lom-right-eyebrow">Grade 12 | Physics | Chapter 1</p>
-                <div className="lom-cards-col">
+            <div className="ecf-dashboard-right">
+                <p className="ecf-dashboard-right-eyebrow">Grade 12 | Physics | Chapter 1</p>
+                <div className="ecf-dashboard-cards-col">
                     {cards.map(c => (
                         <button
                             key={c.id}
-                            className="lom-card-btn"
+                            className="ecf-dashboard-card-btn"
                             onClick={() => navigate(c.path)}
                         >
-                            <div className="lom-card-strip" style={{ background: c.strip }} />
-                            <div className="lom-card-icon" style={{ background: c.iconBg }}>
+                            <div className="ecf-dashboard-card-strip" style={{ background: c.strip }} />
+                            <div className="ecf-dashboard-card-icon" style={{ background: c.iconBg }}>
                                 {c.icon}
                             </div>
-                            <div className="lom-card-text">
-                                <div className="lom-card-tagline">{c.tagline}</div>
-                                <div className="lom-card-label">{c.label}</div>
-                                <div className="lom-card-desc">{c.desc}</div>
+                            <div className="ecf-dashboard-card-text">
+                                <div className="ecf-dashboard-card-tagline">{c.tagline}</div>
+                                <div className="ecf-dashboard-card-label">{c.label}</div>
+                                <div className="ecf-dashboard-card-desc">{c.desc}</div>
                             </div>
-                            <div className="lom-card-chevron">&gt;</div>
+                            <div className="ecf-dashboard-card-chevron">&gt;</div>
                         </button>
                     ))}
                 </div>

@@ -1,18 +1,342 @@
-// ECFSkillsData.js — Electric Charges and Fields (Grade 12 Physics)
-// 7 Skills: problem-solving only. Definitions live in ECFTerminologyData.js.
+const randElem = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const formatOpt = val => `${Number.isInteger(val) ? val : Number(val).toFixed(2)}`.replace(/\.00$/, '');
+const shuffle = (array) => {
+    const copy = [...array];
+    for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+};
 
-export const generateECFSkillsData = () => [
+const generateSkillPool = (generators, count) => {
+    const pool = [];
+    let attempts = 0;
+    while (pool.length < count && attempts < 1000) {
+        const gen = randElem(generators);
+        const q = gen();
+        if (!pool.some(existing => existing.question === q.question)) {
+            pool.push(q);
+        }
+        attempts++;
+    }
+    return pool;
+};
 
-    // ─────────────────────────────────────────────────────────
-    // SKILL 1 — Electric Charge & Its Properties
-    // ─────────────────────────────────────────────────────────
-    {
-        id: 'electric-charge-properties',
-        icon: '⚡',
-        color: '#4a2c8a',
-        title: 'Electric Charge & Its Properties',
-        desc: 'Apply quantisation, conservation, and additivity of charge to solve numerical and conceptual problems.',
-        learnSections: [
+const skill1Generators = [
+    () => {
+        const n = randInt(2, 8) * 10;
+        const electrons = n * Math.pow(10, 10);
+        const charge = n * 1.6;
+        const opts = shuffle([`${charge} nC`, `-${charge} nC`, `${charge * 2} nC`, `-${charge * 2} nC`]);
+        return {
+            type: 'multiple-choice',
+            question: `A glass rod loses ${n} × 10¹⁰ electrons on rubbing. The net charge on the rod is:`,
+            options: opts,
+            correctAnswer: opts.indexOf(`${charge} nC`),
+            explanation: `Losing electrons gives a positive charge. $q = ne = (${n} \\times 10^{10}) \\times (1.6 \\times 10^{-19}) = ${charge} \\times 10^{-9} \\text{ C} = +${charge} \\text{ nC}$.`
+        };
+    },
+    () => {
+        const q1 = randInt(2, 12);
+        const q2 = -randInt(2, 8);
+        const res = (q1 + q2) / 2;
+        const opts = shuffle([`${res} μC`, `${Math.abs(res)} μC`, `${q1 + q2} μC`, `0 μC`]);
+        return {
+            type: 'multiple-choice',
+            question: `Two identical conducting spheres carry charges +${q1} μC and ${q2} μC. They are touched and separated. The final charge on each sphere is:`,
+            options: opts,
+            correctAnswer: opts.indexOf(`${res} μC`),
+            explanation: `By conservation and equal sharing: $q_{\\text{each}} = \\frac{q_1 + q_2}{2} = \\frac{${q1} + (${q2})}{2} = ${res} \\text{ \\mu C}$.`
+        };
+    },
+    () => {
+        const q1 = randInt(2, 6);
+        const q2 = -randInt(1, 5);
+        const q3 = randInt(1, 4);
+        const total = q1 + q2 + q3;
+        const opts = shuffle([`${total} μC`, `${Math.abs(q1) + Math.abs(q2) + Math.abs(q3)} μC`, `${total * 2} μC`, `0 μC`]);
+        return {
+            type: 'multiple-choice',
+            question: `An isolated system contains three charges: +${q1} μC, ${q2} μC, and +${q3} μC. The total charge of the system is:`,
+            options: opts,
+            correctAnswer: opts.indexOf(`${total} μC`),
+            explanation: `Additivity of charge: $Q_{\\text{total}} = ${q1} + (${q2}) + ${q3} = ${total} \\text{ \\mu C}$.`
+        };
+    }
+];
+
+const skill2Generators = [
+    () => {
+        const q1 = randInt(2, 6);
+        const q2 = randInt(2, 6);
+        const r_cm = randInt(1, 3) * 10;
+        const r = r_cm / 100;
+        const f = 9 * 1000000000 * (q1 * 0.000001) * (q2 * 0.000001) / (r * r);
+        const f_val = formatOpt(f);
+        const opts = shuffle([`${f_val} N`, `${formatOpt(f * 2)} N`, `${formatOpt(f / 2)} N`, `${formatOpt(f * 10)} N`]);
+        return {
+            type: 'multiple-choice',
+            question: `Two point charges +${q1} μC and +${q2} μC are separated by a distance of ${r_cm} cm in vacuum. The magnitude of the electrostatic force between them is:`,
+            options: opts,
+            correctAnswer: opts.indexOf(`${f_val} N`),
+            explanation: `Using Coulomb's Law: $F = \\frac{kq_1q_2}{r^2}$. $F = \\frac{9 \\times 10^9 \\times (${q1} \\times 10^{-6}) \\times (${q2} \\times 10^{-6})}{(${r})^2} = ${f_val} \\text{ N}$.`
+        };
+    },
+    () => {
+        const dist_factor = randElem([2, 3, 4]);
+        const factor = dist_factor * dist_factor;
+        const opts = shuffle([`$F/${factor}$`, `$F/${dist_factor}$`, `$${factor}F$`, `$${dist_factor}F$`]);
+        return {
+            type: 'multiple-choice',
+            question: `The electrostatic force between two charges is $F$. If the distance between them is increased to ${dist_factor} times the original distance, the new force is:`,
+            options: opts,
+            correctAnswer: opts.indexOf(`$F/${factor}$`),
+            explanation: `Force is inversely proportional to the square of the distance ($F \\propto 1/r^2$). If $r \\to ${dist_factor}r$, then $F \\to F/${factor}$.`
+        };
+    },
+    () => {
+        const q = randInt(2, 8);
+        const ratio = randElem([2, 3, 4]);
+        const q1_new = q * ratio;
+        const d_factor = randElem([1.5, 2]);
+        const opts = shuffle([`$\\frac{${ratio}}{${d_factor * d_factor}}F$`, `$\\frac{${ratio * 2}}{${d_factor * d_factor}}F$`, `$\\frac{${d_factor * d_factor}}{${ratio}}F$`, `$\\frac{${ratio}}{${d_factor}}F$`]);
+        return {
+            type: 'multiple-choice',
+            question: `Two charges initially repel with force $F$. If one charge is increased by a factor of ${ratio} and the distance is increased by a factor of ${d_factor}, what is the new force in terms of $F$?`,
+            options: opts,
+            correctAnswer: opts.indexOf(`$\\frac{${ratio}}{${d_factor * d_factor}}F$`),
+            explanation: `$F' = \\frac{k(q_1 \\times ${ratio})q_2}{(${d_factor}r)^2} = \\frac{${ratio}}{${d_factor * d_factor}} \\frac{kq_1q_2}{r^2} = \\frac{${ratio}}{${d_factor * d_factor}}F$.`
+        };
+    }
+];
+
+const skill3Generators = [
+    () => {
+        const q = randInt(2, 8);
+        const r_cm = randInt(1, 5) * 10;
+        const r = r_cm / 100;
+        const e = (9 * Math.pow(10, 9) * q * Math.pow(10, -6)) / (r * r);
+        const e_sci = e.toExponential(1).replace('e+', ' × 10^');
+        const opts = shuffle([`${e_sci} N/C`, `${(e * 2).toExponential(1).replace('e+', ' × 10^')} N/C`, `${(e / 2).toExponential(1).replace('e+', ' × 10^')} N/C`, `${(e * 10).toExponential(1).replace('e+', ' × 10^')} N/C`]);
+        return {
+            type: 'multiple-choice',
+            question: `The magnitude of the electric field at a distance of ${r_cm} cm from a point charge of +${q} μC is:`,
+            options: opts,
+            correctAnswer: opts.indexOf(`${e_sci} N/C`),
+            explanation: `$E = \\frac{kq}{r^2} = \\frac{9 \\times 10^9 \\times (${q} \\times 10^{-6})}{(${r})^2} = ${e_sci} \\text{ N/C}$.`
+        };
+    },
+    () => {
+        const F = randInt(2, 6) * 10;
+        const q = randInt(1, 5) * 2;
+        const e = F / (q * 0.001);
+        const e_sci = e.toExponential(1).replace('e+', ' × 10^');
+        const opts = shuffle([`${e_sci} N/C`, `${formatOpt(F / q)} N/C`, `${(e * 2).toExponential(1).replace('e+', ' × 10^')} N/C`, `${(e / 10).toExponential(1).replace('e+', ' × 10^')} N/C`]);
+        return {
+            type: 'multiple-choice',
+            question: `A test charge of +${q} mC experiences a force of ${F} N in an electric field. The magnitude of the electric field is:`,
+            options: opts,
+            correctAnswer: opts.indexOf(`${e_sci} N/C`),
+            explanation: `$E = \\frac{F}{q} = \\frac{${F}}{${q} \\times 10^{-3}} = ${e_sci} \\text{ N/C}$.`
+        };
+    },
+    () => {
+        const d = randInt(2, 5) * 2;
+        const opts = shuffle([`$d/3$`, `$d/2$`, `$d/4$`, `$2d/3$`]);
+        return {
+            type: 'multiple-choice',
+            question: `Two positive charges $+4q$ and $+q$ are separated by a distance $d$. The point where the net electric field is zero is at what distance from $+q$?`,
+            options: opts,
+            correctAnswer: opts.indexOf(`$d/3$`),
+            explanation: `Let the null point be at distance $x$ from $+q$. Then $E_1 = E_2 \\implies \\frac{k(q)}{x^2} = \\frac{k(4q)}{(d-x)^2} \\implies \\frac{1}{x} = \\frac{2}{d-x} \\implies d-x = 2x \\implies x = d/3$.`
+        };
+    }
+];
+
+const skill4Generators = [
+    () => {
+        const l = randInt(1, 5) * 0.1;
+        const E = randInt(1, 5) * 1000;
+        const area = l * l;
+        const flux = E * area * Math.cos(Math.PI / 3);
+        const f_flux = formatOpt(flux);
+        const opts = shuffle([`${f_flux} N·m²/C`, `${formatOpt(flux * 2)} N·m²/C`, `${formatOpt(flux / 2)} N·m²/C`, `${formatOpt(flux * 1.5)} N·m²/C`]);
+        return {
+            type: 'multiple-choice',
+            question: `A uniform electric field $E = ${E}$ N/C exists in space. What is the electric flux through a square of side ${formatOpt(l)} m if its normal makes an angle of $60^\\circ$ with the field?`,
+            options: opts,
+            correctAnswer: opts.indexOf(`${f_flux} N·m²/C`),
+            explanation: `$\\Phi = EA\\cos\\theta$. Area $A = ${l}^2 = ${formatOpt(area)}$ m². $\\Phi = ${E} \\times ${formatOpt(area)} \\times \\cos(60^\\circ) = ${E} \\times ${formatOpt(area)} \\times 0.5 = ${f_flux} \\text{ N·m}^2\\text{/C}$.`
+        };
+    },
+    () => {
+        const q = randInt(2, 8);
+        const opts = shuffle([`$\\frac{${q} \\mu\\text{C}}{\\varepsilon_0}$`, `$\\frac{${q} \\mu\\text{C}}{2\\varepsilon_0}$`, `$\\frac{${q} \\mu\\text{C}}{6\\varepsilon_0}$`, `$0$`]);
+        return {
+            type: 'multiple-choice',
+            question: `A point charge of +${q} μC is placed exactly at the centre of a closed cubical surface. The total electric flux through the entire surface is:`,
+            options: opts,
+            correctAnswer: opts.indexOf(`$\\frac{${q} \\mu\\text{C}}{\\varepsilon_0}$`),
+            explanation: `By Gauss's Law, the total flux through any closed surface enclosing a net charge $q_\\text{enc}$ is simply $q_\\text{enc}/\\varepsilon_0$. Here, total flux = $\\frac{${q} \\mu\\text{C}}{\\varepsilon_0}$.`
+        };
+    },
+    () => {
+        const q_in = randInt(3, 9);
+        const q_out = randInt(2, 7);
+        const opts = shuffle([`$\\frac{${q_in} \\mu\\text{C}}{\\varepsilon_0}$`, `$\\frac{${q_in + q_out} \\mu\\text{C}}{\\varepsilon_0}$`, `$\\frac{${Math.abs(q_in - q_out)} \\mu\\text{C}}{\\varepsilon_0}$`, `$\\frac{${q_out} \\mu\\text{C}}{\\varepsilon_0}$`]);
+        return {
+            type: 'multiple-choice',
+            question: `A spherical Gaussian surface encloses a charge of +${q_in} μC. Another charge of +${q_out} μC is placed outside the surface. The net electric flux through the surface is:`,
+            options: opts,
+            correctAnswer: opts.indexOf(`$\\frac{${q_in} \\mu\\text{C}}{\\varepsilon_0}$`),
+            explanation: `Flux through a closed surface depends only on the charge enclosed. $\\Phi = \\frac{q_\\text{enc}}{\\varepsilon_0} = \\frac{${q_in} \\mu\\text{C}}{\\varepsilon_0}$. Charges outside contribute zero net flux.`
+        };
+    }
+];
+
+const skill5Generators = [
+    () => {
+        const q = randInt(2, 8);
+        const d_cm = randInt(2, 6);
+        const p = q * 0.000001 * (d_cm / 100);
+        const p_sci = p.toExponential(1).replace('e', ' × 10^');
+        const opts = shuffle([`${p_sci} C·m`, `${(p / 2).toExponential(1).replace('e', ' × 10^')} C·m`, `${(p * 2).toExponential(1).replace('e', ' × 10^')} C·m`, `${(p * 10).toExponential(1).replace('e', ' × 10^')} C·m`]);
+        return {
+            type: 'multiple-choice',
+            question: `Two charges $\\pm ${q}$ μC are separated by ${d_cm} cm. The magnitude of the electric dipole moment is:`,
+            options: opts,
+            correctAnswer: opts.indexOf(`${p_sci} C·m`),
+            explanation: `$p = q(2a) = (${q} \\times 10^{-6}) \\times (${d_cm} \\times 10^{-2}) = ${p_sci} \\text{ C·m}$. Note: The distance given is the full separation $2a$.`
+        };
+    },
+    () => {
+        const p_val = randInt(2, 6);
+        const E = randInt(1, 5) * 1000;
+        const torque = (p_val * Math.pow(10, -8)) * E;
+        const t_sci = torque.toExponential(1).replace('e', ' × 10^');
+        const opts = shuffle([`${t_sci} N·m`, `${(torque / 2).toExponential(1).replace('e', ' × 10^')} N·m`, `${(torque * 2).toExponential(1).replace('e', ' × 10^')} N·m`, `$0$`]);
+        return {
+            type: 'multiple-choice',
+            question: `An electric dipole of moment ${p_val} × 10⁻⁸ C·m is placed in a uniform electric field of ${E} N/C such that it makes an angle of $90^\\circ$ with the field. The torque acting on it is:`,
+            options: opts,
+            correctAnswer: opts.indexOf(`${t_sci} N·m`),
+            explanation: `$\\tau = pE\\sin\\theta$. At $90^\\circ$, $\\tau_\\text{max} = pE = (${p_val} \\times 10^{-8}) \\times ${E} = ${t_sci} \\text{ N·m}$.`
+        };
+    },
+    () => {
+        const opts = shuffle([`$-pE$`, `$0$`, `$pE$`, `$2pE$`]);
+        return {
+            type: 'multiple-choice',
+            question: `What is the potential energy of an electric dipole of moment $p$ in a uniform electric field $E$ when it is in stable equilibrium?`,
+            options: opts,
+            correctAnswer: opts.indexOf(`$-pE$`),
+            explanation: `Stable equilibrium occurs when $\\theta = 0^\\circ$ (dipole aligned with the field). $U = -pE\\cos(0^\\circ) = -pE$.`
+        };
+    }
+];
+
+const skill6Generators = [
+    () => {
+        const R = randInt(5, 15);
+        const r = randInt(2, R - 1);
+        const q = randInt(1, 9);
+        const opts = shuffle([`0 N/C`, `$\\frac{kq}{${r}^2}$ N/C`, `$\\frac{kq}{${R}^2}$ N/C`, `$\\frac{kq${r}}{${R}^3}$ N/C`]);
+        return {
+            type: 'multiple-choice',
+            question: `A charge $Q = ${q} \\mu C$ is uniformly distributed over the surface of a thin spherical shell of radius $R = ${R} \\text{ cm}$. What is the electric field at a distance of $r = ${r} \\text{ cm}$ from the centre?`,
+            options: opts,
+            correctAnswer: opts.indexOf(`0 N/C`),
+            explanation: `For a thin spherical shell, the electric field inside the shell ($r < R$) is zero everywhere by Gauss's Law.`
+        };
+    },
+    () => {
+        const sigma = randInt(2, 8);
+        const opts = shuffle([`$\\frac{\\sigma}{\\varepsilon_0}$`, `$\\frac{\\sigma}{2\\varepsilon_0}$`, `$\\frac{2\\sigma}{\\varepsilon_0}$`, `$0$`]);
+        return {
+            type: 'multiple-choice',
+            question: `An infinite thin plane sheet of charge has a uniform surface charge density $\\sigma = ${sigma}\\mu\\text{C/m}^2$. The electric field $E$ at a distance $r$ from the sheet is:`,
+            options: opts,
+            correctAnswer: opts.indexOf(`$\\frac{\\sigma}{2\\varepsilon_0}$`),
+            explanation: `By applying Gauss's Law with a pillbox acting as the Gaussian surface, $2EA = \\frac{\\sigma A}{\\varepsilon_0} \\implies E = \\frac{\\sigma}{2\\varepsilon_0}$.`
+        };
+    },
+    () => {
+        const lambda = randInt(2, 6);
+        const r_cm = randInt(5, 20);
+        const r = r_cm / 100;
+        const e = (lambda * 0.000001) / (2 * 3.14159 * 8.854e-12 * r);
+        const e_sci = e.toExponential(1).replace('e+', ' × 10^');
+        const opts = shuffle([`${e_sci} N/C`, `${(e * 2).toExponential(1).replace('e+', ' × 10^')} N/C`, `${(e * 3.14).toExponential(1).replace('e+', ' × 10^')} N/C`, `${(e / 2).toExponential(1).replace('e+', ' × 10^')} N/C`]);
+        return {
+            type: 'multiple-choice',
+            question: `An infinitely long straight wire has a uniform linear charge density of $\\lambda = ${lambda} \\mu\\text{C/m}$. The electric field at a distance of ${r_cm} cm from the wire is approximately:`,
+            options: opts,
+            correctAnswer: opts.indexOf(`${e_sci} N/C`),
+            explanation: `$E = \\frac{\\lambda}{2\\pi\\varepsilon_0 r} = \\frac{2k\\lambda}{r} = \\frac{2 \\times 9 \\times 10^9 \\times ${lambda} \\times 10^{-6}}{${r}} \\approx ${e_sci} \\text{ N/C}$.`
+        };
+    }
+];
+
+const skill7Generators = [
+    () => {
+        const a = randInt(2, 6);
+        const opts = shuffle([`$0$`, `$\\frac{kq}{a^2}$`, `$\\frac{2kq}{a^2}$`, `$\\frac{4kq}{a^2}$`]);
+        return {
+            type: 'multiple-choice',
+            question: `Four equal charges $+q$ are placed at the corners of a square of side $a$. What is the net electric field at the centre of the square?`,
+            options: opts,
+            correctAnswer: opts.indexOf(`$0$`),
+            explanation: `By symmetry, the electric field vectors from opposite corners cancel each other out completely. Net $E = 0$.`
+        };
+    },
+    () => {
+        const R = randInt(5, 10);
+        const lambda = randInt(1, 5);
+        const opts = shuffle([`$\\frac{k \\lambda}{R}$`, `$\\frac{2k\\lambda}{R}$`, `0`, `$\\frac{\\lambda}{2\\pi\\varepsilon_0 R}$`]);
+        return {
+            type: 'multiple-choice',
+            question: `A uniform ring of radius $R = ${R}$ cm has a uniform linear charge density $\\lambda$. The electric field at its centre is:`,
+            options: opts,
+            correctAnswer: opts.indexOf(`0`),
+            explanation: `For an intact uniform ring, diametrically opposite elements produce equal and opposite electric fields at the centre. Net $E = 0$.`
+        };
+    },
+    () => {
+        const q = randInt(5, 15);
+        const x = randInt(2, 6);
+        const R = randInt(2, 4);
+        const opts = shuffle([`$\\frac{k(${q}x)}{(R^2+x^2)^{3/2}}$`, `$\\frac{k(${q})}{x^2}$`, `$\\frac{k(${q})}{R^2}$`, `0`]);
+        return {
+            type: 'multiple-choice',
+            question: `A ring of radius $R=${R}$ m carries a total charge $Q=${q}$ C. The electric field on its axis at a distance of $x=${x}$ m from the centre is given by:`,
+            options: opts,
+            correctAnswer: opts.indexOf(`$\\frac{k(${q}x)}{(R^2+x^2)^{3/2}}$`),
+            explanation: `The formula for the electric field on the axis of a uniform ring is $E = \\frac{kQx}{(R^2+x^2)^{3/2}}$.`
+        };
+    }
+];
+
+export const generateECFSkillsData = () => {
+    const pools = [
+        generateSkillPool(skill1Generators, 30),
+        generateSkillPool(skill2Generators, 30),
+        generateSkillPool(skill3Generators, 30),
+        generateSkillPool(skill4Generators, 30),
+        generateSkillPool(skill5Generators, 30),
+        generateSkillPool(skill6Generators, 30),
+        generateSkillPool(skill7Generators, 30),
+    ];
+
+    return [
+        {
+            id: 'electric-charge-properties',
+            icon: '⚡',
+            color: '#4a2c8a',
+            title: 'Electric Charge & Its Properties',
+            desc: 'Apply quantisation, conservation, and additivity of charge to solve numerical and conceptual problems.',
+            learnSections: [
             {
                 icon: '🔢',
                 heading: 'Quantisation — Working With q = ne',
@@ -69,102 +393,16 @@ Q_total = 3 − 5 + 2 = 0 μC (electrically neutral system).`,
                 example: 'Charge is a scalar quantity — do NOT add magnitudes. Always keep track of + and − signs. The net charge of an isolated system is invariant (constant).'
             }
         ],
-        practice: [
-            {
-                type: 'multiple-choice',
-                question: 'How many electrons must be removed from a body to give it a charge of +3.2 × 10⁻¹⁹ C?',
-                options: ['1', '2', '3', '4'],
-                correctAnswer: 1,
-                explanation: 'n = q/e = 3.2 × 10⁻¹⁹ / 1.6 × 10⁻¹⁹ = 2 electrons removed.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'Two conducting spheres carry charges +6 μC and −2 μC. They are touched and separated. Charge on each sphere is:',
-                options: ['+4 μC', '+2 μC', '−4 μC', '0 μC'],
-                correctAnswer: 1,
-                explanation: 'q_each = (6 + (−2))/2 = 4/2 = +2 μC. Each sphere gets +2 μC.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'A body has a charge of −4.8 × 10⁻¹⁸ C. How many excess electrons does it have?',
-                options: ['20', '30', '48', '10'],
-                correctAnswer: 1,
-                explanation: 'n = 4.8 × 10⁻¹⁸ / 1.6 × 10⁻¹⁹ = 30 excess electrons.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'Three charges +5 μC, −3 μC, and +2 μC are in an isolated system. The total charge is:',
-                options: ['10 μC', '4 μC', '0 μC', '+6 μC'],
-                correctAnswer: 1,
-                explanation: 'Q_total = 5 + (−3) + 2 = +4 μC.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'Charge is said to be quantised because:',
-                options: [
-                    'It can take any continuous value',
-                    'It exists only in integral multiples of the elementary charge e',
-                    'It can be negative only',
-                    'It depends on the mass of the body'
-                ],
-                correctAnswer: 1,
-                explanation: 'Quantisation means q = ne where n is an integer. Charge cannot exist in fractions of e in nature.'
-            }
-        ],
-        assessment: [
-            {
-                type: 'multiple-choice',
-                question: 'A copper ball gains 10¹² electrons. Its new charge is:',
-                options: ['+1.6 × 10⁻⁷ C', '−1.6 × 10⁻⁷ C', '−1.6 × 10⁻⁷ C', '+6.25 × 10¹¹ C'],
-                correctAnswer: 1,
-                explanation: 'Gaining electrons → negative charge. q = 10¹² × 1.6 × 10⁻¹⁹ = 1.6 × 10⁻⁷ C negative.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'Two identical spheres A (+12 μC) and B (−6 μC) are touched, then A is grounded. Charge on A after grounding is:',
-                options: ['+3 μC', '0 μC', '+6 μC', '−3 μC'],
-                correctAnswer: 1,
-                explanation: 'After touching: each gets (+12 − 6)/2 = +3 μC. When A is grounded, the ground absorbs A\'s charge → A becomes 0.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'The minimum charge detectable in free space is:',
-                options: ['0.5e', 'e', '2e', 'Any arbitrary value'],
-                correctAnswer: 1,
-                explanation: 'By quantisation, the smallest free charge is e = 1.6 × 10⁻¹⁹ C. Fractional charges (quarks) are confined inside hadrons and never observed freely.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'Which of these is NOT a property of electric charge?',
-                options: [
-                    'Charge is conserved',
-                    'Charge is quantised',
-                    'Charge is additive',
-                    'Charge changes with velocity'
-                ],
-                correctAnswer: 3,
-                explanation: 'Charge is relativistically invariant — it does NOT change with the velocity of the body. This is unlike mass in relativistic mechanics.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'A body has 5 × 10⁸ excess protons. Its charge is:',
-                options: ['8 × 10⁻¹¹ C', '−8 × 10⁻¹¹ C', '3.125 × 10²⁷ C', '1.6 × 10⁻¹⁹ C'],
-                correctAnswer: 0,
-                explanation: 'q = n × e = 5 × 10⁸ × 1.6 × 10⁻¹⁹ = 8 × 10⁻¹¹ C (positive, since protons are positive).'
-            }
-        ]
-    },
-
-    // ─────────────────────────────────────────────────────────
-    // SKILL 2 — Coulomb's Law & Superposition
-    // ─────────────────────────────────────────────────────────
-    {
-        id: 'coulombs-law',
-        icon: '⚖️',
-        color: '#be123c',
-        title: "Coulomb's Law & Superposition",
-        desc: "Calculate electrostatic force between point charges using Coulomb's Law; apply superposition for multiple charges.",
-        learnSections: [
+            practice: pools[0].slice(0, 20),
+            assessment: pools[0].slice(20, 30)
+        },
+        {
+            id: 'coulombs-law',
+            icon: '⚖️',
+            color: '#be123c',
+            title: "Coulomb's Law",
+            desc: "Calculate electrostatic force between point charges using Coulomb's Law; apply superposition.",
+            learnSections: [
             {
                 icon: '📐',
                 heading: "Coulomb's Law — The Two-Charge Formula",
@@ -221,98 +459,16 @@ Note: For two unlike charges, no equilibrium point exists between them for a tes
                 example: 'NEET trap: If q₁ = 4q and q₂ = q (like charges), separated by d, the neutral point is at x = 2d/3 from q₂ (smaller charge). Check: forces at x = 2d/3 from q₂ are equal. Never guess the neutral point is at the midpoint unless q₁ = q₂.'
             }
         ],
-        practice: [
-            {
-                type: 'multiple-choice',
-                question: 'Two charges +3 μC and +3 μC are 30 cm apart. The force between them is:',
-                options: ['0.3 N', '0.9 N', '3 N', '9 N'],
-                correctAnswer: 1,
-                explanation: 'F = 9×10⁹ × (3×10⁻⁶)² / (0.3)² = 9×10⁹ × 9×10⁻¹² / 0.09 = 0.9 N (repulsive).'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'If the distance between two point charges is halved, the force becomes:',
-                options: ['Half', 'Double', 'Four times', 'One-quarter'],
-                correctAnswer: 2,
-                explanation: 'F ∝ 1/r². If r → r/2, then F → F × (r/(r/2))² = 4F. Force becomes 4 times.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'Two charges +1 μC and −4 μC are 30 cm apart. The net force on each charge has magnitude:',
-                options: ['0.1 N', '0.4 N', '0.6 N', '1.2 N'],
-                correctAnswer: 0,
-                explanation: 'F = 9×10⁹ × (1×10⁻⁶)(4×10⁻⁶) / (0.3)² = 9×10⁹ × 4×10⁻¹² / 0.09 = 0.4 N. Wait — F = 36×10⁻³/0.09 = 0.4 N. Check options: 0.4 N is option B. Correction: F = 9×10⁹ × 4×10⁻¹² / 0.09 = 0.4 N, answer index 1.',
-                correctAnswer: 1
-            },
-            {
-                type: 'multiple-choice',
-                question: 'Two identical charges +q are at corners A and B of a square of side a. The force on a +q charge at corner C (adjacent to B) due to both charges is proportional to:',
-                options: ['q²/a²', '√2 q²/a²', '2q²/a²', 'q²/(2a²)'],
-                correctAnswer: 1,
-                explanation: 'F_AC = kq²/(a√2)² = kq²/(2a²) (at 45°). F_BC = kq²/a². The x-components: F_BC (horizontal) and F_AC·cos45° = kq²/(2a²)·(1/√2). Resultant ∝ √((kq²/a²)² + (kq²/(2a²))²). This is a complex vector — for the simplified case, the resultant ≈ √2 kq²/a² gives option B.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'Two point charges +4q and +q are separated by 3d. A third charge is placed between them for equilibrium. Its distance from +4q is:',
-                options: ['d', '2d', '1.5d', '0.75d'],
-                correctAnswer: 1,
-                explanation: 'x = d·√4/(√4+√1) = d·2/3 measured from +q. From +4q: 3d − 2d/3... Use: x from +4q = d·√q₁/(√q₁+√q₂) where q₁=4q, q₂=q → x = 3d·2/(2+1) = 2d. Answer: 2d from +4q.'
-            }
-        ],
-        assessment: [
-            {
-                type: 'multiple-choice',
-                question: 'The electrostatic force between two charges is 12 N. If the charge on one is doubled and distance halved, the new force is:',
-                options: ['24 N', '48 N', '96 N', '192 N'],
-                correctAnswer: 2,
-                explanation: 'F ∝ q₁q₂/r². New F = F × (2q₁/q₁) × (r/(r/2))² = 12 × 2 × 4 = 96 N.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'The ratio of electrostatic to gravitational force between a proton and an electron is approximately:',
-                options: ['10¹⁸', '10²⁴', '10³⁶', '10³⁹'],
-                correctAnswer: 3,
-                explanation: 'F_e/F_g = ke²/(Gm_pm_e) = (9×10⁹×(1.6×10⁻¹⁹)²)/(6.67×10⁻¹¹×1.67×10⁻²⁷×9.11×10⁻³¹) ≈ 2.27 × 10³⁹ ≈ 10³⁹.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'Three charges +q, +q, and +q are at vertices of an equilateral triangle of side a. The force on any charge due to the other two has magnitude:',
-                options: ['kq²/a²', '√3 kq²/a²', '2kq²/a²', '√2 kq²/a²'],
-                correctAnswer: 1,
-                explanation: 'Each side contributes kq²/a². The two equal forces are at 60° to each other. Resultant = 2kq²/a² × cos30° = 2kq²/a² × (√3/2) = √3 kq²/a².'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'Coulomb\'s Law holds for:',
-                options: [
-                    'Point charges only',
-                    'Point charges and uniformly charged spheres (treated as point charges at their centres)',
-                    'Extended charge distributions of any shape',
-                    'Moving charges only'
-                ],
-                correctAnswer: 1,
-                explanation: 'By the shell theorem, a uniformly charged sphere behaves as a point charge concentrated at its centre, outside its surface. Coulomb\'s Law is valid for this case.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'Two charges +q and −q are 2d apart. A test charge +q₀ is placed at the midpoint. The net force on q₀ is:',
-                options: ['Zero', 'kqq₀/d² away from +q', '2kqq₀/d² away from −q', '2kqq₀/d² toward −q'],
-                correctAnswer: 3,
-                explanation: '+q attracts q₀ toward +q (say, leftward). −q attracts q₀ toward −q (rightward). Both forces point in opposite directions. Wait — +q pushes rightward on q₀ (repulsion)? No: +q₀ is repelled by +q (away from +q → toward −q) and attracted to −q (toward −q). Both forces point toward −q. Net = 2kqq₀/d² toward −q.'
-            }
-        ]
-    },
-
-    // ─────────────────────────────────────────────────────────
-    // SKILL 3 — Electric Field Calculations
-    // ─────────────────────────────────────────────────────────
-    {
-        id: 'electric-field',
-        icon: '🌐',
-        color: '#d97706',
-        title: 'Electric Field Calculations',
-        desc: 'Find the electric field at a point due to point charges, dipoles, and continuous distributions.',
-        learnSections: [
+            practice: pools[1].slice(0, 20),
+            assessment: pools[1].slice(20, 30)
+        },
+        {
+            id: 'electric-field',
+            icon: '🌐',
+            color: '#d97706',
+            title: 'Electric Field Calculations',
+            desc: 'Find the electric field at a point due to point charges and simple systems.',
+            learnSections: [
             {
                 icon: '📍',
                 heading: 'Field Due to a Point Charge — Method',
@@ -366,102 +522,16 @@ Cross-check: At the null point, confirm E from q₁ and E from q₂ are equal in
                 example: 'Unlike charges: E is zero only outside the pair. If q₁ = +4q and q₂ = −q, the null point is beyond −q (smaller magnitude) on the extension of the line. Between the charges, both E₁ and E₂ point in the same direction — no cancellation.'
             }
         ],
-        practice: [
-            {
-                type: 'multiple-choice',
-                question: 'Electric field at a distance of 50 cm from a charge of 2 μC is:',
-                options: ['72 N/C', '720 N/C', '7200 N/C', '72000 N/C'],
-                correctAnswer: 2,
-                explanation: 'E = kq/r² = 9×10⁹ × 2×10⁻⁶ / (0.5)² = 18×10³ / 0.25 = 7.2 × 10⁴ N/C = 72000 N/C.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'A dipole has p = 4 × 10⁻⁸ C·m. Electric field at an axial point 10 cm from the centre is:',
-                options: ['7.2 × 10⁴ N/C', '3.6 × 10⁴ N/C', '14.4 × 10⁴ N/C', '1.8 × 10⁴ N/C'],
-                correctAnswer: 0,
-                explanation: 'E_axis = 2kp/r³ = 2 × 9×10⁹ × 4×10⁻⁸ / (0.1)³ = 72×10¹/10⁻³ = 72/10⁻³... = 7.2 × 10⁴ N/C.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'The electric field inside an ideal conductor at electrostatic equilibrium is:',
-                options: ['σ/ε₀', 'σ/(2ε₀)', 'Zero', 'kq/r²'],
-                correctAnswer: 2,
-                explanation: 'In electrostatic equilibrium, free charges redistribute on the surface so that the internal electric field is exactly zero. This is a consequence of Gauss\'s Law.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'Two charges +4q and +q are separated by distance d. The null point (E = 0) is at what distance from +q?',
-                options: ['d/2', 'd/3', '2d/3', 'd'],
-                correctAnswer: 1,
-                explanation: 'Like charges: null point between them. x from +q = d·√q₁/(√q₁+√q₂) = d·√q/(√(4q)+√q) = d·1/(2+1) = d/3.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'The ratio of E at an axial point to E at the equatorial point of a dipole at the same distance r is:',
-                options: ['1:2', '2:1', '1:1', '4:1'],
-                correctAnswer: 1,
-                explanation: 'E_axis = 2kp/r³; E_equatorial = kp/r³. Ratio = 2:1.'
-            }
-        ],
-        assessment: [
-            {
-                type: 'multiple-choice',
-                question: 'The electric field at 20 cm from a +6 μC charge equals the field at 30 cm from a charge Q. Q equals:',
-                options: ['+6 μC', '+9 μC', '+13.5 μC', '+4 μC'],
-                correctAnswer: 2,
-                explanation: 'k×6×10⁻⁶/(0.2)² = k×Q/(0.3)². Q = 6×10⁻⁶ × (0.3)²/(0.2)² = 6×10⁻⁶ × 9/4 = 13.5 μC.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'A dipole p = 5 × 10⁻⁸ C·m. E at equatorial point at r = 50 cm is:',
-                options: ['1800 N/C', '3600 N/C', '7200 N/C', '900 N/C'],
-                correctAnswer: 0,
-                explanation: 'E_eq = kp/r³ = 9×10⁹ × 5×10⁻⁸/(0.5)³ = 45×10¹/0.125 = 3600... wait = 9×10⁹×5×10⁻⁸/0.125 = 4.5×10²/0.125 = 3600 N/C. Hmm option B=3600. Actually 9×10⁹×5×10⁻⁸=450; 450/0.125=3600. Answer: 3600 N/C, index 1.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'An electric field of 10⁴ N/C exists at a distance r from a charge. If r is tripled, the new field is:',
-                options: ['3 × 10³ N/C', '1.11 × 10³ N/C', '9 × 10³ N/C', '3.33 × 10³ N/C'],
-                correctAnswer: 1,
-                explanation: 'E ∝ 1/r². New E = 10⁴/(3)² = 10⁴/9 ≈ 1.11 × 10³ N/C.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'Two unlike charges +4q and −q are separated by distance 3d. The null point of E is located at:',
-                options: [
-                    '3d from +4q, beyond −q',
-                    '3d from −q, beyond +4q',
-                    'd from +4q between the charges',
-                    '3d/5 from +4q'
-                ],
-                correctAnswer: 0,
-                explanation: 'Unlike charges: null point is outside, on the side of smaller charge (−q). Setting up: k(4q)/x² = kq/(x−3d)² with x measured from +4q leads to x = 6d (i.e., 3d beyond −q).'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'At the surface of a conductor, the electric field is:',
-                options: [
-                    'Parallel to the surface',
-                    'Zero everywhere',
-                    'Normal to the surface and equal to σ/ε₀',
-                    'Normal to the surface and equal to σ/(2ε₀)'
-                ],
-                correctAnswer: 2,
-                explanation: 'At a conductor surface, E must be perpendicular (normal) to the surface — any tangential component would drive currents. Magnitude: E = σ/ε₀ (full sheet, compared to σ/(2ε₀) for non-conducting sheet).'
-            }
-        ]
-    },
-
-    // ─────────────────────────────────────────────────────────
-    // SKILL 4 — Electric Field Lines & Flux
-    // ─────────────────────────────────────────────────────────
-    {
-        id: 'field-lines-flux',
-        icon: 'Φ',
-        color: '#0f7b6c',
-        title: 'Electric Field Lines & Flux',
-        desc: 'Interpret field line diagrams; calculate electric flux through flat and closed surfaces.',
-        learnSections: [
+            practice: pools[2].slice(0, 20),
+            assessment: pools[2].slice(20, 30)
+        },
+        {
+            id: 'field-lines-flux',
+            icon: 'Φ',
+            color: '#0f7b6c',
+            title: 'Electric Field Lines & Flux',
+            desc: 'Interpret field line diagrams; calculate electric flux through flat and closed surfaces.',
+            learnSections: [
             {
                 icon: '〰️',
                 heading: 'Rules for Electric Field Lines',
@@ -516,102 +586,16 @@ Flux through ONE face of the cube (by symmetry):
                 example: 'NEET 2023: Charge Q at centre of cube → flux per face = Q/(6ε₀). This is the most commonly tested Gauss\'s Law application. The geometry of the cube doesn\'t matter — only the symmetry and q_enc matter.'
             }
         ],
-        practice: [
-            {
-                type: 'multiple-choice',
-                question: 'Electric field E = 500 N/C passes through a surface of area 0.04 m² at 60° to the normal. The flux is:',
-                options: ['10 N·m²/C', '20 N·m²/C', '17.3 N·m²/C', '0 N·m²/C'],
-                correctAnswer: 0,
-                explanation: 'Φ = E·A·cosθ = 500 × 0.04 × cos60° = 500 × 0.04 × 0.5 = 10 N·m²/C.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'A charge of 88.5 μC is enclosed in a sphere. The total electric flux through the sphere is:',
-                options: ['10⁷ N·m²/C', '10⁸ N·m²/C', '10⁵ N·m²/C', '10⁶ N·m²/C'],
-                correctAnswer: 0,
-                explanation: 'Φ = q/ε₀ = 88.5×10⁻⁶/8.85×10⁻¹² = 10 × 10⁶ = 10⁷ N·m²/C.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'A charge Q is at the centre of a cube of side a. Flux through one face is:',
-                options: ['Q/ε₀', 'Q/(6ε₀)', 'Q/(4πε₀a²)', 'Q/(2ε₀)'],
-                correctAnswer: 1,
-                explanation: 'Total flux = Q/ε₀. Each of 6 equal faces gets Q/(6ε₀) by symmetry.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'If a closed surface encloses charges +3 μC and −1 μC, the net flux through the surface is:',
-                options: ['2.26 × 10⁵ N·m²/C', '4.52 × 10⁵ N·m²/C', '1.13 × 10⁵ N·m²/C', '0'],
-                correctAnswer: 0,
-                explanation: 'q_enc = 3−1 = 2 μC. Φ = 2×10⁻⁶/8.85×10⁻¹² = 2.26 × 10⁵ N·m²/C.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'A field line enters one side of a closed surface and exits through another. The net enclosed charge is:',
-                options: ['Positive', 'Negative', 'Zero', 'Indeterminate'],
-                correctAnswer: 2,
-                explanation: 'If a field line enters AND exits the surface, it contributes −E and +E flux that cancel. Net flux = 0 → q_enc = 0 by Gauss\'s Law.'
-            }
-        ],
-        assessment: [
-            {
-                type: 'multiple-choice',
-                question: 'The electric flux through a Gaussian surface is zero. This means:',
-                options: [
-                    'No electric field exists inside',
-                    'Net charge enclosed is zero',
-                    'Electric field is uniform inside',
-                    'The surface contains no charges at all'
-                ],
-                correctAnswer: 1,
-                explanation: 'Φ = q_enc/ε₀ = 0 implies q_enc = 0. The field inside need not be zero — equal + and − charges can cancel the flux without cancelling the field everywhere.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'An electric field of 10³ N/C is perpendicular to a triangular surface of base 20 cm and height 30 cm. The flux through the surface is:',
-                options: ['30 N·m²/C', '15 N·m²/C', '60 N·m²/C', '6 N·m²/C'],
-                correctAnswer: 0,
-                explanation: 'A = ½ × 0.2 × 0.3 = 0.03 m². Φ = E·A·cos0° = 10³ × 0.03 = 30 N·m²/C.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'Which of the following properties of field lines is INCORRECT?',
-                options: [
-                    'They start from positive charges',
-                    'They can cross each other in a strong field',
-                    'Their density represents field strength',
-                    'They are perpendicular to conductor surfaces'
-                ],
-                correctAnswer: 1,
-                explanation: 'Field lines NEVER cross. Crossing would imply the electric field has two different directions at the same point, which is impossible.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'Total charge enclosed by a Gaussian surface is 10 μC. If the surface size is doubled, the flux through it is:',
-                options: ['Halved', 'Doubled', 'Unchanged', 'Quadrupled'],
-                correctAnswer: 2,
-                explanation: 'Flux = q_enc/ε₀. The enclosed charge doesn\'t change when you resize the Gaussian surface (same charges are still inside). Flux is unchanged.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'Electric flux entering and leaving a Gaussian surface are Φ₁ and Φ₂ respectively. The enclosed charge is:',
-                options: ['(Φ₂−Φ₁)ε₀', '(Φ₁+Φ₂)/ε₀', '(Φ₂+Φ₁)ε₀', '(Φ₁−Φ₂)/ε₀'],
-                correctAnswer: 0,
-                explanation: 'Net outward flux = Φ₂ − Φ₁ (Φ₂ exits, Φ₁ enters is negative). q_enc = ε₀ × net flux = (Φ₂ − Φ₁)ε₀.'
-            }
-        ]
-    },
-
-    // ─────────────────────────────────────────────────────────
-    // SKILL 5 — Electric Dipole
-    // ─────────────────────────────────────────────────────────
-    {
-        id: 'electric-dipole',
-        icon: '↔️',
-        color: '#1d4ed8',
-        title: 'Electric Dipole',
-        desc: 'Calculate dipole moment, torque, and potential energy; find fields at axial and equatorial points.',
-        learnSections: [
+            practice: pools[3].slice(0, 20),
+            assessment: pools[3].slice(20, 30)
+        },
+        {
+            id: 'electric-dipole',
+            icon: '↔️',
+            color: '#1d4ed8',
+            title: 'Electric Dipole',
+            desc: 'Calculate dipole moment, torque, potential energy and fields.',
+            learnSections: [
             {
                 icon: '📏',
                 heading: 'Dipole Moment — What It Encodes',
@@ -670,102 +654,16 @@ Important for NEET: Distinguish clearly between uniform and non-uniform field qu
                 example: 'Trap: "A dipole is placed in an electric field. The net force on it is zero." This is only true in a UNIFORM field. In a non-uniform field, the net force is non-zero even if torque explains rotation.'
             }
         ],
-        practice: [
-            {
-                type: 'multiple-choice',
-                question: 'A dipole has charges ±4 μC separated by 6 cm. Its dipole moment is:',
-                options: ['2.4 × 10⁻⁷ C·m', '24 × 10⁻⁷ C·m', '24 × 10⁻⁸ C·m', '2.4 × 10⁻⁸ C·m'],
-                correctAnswer: 2,
-                explanation: 'p = q × 2l = 4×10⁻⁶ × 0.06 = 24 × 10⁻⁸ C·m = 2.4 × 10⁻⁷ C·m.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'A dipole (p = 2 × 10⁻⁸ C·m) is in a uniform field E = 10⁵ N/C, aligned at 30° to the field. The torque is:',
-                options: ['10⁻³ N·m', '√3 × 10⁻³ N·m', '2 × 10⁻³ N·m', '0.5 × 10⁻³ N·m'],
-                correctAnswer: 0,
-                explanation: 'τ = pE sinθ = 2×10⁻⁸ × 10⁵ × sin30° = 2×10⁻³ × 0.5 = 10⁻³ N·m.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'A dipole is in stable equilibrium in a uniform electric field. The angle between p and E is:',
-                options: ['90°', '180°', '0°', '45°'],
-                correctAnswer: 2,
-                explanation: 'Stable equilibrium: θ = 0°, i.e., p is parallel to E. U = −pE (minimum energy). Torque = 0.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'Work done to rotate a dipole from θ = 0° to θ = 180° in a uniform field E is:',
-                options: ['2pE', 'pE', '0', '−2pE'],
-                correctAnswer: 0,
-                explanation: 'W = pE(cosθ₁ − cosθ₂) = pE(cos0° − cos180°) = pE(1 − (−1)) = 2pE.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'The potential energy of a dipole in unstable equilibrium in field E is:',
-                options: ['−pE', '+pE', '0', '+2pE'],
-                correctAnswer: 1,
-                explanation: 'Unstable equilibrium: θ = 180°. U = −pE cos180° = −pE × (−1) = +pE (maximum energy → unstable).'
-            }
-        ],
-        assessment: [
-            {
-                type: 'multiple-choice',
-                question: 'A dipole p = 5 × 10⁻⁸ C·m is at an equatorial point at r = 20 cm. The field there is:',
-                options: ['5.6 × 10⁴ N/C', '2.8 × 10⁴ N/C', '5.6 × 10³ N/C', '11.25 × 10³ N/C'],
-                correctAnswer: 0,
-                explanation: 'E_eq = kp/r³ = 9×10⁹ × 5×10⁻⁸/(0.2)³ = 4.5×10²/8×10⁻³ = 0.5625×10⁵/10... let\'s recalc: 9×10⁹×5×10⁻⁸ = 450; 450/(0.2)³ = 450/0.008 = 56250 ≈ 5.625 × 10⁴ N/C.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'A dipole in a uniform electric field experiences:',
-                options: [
-                    'Only force, no torque',
-                    'Only torque, no net force',
-                    'Both force and torque',
-                    'Neither force nor torque'
-                ],
-                correctAnswer: 1,
-                explanation: 'In a UNIFORM field: Both charges experience equal and opposite forces → net force = 0. But these forces form a couple → torque exists (unless p is parallel or antiparallel to E).'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'Work done to rotate a dipole from θ = 60° to θ = 90° in field E is:',
-                options: ['pE/4', 'pE/2', 'pE', 'pE/3'],
-                correctAnswer: 1,
-                explanation: 'W = pE(cos60° − cos90°) = pE(0.5 − 0) = pE/2.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'A water molecule has dipole moment p = 6.1 × 10⁻³⁰ C·m in field E = 10⁶ N/C. Maximum torque is:',
-                options: ['6.1 × 10⁻²⁴ N·m', '6.1 × 10⁻²⁴ N·m', '6.1 × 10⁻³⁶ N·m', '6.1 × 10⁻¹⁸ N·m'],
-                correctAnswer: 0,
-                explanation: 'τ_max = pE = 6.1×10⁻³⁰ × 10⁶ = 6.1 × 10⁻²⁴ N·m (at θ = 90°).'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'The direction of the electric field at an equatorial point of a dipole is:',
-                options: [
-                    'Along the dipole moment (−q to +q)',
-                    'Antiparallel to dipole moment (+q to −q direction)',
-                    'Perpendicular to the dipole axis',
-                    'Along the line joining equatorial point to centre'
-                ],
-                correctAnswer: 1,
-                explanation: 'At an equatorial point, the field contributions from +q and −q give a resultant that points opposite to p (from +q toward −q, i.e., antiparallel to p).'
-            }
-        ]
-    },
-
-    // ─────────────────────────────────────────────────────────
-    // SKILL 6 — Gauss's Law & Applications
-    // ─────────────────────────────────────────────────────────
-    {
-        id: 'gauss-law',
-        icon: '🔵',
-        color: '#15803d',
-        title: "Gauss's Law & Applications",
-        desc: "Apply Gauss's Law to find electric field for spherical, cylindrical, and planar charge distributions.",
-        learnSections: [
+            practice: pools[4].slice(0, 20),
+            assessment: pools[4].slice(20, 30)
+        },
+        {
+            id: 'gauss-law',
+            icon: '🔵',
+            color: '#15803d',
+            title: "Gauss's Law",
+            desc: "Apply Gauss's Law to find field for spherical, cylindrical, and planar distributions.",
+            learnSections: [
             {
                 icon: '⭕',
                 heading: 'The Three Canonical Gaussian Surfaces',
@@ -830,102 +728,16 @@ Application 2 — Conductor properties from Gauss's Law:
                 example: 'Trap: "An uncharged conducting shell surrounds a charge +q at its centre. What is E inside the shell material?" → E = 0 (conductor). What charge appears on inner surface? → −q. Outer surface? → +q. Net charge on shell? → 0 (it was uncharged).'
             }
         ],
-        practice: [
-            {
-                type: 'multiple-choice',
-                question: 'A spherical Gaussian surface of radius 0.2 m surrounds a charge of 4 μC. The electric flux is:',
-                options: ['4.52 × 10⁵ N·m²/C', '1.13 × 10⁶ N·m²/C', '4.52 × 10⁶ N·m²/C', '2.26 × 10⁵ N·m²/C'],
-                correctAnswer: 0,
-                explanation: 'Φ = q/ε₀ = 4×10⁻⁶/8.85×10⁻¹² = 4.52 × 10⁵ N·m²/C. The radius doesn\'t matter for Gauss\'s Law!'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'E inside a uniformly charged solid sphere (charge Q, radius R) at r = R/3 is:',
-                options: ['kQ/R²', 'kQ/(3R²)', 'kQ/(9R²)', '3kQ/R²'],
-                correctAnswer: 1,
-                explanation: 'E_inside = kQr/R³ = kQ(R/3)/R³ = kQ/(3R²).'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'The electric field at distance r from an infinite wire with charge density λ is:',
-                options: ['λr/(2πε₀)', 'λ/(2πε₀r)', 'λ/(πε₀r²)', '2λ/(ε₀r)'],
-                correctAnswer: 1,
-                explanation: 'Using cylindrical Gaussian surface: E × 2πrL = λL/ε₀ → E = λ/(2πε₀r).'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'An uncharged conducting shell encloses a +3 μC charge at its centre. Charge on its outer surface is:',
-                options: ['0', '+3 μC', '−3 μC', '+6 μC'],
-                correctAnswer: 1,
-                explanation: 'Inner surface gets −3 μC (induced). Shell is uncharged overall, so outer surface gets +3 μC to maintain Q_shell = 0.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'For a spherical Gaussian surface completely inside a hollow conducting sphere (no charge inside), E inside is:',
-                options: ['kQ/r²', 'Q/(4πε₀R²)', 'σ/ε₀', '0'],
-                correctAnswer: 3,
-                explanation: 'No charge enclosed in the hollow region → Φ = 0 → E = 0 everywhere inside the hollow shell.'
-            }
-        ],
-        assessment: [
-            {
-                type: 'multiple-choice',
-                question: 'A solid sphere of radius R has uniform charge density ρ. E at a point 2R from centre is:',
-                options: ['ρR³/(6ε₀)', 'ρR³/(12ε₀)', 'ρR/(3ε₀)', '4ρR³/(3ε₀)'],
-                correctAnswer: 1,
-                explanation: 'Q = ρ × (4πR³/3). E = kQ/(2R)² = kQ/(4R²) = (9×10⁹ × 4πρR³/3)/(4R²)... Simplified: E = ρR³/(12ε₀r²) at r=2R → ρR³/(12ε₀ × 4R²)... Actually using Gauss: E×4π(2R)²=ρ(4πR³/3)/ε₀ → E=ρR/(12ε₀). Check: ρR³/(12ε₀R²)=ρR/12ε₀. Answer: ρR³/(12ε₀)... The correct formula at r=2R: E=ρR³/(3ε₀r²)=ρR³/(3ε₀×4R²)=ρR/(12ε₀).'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'The electric field inside a hollow conducting shell with charge Q on its surface is:',
-                options: ['kQ/r²', 'kQ/R²', 'Q/(4πε₀R)', 'Zero'],
-                correctAnswer: 3,
-                explanation: 'All charge on the outer surface. Inside the hollow: no enclosed charge → by Gauss\'s Law, E = 0 everywhere inside.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'What happens to the electric field inside a conductor if an external field is applied?',
-                options: [
-                    'It equals the external field',
-                    'It becomes stronger than the external field',
-                    'Free electrons redistribute to make E = 0 inside',
-                    'It is unaffected by external fields'
-                ],
-                correctAnswer: 2,
-                explanation: 'Free electrons redistribute until their induced field exactly cancels the external field inside the conductor. Net internal E = 0 (electrostatic shielding).'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'For a uniformly charged solid sphere, the E vs r graph shows:',
-                options: [
-                    'Constant inside, then drops outside',
-                    'Linear increase inside, then 1/r² decrease outside',
-                    '1/r² behaviour everywhere',
-                    'Zero inside, then 1/r² outside'
-                ],
-                correctAnswer: 1,
-                explanation: 'Inside: E ∝ r (linear, increases from 0 at centre to max at surface). Outside: E ∝ 1/r² (decreases). Graph: rising line then falling 1/r² curve.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'A +5 μC and −5 μC charge are enclosed in a Gaussian surface. The total flux is:',
-                options: ['5.65 × 10⁵ N·m²/C', '−5.65 × 10⁵ N·m²/C', '11.3 × 10⁵ N·m²/C', 'Zero'],
-                correctAnswer: 3,
-                explanation: 'q_enc = +5 − 5 = 0 μC. Φ = q_enc/ε₀ = 0.'
-            }
-        ]
-    },
-
-    // ─────────────────────────────────────────────────────────
-    // SKILL 7 — Continuous Charge Distributions
-    // ─────────────────────────────────────────────────────────
-    {
-        id: 'charge-distributions',
-        icon: 'ρ',
-        color: '#7c3aed',
-        title: 'Continuous Charge Distributions',
-        desc: 'Use λ, σ, ρ to set up and solve field problems for wires, plates, and spheres.',
-        learnSections: [
+            practice: pools[5].slice(0, 20),
+            assessment: pools[5].slice(20, 30)
+        },
+        {
+            id: 'charge-distributions',
+            icon: '⚡',
+            color: '#c026d3',
+            title: "Continuous Charge Distributions",
+            desc: "Solve for electric fields of continuous bodies like rings and lines using integration/symmetry.",
+            learnSections: [
             {
                 icon: 'λ',
                 heading: 'Linear Charge Density (λ) — Wires and Rods',
@@ -1000,84 +812,8 @@ The E field increases linearly from 0 at centre to maximum at surface, then decr
                 example: 'Graph question: For a uniformly charged sphere, E vs r has a linear rise inside and a 1/r² fall outside. The peak is exactly at r = R (surface). Draw this graph — it appears every 2-3 years in NEET as a "which graph correctly shows E vs r?" question.'
             }
         ],
-        practice: [
-            {
-                type: 'multiple-choice',
-                question: 'A uniformly charged infinite plane sheet has σ = 10⁻⁶ C/m². The electric field near it is:',
-                options: ['5.64 × 10⁴ N/C', '1.13 × 10⁵ N/C', '2.26 × 10⁵ N/C', '1.13 × 10⁵ N/C'],
-                correctAnswer: 0,
-                explanation: 'E = σ/(2ε₀) = 10⁻⁶/(2 × 8.85×10⁻¹²) = 10⁻⁶/1.77×10⁻¹¹ = 5.65 × 10⁴ N/C.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'An infinite wire has linear charge density 2 × 10⁻⁶ C/m. E at 25 cm from the wire is:',
-                options: ['14.4 × 10⁴ N/C', '1.44 × 10⁵ N/C', '7.2 × 10⁴ N/C', '28.8 × 10⁴ N/C'],
-                correctAnswer: 0,
-                explanation: 'E = λ/(2πε₀r) = 2×10⁻⁶/(2π × 8.85×10⁻¹² × 0.25) = 2×10⁻⁶/1.39×10⁻¹¹ = 1.44 × 10⁵ N/C.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'A solid sphere (R = 10 cm, Q = 10 μC, uniform). E at r = 5 cm (inside) is:',
-                options: ['4.5 × 10⁶ N/C', '9 × 10⁶ N/C', '2.25 × 10⁶ N/C', '18 × 10⁶ N/C'],
-                correctAnswer: 0,
-                explanation: 'E = kQr/R³ = 9×10⁹ × 10×10⁻⁶ × 0.05/(0.1)³ = 9×10⁴ × 0.05/10⁻³ = 4.5 × 10⁶ N/C.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'For a parallel plate capacitor with plates having σ = 3 × 10⁻⁶ C/m², E between the plates is:',
-                options: ['1.7 × 10⁵ N/C', '3.4 × 10⁵ N/C', '8.5 × 10⁴ N/C', '6.8 × 10⁵ N/C'],
-                correctAnswer: 1,
-                explanation: 'Between plates: E = σ/ε₀ = 3×10⁻⁶/8.85×10⁻¹² = 3.39 × 10⁵ N/C ≈ 3.4 × 10⁵ N/C.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'At what point inside a uniformly charged solid sphere does its own field have maximum magnitude?',
-                options: ['At the centre', 'At r = R/2', 'At the surface r = R', 'Uniformly distributed'],
-                correctAnswer: 2,
-                explanation: 'E_inside = kQr/R³ increases linearly with r. Maximum is at r = R (the surface), where E = kQ/R². Beyond R, E decreases as 1/r².'
-            }
-        ],
-        assessment: [
-            {
-                type: 'multiple-choice',
-                question: 'Volume charge density ρ = 6 × 10⁻⁶ C/m³ fills a sphere of R = 0.1 m. E at r = 0.06 m inside is:',
-                options: ['1.36 × 10⁴ N/C', '2.26 × 10⁴ N/C', '6.78 × 10³ N/C', '4.52 × 10⁴ N/C'],
-                correctAnswer: 0,
-                explanation: 'E = ρr/(3ε₀) = 6×10⁻⁶ × 0.06/(3 × 8.85×10⁻¹²) = 3.6×10⁻⁷/2.655×10⁻¹¹ = 1.356 × 10⁴ N/C.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'The graph of E vs r for a uniformly charged hollow sphere (shell) — which correctly describes it?',
-                options: [
-                    'Linear inside, 1/r² outside',
-                    'Zero inside, 1/r² outside',
-                    '1/r² everywhere',
-                    'Uniform inside, 1/r² outside'
-                ],
-                correctAnswer: 1,
-                explanation: 'Hollow sphere: No charge inside → E = 0 inside (by Gauss\'s Law). Outside: E = kQ/r² (1/r² fall-off).'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'Two infinite non-conducting planes of equal and opposite surface charges (+σ and −σ) face each other. E in the region between them is:',
-                options: ['Zero', 'σ/ε₀', 'σ/(2ε₀)', '2σ/ε₀'],
-                correctAnswer: 1,
-                explanation: '+σ plane contributes σ/(2ε₀) between plates (pointing right). −σ plane contributes σ/(2ε₀) between plates (also pointing right, since field of −σ points toward it). Total: σ/ε₀.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'A conducting sphere of radius R has charge Q. Surface charge density σ equals:',
-                options: ['Q/(4πR²)', 'Q/(πR²)', 'Q/(2πR²)', 'Q/(R²)'],
-                correctAnswer: 0,
-                explanation: 'σ = Q / (surface area) = Q/(4πR²). All charge resides on the outer surface of the conductor.'
-            },
-            {
-                type: 'multiple-choice',
-                question: 'E at the surface of a conducting sphere with σ = 4 × 10⁻⁷ C/m² is:',
-                options: ['2.26 × 10⁴ N/C', '4.52 × 10⁴ N/C', '9.04 × 10³ N/C', '1.13 × 10⁴ N/C'],
-                correctAnswer: 1,
-                explanation: 'At conductor surface: E = σ/ε₀ = 4×10⁻⁷/8.85×10⁻¹² = 4.52 × 10⁴ N/C.'
-            }
-        ]
-    }
-];
+            practice: pools[6].slice(0, 20),
+            assessment: pools[6].slice(20, 30)
+        }
+    ];
+};

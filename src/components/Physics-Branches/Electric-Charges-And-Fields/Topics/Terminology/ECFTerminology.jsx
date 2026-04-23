@@ -104,7 +104,7 @@ export default function ECFTerminology() {
                                         style={{ '--ecf-skill-color': term.color }}
                                     >
                                         <span style={{ fontSize: 20 }}>{term.icon}</span>
-                                        <span style={{ fontWeight: 700, fontSize: 14, color: selectedIdx === i ? '#fff' : '#1e293b' }}>{term.term}</span>
+                                        <span style={{ fontWeight: 700, fontSize: 14 }}>{term.term}</span>
                                     </button>
                                 ))
                                 : ECF_RULES.map((rule, i) => (
