@@ -804,7 +804,7 @@ export default function TheCellSkills() {
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                             {cellSkillsData.map((skill) => (
                                 <div key={skill.id} className="cell-skill-card">
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 20, flex: 1 }}>
                                         <div style={{ background: `${skill.color}15`, color: skill.color, padding: '16px', borderRadius: '12px', fontSize: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{skill.icon}</div>
                                         <div>
                                             <div className="cell-skill-title">{skill.title}</div>

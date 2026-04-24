@@ -236,6 +236,20 @@ function LearnMode({ skill, onBack }) {
                     });
                 })()}
 
+                {/* Images */}
+                {sec?.image && (
+                    <div style={{ margin: '10px 0 20px', textAlign: 'center' }}>
+                        <img src={sec.image} alt={mainHeading} style={{ maxWidth: '100%', borderRadius: 12, border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }} />
+                    </div>
+                )}
+                {sec?.images && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 20, margin: '10px 0 20px', alignItems: 'center' }}>
+                        {sec.images.map((imgSrc, imgIdx) => (
+                            <img key={imgIdx} src={imgSrc} alt={`${mainHeading} diagram ${imgIdx + 1}`} style={{ maxWidth: '100%', borderRadius: 12, border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }} />
+                        ))}
+                    </div>
+                )}
+
                 {/* Table */}
                 {sec?.table && (
                     <div style={{ overflowX: 'auto', margin: '20px 0', width: '100%' }}>
@@ -414,6 +428,7 @@ function PracticeMode({ skill, onBack, onAssess }) {
     const [qIdx, setQIdx] = useState(0);
     const [answersMap, setAnswersMap] = useState({});
     const [finished, setFinished] = useState(false);
+    const [elapsed, setElapsed] = useState(0);
     const startTime = useRef(Date.now());
 
     // v4 Session Logging
@@ -424,6 +439,12 @@ function PracticeMode({ skill, onBack, onAssess }) {
 
     useEffect(() => {
         isFinishedRef.current = finished;
+    }, [finished]);
+
+    useEffect(() => {
+        if (finished) return;
+        const iv = setInterval(() => setElapsed(Date.now() - startTime.current), 1000);
+        return () => clearInterval(iv);
     }, [finished]);
 
     useEffect(() => {
@@ -499,9 +520,13 @@ function PracticeMode({ skill, onBack, onAssess }) {
 
     return (
         <div style={{ maxWidth: 700, margin: '0 auto', background: '#fff', padding: 32, borderRadius: 24, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, gap: 12, flexWrap: 'wrap' }}>
                 <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'none', border: 'none', color: '#64748b', fontWeight: 600, cursor: 'pointer' }}>← Exit Practice</button>
                 <div style={{ fontWeight: 800, color: skill.color }}>Practice {qIdx + 1}/{questions.length}</div>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 14px', borderRadius: 12, background: '#f8fafc', color: '#475569', fontWeight: 800, fontVariantNumeric: 'tabular-nums' }}>
+                    <span style={{ fontSize: 12, textTransform: 'uppercase', letterSpacing: 0.6 }}>Time</span>
+                    <span>{fmtTime(elapsed)}</span>
+                </div>
             </div>
             <QuestionCard key={qIdx} type={q.type} question={q.question} options={q.options} answer={q.correctAnswer} onAnswer={handleAnswer} disabled={answered} selectedOption={selectedOpt} image={q.image} />
             {answered && (
@@ -724,7 +749,10 @@ function AssessMode({ skill, onBack }) {
         <div style={{ display: 'flex', gap: 24, maxWidth: 1100, margin: '0 auto', alignItems: 'flex-start' }}>
             {/* LEFT: Question panel */}
             <div style={{ flex: '1 1 60%', background: '#fff', borderRadius: 24, padding: 32, boxShadow: '0 10px 40px rgba(0,0,0,0.05)' }}>
-                <div style={{ display: 'inline-block', padding: '4px 14px', borderRadius: 100, border: '2px solid #0f172a', fontWeight: 800, fontSize: 12, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 16 }}>Question {qIdx + 1}</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap', marginBottom: 16 }}>
+                    <div style={{ display: 'inline-block', padding: '4px 14px', borderRadius: 100, border: '2px solid #0f172a', fontWeight: 800, fontSize: 12, textTransform: 'uppercase', letterSpacing: 1 }}>Question {qIdx + 1}</div>
+                    <button onClick={onBack} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#fff1f2', border: '2px solid #fecdd3', borderRadius: 100, color: '#e11d48', fontWeight: 800, fontSize: 14, padding: '8px 16px', cursor: 'pointer' }}>Exit Assessment</button>
+                </div>
 
                 <QuestionCard
                     key={qIdx}
@@ -838,9 +866,11 @@ export default function SexualReproductionSkills() {
                     <button className="sr-nav-back" onClick={returnToList}>← Back to Skills</button>
                 )}
                 <div className="sr-nav-links">
+                    <button className="sr-nav-link" onClick={() => navigate('/senior/grade/12/biology/sexual-reproduction/connectomics')}>Connectomics</button>
                     <button className="sr-nav-link" onClick={() => navigate('/senior/grade/12/biology/sexual-reproduction/introduction')}>Introduction</button>
                     <button className="sr-nav-link" onClick={() => navigate('/senior/grade/12/biology/sexual-reproduction/terminology')}>Terminology</button>
                     <button className="sr-nav-link active" onClick={returnToList}>Skills</button>
+                    <button className="sr-nav-link" onClick={() => navigate('/senior/grade/12/biology/sexual-reproduction/exam-edge')}>Exam Edge</button>
                 </div>
             </nav>
 
@@ -876,7 +906,7 @@ export default function SexualReproductionSkills() {
                                 <div key={skill.id} className="sr-skill-card" style={{ '--skill-color': skill.color, position: 'relative', overflow: 'hidden' }}>
                                     <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 6, background: skill.color }} />
                                     
-                                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, flex: 1 }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 16, flex: 1 }}>
                                         <div className="sr-skill-icon" style={{ background: `${skill.color}15`, color: skill.color }}>
                                             {skill.icon}
                                         </div>

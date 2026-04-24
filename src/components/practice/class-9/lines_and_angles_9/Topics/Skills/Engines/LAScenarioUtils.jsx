@@ -591,7 +591,7 @@ export const generateAngleSumScenarios = () => {
                     q: `Lines $AB$ and $CD$ cross at $O$. Ray $OE$ lies between $OA$ and $OC$. If $\\angle BOD = ${acute}^{\\circ}$ and $\\angle AOE = ${extraRay}^{\\circ}$, find $\\angle EOC$.`,
                     type: "mcq", opts: options, ans: ansIndex,
                     expl: `$\\angle AOC = \\angle BOD = ${acute}^{\\circ}$ (VOA). $\\angle EOC = \\angle AOC - \\angle AOE = ${acute} - ${extraRay} = ${ans}^{\\circ}$.`,
-                    svg: { type: "intersecting-extra-ray", data: { angleBOD: acute, angleBOE: extraRay, pointLabels: ['A', 'B', 'C', 'D', 'O', 'E'] } }
+                    svg: { type: "intersecting-extra-ray", data: { angleBOD: acute, angleAOE: extraRay, pointLabels: ['A', 'B', 'C', 'D', 'O', 'E'] } }
                 });
             } else {
                 const fb = randInt(40, 100);

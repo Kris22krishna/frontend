@@ -1,3 +1,31 @@
+import maleWhorl1 from '../../../../../../../assets/sexual-reproduction/skills/male_whorl1.png';
+import maleWhorl2 from '../../../../../../../assets/sexual-reproduction/skills/male_whorl2.png';
+import microsporogenesis from '../../../../../../../assets/sexual-reproduction/skills/microsporogenesis.png';
+import microsporogenesis2 from '../../../../../../../assets/sexual-reproduction/skills/microsporogenesis2.png';
+import pollenGrainStruc from '../../../../../../../assets/sexual-reproduction/skills/pollen_grain_struc.png';
+import femaleWhorl from '../../../../../../../assets/sexual-reproduction/skills/female_whorl.png';
+import megasporogenesisImage from '../../../../../../../assets/sexual-reproduction/skills/megasporogenesis.png';
+import femaleGameImage from '../../../../../../../assets/sexual-reproduction/skills/female_game.png';
+import transferImage from '../../../../../../../assets/sexual-reproduction/skills/transfer.png';
+import agentsPollinationImage from '../../../../../../../assets/sexual-reproduction/skills/Agents-of-pollination-pollinators.png';
+import outbreedingImage from '../../../../../../../assets/sexual-reproduction/skills/outbreeding_devices.png';
+import pollenPistilImage from '../../../../../../../assets/sexual-reproduction/skills/Pollen-Pistil-Interaction.png';
+import morphologyImage from '../../../../../../../assets/sexual-reproduction/skills/morphology.png';
+import sexualityFlowersImage from '../../../../../../../assets/sexual-reproduction/skills/sexuality_of_flowers.png';
+import process1Image from '../../../../../../../assets/sexual-reproduction/skills/process_1.png';
+import process2Image from '../../../../../../../assets/sexual-reproduction/skills/process_2.png';
+import syngamyImage from '../../../../../../../assets/sexual-reproduction/skills/syngamy.png';
+import tripleFusionImage from '../../../../../../../assets/sexual-reproduction/skills/triple_fusion.png';
+import doubleFertImage from '../../../../../../../assets/sexual-reproduction/skills/Double-Fertilization.png';
+import nourishmentImage from '../../../../../../../assets/sexual-reproduction/skills/nourishment.png';
+import dicotImage from '../../../../../../../assets/sexual-reproduction/skills/dicot.png';
+import monocotImage from '../../../../../../../assets/sexual-reproduction/skills/monocot.png';
+import finalProImage from '../../../../../../../assets/sexual-reproduction/skills/final_pro.png';
+import fruitFormImage from '../../../../../../../assets/sexual-reproduction/skills/fruit_form.png';
+import agricultureImage from '../../../../../../../assets/sexual-reproduction/skills/agriculture.png';
+import specialCasesImage from '../../../../../../../assets/sexual-reproduction/skills/special_cases.png';
+import polyembryonyImage from '../../../../../../../assets/sexual-reproduction/skills/polyembryony.png';
+
 export const generateSexualReproductionSkillsData = () => {
     const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
     const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
@@ -171,6 +199,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Morphology — The Flower: A Fascinating Organ",
                 icon: "🌺",
+                image: morphologyImage,
                 content: "The **flower** is a modified shoot that serves as the site of sexual reproduction in angiosperms.\n\nA typical flower has four whorls attached to the **thalamus** (receptacle):\n• **Calyx** — outermost whorl of **sepals** (usually green, protective)\n• **Corolla** — whorl of **petals** (colourful, attracts pollinators)\n• **Androecium** — whorl of **stamens** (male reproductive organs)\n• **Gynoecium** — whorl of **pistils/carpels** (female reproductive organs)\n\nCalyx and Corolla are **accessory whorls** — they help in reproduction but do not directly produce gametes.\nAndroecium and Gynoecium are **essential whorls** — they directly produce male and female gametes respectively.",
                 example: "A flower with all four whorls (sepals, petals, stamens, pistils) is called a **complete flower** (e.g., Hibiscus). If any whorl is missing, it is **incomplete**.",
                 keyLabel: "key-fact"
@@ -178,6 +207,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Sexuality of Flowers",
                 icon: "⚡",
+                image: sexualityFlowersImage,
                 content: "Flowers can be classified by the presence of reproductive whorls:\n\n• **Bisexual (Hermaphrodite)** — Both androecium and gynoecium present in the same flower. Example: Hibiscus, Mustard, Lily.\n• **Unisexual** — Only one reproductive whorl present.\n  → **Staminate (Male flower)** — has only stamens. Example: Male flower of Cucumber.\n  → **Pistillate (Female flower)** — has only pistils. Example: Female flower of Papaya.\n\nPlant sexuality based on flower distribution:\n• **Monoecious** — Both male and female flowers on the **same plant** (e.g., Maize, Cucumber)\n• **Dioecious** — Male and female flowers on **different plants** (e.g., Papaya, Date palm)",
                 example: "Monoecious = 'one house' (both sexes on same plant). Dioecious = 'two houses' (sexes on separate plants). This is a very common NEET question.",
                 keyLabel: "neet-note"
@@ -228,6 +258,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Male Whorl — Stamen, Microsporangium & Anther",
                 icon: "🧪",
+                images: [maleWhorl1, maleWhorl2],
                 content: "The **stamen** (microsporophyll) is the male reproductive organ. It consists of:\n• **Filament** — a long, slender stalk\n• **Anther** — the terminal, bilobed structure that produces pollen\n\nA typical anther is **bilobed**, **dithecous** (two theca), and **tetrasporangiate** (four microsporangia — two per lobe).\n\nAnther Wall Layers (outside → inside):\n1. **Epidermis** — outermost protective layer\n2. **Endothecium** — helps in dehiscence (splitting) of anther\n3. **Middle layers** — 2-3 layers, degenerate as anther matures\n4. **Tapetum** — innermost layer; **nourishes** developing pollen grains\n\nThe centre of each microsporangium contains **sporogenous tissue** — the cells that will undergo meiosis to form pollen.",
                 example: "**Tapetum** is the most important anther wall layer for NEET. It is nutritive (provides food to developing microspores). Tapetal cells are usually polyploid and multinucleate. They produce **Ubisch bodies** and **pollenkitt**.",
                 keyLabel: "neet-trap"
@@ -235,6 +266,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Microsporogenesis",
                 icon: "🔄",
+                images: [microsporogenesis, microsporogenesis2],
                 content: "**Microsporogenesis** is the process of formation of **microspores** (pollen) from a **Pollen Mother Cell (PMC)** by meiosis.\n\nSequence:\n• Sporogenous tissue → **Pollen Mother Cells (PMC)** (diploid, 2n)\n• Each PMC undergoes **meiosis** → produces a **tetrad** of four haploid (n) microspores\n• Tetrads separate → individual **microspores**\n• Each microspore matures into a **pollen grain**\n\nDevelopmental sequence (must memorise):\n**Sporogenous tissue → PMC → Meiosis → Microspore tetrad → Microspores → Pollen grains**",
                 example: "Do NOT confuse **Microsporogenesis** (PMC → microspores via meiosis) with **Microgametogenesis** (microspore → male gametophyte via mitosis). Sporogenesis = meiosis. Gametogenesis = mitosis.",
                 keyLabel: "neet-trap"
@@ -242,6 +274,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Pollen Grain Structure",
                 icon: "🟡",
+                image: pollenGrainStruc,
                 content: "The mature **pollen grain** (male gametophyte) has a two-layered wall:\n\nOuter wall — **Exine**:\n• Made of **sporopollenin** — the most resistant organic material known\n• Can withstand high temperature, strong acids, and alkalis\n• Cannot be degraded by any known enzyme\n• Has openings called **germ pores** where sporopollenin is absent\n\nInner wall — **Intine**:\n• Made of **cellulose** and **pectin**\n• Thin, continuous layer\n\nAt the time of shedding, pollen grain contains:\n• **Vegetative cell** (larger, abundant food reserve, irregular nucleus)\n• **Generative cell** (small, dense cytoplasm, floats in vegetative cell cytoplasm)\n\nThe generative cell later divides by **mitosis** to form **two male gametes**.\nThis division may happen before shedding (3-celled pollen) or after landing on stigma (2-celled pollen).",
                 example: "**Sporopollenin** is the toughest organic material. It is absent at germ pores — this is where the pollen tube emerges during germination. Pollen grains are well-preserved as fossils because of sporopollenin.",
                 keyLabel: "key-fact"
@@ -249,6 +282,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Female Whorl — The Pistil, Ovule & Megasporangium",
                 icon: "🌿",
+                image: femaleWhorl,
                 content: "The **pistil** (megasporophyll) is the female reproductive organ. It has three parts:\n• **Stigma** — landing platform for pollen; often sticky or feathery\n• **Style** — elongated slender part connecting stigma to ovary\n• **Ovary** — basal swollen part containing one or more **ovules**\n\n**Gynoecium types:**\n• **Monocarpellary** — single carpel (e.g., Pea)\n• **Multicarpellary syncarpous** — multiple carpels fused (e.g., Tomato)\n• **Multicarpellary apocarpous** — multiple free carpels (e.g., Lotus)\n\nThe **ovule** (megasporangium) structure:\n• **Funicle** — stalk attaching ovule to placenta\n• **Hilum** — junction of ovule and funicle\n• **Integuments** — 1 or 2 protective envelopes\n• **Micropyle** — small opening in integuments (pollen tube entry)\n• **Chalaza** — basal part, opposite to micropyle\n• **Nucellus** — mass of parenchyma cells with food reserves\n• **Embryo sac** — located within the nucellus",
                 example: "The ovule is technically the **megasporangium**. The integuments are NOT part of the sporangium — they are protective coverings. The nucellus is the actual sporangium tissue.",
                 keyLabel: "key-fact"
@@ -256,6 +290,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Megasporogenesis",
                 icon: "✂️",
+                image: megasporogenesisImage,
                 content: "**Megasporogenesis** is the formation of megaspores from the **Megaspore Mother Cell (MMC)**.\n\n• A single **MMC** differentiates in the micropylar region of the nucellus\n• MMC is diploid (2n), large, with dense cytoplasm\n• MMC undergoes **meiosis** → produces **4 haploid megaspores** (linear tetrad)\n• **3 megaspores degenerate** (towards micropylar end)\n• **1 functional megaspore** survives (towards chalazal end)\n\nThe functional megaspore develops into the female gametophyte (embryo sac).\n\nThis is called **monosporic development** (Polygonum type) — because the embryo sac develops from a single megaspore.",
                 example: "Why does only ONE megaspore survive? This is an economy measure — one is enough. The three that degenerate are always the ones closest to the micropylar end. The functional one is the chalazal-most megaspore.",
                 keyLabel: "neet-note"
@@ -263,6 +298,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Female Gametophyte (Embryo Sac)",
                 icon: "🥚",
+                image: femaleGameImage,
                 content: "The functional megaspore develops into the **embryo sac** through **three successive mitotic divisions**:\n\n• 1 megaspore → 2-nucleate → 4-nucleate → **8-nucleate** stage\n• These divisions are **free nuclear** (no cell walls form immediately)\n• After 8-nucleate stage, cell walls are laid down\n\nFinal structure — **7-celled, 8-nucleate**:\n\n**Micropylar end:**\n• **Egg apparatus** = 1 **egg cell** + 2 **synergids**\n• Synergids have **filiform apparatus** (finger-like projections) that guide the pollen tube\n\n**Chalazal end:**\n• 3 **antipodal cells** (nutritive role, may degenerate)\n\n**Centre:**\n• 1 large **central cell** containing **2 polar nuclei**\n\nTotal: 6 cells with walls + 1 central cell with 2 nuclei = **7 cells, 8 nuclei**",
                 example: "NEET trap: The embryo sac is **7-celled and 8-nucleate**, NOT 8-celled! The two polar nuclei are in the same central cell. This is one of the most frequently tested facts.",
                 keyLabel: "neet-trap"
@@ -270,6 +306,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Transfer — Pollination",
                 icon: "🐝",
+                image: transferImage,
                 content: "**Pollination** = transfer of pollen grains from anther to stigma.\n\nThree types based on source of pollen:\n\n1. **Autogamy** — pollen transferred within the **same flower**\n   • Requires synchrony of pollen release and stigma receptivity\n   • **Cleistogamous flowers** — never open; guaranteed autogamy (e.g., Viola, Oxalis, Commelina)\n   • **Chasmogamous flowers** — open flowers with exposed anthers/stigma\n\n2. **Geitonogamy** — pollen transferred to stigma of **another flower on the same plant**\n   • Functionally cross-pollination (needs agent)\n   • Genetically equivalent to self-pollination (same plant's genes)\n\n3. **Xenogamy** (Cross-pollination) — pollen from a **different plant**\n   • The only type that brings **genetically different** pollen\n   • Produces variation",
                 example: "Geitonogamy is the trickiest concept: it LOOKS like cross-pollination (involves an agent) but IS genetically self-pollination (same plant). NEET loves asking this distinction.",
                 keyLabel: "neet-trap"
@@ -277,6 +314,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Agents of Pollination",
                 icon: "🌬️",
+                image: agentsPollinationImage,
                 content: "Plants use **abiotic** and **biotic** agents for pollination:\n\n**Abiotic agents:**\n• **Anemophily** (wind) — light, non-sticky pollen; feathery stigma; no scent/colour. Examples: Maize, Grasses, Cannabis\n• **Hydrophily** (water) — rare; pollen released into water. Examples: Vallisneria (female flowers float), Zostera, Hydrilla\n\n**Biotic agents:**\n• **Entomophily** (insects) — large, colourful petals; fragrance; nectar. Examples: Rose, Sunflower, Orchid\n• **Ornithophily** (birds) — large, bright red flowers; copious nectar. Example: Bombax (silk cotton)\n• **Chiropterophily** (bats) — large, dull-coloured flowers that open at night",
                 table: {
                     headers: ["Feature", "Wind-pollinated", "Insect-pollinated"],
@@ -294,6 +332,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Outbreeding Devices",
                 icon: "🚫",
+                image: outbreedingImage,
                 content: "Many plants have evolved mechanisms to **prevent self-pollination** and encourage cross-pollination:\n\n1. **Dichogamy** — anthers and stigma mature at different times\n   • **Protandry** — anthers mature first (e.g., Sunflower)\n   • **Protogyny** — stigma matures first (e.g., Mirabilis)\n\n2. **Herkogamy** — physical barrier between anther and stigma in the same flower\n\n3. **Self-incompatibility (SI)** — genetic mechanism; pollen of the same plant is rejected by the stigma. Based on S-alleles.\n\n4. **Dioecious plants** — male and female flowers on separate plants (e.g., Papaya) — cross-pollination is obligatory",
                 example: "**Cleistogamy** is NOT an outbreeding device — it actually PROMOTES self-pollination (inbreeding). This is a classic NEET trap MCQ: 'Which is NOT an outbreeding device? Answer: Cleistogamy'.",
                 keyLabel: "neet-trap"
@@ -301,6 +340,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Pollen-Pistil Interaction",
                 icon: "🤝",
+                image: pollenPistilImage,
                 content: "After pollen lands on the stigma, a series of events determines if fertilisation can proceed:\n\n• **Compatible pollen** → accepted; germinates on stigma\n• **Incompatible pollen** → rejected (self-incompatibility mechanism)\n\nSteps of compatible pollen-pistil interaction:\n1. Pollen grain lands on stigma\n2. Stigma recognises pollen (protein-protein interaction)\n3. Pollen grain **germinates** — pollen tube emerges through the germ pore\n4. Pollen tube grows through the **style** (using enzymes to digest tissue)\n5. The **generative cell** divides into **two male gametes** inside the pollen tube\n6. Pollen tube enters the ovule through the **micropyle**\n7. Pollen tube enters one of the **synergids** and releases the two male gametes\n\nThe pollen tube is guided by **chemical signals** from the synergids (especially the filiform apparatus).",
                 example: "The entire journey from stigma → style → ovary → micropyle → synergid is guided by chemical attractants. The filiform apparatus of the synergids plays a crucial role in guiding the pollen tube.",
                 keyLabel: "key-fact"
@@ -351,6 +391,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Process — Pollen Tube Entry & Gamete Delivery",
                 icon: "🚀",
+                images: [process1Image, process2Image],
                 content: "After the pollen tube enters the embryo sac through the micropyle, it discharges its contents into one of the **synergids**:\n\n• The pollen tube enters through the **micropyle** (most common — called **porogamy**)\n• Rarely through chalaza (**chalazogamy**) or through integuments (**mesogamy**)\n• The tip of the pollen tube enters a **synergid** and bursts\n• Releases **two male gametes** and the **vegetative nucleus** (which degenerates)\n• The synergid also degenerates after discharge",
                 example: "Entry through micropyle = **porogamy** (most common). Entry through chalaza = **chalazogamy**. Entry through integuments = **mesogamy**. NEET usually asks about porogamy.",
                 keyLabel: "key-fact"
@@ -358,6 +399,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Syngamy & Triple Fusion",
                 icon: "🔥",
+                images: [syngamyImage, tripleFusionImage],
                 content: "After release, the two male gametes participate in **two separate fusion events**:\n\n**Event 1 — Syngamy:**\n• One male gamete (n) + Egg cell (n) → **Zygote (2n)**\n• This is true fertilisation\n\n**Event 2 — Triple Fusion:**\n• Other male gamete (n) + 2 Polar nuclei (n + n) → **Primary Endosperm Nucleus (PEN, 3n)**\n• Called triple fusion because three nuclei fuse\n• PEN develops into the **endosperm** (nutritive tissue)\n\nBoth events occurring together = **DOUBLE FERTILISATION**\n\nThis is the **defining feature** of angiosperms — it does NOT occur in gymnosperms or any other plant group.",
                 example: "Double fertilisation = Syngamy + Triple Fusion. The product of syngamy is the **zygote (2n)**. The product of triple fusion is the **Primary Endosperm Nucleus (3n)**. Both events happen inside the same embryo sac.",
                 keyLabel: "neet-note"
@@ -365,6 +407,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Significance of Double Fertilisation",
                 icon: "💡",
+                image: doubleFertImage,
                 content: "Why did angiosperms evolve double fertilisation?\n\n• **Endosperm formation is linked to fertilisation** — the plant does not waste energy producing endosperm unless an embryo is actually forming\n• **Endosperm nourishes** the developing embryo\n• **Triploid endosperm (3n)** has more vigour than diploid tissue — provides better nutrition\n• This is more efficient than gymnosperms where endosperm (female gametophyte) forms BEFORE fertilisation\n\nAfter double fertilisation:\n• Zygote → **Embryo**\n• PEN → **Endosperm**\n• Synergids and antipodals → **degenerate**\n• Ovule → **Seed**\n• Ovary → **Fruit**",
                 example: "The endosperm always begins developing BEFORE the embryo. This ensures that the embryo has a ready food supply when it starts growing. The zygote undergoes a period of dormancy before dividing.",
                 keyLabel: "key-fact"
@@ -415,6 +458,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Nourishment — Endosperm Development",
                 icon: "🍚",
+                image: nourishmentImage,
                 content: "The **Primary Endosperm Nucleus (PEN, 3n)** divides repeatedly to form the **endosperm** — the nutritive tissue for the embryo.\n\nThree types of endosperm development:\n\n1. **Nuclear type** — PEN undergoes free nuclear divisions (no cell walls initially); cell walls form later. Most common type. Example: Coconut\n   • Coconut water = free nuclear endosperm (liquid)\n   • Coconut meat = cellular endosperm (solid)\n\n2. **Cellular type** — every nuclear division is followed by cell wall formation. Example: Petunia\n\n3. **Helobial type** — intermediate; first division forms two unequal cells, then nuclear divisions. Example: Monocots\n\nBased on endosperm persistence in mature seed:\n• **Albuminous (Endospermic)** — endosperm persists in mature seed. Examples: Wheat, Maize, Castor, Barley\n• **Non-albuminous (Ex-albuminous)** — endosperm completely consumed during embryo development. Examples: Pea, Groundnut, Beans",
                 example: "In Coconut: the liquid is free-nuclear endosperm, the white solid is cellular endosperm. This is a favourite NCERT example for board exams.",
                 keyLabel: "neet-note"
@@ -422,6 +466,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Development — Embryo Development (Embryogeny)",
                 icon: "🌿",
+                images: [dicotImage, monocotImage],
                 content: "The **zygote** divides only AFTER some endosperm has formed (ensures nutrition is available).\n\nStages of embryogeny in dicots:\n**Zygote → Proembryo → Globular stage → Heart-shaped stage → Mature embryo**\n\n**Dicot Embryo** structure:\n• **Embryonal axis** with two ends:\n  → **Epicotyl** (above cotyledons) — terminates in **plumule** (future shoot)\n  → **Hypocotyl** (below cotyledons) — terminates in **radicle** (future root)\n• **Two cotyledons** attached to the embryonal axis\n• Radicle is covered by a **root cap**\n\n**Monocot Embryo** (grass family) structure:\n• **Single cotyledon** called **scutellum** (lateral, shield-shaped)\n• **Coleoptile** — hollow sheath covering the plumule\n• **Coleorrhiza** — undifferentiated sheath covering the radicle\n• Epicotyl has shoot apex and leaf primordia",
                 table: {
                     headers: ["Feature", "Dicot Embryo", "Monocot Embryo"],
@@ -439,6 +484,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Final Product — Seed",
                 icon: "🫘",
+                image: finalProImage,
                 content: "The **seed** is a fertilised, matured ovule. It is the final product of sexual reproduction in angiosperms.\n\nSeed components:\n• **Seed coat** — developed from integuments; tough, protective\n  → **Testa** (outer coat) and **Tegmen** (inner coat)\n• **Cotyledon(s)** — may store food (thick in non-albuminous seeds)\n• **Embryonal axis** — with plumule and radicle\n• **Endosperm** — present in albuminous seeds, absent in non-albuminous\n• **Micropyle** persists as a small pore → allows water and oxygen entry during germination\n\nSeed maturation:\n• Water content reduces to **10-15%** moisture\n• Metabolic activity slows down\n• Embryo enters **dormancy** (state of inactivity)\n• Seeds germinate when conditions are favourable (moisture, oxygen, temperature)\n\n**Perisperm** — remnants of nucellus that persist in some seeds (e.g., Black pepper, Beet)",
                 example: "**Perisperm** = persistent nucellus (rare). **Endosperm** = product of triple fusion. These are different tissues! Perisperm is diploid maternal tissue; endosperm is triploid.",
                 keyLabel: "neet-trap"
@@ -446,6 +492,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Fruit Formation",
                 icon: "🍎",
+                image: fruitFormImage,
                 content: "As ovules mature into seeds, the **ovary simultaneously develops into the fruit**.\n\n• **Pericarp** = wall of the fruit, developed from the ovary wall\n• Fruits may be **fleshy** (Mango, Guava) or **dry** (Groundnut, Mustard)\n\nTypes of fruits:\n• **True fruit** — develops only from the ovary. Most fruits are true fruits.\n• **False fruit (Pseudocarp)** — the thalamus or other floral parts also contribute. Examples: Apple (thalamus forms fleshy part), Strawberry, Cashew\n• **Parthenocarpic fruit** — fruit develops WITHOUT fertilisation → **seedless**. Example: Banana. Can be induced by growth hormones.\n\nRelationship: Number of ovules in ovary = Number of seeds in fruit (approximately).",
                 example: "In Apple, the fleshy part you eat is the **thalamus**, not the ovary! The true fruit (ovary) is the core with seeds. That's why Apple is a **false fruit**.",
                 keyLabel: "neet-note"
@@ -496,6 +543,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Special Cases — Apomixis",
                 icon: "🔬",
+                image: specialCasesImage,
                 content: "**Apomixis** = production of seeds WITHOUT fertilisation. It is a form of **asexual reproduction that mimics sexual reproduction**.\n\nDo not confuse:\n• **Apomixis** = seeds without fertilisation\n• **Parthenocarpy** = fruits without fertilisation (seedless)\n\nMechanisms of apomixis:\n\n1. **Diploid egg cell** — formed without meiosis (no reduction division); develops into embryo without fertilisation\n\n2. **Adventive embryony** — cells of the **nucellus** or **integuments** surrounding the embryo sac start dividing, protrude into the embryo sac, and develop into embryos\n   • Common in **Citrus** and **Mango**\n   • These embryos are genetically identical to the parent (clones)\n\nApomictic seeds are essentially **clones** of the parent plant.",
                 example: "Apomixis = seeds without fertilisation (has seeds). Parthenocarpy = fruits without fertilisation (no seeds). This distinction is a NEET favourite.",
                 keyLabel: "neet-trap"
@@ -503,6 +551,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Polyembryony",
                 icon: "👥",
+                image: polyembryonyImage,
                 content: "**Polyembryony** = occurrence of **more than one embryo** in a seed.\n\nCauses:\n• **Adventive embryony** — nucellar/integumentary cells form extra embryos alongside the zygotic embryo\n• Multiple embryo sacs in one ovule\n• Cleavage of the zygotic embryo\n\nExamples: **Orange (Citrus)**, Mango\n\nIf you squeeze orange seeds, you can observe multiple embryos of different sizes. The embryos derived from nucellus are **genetically identical** to the parent (maternal clones), while the zygotic embryo is genetically unique.",
                 example: "In Citrus, both zygotic embryos and adventive (nucellar) embryos coexist in the same seed. The nucellar embryos are clones of the mother plant.",
                 keyLabel: "key-fact"
@@ -510,6 +559,7 @@ export const generateSexualReproductionSkillsData = () => {
             {
                 heading: "Agricultural Significance",
                 icon: "🌾",
+                image: agricultureImage,
                 content: "Why is apomixis important in agriculture?\n\n**The Hybrid Seed Problem:**\n• Hybrid crop varieties have tremendously increased productivity\n• But hybrid seeds must be **produced every year** (expensive)\n• If seeds from hybrids are sown, progeny **segregates** (loses hybrid vigour)\n\n**The Apomixis Solution:**\n• If hybrids are made **apomictic**, seeds will produce identical plants\n• No segregation in progeny — hybrid characters are maintained\n• Farmers can reuse seeds year after year\n• No need to buy expensive hybrid seeds annually\n\nActive research is underway worldwide to:\n• Understand the genetics of apomixis\n• Transfer apomictic genes into hybrid crop varieties\n\nThis could revolutionise agriculture by making hybrid seeds affordable and reusable.",
                 example: "The dream of agricultural biotechnology: take a high-yielding hybrid → make it apomictic → farmers can save and replant seeds forever while maintaining hybrid vigour. This is still an active area of research.",
                 keyLabel: "key-fact"

@@ -537,7 +537,7 @@
 
 .sr-skill-card {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 24px;
   background: #fff;
   border: 1px solid #f1f5f9;
@@ -562,6 +562,7 @@
   justify-content: center;
   font-size: 28px;
   flex-shrink: 0;
+  align-self: center;
 }
 
 .sr-skill-info {
@@ -586,6 +587,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   min-width: 250px;
+  align-self: center;
 }
 .sr-skill-actions > button:last-child {
   grid-column: 1 / -1;
