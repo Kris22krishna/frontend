@@ -25,10 +25,10 @@ This is a React 19 + Vite SPA — an e-learning platform ("skill100") covering K
 
 ### Auth & Data
 
-- **`src/contexts/AuthContext.jsx`** — provides `user`, `isAuthenticated`, `login()`, `logout()`, `checkAuth()`; reads `userId` from `sessionStorage`
+- **`src/contexts/AuthContext.jsx`** — provides `user`, `isAuthenticated`, `login()`, `logout()`, `checkAuth()`; reads `userId` from `sessionStorage`; dispatches `auth-change` event on login/logout
 - **`src/firebase.js`** — Firebase Auth + Firestore + Analytics (credentials via `VITE_FIREBASE_*` env vars)
 - **`src/lib/supabaseClient.js`** — Supabase client (`VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY`); used for session logging and skill progress
-- **`src/services/api.js`** — REST calls to backend at `VITE_API_BASE_URL` (default `http://127.0.0.1:8000`)
+- **`src/services/api.js`** — REST calls to backend at `VITE_API_BASE_URL` (default `http://127.0.0.1:8000`); handles auth tokens, error parsing, and response normalization
 
 ### Practice Engine
 
@@ -38,7 +38,9 @@ Every practice module shares the same lifecycle via **`src/hooks/useSessionLogge
 2. `logAnswer({ question_index, answer_json, is_correct })` — writes to `v4_session_temp` (Supabase)
 3. `finishSession({ totalQuestions, questionsAnswered, answersPayload })` — upserts `v4_sessions` and `v4_skill_progress`
 
-Node IDs that map skills to curriculum nodes live in **`src/lib/curriculumIds.js`** (`NODE_IDS` export). Each skill component passes a `nodeId` from this map to `startSession`.
+Node IDs that map skills to curriculum nodes live in **`src/lib/curriculumIds.js`** (`NODE_IDS` export). Each skill component passes a `nodeId` from this map to `startSession`. IDs follow a UUID pattern with prefixes: `a` for academic curriculum, `m` for modules.
+
+Curriculum structure (grades → chapters → skills) is defined in **`src/lib/topicConfig.js`** (`TOPIC_CONFIGS` export), used for navigation and syllabus display.
 
 ### Practice Module Pattern (class-3 flat-file style)
 
@@ -80,13 +82,20 @@ if (!selRef.current) {
 }
 ```
 
-The logic hook (`useToyJoyLogic`) exposes: `handleMcq`, `handleTf`, `handleMatch`, `getMcqClass`, `getTfClass`, `getMatchClass`, `checkCurrentAnswer`, `isReadyToSubmit`, `resetState`.
+The logic hook (`useToyJoyLogic`) exposes: `handleMcq`, `handleTf`, `handleMatch`, `getMcqClass`, `getTfClass`, `getMatchClass`, `checkCurrentAnswer`, `isReadyToSubmit`, `resetState`. This hook is shared across chapters via re-export (e.g., `useDCLogic` re-exports `useToyJoyLogic`).
 
 ### Styling
 
 - **Tailwind CSS 3** with custom theme (HSL variables for mint/teal/purple/navy) — used for page-level layouts
 - **Per-module CSS files** (e.g. `double-century.css`, `fun-with-shapes.css`) with a scoped prefix — used inside practice components
 - Path alias `@/` → `src/`
+
+### Math-Branches (IDM)
+
+Advanced math topics (Algebra, Calculus, Arithmetic) follow a consistent structure under `src/components/Math-Branches/`:
+- Each topic has a `Dashboard` component for navigation
+- Sub-topics follow `Topics/5W1H/`, `Topics/Terminology/`, `Topics/Skills/` pattern
+- Mastery tests are in `src/components/IDM/assessment_idm/`
 
 ### Key Libraries
 
