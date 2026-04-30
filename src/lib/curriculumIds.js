@@ -1082,6 +1082,18 @@ export const NODE_IDS = {
   g12ChemSolutionsConnectomics:                'e4121601-0012-0000-0000-000000000000',
   g12ChemSolutionsVirtualLab:                  'e4121601-0013-0000-0000-000000000000',
   g12ChemSolutionsExamEdge:                    'e4121601-0014-0000-0000-000000000000',
+
+  // ── GRADE 12 BIOLOGY: Sexual Reproduction in Flowering Plants (Chapter 2) ─
+  // Prefix: e = Biology | Biology subject code: 16 | Chapter: 02
+  g12BiolSexualReproduction:                   'e3121602-0000-0000-0000-000000000001',
+
+  // Skills (5 skills)
+  g12BiolSRTheFlower:                          'e4121602-0001-0000-0000-000000000000',
+  g12BiolSRPreFertilisation:                   'e4121602-0002-0000-0000-000000000000',
+  g12BiolSRDoubleFertilisation:                'e4121602-0003-0000-0000-000000000000',
+  g12BiolSRPostFertilisation:                  'e4121602-0004-0000-0000-000000000000',
+  g12BiolSRApomixisPolyembryony:               'e4121602-0005-0000-0000-000000000000',
+  g12BiolSRTerminologyQuiz:                    'e4121602-0010-0000-0000-000000000000',
 };
 
 /**
@@ -1444,4 +1456,13 @@ export const SLUG_TO_NODE_ID = {
   'g12-chem-solutions-connectomics':           NODE_IDS.g12ChemSolutionsConnectomics,
   'g12-chem-solutions-virtual-lab':            NODE_IDS.g12ChemSolutionsVirtualLab,
   'g12-chem-solutions-exam-edge':               NODE_IDS.g12ChemSolutionsExamEdge,
+
+  // Grade 12 Biology: Sexual Reproduction in Flowering Plants
+  'g12-bio-sexual-reproduction':               NODE_IDS.g12BiolSexualReproduction,
+  'g12-bio-sr-the-flower':                     NODE_IDS.g12BiolSRTheFlower,
+  'g12-bio-sr-pre-fertilisation':              NODE_IDS.g12BiolSRPreFertilisation,
+  'g12-bio-sr-double-fertilisation':           NODE_IDS.g12BiolSRDoubleFertilisation,
+  'g12-bio-sr-post-fertilisation':             NODE_IDS.g12BiolSRPostFertilisation,
+  'g12-bio-sr-apomixis-polyembryony':          NODE_IDS.g12BiolSRApomixisPolyembryony,
+  'g12-bio-sr-terminology':                    NODE_IDS.g12BiolSRTerminologyQuiz,
 };

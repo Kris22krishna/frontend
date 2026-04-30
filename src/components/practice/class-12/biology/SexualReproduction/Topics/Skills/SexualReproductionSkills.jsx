@@ -2,6 +2,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { generateSexualReproductionSkillsData } from './SexualReproductionSkillsData';
 import '../../SexualReproductionBranch.css';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
+
+const SKILL_NODE_ID_MAP = {
+    'skill-1': NODE_IDS.g12BiolSRTheFlower,
+    'skill-2': NODE_IDS.g12BiolSRPreFertilisation,
+    'skill-3': NODE_IDS.g12BiolSRDoubleFertilisation,
+    'skill-4': NODE_IDS.g12BiolSRPostFertilisation,
+    'skill-5': NODE_IDS.g12BiolSRApomixisPolyembryony,
+};
 
 /* ═══════════════════════════════════════════════════════════════
    SHUFFLE UTILITIES
@@ -422,7 +432,8 @@ function LearnMode({ skill, onBack }) {
 /* ═══════════════════════════════════════════════════════════════
    PRACTICE MODE
    ═══════════════════════════════════════════════════════════════ */
-function PracticeMode({ skill, onBack, onAssess }) {
+function PracticeMode({ skill, onBack, onAssess, nodeId, onRetry }) {
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
     const questions = useShuffledQuestions(skill.practice, skill.practice.length);
 
     const [qIdx, setQIdx] = useState(0);
@@ -430,12 +441,9 @@ function PracticeMode({ skill, onBack, onAssess }) {
     const [finished, setFinished] = useState(false);
     const [elapsed, setElapsed] = useState(0);
     const startTime = useRef(Date.now());
-
-    // v4 Session Logging
-    const nodeId = null;
-    
     const answersPayload = useRef([]);
     const isFinishedRef = useRef(false);
+    const sessionStartedRef = useRef(false);
 
     useEffect(() => {
         isFinishedRef.current = finished;
@@ -450,13 +458,14 @@ function PracticeMode({ skill, onBack, onAssess }) {
     useEffect(() => {
         if (!nodeId || !questions || questions.length === 0) return;
         startSession({ nodeId, sessionType: 'practice' });
+        sessionStartedRef.current = true;
         answersPayload.current = [];
         return () => {
-            if (!isFinishedRef.current && answersPayload.current.length > 0) {
+            if (sessionStartedRef.current && !isFinishedRef.current && answersPayload.current.length > 0) {
                 abandonSession({ answersPayload: answersPayload.current, totalQuestions: questions.length });
             }
         };
-    }, [nodeId, questions]);
+    }, [nodeId, questions]); // eslint-disable-line
 
     if (!questions || questions.length === 0) return <div>Loading...</div>;
 
@@ -483,10 +492,22 @@ function PracticeMode({ skill, onBack, onAssess }) {
         if (qIdx + 1 < questions.length) {
             setQIdx(qIdx + 1);
         } else {
+            if (nodeId && !isFinishedRef.current) {
+                isFinishedRef.current = true;
+                await finishSession({ totalQuestions: questions.length, questionsAnswered: answersPayload.current.length, answersPayload: answersPayload.current });
+            }
             setFinished(true);
-            isFinishedRef.current = true;
-            if (nodeId) await finishSession({ totalQuestions: questions.length, questionsAnswered: answersPayload.current.length, answersPayload: answersPayload.current });
         }
+    };
+
+    const handleRetry = () => {
+        answersPayload.current = [];
+        isFinishedRef.current = false;
+        sessionStartedRef.current = false;
+        setQIdx(0); setAnswersMap({}); setFinished(false); setElapsed(0);
+        startTime.current = Date.now();
+        if (onRetry) onRetry();
+        if (nodeId) startSession({ nodeId, sessionType: 'practice' });
     };
     const prevQ = () => { if (qIdx > 0) setQIdx(qIdx - 1); };
 
@@ -511,7 +532,7 @@ function PracticeMode({ skill, onBack, onAssess }) {
                 <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 28, fontWeight: 900, color: '#0f172a', margin: '8px 0 4px' }}>{msg}</h2>
                 <p style={{ color: '#64748b', fontSize: 15, margin: '0 0 24px' }}>{sub}</p>
                 <div style={{ display: 'flex', justifyContent: 'center', gap: 12 }}>
-                    <button onClick={onBack} style={{ padding: '12px 28px', borderRadius: 100, border: `2px solid ${skill.color}`, background: '#fff', color: skill.color, fontWeight: 800, fontSize: 15, cursor: 'pointer' }}>Back to Skills</button>
+                    <button onClick={handleRetry} style={{ padding: '12px 28px', borderRadius: 100, border: `2px solid ${skill.color}`, background: '#fff', color: skill.color, fontWeight: 800, fontSize: 15, cursor: 'pointer' }}>New Questions</button>
                     <button onClick={onAssess} style={{ padding: '12px 28px', borderRadius: 100, border: 'none', background: skill.color, color: '#fff', fontWeight: 800, fontSize: 15, cursor: 'pointer', boxShadow: `0 4px 14px ${skill.color}40` }}>Take Assessment 🏆</button>
                 </div>
             </div>
@@ -550,7 +571,8 @@ function PracticeMode({ skill, onBack, onAssess }) {
 /* ═══════════════════════════════════════════════════════════════
    ASSESS MODE
    ═══════════════════════════════════════════════════════════════ */
-function AssessMode({ skill, onBack }) {
+function AssessMode({ skill, onBack, nodeId, onRetry }) {
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
     const questions = useShuffledQuestions(skill.assess, skill.assess.length);
 
     const [qIdx, setQIdx] = useState(0);
@@ -562,12 +584,9 @@ function AssessMode({ skill, onBack }) {
     const startRef = useRef(Date.now());
     const qStartRef = useRef(Date.now());
     const [qTimes, setQTimes] = useState({});
-
-    // v4 Session Logging
-    const nodeId = null;
-    
     const answersPayload = useRef([]);
     const isFinishedRef = useRef(false);
+    const sessionStartedRef = useRef(false);
 
     useEffect(() => {
         isFinishedRef.current = finished;
@@ -576,13 +595,14 @@ function AssessMode({ skill, onBack }) {
     useEffect(() => {
         if (!nodeId || !questions || questions.length === 0) return;
         startSession({ nodeId, sessionType: 'assessment' });
+        sessionStartedRef.current = true;
         answersPayload.current = [];
         return () => {
-            if (!isFinishedRef.current && answersPayload.current.length > 0) {
+            if (sessionStartedRef.current && !isFinishedRef.current && answersPayload.current.length > 0) {
                 abandonSession({ answersPayload: answersPayload.current, totalQuestions: questions.length });
             }
         };
-    }, [nodeId, questions]);
+    }, [nodeId, questions]); // eslint-disable-line
 
     // Timer tick
     useEffect(() => {
@@ -624,7 +644,9 @@ function AssessMode({ skill, onBack }) {
         setQTimes(prev => ({ ...prev, [qIdx]: (prev[qIdx] || 0) + (now - qStartRef.current) }));
         setFinished(true);
         isFinishedRef.current = true;
-        if (nodeId) await finishSession({ totalQuestions: questions.length, questionsAnswered: answersPayload.current.length, answersPayload: answersPayload.current });
+        if (nodeId && !isFinishedRef.current) {
+            await finishSession({ totalQuestions: questions.length, questionsAnswered: answersPayload.current.length, answersPayload: answersPayload.current });
+        }
     };
 
 
@@ -839,23 +861,34 @@ export default function SexualReproductionSkills() {
     const [view, setView] = useState('list');
     const [activeSkillId, setActiveSkillId] = useState(null);
     const [cellSkillsData, setCellSkillsData] = useState([]);
-    
-    useEffect(() => { 
-        setCellSkillsData(generateSexualReproductionSkillsData()); 
+
+    useEffect(() => {
+        setCellSkillsData(generateSexualReproductionSkillsData());
     }, []);
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [view]);
-    
-    const activeSkill = cellSkillsData.find(s => s.id === activeSkillId);
 
-    const openMode = (skill, mode) => { 
-        setActiveSkillId(skill.id); 
-        setView(mode); 
+    const activeSkill = cellSkillsData.find(s => s.id === activeSkillId);
+    const nodeId = activeSkill ? SKILL_NODE_ID_MAP[activeSkill.id] : null;
+
+    const refreshSkillsData = () => {
+        setCellSkillsData(generateSexualReproductionSkillsData());
     };
 
-    const returnToList = () => setView('list');
+    const openMode = (skill, mode) => {
+        if (mode === 'practice' || mode === 'assess') refreshSkillsData();
+        setActiveSkillId(skill.id);
+        setView(mode);
+        window.scrollTo(0, 0);
+    };
+
+    const returnToList = () => {
+        setView('list');
+        setActiveSkillId(null);
+        window.scrollTo(0, 0);
+    };
 
     return (
         <div className="sr-page">
@@ -928,8 +961,8 @@ export default function SexualReproductionSkills() {
                 )}
 
                 {view === 'learn' && activeSkill && <LearnMode skill={activeSkill} onBack={returnToList} />}
-                {view === 'practice' && activeSkill && <PracticeMode skill={activeSkill} onBack={returnToList} onAssess={() => openMode(activeSkill, 'assess')} />}
-                {view === 'assess' && activeSkill && <AssessMode skill={activeSkill} onBack={returnToList} />}
+                {view === 'practice' && activeSkill && <PracticeMode skill={activeSkill} onBack={returnToList} onAssess={() => openMode(activeSkill, 'assess')} nodeId={nodeId} onRetry={refreshSkillsData} />}
+                {view === 'assess' && activeSkill && <AssessMode skill={activeSkill} onBack={returnToList} nodeId={nodeId} onRetry={refreshSkillsData} />}
             </div>
         </div>
     );

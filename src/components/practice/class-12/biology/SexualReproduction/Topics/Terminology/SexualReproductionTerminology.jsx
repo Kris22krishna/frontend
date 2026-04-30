@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../SexualReproductionBranch.css';
 import { TERMS, VOCAB_QUIZ } from './SexualReproductionTerminologyData';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 export default function SexualReproductionTerminology() {
     const navigate = useNavigate();
@@ -23,6 +25,19 @@ export default function SexualReproductionTerminology() {
     const [quizTotalScore, setQuizTotalScore] = useState(0);
     const [quizFinished, setQuizFinished] = useState(false);
 
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const answersPayload = useRef([]);
+    const quizStarted = useRef(false);
+
+    const handleTabChange = (tab) => {
+        setActiveTab(tab);
+        if (tab === 'quiz' && !quizStarted.current && NODE_IDS.g12BiolSRTerminologyQuiz) {
+            startSession({ nodeId: NODE_IDS.g12BiolSRTerminologyQuiz, sessionType: 'practice' });
+            quizStarted.current = true;
+            answersPayload.current = [];
+        }
+    };
+
     const activeTerm = TERMS[selectedIdx];
     const activeQuiz = VOCAB_QUIZ[quizIdx];
 
@@ -32,24 +47,30 @@ export default function SexualReproductionTerminology() {
         setQuizAnswered(false);
         setQuizTotalScore(0);
         setQuizFinished(false);
+        quizStarted.current = false;
     };
 
-    const handleQuizSelect = (optIdx) => {
+    const handleQuizSelect = async (optIdx) => {
         if (quizAnswered) return;
         setQuizSelected(optIdx);
         setQuizAnswered(true);
-        if (optIdx === activeQuiz.correct) {
+        const correct = optIdx === activeQuiz.correct;
+        if (correct) {
             setQuizTotalScore(s => s + 1);
         }
+        const entry = { question_index: quizIdx + 1, answer_json: { selected: optIdx, text: activeQuiz.options[optIdx] }, is_correct: correct ? 1.0 : 0.0, marks_awarded: correct ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+        answersPayload.current.push(entry);
+        await logAnswer({ questionIndex: entry.question_index, answerJson: entry.answer_json, isCorrect: entry.is_correct });
     };
 
-    const nextQuiz = () => {
+    const nextQuiz = async () => {
         if (quizIdx + 1 < VOCAB_QUIZ.length) {
             setQuizIdx(i => i + 1);
             setQuizSelected(null);
             setQuizAnswered(false);
         } else {
             setQuizFinished(true);
+            await finishSession({ totalQuestions: VOCAB_QUIZ.length, questionsAnswered: answersPayload.current.length, answersPayload: answersPayload.current });
         }
     };
 
@@ -86,11 +107,11 @@ export default function SexualReproductionTerminology() {
                 <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', marginBottom: '32px' }}>
                     <button 
                         style={{ padding: '10px 24px', borderRadius: '100px', border: 'none', background: activeTab === 'terms' ? '#0d9488' : '#f1f5f9', color: activeTab === 'terms' ? '#fff' : '#64748b', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}
-                        onClick={() => setActiveTab('terms')}
+                        onClick={() => handleTabChange('terms')}
                     >📚 Key Terms</button>
                     <button 
                         style={{ padding: '10px 24px', borderRadius: '100px', border: 'none', background: activeTab === 'quiz' ? '#0d9488' : '#f1f5f9', color: activeTab === 'quiz' ? '#fff' : '#64748b', fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }}
-                        onClick={() => setActiveTab('quiz')}
+                        onClick={() => handleTabChange('quiz')}
                     >🧪 Quiz Time</button>
                 </div>
 
