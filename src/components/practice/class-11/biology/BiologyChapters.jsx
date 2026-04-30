@@ -14,6 +14,7 @@ const chapters = [
         questions: 20,
         gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
         shadow: 'rgba(67,233,123,0.35)',
+        hidden: true,
     },
     {
         key: 'the-cell',
@@ -49,6 +50,8 @@ const BiologyChapters = () => {
         }
     };
 
+    const visibleChapters = chapters.filter(ch => !ch.hidden);
+
     return (
         <div className="senior-syllabus-page">
             <header className="senior-header-container">
@@ -70,7 +73,7 @@ const BiologyChapters = () => {
 
             <main className="senior-content-grid">
                 <div className="g11-subject-grid" style={{ maxWidth: 1100 }}>
-                    {chapters.map(ch => (
+                    {visibleChapters.map(ch => (
                         <div
                             key={ch.key}
                             className="g11-subject-card"

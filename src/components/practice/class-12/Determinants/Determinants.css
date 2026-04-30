@@ -1089,7 +1089,7 @@
 }
 
 /* ── RESPONSIVE ──────────────────────────────────────── */
-@media (max-width: 900px) {
+@media (max-width: 960px) {
   .det-fullpage {
     flex-direction: column;
     min-height: 100vh;
