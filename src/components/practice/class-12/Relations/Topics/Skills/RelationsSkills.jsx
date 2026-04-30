@@ -3,6 +3,7 @@ import "../../Relations.css";
 import MathRenderer from "../../../../../MathRenderer";
 import { LatexText } from "../../../../../LatexText";
 import RelationsTopNav from "../../RelationsTopNav";
+import { NODE_IDS } from "@/lib/curriculumIds";
 import {
   generateCartesianQuestions,
   generateCartesianAssessment,
@@ -151,11 +152,19 @@ export default function RelationsSkills() {
   const [activeSkill, setActiveSkill] = useState(null);
   const [selectedLearnIdx, setSelectedLearnIdx] = useState(0);
 
+  const skillMap = {
+    cartesian: NODE_IDS.g12MathRelationsCartesian,
+    domain_range: NODE_IDS.g12MathRelationsDomainRange,
+    counting: NODE_IDS.g12MathRelationsCounting,
+    equivalence: NODE_IDS.g12MathRelationsEquivalence,
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   const skill = activeSkill !== null ? SKILLS[activeSkill] : null;
+  const currentNodeId = React.useMemo(() => skill ? skillMap[skill.id] : null, [skill]);
 
   if (view !== "list" && skill) {
     return (
@@ -436,6 +445,7 @@ export default function RelationsSkills() {
               onBack={() => setView("list")}
               color={skill.color}
               prefix="rel"
+              nodeId={currentNodeId}
             />
           ) : (
             <AssessmentEngine
@@ -444,6 +454,7 @@ export default function RelationsSkills() {
               onBack={() => setView("list")}
               color={skill.color}
               prefix="rel"
+              nodeId={currentNodeId}
             />
           )}
         </div>

@@ -28,6 +28,9 @@ export const NODE_IDS = {
   grade2:  'a2000000-0000-0000-0000-000000000002',
   grade3:  'a2000000-0000-0000-0000-000000000003',
   grade4:  'a2000000-0000-0000-0000-000000000004',
+  grade5:  'a2000000-0000-0000-0000-000000000005',
+  grade6:  'a2000000-0000-0000-0000-000000000006',
+  grade7:  'a2000000-0000-0000-0000-000000000007',
   grade8:  'a2000000-0000-0000-0000-000000000008',
   grade9:  'a2000000-0000-0000-0000-000000000009',
   grade10: 'a2000000-0000-0000-0000-000000000010',
@@ -890,6 +893,51 @@ export const NODE_IDS = {
   g9MathPolyZeroes:                        'a4091002-0002-0000-0000-000000000000',
   g9MathPolyFactorisation:                 'a4091002-0003-0000-0000-000000000000',
   g9MathPolyIdentities:                    'a4091002-0004-0000-0000-000000000000',
+  // ── GRADE 12 MATH: RELATIONS ──────────────────────────────────────────────
+  g12MathRelations:                      'a3121001-0000-0000-0000-000000000001',
+  g12MathRelationsCartesian:             'a4121001-0001-0000-0000-000000000000',
+  g12MathRelationsDomainRange:           'a4121001-0002-0000-0000-000000000000',
+  g12MathRelationsCounting:              'a4121001-0003-0000-0000-000000000000',
+  g12MathRelationsEquivalence:           'a4121001-0004-0000-0000-000000000000',
+  g12MathRelationsTerminologyQuiz:       'a4121001-0010-0000-0000-000000000000',
+
+  // ── GRADE 12 MATH: FUNCTIONS ──────────────────────────────────────────────
+  g12MathFunctions:                      'a3121002-0000-0000-0000-000000000001',
+  g12MathFunctionsConcept:               'a4121002-0001-0000-0000-000000000000',
+  g12MathFunctionsTypes:                 'a4121002-0002-0000-0000-000000000000',
+  g12MathFunctionsAlgebra:               'a4121002-0003-0000-0000-000000000000',
+  g12MathFunctionsEquations:             'a4121002-0004-0000-0000-000000000000',
+  g12MathFunctionsDomainRange:           'a4121002-0005-0000-0000-000000000000',
+  g12MathFunctionsTerminologyQuiz:       'a4121002-0010-0000-0000-000000000000',
+
+  // ── GRADE 12 MATH: MATRICES ───────────────────────────────────────────────
+  g12MathMatrices:                       'a3121003-0000-0000-0000-000000000001',
+  g12MathMatricesOrder:                  'a4121003-0001-0000-0000-000000000000',
+  g12MathMatricesTypes:                  'a4121003-0002-0000-0000-000000000000',
+  g12MathMatricesOperations:             'a4121003-0003-0000-0000-000000000000',
+  g12MathMatricesMultiplication:         'a4121003-0004-0000-0000-000000000000',
+  g12MathMatricesTranspose:              'a4121003-0005-0000-0000-000000000000',
+  g12MathMatricesInverse:                'a4121003-0006-0000-0000-000000000000',
+  g12MathMatricesTerminologyQuiz:        'a4121003-0010-0000-0000-000000000000',
+
+  // ── GRADE 12 MATH: DETERMINANTS ───────────────────────────────────────────
+  g12MathDeterminants:                   'a3121004-0000-0000-0000-000000000001',
+  g12MathDeterminantsFundamentals:       'a4121004-0001-0000-0000-000000000000',
+  g12MathDeterminantsProperties:         'a4121004-0002-0000-0000-000000000000',
+  g12MathDeterminantsArea:               'a4121004-0003-0000-0000-000000000000',
+  g12MathDeterminantsMinorsCofactors:    'a4121004-0004-0000-0000-000000000000',
+  g12MathDeterminantsAdjointInverse:     'a4121004-0005-0000-0000-000000000000',
+  g12MathDeterminantsApplications:       'a4121004-0006-0000-0000-000000000000',
+  g12MathDeterminantsTerminologyQuiz:    'a4121004-0010-0000-0000-000000000000',
+
+  // ── GRADE 12 MATH: INVERSE TRIGONOMETRIC FUNCTIONS ────────────────────────
+  g12MathITF:                            'a3121005-0000-0000-0000-000000000001',
+  g12MathITFConcept:                     'a4121005-0001-0000-0000-000000000000',
+  g12MathITFDefinitions:                 'a4121005-0002-0000-0000-000000000000',
+  g12MathITFProperties:                  'a4121005-0003-0000-0000-000000000000',
+  g12MathITFPrincipal:                   'a4121005-0004-0000-0000-000000000000',
+  g12MathITFSimplification:              'a4121005-0005-0000-0000-000000000000',
+  g12MathITFTerminologyQuiz:             'a4121005-0010-0000-0000-000000000000',
   g9MathPolyTerminologyQuiz:               'a4091002-0010-0000-0000-000000000000',
 
   // ── 7. GRADE 11 CHEMISTRY ─────────────────────────────────────────────────
@@ -931,6 +979,29 @@ export const NODE_IDS = {
   // Terminology Quiz
   g11PhysLOMTerminologyQuiz:               'd4111505-0010-0000-0000-000000000000',
 
+  // Ch 3: Motion in a Straight Line
+  g11PhysicsMSL:                           'd3111503-0000-0000-0000-000000000001',
+
+  // Skills (5 skills)
+  g11PhysMSLDistanceDisplacement:          'd4111503-0001-0000-0000-000000000000',
+  g11PhysMSLVelocityAcceleration:          'd4111503-0002-0000-0000-000000000000',
+  g11PhysMSLKinematicEquations:            'd4111503-0003-0000-0000-000000000000',
+  g11PhysMSLMotionGraphs:                  'd4111503-0004-0000-0000-000000000000',
+  g11PhysMSLRelativeVelocity:              'd4111503-0005-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11PhysMSLTerminologyQuiz:               'd4111503-0010-0000-0000-000000000000',
+
+  // ── GRADE 12 PHYSICS: Electric Charges and Fields (Chapter 1) ────────────
+  g12PhysECFChapter:               'b3121001-0000-0000-0000-000000000001',
+  g12PhysECFElectricChargeProps:   'b4121001-0001-0000-0000-000000000000',
+  g12PhysECFCoulombsLaw:           'b4121001-0002-0000-0000-000000000000',
+  g12PhysECFElectricField:         'b4121001-0003-0000-0000-000000000000',
+  g12PhysECFFieldLinesFlux:        'b4121001-0004-0000-0000-000000000000',
+  g12PhysECFElectricDipole:        'b4121001-0005-0000-0000-000000000000',
+  g12PhysECFGaussLaw:              'b4121001-0006-0000-0000-000000000000',
+  g12PhysECFChargeDistributions:   'b4121001-0007-0000-0000-000000000000',
+  g12PhysECFTerminologyQuiz:      'b4121001-0010-0000-0000-000000000000',
   // Ch 6: Work, Energy and Power
   g11PhysicsWEP:                           'd3111506-0000-0000-0000-000000000001',
 
@@ -997,7 +1068,20 @@ export const NODE_IDS = {
   g11BiolTheCellTerminologyQuiz:           'e4111604-0010-0000-0000-000000000000',
 
   // Ch 8: Cell — Structure and Functions (legacy test)
-  g11BiologyCellStructure:                 'e4111608-0001-0000-0000-000000000000',
+  // g11BiologyCellStructure:                 'e4111608-0001-0000-0000-000000000000',
+  // Grade 12 Chemistry: Solutions
+  g12ChemSolutions:                            'e3121601-0000-0000-0000-000000000001',
+  g12ChemSolutionsTypes:                       'e4121601-0001-0000-0000-000000000000',
+  g12ChemSolutionsConcentration:               'e4121601-0002-0000-0000-000000000000',
+  g12ChemSolutionsSolubility:                  'e4121601-0003-0000-0000-000000000000',
+  g12ChemSolutionsVapourPressure:              'e4121601-0004-0000-0000-000000000000',
+  g12ChemSolutionsIdeal:                       'e4121601-0005-0000-0000-000000000000',
+  g12ChemSolutionsColligative:                 'e4121601-0006-0000-0000-000000000000',
+  g12ChemSolutionsTerminologyQuiz:             'e4121601-0010-0000-0000-000000000000',
+  g12ChemSolutionsIntro:                       'e4121601-0011-0000-0000-000000000000',
+  g12ChemSolutionsConnectomics:                'e4121601-0012-0000-0000-000000000000',
+  g12ChemSolutionsVirtualLab:                  'e4121601-0013-0000-0000-000000000000',
+  g12ChemSolutionsExamEdge:                    'e4121601-0014-0000-0000-000000000000',
 };
 
 /**
@@ -1121,6 +1205,15 @@ export const SLUG_TO_NODE_ID = {
   'g11-phys-lom-circular-motion':              NODE_IDS.g11PhysLOMCircularMotion,
   'g11-phys-lom-terminology':                  NODE_IDS.g11PhysLOMTerminologyQuiz,
 
+  // Grade 11 Physics: Motion in a Straight Line
+  'g11-phys-msl':                              NODE_IDS.g11PhysicsMSL,
+  'g11-phys-msl-distance-displacement':        NODE_IDS.g11PhysMSLDistanceDisplacement,
+  'g11-phys-msl-velocity-acceleration':        NODE_IDS.g11PhysMSLVelocityAcceleration,
+  'g11-phys-msl-kinematic-equations':          NODE_IDS.g11PhysMSLKinematicEquations,
+  'g11-phys-msl-motion-graphs':                NODE_IDS.g11PhysMSLMotionGraphs,
+  'g11-phys-msl-relative-velocity':            NODE_IDS.g11PhysMSLRelativeVelocity,
+  'g11-phys-msl-terminology':                  NODE_IDS.g11PhysMSLTerminologyQuiz,
+
   // Grade 11 Physics: Work, Energy and Power
   'g11-phys-wep':                              NODE_IDS.g11PhysicsWEP,
   'g11-phys-wep-work-calc':                    NODE_IDS.g11PhysWEPWorkCalc,
@@ -1165,8 +1258,64 @@ export const SLUG_TO_NODE_ID = {
   'g11-bio-the-cell-terminology':              NODE_IDS.g11BiolTheCellTerminologyQuiz,
 
   // Grade 11 Biology: Cell — Structure and Functions (legacy test)
-  'g11-bio-cell-structure':                    NODE_IDS.g11BiologyCellStructure,
+  // 'g11-bio-cell-structure':                    NODE_IDS.g11BiologyCellStructure,
 
+  // Grade 12 Physics: Electric Charges and Fields
+  'g12-phys-ecf':                       NODE_IDS.g12PhysECFChapter,
+  'g12-phys-ecf-charge-props':          NODE_IDS.g12PhysECFElectricChargeProps,
+  'g12-phys-ecf-coulombs-law':          NODE_IDS.g12PhysECFCoulombsLaw,
+  'g12-phys-ecf-electric-field':        NODE_IDS.g12PhysECFElectricField,
+  'g12-phys-ecf-field-lines-flux':      NODE_IDS.g12PhysECFFieldLinesFlux,
+  'g12-phys-ecf-electric-dipole':       NODE_IDS.g12PhysECFElectricDipole,
+  'g12-phys-ecf-gauss-law':             NODE_IDS.g12PhysECFGaussLaw,
+  'g12-phys-ecf-charge-distributions':  NODE_IDS.g12PhysECFChargeDistributions,
+  'g12-phys-ecf-terminology':           NODE_IDS.g12PhysECFTerminologyQuiz,
+
+  // Grade 12 Math: Relations
+  'g12-math-relations':                        NODE_IDS.g12MathRelations,
+  'g12-math-relations-cartesian':              NODE_IDS.g12MathRelationsCartesian,
+  'g12-math-relations-domain-range':           NODE_IDS.g12MathRelationsDomainRange,
+  'g12-math-relations-counting':               NODE_IDS.g12MathRelationsCounting,
+  'g12-math-relations-equivalence':            NODE_IDS.g12MathRelationsEquivalence,
+  'g12-math-relations-terminology':            NODE_IDS.g12MathRelationsTerminologyQuiz,
+
+  // Grade 12 Math: Functions
+  'g12-math-functions':                        NODE_IDS.g12MathFunctions,
+  'g12-math-functions-concept':                NODE_IDS.g12MathFunctionsConcept,
+  'g12-math-functions-types':                  NODE_IDS.g12MathFunctionsTypes,
+  'g12-math-functions-algebra':                NODE_IDS.g12MathFunctionsAlgebra,
+  'g12-math-functions-equations':              NODE_IDS.g12MathFunctionsEquations,
+  'g12-math-functions-domain-range':           NODE_IDS.g12MathFunctionsDomainRange,
+  'g12-math-functions-terminology':            NODE_IDS.g12MathFunctionsTerminologyQuiz,
+
+  // Grade 12 Math: Matrices
+  'g12-math-matrices':                         NODE_IDS.g12MathMatrices,
+  'g12-math-matrices-order':                   NODE_IDS.g12MathMatricesOrder,
+  'g12-math-matrices-types':                   NODE_IDS.g12MathMatricesTypes,
+  'g12-math-matrices-operations':              NODE_IDS.g12MathMatricesOperations,
+  'g12-math-matrices-multiplication':          NODE_IDS.g12MathMatricesMultiplication,
+  'g12-math-matrices-transpose':               NODE_IDS.g12MathMatricesTranspose,
+  'g12-math-matrices-inverse':                 NODE_IDS.g12MathMatricesInverse,
+  'g12-math-matrices-terminology':             NODE_IDS.g12MathMatricesTerminologyQuiz,
+
+  // Grade 12 Math: Determinants
+  'g12-math-determinants':                     NODE_IDS.g12MathDeterminants,
+  'g12-math-determinants-fundamentals':        NODE_IDS.g12MathDeterminantsFundamentals,
+  'g12-math-determinants-properties':          NODE_IDS.g12MathDeterminantsProperties,
+  'g12-math-determinants-area':                NODE_IDS.g12MathDeterminantsArea,
+  'g12-math-determinants-minors-cofactors':    NODE_IDS.g12MathDeterminantsMinorsCofactors,
+  'g12-math-determinants-adjoint-inverse':     NODE_IDS.g12MathDeterminantsAdjointInverse,
+  'g12-math-determinants-applications':        NODE_IDS.g12MathDeterminantsApplications,
+  'g12-math-determinants-terminology':         NODE_IDS.g12MathDeterminantsTerminologyQuiz,
+
+  // Grade 12 Math: Inverse Trigonometric Functions
+  'g12-math-itf':                              NODE_IDS.g12MathITF,
+  'g12-math-itf-concept':                      NODE_IDS.g12MathITFConcept,
+  'g12-math-itf-definitions':                  NODE_IDS.g12MathITFDefinitions,
+  'g12-math-itf-properties':                   NODE_IDS.g12MathITFProperties,
+  'g12-math-itf-principal':                    NODE_IDS.g12MathITFPrincipal,
+  'g12-math-itf-simplification':               NODE_IDS.g12MathITFSimplification,
+  'g12-math-itf-terminology':                  NODE_IDS.g12MathITFTerminologyQuiz,
 
   // Grade 9 Math: Polynomials
   'g9-math-polynomials':                NODE_IDS.g9MathPolynomials,
@@ -1281,4 +1430,18 @@ export const SLUG_TO_NODE_ID = {
   'g1-math-numbers-51-100-comparison': NODE_IDS.g1MathNumbers51100Comparison,
   'g1-math-numbers-51-100-skip':       NODE_IDS.g1MathNumbers51100Skip,
   'g1-math-numbers-51-100-mixed':      NODE_IDS.g1MathNumbers51100Mixed,
+
+  // Grade 12 Chemistry: Solutions
+  'g12-chem-solutions':                        NODE_IDS.g12ChemSolutions,
+  'g12-chem-solutions-types':                  NODE_IDS.g12ChemSolutionsTypes,
+  'g12-chem-solutions-concentration':          NODE_IDS.g12ChemSolutionsConcentration,
+  'g12-chem-solutions-solubility':             NODE_IDS.g12ChemSolutionsSolubility,
+  'g12-chem-solutions-vapour-pressure':        NODE_IDS.g12ChemSolutionsVapourPressure,
+  'g12-chem-solutions-ideal':                  NODE_IDS.g12ChemSolutionsIdeal,
+  'g12-chem-solutions-colligative':            NODE_IDS.g12ChemSolutionsColligative,
+  'g12-chem-solutions-terminology':            NODE_IDS.g12ChemSolutionsTerminologyQuiz,
+  'g12-chem-solutions-introduction':           NODE_IDS.g12ChemSolutionsIntro,
+  'g12-chem-solutions-connectomics':           NODE_IDS.g12ChemSolutionsConnectomics,
+  'g12-chem-solutions-virtual-lab':            NODE_IDS.g12ChemSolutionsVirtualLab,
+  'g12-chem-solutions-exam-edge':               NODE_IDS.g12ChemSolutionsExamEdge,
 };

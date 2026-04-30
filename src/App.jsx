@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
+import ScrollToTop from './components/ScrollToTop';
 import { wordApi } from './components/wordOfTheDay/services/wordApi';
 import MultiplicationPractice from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_2_digit_numbers';
 import MultiplicationPractice3D from './components/practice/class-5/WaystoMultiplyandDivide/Multiplication/multiplication_of_3_digit_numbers';
@@ -110,8 +111,13 @@ import RelFuncTerminology from './components/practice/class-11/maths/RelationsAn
 import RelFuncSkills from './components/practice/class-11/maths/RelationsAndFunctions/Topics/Skills/RelFuncSkills';
 import RelFuncConnectomics from './components/practice/class-11/maths/RelationsAndFunctions/Topics/Connectomics/RelFuncConnectomics';
 import RelFuncExamEdge from './components/practice/class-11/maths/RelationsAndFunctions/Topics/ExamEdge/RelFuncExamEdge';
+import MathsChapters12 from './components/practice/class-12/maths/MathsChapters12';
 
 import TheCellDashboard from './components/Biology-Branches/The-Cell/TheCellDashboard';
+import PhysicsChapters12 from './components/practice/class-12/physics/PhysicsChapters12';
+import ChemistryChapters12 from './components/practice/class-12/chemistry/ChemistryChapters12';
+import BiologyChapters12 from './components/practice/class-12/biology/BiologyChapters12';
+
 import TheCellIntro from './components/Biology-Branches/The-Cell/Topics/Introduction/TheCellIntro';
 import TheCellTerminology from './components/Biology-Branches/The-Cell/Topics/Terminology/TheCellTerminology';
 import TheCellSkills from './components/Biology-Branches/The-Cell/Topics/Skills/TheCellSkills';
@@ -124,6 +130,18 @@ import LawsOfMotionTerminology from './components/Physics-Branches/Laws-Of-Motio
 import LawsOfMotionSkills from './components/Physics-Branches/Laws-Of-Motion/Topics/Skills/LawsOfMotionSkills';
 import LawsOfMotionConnectomics from './components/Physics-Branches/Laws-Of-Motion/Topics/Connectomics/LawsOfMotionConnectomics';
 import LawsOfMotionExamEdge from './components/Physics-Branches/Laws-Of-Motion/Topics/ExamEdge/LawsOfMotionExamEdge';
+import MotionInAStraightLineDashboard from './components/Physics-Branches/Motion-In-A-Straight-Line/MotionInAStraightLineDashboard';
+import MSLIntro from './components/Physics-Branches/Motion-In-A-Straight-Line/Topics/Introduction/MSLIntro';
+import MSLTerminology from './components/Physics-Branches/Motion-In-A-Straight-Line/Topics/Terminology/MSLTerminology';
+import MSLSkills from './components/Physics-Branches/Motion-In-A-Straight-Line/Topics/Skills/MSLSkills';
+import MSLConnectomics from './components/Physics-Branches/Motion-In-A-Straight-Line/Topics/Connectomics/MSLConnectomics';
+import MSLExamEdge from './components/Physics-Branches/Motion-In-A-Straight-Line/Topics/ExamEdge/MSLExamEdge';
+import ElectricChargesDashboard from './components/practice/class-12/physics/Electric-Charges-And-Fields/ElectricChargesDashboard';
+import ECFIntro from './components/practice/class-12/physics/Electric-Charges-And-Fields/Topics/Introduction/ECFIntro';
+import ECFTerminology from './components/practice/class-12/physics/Electric-Charges-And-Fields/Topics/Terminology/ECFTerminology';
+import ECFSkills from './components/practice/class-12/physics/Electric-Charges-And-Fields/Topics/Skills/ECFSkills';
+import ECFConnectomics from './components/practice/class-12/physics/Electric-Charges-And-Fields/Topics/Connectomics/ECFConnectomics';
+import ECFExamEdge from './components/practice/class-12/physics/Electric-Charges-And-Fields/Topics/ExamEdge/ECFExamEdge';
 
 import ChemistryChapters from './components/practice/class-11/chemistry/ChemistryChapters';
 import StructureOfAtomDashboard from './components/Chemistry-Branches/Structure-of-Atom/StructureOfAtomDashboard';
@@ -132,6 +150,15 @@ import StructureOfAtomTerminology from './components/Chemistry-Branches/Structur
 import StructureOfAtomSkills from './components/Chemistry-Branches/Structure-of-Atom/Topics/Skills/StructureOfAtomSkills';
 import StructureOfAtomConnectomics from './components/Chemistry-Branches/Structure-of-Atom/Topics/Connectomics/StructureOfAtomConnectomics';
 import StructureOfAtomExamEdge from './components/Chemistry-Branches/Structure-of-Atom/Topics/ExamEdge/StructureOfAtomExamEdge';
+
+// Class 12 Chemistry
+import SolutionsDashboard from './components/practice/class-12/chemistry/Solutions/SolutionsDashboard';
+import SolutionsIntro from './components/practice/class-12/chemistry/Solutions/Topics/Introduction/SolutionsIntro';
+import SolutionsTerminology from './components/practice/class-12/chemistry/Solutions/Topics/Terminology/SolutionsTerminology';
+import SolutionsCoreConcepts from './components/practice/class-12/chemistry/Solutions/Topics/CoreConcepts/SolutionsCoreConcepts';
+import SolutionsConnectomics from './components/practice/class-12/chemistry/Solutions/Topics/Connectomics/SolutionsConnectomics';
+import SolutionsExamEdge from './components/practice/class-12/chemistry/Solutions/Topics/ExamEdge/SolutionsExamEdge';
+import SolutionsVirtualLab from './components/practice/class-12/chemistry/Solutions/Topics/VirtualLab/SolutionsVirtualLab';
 
 import TheFishTaleLanding from './components/practice/class-5/The_Fish_Tale/TheFishTale';
 import FishTaleIntro5W1H from './components/practice/class-5/The_Fish_Tale/Topics/5W1H/FishTaleIntro5W1H';
@@ -145,6 +172,14 @@ import SurfaceAreasAndVolumes from './components/practice/class-10/SurfaceAreasA
 import SurfaceVolumesIntro from './components/practice/class-10/SurfaceAreasAndVolumes/Topics/5W1H/Intro5W1H';
 import SurfaceVolumesTerminology from './components/practice/class-10/SurfaceAreasAndVolumes/Topics/Terminology/Terminology';
 import SurfaceVolumesSkills from './components/practice/class-10/SurfaceAreasAndVolumes/Topics/Skills/Skills';
+import SomeApplicationsOfTrigonometry from './components/practice/class-10/SomeApplicationsOfTrigonometry/SomeApplicationsOfTrigonometry';
+import SomeApplicationsTrigIntro from './components/practice/class-10/SomeApplicationsOfTrigonometry/Topics/5W1H/Intro5W1H';
+import SomeApplicationsTrigTerminology from './components/practice/class-10/SomeApplicationsOfTrigonometry/Topics/Terminology/Terminology';
+import SomeApplicationsTrigSkills from './components/practice/class-10/SomeApplicationsOfTrigonometry/Topics/Skills/Skills';
+import Statistics from './components/practice/class-10/Statistics/Statistics';
+import StatisticsIntro from './components/practice/class-10/Statistics/Topics/5W1H/Intro5W1H';
+import StatisticsTerminology from './components/practice/class-10/Statistics/Topics/Terminology/Terminology';
+import StatisticsSkills from './components/practice/class-10/Statistics/Topics/Skills/Skills';
 
 import IntroductionToTrignometry from './components/practice/class-10/IntroductionToTrignometry/IntroductionToTrignometry';
 import TrignometryIntro5W1H from './components/practice/class-10/IntroductionToTrignometry/Topics/5W1H/Intro5W1H';
@@ -672,6 +707,12 @@ import Grade6DataHandling from './components/practice/grade-6/DataHandling6/Data
 import Grade6DataHandlingIntro from './components/practice/grade-6/DataHandling6/Topics/5W1H/DataHandling6Intro';
 import Grade6DataHandlingTerminology from './components/practice/grade-6/DataHandling6/Topics/Terminology/DataHandling6Terminology';
 import Grade6DataHandlingSkills from './components/practice/grade-6/DataHandling6/Topics/Skills/DataHandling6Skills';
+
+// Grade 6 The Other Side of Zero
+import Grade6TheOtherSideOfZero from './components/practice/grade-6/TheOtherSideOfZero6/TheOtherSideOfZero6';
+import Grade6TheOtherSideOfZeroIntro from './components/practice/grade-6/TheOtherSideOfZero6/Topics/5W1H/TheOtherSideOfZero6Intro';
+import Grade6TheOtherSideOfZeroTerminology from './components/practice/grade-6/TheOtherSideOfZero6/Topics/Terminology/TheOtherSideOfZero6Terminology';
+import Grade6TheOtherSideOfZeroSkills from './components/practice/grade-6/TheOtherSideOfZero6/Topics/Skills/TheOtherSideOfZero6Skills';
 
 // Grade 6 Fractions Chapter
 import Grade6Fractions from './components/practice/grade-6/Fractions6/Fractions6';
@@ -1243,6 +1284,7 @@ function App() {
 
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
@@ -1258,56 +1300,84 @@ function App() {
 
           {/* Class 11 Biology */}
           <Route path="senior/grade/11/biology" element={<BiologyChapters />} />
-          <Route path="senior/grade/11/biology/cell-structure" element={<CellStructureTest />} />
-          <Route path="senior/grade/11/biology/the-cell" element={<TheCellDashboard />} />
-          <Route path="senior/grade/11/biology/the-cell/introduction" element={<TheCellIntro />} />
-          <Route path="senior/grade/11/biology/the-cell/terminology" element={<TheCellTerminology />} />
-          <Route path="senior/grade/11/biology/the-cell/skills" element={<TheCellSkills />} />
-          <Route path="senior/grade/11/biology/the-cell/connectomics" element={<TheCellConnectomics />} />
-          <Route path="senior/grade/11/biology/the-cell/exam-edge" element={<TheCellExamEdge />} />
+          <Route path="senior/grade/12/biology" element={<BiologyChapters12 />} />
+          <Route path="senior/grade/11/biology/cell-structure" element={<ProtectedRoute redirectTo="/login"><CellStructureTest /></ProtectedRoute>} />
+          <Route path="senior/grade/11/biology/the-cell" element={<ProtectedRoute redirectTo="/login"><TheCellDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/11/biology/the-cell/introduction" element={<ProtectedRoute redirectTo="/login"><TheCellIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/11/biology/the-cell/terminology" element={<ProtectedRoute redirectTo="/login"><TheCellTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/11/biology/the-cell/skills" element={<ProtectedRoute redirectTo="/login"><TheCellSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/11/biology/the-cell/connectomics" element={<ProtectedRoute redirectTo="/login"><TheCellConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/11/biology/the-cell/exam-edge" element={<ProtectedRoute redirectTo="/login"><TheCellExamEdge /></ProtectedRoute>} />
 
           {/* Class 11 Maths */}
           <Route path="senior/grade/11/maths" element={<MathsChapters />} />
-          <Route path="senior/grade/11/maths/sets" element={<SetsDashboard />} />
-          <Route path="senior/grade/11/maths/sets/introduction" element={<SetsIntro />} />
-          <Route path="senior/grade/11/maths/sets/terminology" element={<SetsTerminology />} />
-          <Route path="senior/grade/11/maths/sets/skills" element={<SetsSkills />} />
-          <Route path="senior/grade/11/maths/sets/connectomics" element={<SetsConnectomics />} />
-          <Route path="senior/grade/11/maths/sets/exam-edge" element={<SetsExamEdge />} />
+          <Route path="senior/grade/12/maths" element={<MathsChapters12 />} />
+          <Route path="senior/grade/11/maths/sets" element={<ProtectedRoute redirectTo="/login"><SetsDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/sets/introduction" element={<ProtectedRoute redirectTo="/login"><SetsIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/sets/terminology" element={<ProtectedRoute redirectTo="/login"><SetsTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/sets/skills" element={<ProtectedRoute redirectTo="/login"><SetsSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/sets/connectomics" element={<ProtectedRoute redirectTo="/login"><SetsConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/sets/exam-edge" element={<ProtectedRoute redirectTo="/login"><SetsExamEdge /></ProtectedRoute>} />
 
           {/* Class 11 Maths: Relations & Functions */}
-          <Route path="senior/grade/11/maths/relations-and-functions" element={<RelFuncDashboard />} />
-          <Route path="senior/grade/11/maths/relations-and-functions/introduction" element={<RelFuncIntro />} />
-          <Route path="senior/grade/11/maths/relations-and-functions/terminology" element={<RelFuncTerminology />} />
-          <Route path="senior/grade/11/maths/relations-and-functions/skills" element={<RelFuncSkills />} />
-          <Route path="senior/grade/11/maths/relations-and-functions/connectomics" element={<RelFuncConnectomics />} />
-          <Route path="senior/grade/11/maths/relations-and-functions/exam-edge" element={<RelFuncExamEdge />} />
+          <Route path="senior/grade/11/maths/relations-and-functions" element={<ProtectedRoute redirectTo="/login"><RelFuncDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/relations-and-functions/introduction" element={<ProtectedRoute redirectTo="/login"><RelFuncIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/relations-and-functions/terminology" element={<ProtectedRoute redirectTo="/login"><RelFuncTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/relations-and-functions/skills" element={<ProtectedRoute redirectTo="/login"><RelFuncSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/relations-and-functions/connectomics" element={<ProtectedRoute redirectTo="/login"><RelFuncConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/relations-and-functions/exam-edge" element={<ProtectedRoute redirectTo="/login"><RelFuncExamEdge /></ProtectedRoute>} />
 
           {/* Class 11 Physics */}
           <Route path="senior/grade/11/physics" element={<PhysicsChapters />} />
-          <Route path="senior/grade/11/physics/laws-of-motion" element={<LawsOfMotionDashboard />} />
-          <Route path="senior/grade/11/physics/laws-of-motion/introduction" element={<LawsOfMotionIntro />} />
-          <Route path="senior/grade/11/physics/laws-of-motion/terminology" element={<LawsOfMotionTerminology />} />
-          <Route path="senior/grade/11/physics/laws-of-motion/skills" element={<LawsOfMotionSkills />} />
-          <Route path="senior/grade/11/physics/laws-of-motion/connectomics" element={<LawsOfMotionConnectomics />} />
-          <Route path="senior/grade/11/physics/laws-of-motion/exam-edge" element={<LawsOfMotionExamEdge />} />
-          <Route path="senior/grade/11/physics/work-energy-power" element={<WorkEnergyPowerDashboard />} />
-          <Route path="senior/grade/11/physics/work-energy-power/introduction" element={<WorkEnergyPowerIntro />} />
-          <Route path="senior/grade/11/physics/work-energy-power/terminology" element={<WorkEnergyPowerTerminology />} />
-          <Route path="senior/grade/11/physics/work-energy-power/skills" element={<WorkEnergyPowerSkills />} />
-          <Route path="senior/grade/11/physics/work-energy-power/connectomics" element={<WorkEnergyPowerConnectomics />} />
-          <Route path="senior/grade/11/physics/work-energy-power/exam-edge" element={<WorkEnergyPowerExamEdge />} />
-          <Route path="senior/grade/11/physics/work-energy-power/mind-map" element={<WorkEnergyPowerMindMap />} />
-          <Route path="senior/grade/11/physics/work-energy-power/derivations" element={<WorkEnergyPowerDerivations />} />
+          <Route path="senior/grade/12/physics" element={<PhysicsChapters12 />} />
+          <Route path="senior/grade/11/physics/laws-of-motion" element={<ProtectedRoute redirectTo="/login"><LawsOfMotionDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/laws-of-motion/introduction" element={<ProtectedRoute redirectTo="/login"><LawsOfMotionIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/laws-of-motion/terminology" element={<ProtectedRoute redirectTo="/login"><LawsOfMotionTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/laws-of-motion/skills" element={<ProtectedRoute redirectTo="/login"><LawsOfMotionSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/laws-of-motion/connectomics" element={<ProtectedRoute redirectTo="/login"><LawsOfMotionConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/laws-of-motion/exam-edge" element={<ProtectedRoute redirectTo="/login"><LawsOfMotionExamEdge /></ProtectedRoute>} />
+
+          {/* Class 11 Physics: Motion in a Straight Line */}
+          <Route path="senior/grade/11/physics/motion-in-a-straight-line" element={<ProtectedRoute redirectTo="/login"><MotionInAStraightLineDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/motion-in-a-straight-line/introduction" element={<ProtectedRoute redirectTo="/login"><MSLIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/motion-in-a-straight-line/terminology" element={<ProtectedRoute redirectTo="/login"><MSLTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/motion-in-a-straight-line/skills" element={<ProtectedRoute redirectTo="/login"><MSLSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/motion-in-a-straight-line/connectomics" element={<ProtectedRoute redirectTo="/login"><MSLConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/motion-in-a-straight-line/exam-edge" element={<ProtectedRoute redirectTo="/login"><MSLExamEdge /></ProtectedRoute>} />
+
+          <Route path="senior/grade/11/physics/work-energy-power" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/work-energy-power/introduction" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/work-energy-power/terminology" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/work-energy-power/skills" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/work-energy-power/connectomics" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/work-energy-power/exam-edge" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerExamEdge /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/work-energy-power/mind-map" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerMindMap /></ProtectedRoute>} />
+          <Route path="senior/grade/11/physics/work-energy-power/derivations" element={<ProtectedRoute redirectTo="/login"><WorkEnergyPowerDerivations /></ProtectedRoute>} />
+          <Route path="senior/grade/12/physics/electric-charges-and-fields" element={<ProtectedRoute redirectTo="/login"><ElectricChargesDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/12/physics/electric-charges-and-fields/introduction" element={<ProtectedRoute redirectTo="/login"><ECFIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/12/physics/electric-charges-and-fields/terminology" element={<ProtectedRoute redirectTo="/login"><ECFTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/12/physics/electric-charges-and-fields/skills" element={<ProtectedRoute redirectTo="/login"><ECFSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/12/physics/electric-charges-and-fields/connectomics" element={<ProtectedRoute redirectTo="/login"><ECFConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/12/physics/electric-charges-and-fields/exam-edge" element={<ProtectedRoute redirectTo="/login"><ECFExamEdge /></ProtectedRoute>} />
 
           {/* Class 11 Chemistry */}
           <Route path="senior/grade/11/chemistry" element={<ChemistryChapters />} />
-          <Route path="senior/grade/11/chemistry/structure-of-atom" element={<StructureOfAtomDashboard />} />
-          <Route path="senior/grade/11/chemistry/structure-of-atom/introduction" element={<StructureOfAtomIntro />} />
-          <Route path="senior/grade/11/chemistry/structure-of-atom/terminology" element={<StructureOfAtomTerminology />} />
-          <Route path="senior/grade/11/chemistry/structure-of-atom/skills" element={<StructureOfAtomSkills />} />
-          <Route path="senior/grade/11/chemistry/structure-of-atom/connectomics" element={<StructureOfAtomConnectomics />} />
-          <Route path="senior/grade/11/chemistry/structure-of-atom/exam-edge" element={<StructureOfAtomExamEdge />} />
+          <Route path="senior/grade/12/chemistry" element={<ChemistryChapters12 />} />
+          <Route path="senior/grade/11/chemistry/structure-of-atom" element={<ProtectedRoute redirectTo="/login"><StructureOfAtomDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/11/chemistry/structure-of-atom/introduction" element={<ProtectedRoute redirectTo="/login"><StructureOfAtomIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/11/chemistry/structure-of-atom/terminology" element={<ProtectedRoute redirectTo="/login"><StructureOfAtomTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/11/chemistry/structure-of-atom/skills" element={<ProtectedRoute redirectTo="/login"><StructureOfAtomSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/11/chemistry/structure-of-atom/connectomics" element={<ProtectedRoute redirectTo="/login"><StructureOfAtomConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/11/chemistry/structure-of-atom/exam-edge" element={<ProtectedRoute redirectTo="/login"><StructureOfAtomExamEdge /></ProtectedRoute>} />
+          
+          {/* Class 12 Chemistry */}
+          <Route path="senior/grade/12/chemistry/solutions" element={<ProtectedRoute redirectTo="/login"><SolutionsDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/12/chemistry/solutions/introduction" element={<ProtectedRoute redirectTo="/login"><SolutionsIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/12/chemistry/solutions/terminology" element={<ProtectedRoute redirectTo="/login"><SolutionsTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/12/chemistry/solutions/core-concepts" element={<ProtectedRoute redirectTo="/login"><SolutionsCoreConcepts /></ProtectedRoute>} />
+          <Route path="senior/grade/12/chemistry/solutions/connectomics" element={<ProtectedRoute redirectTo="/login"><SolutionsConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/12/chemistry/solutions/exam-edge" element={<ProtectedRoute redirectTo="/login"><SolutionsExamEdge /></ProtectedRoute>} />
+          <Route path="senior/grade/12/chemistry/solutions/virtual-lab" element={<ProtectedRoute redirectTo="/login"><SolutionsVirtualLab /></ProtectedRoute>} />
           
           {/* Grade 7 Science */}
           <Route path="/middle/grade/7/science/wonderful-world-science" element={<EverEvolvingScienceDashboard />} />
@@ -1474,6 +1544,24 @@ function App() {
           <Route path="surface areas and volumes/introduction" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesIntro /></ProtectedRoute>} />
           <Route path="surface areas and volumes/terminology" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesTerminology /></ProtectedRoute>} />
           <Route path="surface areas and volumes/skills" element={<ProtectedRoute redirectTo="/login"><SurfaceVolumesSkills /></ProtectedRoute>} />
+
+          {/* Some Applications of Trigonometry Routes */}
+          <Route path="some-applications-of-trigonometry" element={<ProtectedRoute redirectTo="/login"><SomeApplicationsOfTrigonometry /></ProtectedRoute>} />
+          <Route path="some-applications-of-trigonometry/introduction" element={<ProtectedRoute redirectTo="/login"><SomeApplicationsTrigIntro /></ProtectedRoute>} />
+          <Route path="some-applications-of-trigonometry/terminology" element={<ProtectedRoute redirectTo="/login"><SomeApplicationsTrigTerminology /></ProtectedRoute>} />
+          <Route path="some-applications-of-trigonometry/skills" element={<ProtectedRoute redirectTo="/login"><SomeApplicationsTrigSkills /></ProtectedRoute>} />
+
+          {/* Fallback for spaces in URL */}
+          <Route path="some applications of trigonometry" element={<ProtectedRoute redirectTo="/login"><SomeApplicationsOfTrigonometry /></ProtectedRoute>} />
+          <Route path="some applications of trigonometry/introduction" element={<ProtectedRoute redirectTo="/login"><SomeApplicationsTrigIntro /></ProtectedRoute>} />
+          <Route path="some applications of trigonometry/terminology" element={<ProtectedRoute redirectTo="/login"><SomeApplicationsTrigTerminology /></ProtectedRoute>} />
+          <Route path="some applications of trigonometry/skills" element={<ProtectedRoute redirectTo="/login"><SomeApplicationsTrigSkills /></ProtectedRoute>} />
+
+          {/* Statistics */}
+          <Route path="statistics" element={<ProtectedRoute redirectTo="/login"><Statistics /></ProtectedRoute>} />
+          <Route path="statistics/introduction" element={<ProtectedRoute redirectTo="/login"><StatisticsIntro /></ProtectedRoute>} />
+          <Route path="statistics/terminology" element={<ProtectedRoute redirectTo="/login"><StatisticsTerminology /></ProtectedRoute>} />
+          <Route path="statistics/skills" element={<ProtectedRoute redirectTo="/login"><StatisticsSkills /></ProtectedRoute>} />
 
           {/* Introduction to Trigonometry Routes */}
           <Route path="introduction-to-trigonometry" element={<ProtectedRoute redirectTo="/login"><IntroductionToTrignometry /></ProtectedRoute>} />
@@ -1824,6 +1912,11 @@ function App() {
           <Route path="middle/grade/6/data-handling-6/introduction" element={<Grade6DataHandlingIntro />} />
           <Route path="middle/grade/6/data-handling-6/terminology" element={<Grade6DataHandlingTerminology />} />
           <Route path="middle/grade/6/data-handling-6/skills" element={<Grade6DataHandlingSkills />} />
+
+          <Route path="middle/grade/6/the-other-side-of-zero" element={<Grade6TheOtherSideOfZero />} />
+          <Route path="middle/grade/6/the-other-side-of-zero/introduction" element={<Grade6TheOtherSideOfZeroIntro />} />
+          <Route path="middle/grade/6/the-other-side-of-zero/terminology" element={<Grade6TheOtherSideOfZeroTerminology />} />
+          <Route path="middle/grade/6/the-other-side-of-zero/skills" element={<Grade6TheOtherSideOfZeroSkills />} />
 
           {/* Grade 6 Fractions Routes */}
           <Route path="middle/grade/6/fractions-6" element={<Grade6Fractions />} />

@@ -11,6 +11,7 @@ export default function NumberPlay6AssessmentEngine({ questions, title, onBack, 
 
     const normalizeTextAnswer = (value) => String(value ?? '')
         .replace(/\s+/g, ' ')
+        .replace(/[,]/g, '')
         .trim()
         .toLowerCase();
 
@@ -44,7 +45,13 @@ export default function NumberPlay6AssessmentEngine({ questions, title, onBack, 
                 ? question.correct.map((index) => question.options?.[index]).filter(Boolean).join(', ')
                 : 'No answer provided';
         }
-        return question.options?.[question.correct] ?? 'No answer provided';
+                if (question.options && question.options[question.correct] !== undefined) {
+            return question.options[question.correct];
+        }
+        if (question.correct !== undefined && question.correct !== null) {
+            return String(question.correct);
+        }
+        return 'No answer provided';
     };
 
     const getUserAnswerLabel = (question, answer) => {

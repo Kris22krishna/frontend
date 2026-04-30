@@ -79,9 +79,10 @@ const DrawTiles = () => {
     const [timeElapsed, setTimeElapsed] = useState(0);
 
     useEffect(() => {
+        if (showResult) return;
         const timer = setInterval(() => setTimeElapsed(prev => prev + 1), 1000);
         return () => clearInterval(timer);
-    }, []);
+    }, [showResult]);
 
     const formatTime = (s) => `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
 
@@ -136,12 +137,16 @@ const DrawTiles = () => {
         let isRight = false;
         let selected = option;
 
+        // Ensure we handle the case where a number is passed or we use state
+        const isActuallyAnOption = typeof option === 'number';
+
         if (currentQ.type === 'drag-drop') {
             const currentVal = (droppedTiles[100] * 100) + (droppedTiles[10] * 10) + (droppedTiles[1] * 1);
             isRight = currentVal === currentQ.target;
         } else {
-            // If called from footer submit without arg, use state
-            if (option === null) selected = selectedMcqOption;
+            if (!isActuallyAnOption) {
+                selected = selectedMcqOption;
+            }
             isRight = selected === currentQ.correct;
             setSelectedMcqOption(selected);
         }
@@ -150,8 +155,10 @@ const DrawTiles = () => {
         setIsCorrect(isRight);
 
         if (isRight) {
+            setFeedback('correct');
             setScore(s => s + 1);
         } else {
+            setFeedback('wrong');
             setShowExplanationModal(true);
         }
     };
@@ -175,13 +182,25 @@ const DrawTiles = () => {
 
     const handlePrevious = () => {
         if (currentQIndex > 0) {
-            setHistory(prev => ({ ...prev, [currentQIndex]: { feedback, isSubmitted, isCorrect, droppedTiles, selectedMcqOption } }));
+            const summary = {
+                feedback, isSubmitted, isCorrect, droppedTiles, selectedMcqOption,
+                text: currentQ.type === 'drag-drop' ? `Draw tiles for ${currentQ.target}` : (currentQ.text || "What number is shown?"),
+                selected: currentQ.type === 'drag-drop' ? `${droppedTiles[100]}H, ${droppedTiles[10]}T, ${droppedTiles[1]}O` : (selectedMcqOption || "None"),
+                correctAnswer: currentQ.type === 'drag-drop' ? currentQ.target : currentQ.correct
+            };
+            setHistory(prev => ({ ...prev, [currentQIndex]: summary }));
             setCurrentQIndex(prev => prev - 1);
         }
     };
 
     const handleNext = () => {
-        setHistory(prev => ({ ...prev, [currentQIndex]: { feedback, isSubmitted, isCorrect, droppedTiles, selectedMcqOption } }));
+        const summary = {
+            feedback, isSubmitted, isCorrect, droppedTiles, selectedMcqOption,
+            text: currentQ.type === 'drag-drop' ? `Draw tiles for ${currentQ.target}` : (currentQ.text || "What number is shown?"),
+            selected: currentQ.type === 'drag-drop' ? `${droppedTiles[100]}H, ${droppedTiles[10]}T, ${droppedTiles[1]}O` : (selectedMcqOption || "None"),
+            correctAnswer: currentQ.type === 'drag-drop' ? currentQ.target : currentQ.correct
+        };
+        setHistory(prev => ({ ...prev, [currentQIndex]: summary }));
         if (currentQIndex < questions.length - 1) {
             setCurrentQIndex(prev => prev + 1);
         } else {
@@ -206,19 +225,14 @@ const DrawTiles = () => {
     };
 
     
-    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
-    if (showRes) {
-        const scoreVal = typeof score !== 'undefined' 
-            ? score 
-            : (typeof stats !== 'undefined' && stats.correct !== undefined 
-                ? stats.correct 
-                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
-        const totalVal = typeof questions !== 'undefined' 
-            ? questions.length 
-            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
-                ? sessionQuestions.length 
-                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
-        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
+    if (showResult) {
+        return <GenericReportCard 
+            score={score} 
+            totalQuestions={questions.length} 
+            onRestart={handleRestart} 
+            timeElapsed={timeElapsed} 
+            summaryData={Object.values(history)} 
+        />;
     }
 
     const SKILL_NAME = "House of Hundreds II - Draw Tiles";
@@ -311,7 +325,7 @@ const DrawTiles = () => {
 
                             {/* MCQ Options — inline below visual */}
                             {currentQ.type === 'mcq' && (
-                                <div className="options-grid-modern w-full" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.75rem' }}>
+                                <div className="options-grid-modern w-full" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.75rem' }}>
                                     {currentQ.options.map((opt, i) => (
                                         <button
                                             key={i}
@@ -320,7 +334,7 @@ const DrawTiles = () => {
                                                 } ${isSubmitted && opt === currentQ.correct ? 'correct' : ''
                                                 } ${isSubmitted && selectedMcqOption === opt && selectedMcqOption !== currentQ.correct ? 'wrong' : ''
                                                 }`}
-                                            style={{ fontSize: '1.1rem', fontWeight: '400', fontFamily: '"Open Sans", sans-serif' }}
+                                            style={{ fontSize: '1.1rem', fontWeight: '500', minHeight: '3.5rem' }}
                                             disabled={isSubmitted}
                                         >
                                             {opt}
@@ -429,8 +443,8 @@ const DrawTiles = () => {
                             ) : (
                                 <button
                                     className="nav-pill-submit-btn"
-                                    onClick={handleCheckAnswer}
-                                    disabled={isSubmitted || (typeof selectedOption !== 'undefined' ? !selectedOption && typeof dragItems === 'undefined' : false)}
+                                    onClick={() => handleCheckAnswer()}
+                                    disabled={isSubmitted || (currentQ.type === 'mcq' ? selectedMcqOption === null : (droppedTiles[100] === 0 && droppedTiles[10] === 0 && droppedTiles[1] === 0))}
                                 >
                                     SUBMIT <Check size={24} strokeWidth={3} />
                                 </button>
@@ -472,7 +486,7 @@ const DrawTiles = () => {
                                     {currentQIndex < questions.length - 1 ? "NEXT" : "DONE"}
                                 </button>
                             ) : (
-                                <button className="nav-pill-submit-btn" onClick={handleCheckAnswer} disabled={isSubmitted || (typeof selectedOption !== 'undefined' ? !selectedOption && typeof dragItems === 'undefined' : false)}>SUBMIT</button>
+                                <button className="nav-pill-submit-btn" onClick={() => handleCheckAnswer()} disabled={isSubmitted || (currentQ.type === 'mcq' ? selectedMcqOption === null : (droppedTiles[100] === 0 && droppedTiles[10] === 0 && droppedTiles[1] === 0))}>SUBMIT</button>
                             )}
                         </div>
                     </div>

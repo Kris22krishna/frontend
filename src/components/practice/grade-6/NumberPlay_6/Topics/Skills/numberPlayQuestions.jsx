@@ -30,9 +30,12 @@ export const generateNumbersDailyLifeQuestions = () => {
     
     // Type 1: Place value combinations
     for (let i = 0; i < 7; i++) {
-        let h = rnd(2, 9);
-        let t = rnd(1, 9);
-        let o = rnd(1, 9);
+        let h, t, o;
+        do {
+            h = rnd(2, 9);
+            t = rnd(1, 9);
+            o = rnd(1, 9);
+        } while (h === t || t === o || h === o);
         let num = h * 100 + t * 10 + o;
         qs.push({
             type: 'mcq',

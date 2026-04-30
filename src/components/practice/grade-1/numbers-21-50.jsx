@@ -280,7 +280,7 @@ const Numbers21to50 = () => {
                 };
 
                 question = {
-                    text: "How many ones are there in total?",
+                    text: "How many ones and tens are there in total?",
                     options: makeOptionsLocal(num),
                     correct: num,
                     type: 'counting',
@@ -308,7 +308,7 @@ const Numbers21to50 = () => {
                 }
 
                 question = {
-                    text: `How many ones are there in total in ${num}?`,
+                    text: `How many ones and tens are there in total in ${num}?`,
                     options: Array.from(optionsSet).sort(() => 0.5 - Math.random()),
                     correct: correctStr,
                     type: 'tens-ones',

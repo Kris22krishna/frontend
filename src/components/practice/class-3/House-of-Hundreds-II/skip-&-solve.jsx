@@ -128,11 +128,12 @@ const SkipAndSolve = () => {
     const currentQ = questions[currentQIndex];
 
     useEffect(() => {
+        if (showResult) return;
         const timer = setInterval(() => {
             setTimeElapsed(prev => prev + 1);
         }, 1000);
         return () => clearInterval(timer);
-    }, []);
+    }, [showResult]);
 
     const formatTime = (seconds) => {
         const mins = Math.floor(seconds / 60);
@@ -158,10 +159,20 @@ const SkipAndSolve = () => {
             setFeedback('wrong');
             setShowExplanationModal(true);
         }
+
+        setHistory(prev => ({ 
+            ...prev, 
+            [currentQIndex]: { 
+                text: "Fill in the missing pattern value",
+                selected: selectedOption,
+                correctAnswer: currentQ.correct,
+                isCorrect: isRight,
+                isSubmitted: true
+            } 
+        }));
     };
 
     const handleNext = () => {
-        setHistory(prev => ({ ...prev, [currentQIndex]: { feedback, isSubmitted, isCorrect, selectedOption } }));
         setShowExplanationModal(false);
 
         if (currentQIndex < questions.length - 1) {
@@ -189,7 +200,6 @@ const SkipAndSolve = () => {
 
     const handlePrevious = () => {
         if (currentQIndex > 0) {
-            setHistory(prev => ({ ...prev, [currentQIndex]: { feedback, isSubmitted, isCorrect, selectedOption } }));
             setCurrentQIndex(prev => prev - 1);
             setShowExplanationModal(false);
         }
@@ -207,6 +217,17 @@ const SkipAndSolve = () => {
         setHistory({});
 };
 
+    if (showResult) {
+        return (
+            <GenericReportCard 
+                score={score} 
+                totalQuestions={questions.length} 
+                onRestart={handleRestart} 
+                timeElapsed={timeElapsed} 
+                summaryData={Object.values(history)} 
+            />
+        );
+    }
     const renderPattern = () => {
         const { sequence, patternType, jump } = currentQ;
 

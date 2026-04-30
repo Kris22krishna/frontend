@@ -444,7 +444,7 @@ export const SKILLS = [
         learn: {
             title: 'Layers of Sets',
             rules: [
-                { title: 'Subsets', f: 'A \\subseteq B', d: 'Every element of A is also in B. The empty set is a subset of every set. A set is always a subset of itself.', ex: '{1, 3} ⊆ {1, 2, 3, 4} ✓ and ∅ ⊆ {1, 2, 3} ✓', tip: 'To disprove A ⊆ B, find just ONE element in A that is not in B.' },
+                { title: 'Subsets', f: 'A \\subseteq B', d: 'Every element of A is also in B. The empty set is a subset of every set. A set is always a subset of itself.', ex: '{1, 3} ⊆ {1, 2, 3, 4} ✓ and ∅ ⊆ {1, 2, 3} ✓', tip: 'To disprove A ⊆ B, find just ONE element in A that is not in B.', diagram: 'subset' },
                 { title: 'Proper Subsets & Power Set', f: '|P(A)| = 2^n', d: 'A proper subset means A ⊆ B but A ≠ B. The power set P(A) contains all 2ⁿ subsets. Proper subsets count: 2ⁿ − 1.', ex: 'A = {1, 2}: P(A) = {∅, {1}, {2}, {1,2}} — 4 subsets.', tip: 'Remember: 2ⁿ gives total subsets, 2ⁿ − 1 gives proper subsets.' },
                 { title: 'Intervals', f: '[a, b] \\text{ vs } (a, b)', d: 'Intervals represent subsets of real numbers. Closed [a,b] includes endpoints; Open (a,b) excludes them; Semi-open [a,b) or (a,b] mixes.', ex: '-1 < x ≤ 4 is written as (−1, 4].', tip: 'Round bracket = strict (<, >). Square bracket = inclusive (≤, ≥).' }
             ]
@@ -594,8 +594,10 @@ export const SKILLS = [
             title: 'The Universal Perspective',
             rules: [
                 { title: 'Universal Set', f: 'U', d: 'The universal set U contains ALL objects under consideration in a given context. It defines the boundary of our discussion.', ex: 'If discussing vowels, U could be all English letters.', tip: 'U can change depending on context — always identify it first.' },
-                { title: 'Complement of A', f: "A' = \\{x : x \\in U, x \\notin A\\}", d: "The complement A' consists of everything in U that is NOT in A. Also written as Aᶜ or U − A.", ex: 'U = {1,2,3,4,5}, A = {1,3}. Then A\' = {2,4,5}.', tip: 'Always state U before computing complement — it depends on U.' },
-                { title: 'Laws of Complement', f: "A \\cup A' = U, \\; A \\cap A' = \\emptyset", d: "Key complement laws: (1) A ∪ A' = U, (2) A ∩ A' = ∅, (3) (A')' = A, (4) U' = ∅ and ∅' = U.", ex: 'n(U)=50, n(A)=20 → n(A\')=30.', tip: 'Double complement brings you back: (A\')\' = A always.' }
+                { title: 'Complement of A', f: "A' = \\{x : x \\in U, x \\notin A\\}", d: "The complement A' consists of everything in U that is NOT in A. Also written as Aᶜ or U − A.", ex: 'U = {1,2,3,4,5}, A = {1,3}. Then A\' = {2,4,5}.', tip: 'Always state U before computing complement — it depends on U.', diagram: 'complement-a' },
+                { title: 'Complement Laws (Identity)', f: "A \\cup A' = U, \\; A \\cap A' = \\emptyset", d: "1. A ∪ A' = U (The Union Law)\n2. A ∩ A' = ∅ (The Intersection Law)", ex: 'n(U)=50, n(A)=20 → n(A\')=30.', tip: 'A set and its complement are always disjoint and their union is U.', diagram: 'union' },
+                { title: 'Double Complement Law', f: "(A')' = A", d: "Taking the complement of a complement returns you to the original set.", ex: "If A = {1, 2}, A' = {3, 4, 5} (in U={1..5}), then (A')' = {1, 2} = A.", tip: 'Think of it as two negatives making a positive.' },
+                { title: 'Laws of Empty & Universal Sets', f: "U' = \\emptyset, \\; \\emptyset' = U", d: "1. The complement of the Universal set is the Empty set.\n2. The complement of the Empty set is the Universal set.", ex: 'U\' = U - U = ∅. ∅\' = U - ∅ = U.', tip: 'Everything outside of "Everything" is "Nothing", and vice-versa.' }
             ]
         },
         practice: [
@@ -694,9 +696,9 @@ export const SKILLS = [
         learn: {
             title: 'Operating on Sets',
             rules: [
-                { title: 'Union', f: 'A \\cup B = \\{x : x \\in A \\text{ or } x \\in B\\}', d: 'The union combines all elements from both sets. Think of it as "everything in A OR B (or both)".', ex: 'A = {1,2,3}, B = {3,4,5} → A ∪ B = {1,2,3,4,5}.', tip: 'Union always has more or equal elements than either set.' },
-                { title: 'Intersection', f: 'A \\cap B = \\{x : x \\in A \\text{ and } x \\in B\\}', d: 'The intersection keeps only elements common to both sets. If A ∩ B = ∅, the sets are disjoint.', ex: 'A = {1,2,3}, B = {3,4,5} → A ∩ B = {3}.', tip: 'For disjoint sets, A ∩ B = ∅ and A ∪ B = n(A) + n(B).' },
-                { title: 'Difference', f: 'A - B = \\{x : x \\in A, x \\notin B\\}', d: 'A − B keeps only elements of A that are NOT in B. Note: A − B ≠ B − A (not commutative).', ex: 'A = {1,2,3,4,5,6}, B = {2,4,6,8} → B − A = {8}.', tip: 'Think of A − B as "remove B from A". What\'s left is purely A.' }
+                { title: 'Union', f: 'A \\cup B = \\{x : x \\in A \\text{ or } x \\in B\\}', d: 'The union combines all elements from both sets. Think of it as "everything in A OR B (or both)".', ex: 'A = {1,2,3}, B = {3,4,5} → A ∪ B = {1,2,3,4,5}.', tip: 'Union always has more or equal elements than either set.', diagram: 'union' },
+                { title: 'Intersection', f: 'A \\cap B = \\{x : x \\in A \\text{ and } x \\in B\\}', d: 'The intersection keeps only elements common to both sets. If A ∩ B = ∅, the sets are disjoint.', ex: 'A = {1,2,3}, B = {3,4,5} → A ∩ B = {3}.', tip: 'For disjoint sets, A ∩ B = ∅ and A ∪ B = n(A) + n(B).', diagram: 'intersection' },
+                { title: 'Difference', f: 'A - B = \\{x : x \\in A, x \\notin B\\}', d: 'A − B keeps only elements of A that are NOT in B. Note: A − B ≠ B − A (not commutative).', ex: 'A = {1,2,3,4,5,6}, B = {2,4,6,8} → B − A = {8}.', tip: 'Think of A − B as "remove B from A". What\'s left is purely A.', diagram: 'difference-a-b' }
             ]
         },
         practice: [
@@ -719,13 +721,13 @@ export const SKILLS = [
                 explanation: 'A = { 1, 2, 3, 4 }, B = { 3, 4, 5, 6, 7 }. Intersection is { 3, 4 }.'
             },
             {
-                question: 'Level 2: $A \\cup \\emptyset = $:',
+                question: 'Level 2: $A \\cup \\emptyset = $',
                 options: ['$A$', '$\\emptyset$', '$U$', 'None'],
                 correct: 0,
                 explanation: 'Union with an empty set leaves the set unchanged.'
             },
             {
-                question: 'Level 2: For any set A, $A \\cap A = $:',
+                question: 'Level 2: For any set A, $A \\cap A = $',
                 options: ['$A$', '$\\emptyset$', '$U$', '$2A$'],
                 correct: 0,
                 explanation: 'Intersection of a set with itself is the set itself (Idempotent law).'
@@ -796,8 +798,8 @@ export const SKILLS = [
         learn: {
             title: 'Visualizing Sets',
             rules: [
-                { title: 'Diagram Basics', f: 'U = \\text{Rectangle}, A,B = \\text{Circles}', d: 'Venn diagrams use a rectangle for U and circles for individual sets. Overlapping areas show A ∩ B.', ex: 'Two overlapping circles create 4 regions: only-A, only-B, both (A∩B), and neither.', tip: 'Always start by drawing the rectangle for U first.' },
-                { title: 'Subset & Disjoint', f: 'A \\subset B \\Rightarrow \\text{Circle A inside B}', d: 'Non-overlapping circles mean disjoint sets (A ∩ B = ∅). One circle inside another shows subset relationship.', ex: 'If A ⊂ B: circle A is completely inside circle B.', tip: 'Disjoint = no overlap. Subset = completely inside.' },
+                { title: 'Diagram Basics', f: 'U = \\text{Rectangle}, A,B = \\text{Circles}', d: 'Venn diagrams use a rectangle for U and circles for individual sets. Overlapping areas show A ∩ B.', ex: 'Two overlapping circles create 4 regions: only-A, only-B, both (A∩B), and neither.', tip: 'Always start by drawing the rectangle for U first.', diagram: 'intersection' },
+                { title: 'Subset & Disjoint', f: 'A \\subset B \\Rightarrow \\text{Circle A inside B}', d: 'Non-overlapping circles mean disjoint sets (A ∩ B = ∅). One circle inside another shows subset relationship.', ex: 'If A ⊂ B: circle A is completely inside circle B.', tip: 'Disjoint = no overlap. Subset = completely inside.', diagram: 'subset' },
                 { title: 'Shading Regions', f: 'A - B = \\text{shade A, not overlap}', d: 'Each operation corresponds to a specific shaded region. A−B is A\'s portion only. (A∪B)\' is outside both circles.', ex: 'To shade A − B: color circle A\'s non-overlapping part.', tip: 'Practice shading each operation — exams love "identify the shaded region" questions.' }
             ]
         },
@@ -898,9 +900,11 @@ export const SKILLS = [
         learn: {
             title: 'The Rules of the Game',
             rules: [
-                { title: 'Commutative & Associative', f: 'A \\cup B = B \\cup A', d: 'Commutative: order doesn\'t matter. Associative: grouping doesn\'t matter. Also Idempotent: A ∪ A = A, A ∩ A = A.', ex: '(A ∪ B) ∪ C = A ∪ (B ∪ C) — regroup freely.', tip: 'These work for both ∪ and ∩ — just like + and × for numbers.' },
+                { title: 'Commutative Laws', f: 'A \\cup B = B \\cup A, \\; A \\cap B = B \\cap A', d: 'The order in which we perform Union or Intersection does not change the result. Just like 2 + 3 = 3 + 2.', ex: '{1, 2} ∪ {3, 4} = {3, 4} ∪ {1, 2} = {1, 2, 3, 4}.', tip: 'Commutative means "the order is interchangeable".' },
+                { title: 'Associative Laws', f: '(A \\cup B) \\cup C = A \\cup (B \\cup C)', d: 'The way elements are grouped in Union or Intersection does not change the result. $(A \\cap B) \\cap C = A \\cap (B \\cap C)$.', ex: '({a, b} ∪ {c}) ∪ {d} = {a, b, c} ∪ {d} = {a, b, c, d}.', tip: 'Associative means "the grouping is interchangeable".' },
+                { title: 'Idempotent Laws', f: 'A \\cup A = A, \\; A \\cap A = A', d: 'Operating a set with itself results in the same set. Repetition doesn\'t add or remove anything.', ex: '{1, 2} ∩ {1, 2} = {1, 2}.', tip: 'Idempotent comes from "idempotens" — having the same power.' },
                 { title: 'Distributive Laws', f: 'A \\cup (B \\cap C) = (A \\cup B) \\cap (A \\cup C)', d: 'Union distributes over intersection AND intersection distributes over union. Works both ways.', ex: 'A ∩ (B ∪ C) = (A ∩ B) ∪ (A ∩ C).', tip: 'Think of it like multiplication distributing over addition.' },
-                { title: 'De Morgan\'s Laws', f: "(A \\cup B)' = A' \\cap B'", d: 'When complementing, union flips to intersection (and vice versa). The "flip and complement" rule.', ex: '(A ∩ B)\' = A\' ∪ B\' — complement flips the operation.', tip: 'Remember: Break the bar, change the sign. This is crucial for proofs.' }
+                { title: 'De Morgan\'s Laws', f: "(A \\cup B)' = A' \\cap B'", d: "1. (A ∪ B)' = A' ∩ B'\n2. (A ∩ B)' = A' ∪ B'\nThe complement of a union is the intersection of complements, and vice-versa.", ex: "(A ∩ B)' = A' ∪ B' — the 'flip and complement' rule.", tip: 'Remember: Break the bar, change the sign. This is crucial for proofs.' }
             ]
         },
         practice: [

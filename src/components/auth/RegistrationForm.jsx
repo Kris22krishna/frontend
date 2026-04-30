@@ -7,25 +7,55 @@ import '../../styles/AuthStyles.css'; // Use shared styles
 
 
 const RegistrationForm = ({ role = 'student', parentId = null, onBack, onSuccess }) => {
-    const [selectedRole, setSelectedRole] = useState(role.toLowerCase());
+    const [selectedRole, setSelectedRole] = useState(role.toLowerCase() === 'teacher' ? 'mentor' : role.toLowerCase());
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
+    const [countryCode, setCountryCode] = useState('+91');
     const [grade, setGrade] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [showConfirm, setShowConfirm] = useState(false);
     const [isRateLimited, setIsRateLimited] = useState(false);
     const [predictedUsername, setPredictedUsername] = useState('');
+    const [customUsername, setCustomUsername] = useState('');
+    const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
     const [hasEmail, setHasEmail] = useState(null);
     const navigate = useNavigate();
 
-    const roles = ['Student', 'Parent', 'Mentor', 'Guest'];
+    const roles = [
+        { display: 'Student', value: 'student' },
+        { display: 'Teacher', value: 'mentor' }
+    ];
     const grades = [
         'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5', 'Grade 6',
         'Grade 7', 'Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'
     ];
+    const normalizeUsername = (value) => {
+        const trimmed = value.trim();
+        const prefixMatch = trimmed.match(/^([a-zA-Z]\d+-)(.*)$/);
+        if (!prefixMatch) return trimmed;
+        return `${prefixMatch[1].toLowerCase()}${prefixMatch[2]}`;
+    };
+
+    const handleUsernameChange = (e) => {
+        const val = normalizeUsername(e.target.value);
+        setCustomUsername(val);
+        if (window.usernameTimeout) clearTimeout(window.usernameTimeout);
+        window.usernameTimeout = setTimeout(async () => {
+            if (val.length >= 3) {
+                try {
+                    const res = await authService.checkUsername(val);
+                    setIsUsernameAvailable(res.available);
+                } catch {
+                    setIsUsernameAvailable(false);
+                }
+            } else {
+                setIsUsernameAvailable(true);
+            }
+        }, 500);
+    };
 
 
 
@@ -107,7 +137,7 @@ const RegistrationForm = ({ role = 'student', parentId = null, onBack, onSuccess
 
         try {
             const uname = await authService.predictUsername(name, selectedRole);
-            setPredictedUsername(uname || 'Error');
+            setPredictedUsername(uname ? normalizeUsername(uname) : 'Error');
         } catch (err) {
             console.error("Validation error:", err);
         }
@@ -123,12 +153,14 @@ const RegistrationForm = ({ role = 'student', parentId = null, onBack, onSuccess
         setError('');
 
         try {
+            const username = normalizeUsername(customUsername || predictedUsername);
             const registrationData = {
+                username,
                 email,
                 password,
                 role: selectedRole,
                 name,
-                phoneNumber,
+                phoneNumber: selectedRole !== 'student' ? `${countryCode}${phoneNumber}` : phoneNumber,
                 grade: selectedRole === 'student' ? grade : undefined
             };
 
@@ -196,7 +228,17 @@ const RegistrationForm = ({ role = 'student', parentId = null, onBack, onSuccess
 
         } catch (err) {
             console.error("Registration Error:", err);
-            setError(err.message || (typeof err === 'string' ? err : 'Registration failed.'));
+            const message = err.message || (typeof err === 'string' ? err : 'Registration failed.');
+            const lowerMessage = message.toLowerCase();
+            const isUsernameError = lowerMessage.includes('username is')
+                || lowerMessage.includes('username already')
+                || lowerMessage.includes('username exists')
+                || lowerMessage.includes('username taken');
+            setError(
+                isUsernameError
+                    ? `${message}. The s100- prefix stays lowercase, but uppercase letters after it are allowed.`
+                    : message
+            );
             setShowConfirm(false); // Go back to form on error
         } finally {
             setIsLoading(false);
@@ -211,7 +253,7 @@ const RegistrationForm = ({ role = 'student', parentId = null, onBack, onSuccess
                 <h2 className="auth-title">Quick Check</h2>
                 <div className="confirmation-summary" style={{ textAlign: 'left', margin: '20px 0', padding: '15px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
                     <p style={{ marginBottom: '10px' }}><strong>Full Name:</strong> {name}</p>
-                    <p style={{ marginBottom: '10px' }}><strong>Role:</strong> {roles.find(r => r.toLowerCase() === selectedRole)}</p>
+                    <p style={{ marginBottom: '10px' }}><strong>Role:</strong> {roles.find(r => r.value === selectedRole)?.display || selectedRole}</p>
 
                     {email && <p style={{ marginBottom: '10px' }}><strong>Email:</strong> {email}</p>}
 
@@ -220,12 +262,47 @@ const RegistrationForm = ({ role = 'student', parentId = null, onBack, onSuccess
                     {selectedRole === 'student' && <p style={{ marginBottom: '10px' }}><strong>Grade:</strong> {grade}</p>}
 
                     <div style={{ marginTop: '15px', padding: '10px', background: '#e0f2fe', borderRadius: '6px', border: '1px solid #bae6fd' }}>
-                        <p style={{ color: '#0369a1', fontSize: '0.9rem' }}>
+                        <div style={{ color: '#0369a1', fontSize: '0.9rem' }}>
                             <strong>Your Personal Login ID:</strong><br />
-                            <span style={{ fontSize: '1.2rem', fontWeight: 'bold', fontFamily: 'monospace' }}>{predictedUsername}</span>
-                            <br />
-                            <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>(This unique ID will be assigned to you)</span>
-                        </p>
+                            <input 
+                                type="text" 
+                                value={customUsername !== '' ? customUsername : predictedUsername} 
+                                onChange={handleUsernameChange}
+                                className="auth-input"
+                                style={{
+                                    marginTop: '5px',
+                                    fontWeight: 'bold', 
+                                    fontFamily: 'monospace', 
+                                    borderColor: !isUsernameAvailable ? 'red' : undefined,
+                                    width: '100%'
+                                }}
+                            />
+                            {!isUsernameAvailable && <span style={{color: 'red', display: 'block', marginTop: '4px'}}>Username is taken.</span>}
+                            <span style={{ fontSize: '0.8rem', opacity: 0.8, display: 'block', marginTop: '4px' }}>(The s100- prefix stays lowercase; uppercase letters are allowed after it)</span>
+                            {customUsername !== '' && customUsername !== predictedUsername && (
+                                <div style={{ marginTop: '8px', fontSize: '0.85rem' }}>
+                                    <span style={{ color: '#475569' }}>Generated suggestion: </span>
+                                    <button 
+                                        type="button" 
+                                        onClick={() => {
+                                            setCustomUsername(predictedUsername);
+                                            setIsUsernameAvailable(true);
+                                        }} 
+                                        style={{ 
+                                            background: '#bae6fd', 
+                                            border: 'none', 
+                                            color: '#0369a1', 
+                                            cursor: 'pointer', 
+                                            padding: '2px 8px', 
+                                            borderRadius: '4px',
+                                            fontWeight: '500'
+                                        }}
+                                    >
+                                        {predictedUsername}
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
 
@@ -243,7 +320,7 @@ const RegistrationForm = ({ role = 'student', parentId = null, onBack, onSuccess
                         type="button"
                         className="auth-btn-primary"
                         onClick={handleFinalSubmit}
-                        disabled={isLoading}
+                        disabled={isLoading || !isUsernameAvailable}
                         style={{ flex: 1, margin: 0 }}
                     >
                         {isLoading ? 'Creating...' : 'Confirm & Register'}
@@ -262,12 +339,12 @@ const RegistrationForm = ({ role = 'student', parentId = null, onBack, onSuccess
             <div className="role-selection-group">
                 {roles.map((r) => (
                     <button
-                        key={r}
+                        key={r.value}
                         type="button"
-                        className={`role-btn ${selectedRole === r.toLowerCase() ? 'active' : ''}`}
-                        onClick={() => setSelectedRole(r.toLowerCase())}
+                        className={`role-btn ${selectedRole === r.value ? 'active' : ''}`}
+                        onClick={() => setSelectedRole(r.value)}
                     >
-                        {r}
+                        {r.display}
                     </button>
                 ))}
             </div>
@@ -310,15 +387,41 @@ const RegistrationForm = ({ role = 'student', parentId = null, onBack, onSuccess
                 {selectedRole !== 'student' && (
                     <div className="auth-form-group">
                         <label className="auth-label">Phone Number *</label>
-                        <input
-                            type="tel"
-                            value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                            className="auth-input"
-                            placeholder="+1 (555) 000-0000"
-                            required
-                            disabled={isLoading}
-                        />
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <select 
+                                value={countryCode} 
+                                onChange={(e) => setCountryCode(e.target.value)}
+                                className="auth-input"
+                                style={{ width: '125px', padding: '0.5rem', cursor: 'pointer' }}
+                            >
+                                <option value="+91">+91 (IN)</option>
+                                <option value="+1">+1 (US/CA)</option>
+                                <option value="+44">+44 (UK)</option>
+                                <option value="+61">+61 (AU)</option>
+                                <option value="+81">+81 (JP)</option>
+                                <option value="+49">+49 (DE)</option>
+                                <option value="+33">+33 (FR)</option>
+                                <option value="+39">+39 (IT)</option>
+                                <option value="+86">+86 (CN)</option>
+                                <option value="+55">+55 (BR)</option>
+                                <option value="+52">+52 (MX)</option>
+                                <option value="+34">+34 (ES)</option>
+                                <option value="+27">+27 (ZA)</option>
+                                <option value="+971">+971 (AE)</option>
+                                <option value="+65">+65 (SG)</option>
+                                <option value="+64">+64 (NZ)</option>
+                            </select>
+                            <input
+                                type="tel"
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                                className="auth-input"
+                                placeholder="00000 00000"
+                                required
+                                disabled={isLoading}
+                                style={{ flex: 1 }}
+                            />
+                        </div>
                     </div>
                 )}
 

@@ -87,7 +87,9 @@ export default function NumberPlay6QuizEngine({ questions, title, onBack, onSeco
         if (isAnswered) return;
         if (!draftTextAnswer.trim()) return;
         
-        const isCorrect = draftTextAnswer.trim().toLowerCase() === String(q.answer).trim().toLowerCase();
+        const normalizedDraft = draftTextAnswer.replace(/\s+/g, ' ').replace(/[,]/g, '').trim().toLowerCase();
+        const normalizedAnswer = String(q.answer).replace(/\s+/g, ' ').replace(/[,]/g, '').trim().toLowerCase();
+        const isCorrect = normalizedDraft === normalizedAnswer;
         setAnswersMap(prev => ({ ...prev, [current]: { textAnswer: draftTextAnswer, isCorrect } }));
     };
 

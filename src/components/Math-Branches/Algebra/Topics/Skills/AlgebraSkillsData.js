@@ -15,8 +15,8 @@ const genProductQuestions = () => {
     const b = _rnd(2,5), a = _rnd(2,4), c = _rnd(2,4), d = _rnd(2,4);
     const l = _rndL();
     return [
-        _mkQ(`Simplify: $${b}^{${a}} \\cdot ${b}^{${c}}$`, [`$${b}^{${a+c}}$`,`$${b}^{${a*c}}$`,`$${b*2}^{${a+c}}$`,`$${b}^{${Math.abs(a-c)}}$`], `Add exponents: $${a}+${c}=${a+c}$.`),
-        _mkQ(`Simplify: $x^{${a}} \\cdot x^{${c}}$`, [`$x^{${a+c}}$`,`$x^{${a*c}}$`,`$2x^{${a+c}}$`,`$x^{${Math.abs(a-c)}}$`], `Add exponents: $${a}+${c}=${a+c}$.`),
+        _mkQ(`Simplify: $${b}^{${a}} \\cdot ${b}^{${c}}$`, [`$${b}^{${a+c}}$`,`$${b}^{${a+c === a*c ? a*c+1 : a*c}}$`,`$${b*2}^{${a+c}}$`,`$${b}^{${Math.abs(a-c)}}$`], `Add exponents: $${a}+${c}=${a+c}$.`),
+        _mkQ(`Simplify: $x^{${a}} \\cdot x^{${c}}$`, [`$x^{${a+c}}$`,`$x^{${a+c === a*c ? a*c+1 : a*c}}$`,`$2x^{${a+c}}$`,`$x^{${Math.abs(a-c)}}$`], `Add exponents: $${a}+${c}=${a+c}$.`),
         _mkQ(`Simplify: $${b}^{${a}} \\cdot ${b}^{${c}} \\cdot ${b}^{${d}}$`, [`$${b}^{${a+c+d}}$`,`$${b}^{${a*c*d}}$`,`$${b}^{${a+c}}$`,`$${b}^{3}$`], `Add all: $${a}+${c}+${d}=${a+c+d}$.`),
         _mkQ(`Simplify: $${l}^{${a}} \\cdot ${l}^{${c}} \\cdot ${l}^{${d}}$`, [`$${l}^{${a+c+d}}$`,`$${l}^{${a*c*d}}$`,`$3${l}^{${a+c+d}}$`,`$${l}^{${a+c}}$`], `Add all: $${a}+${c}+${d}=${a+c+d}$.`),
         _mkQ(`Simplify: $2${l}^{${a}} \\cdot 3${l}^{${c}} \\cdot ${l}^{2}$`, [`$6${l}^{${a+c+2}}$`,`$5${l}^{${a+c+2}}$`,`$6${l}^{${a*c*2}}$`,`$${l}^{${a+c+2}}$`], `Multiply numbers ($2 \\times 3=6$) and add exponents.`),
@@ -41,11 +41,11 @@ const genPowerQuestions = () => {
     const b = _rnd(2,4), a = _rnd(2,3), c = _rnd(2,3), d = _rnd(2,2);
     const l = _rndL();
     return [
-        _mkQ(`Simplify: $(${b}^{${a}})^{${c}}$`, [`$${b}^{${a*c}}$`,`$${b}^{${a+c}}$`,`$${b*c}^{${a}}$`,`$${b}^{${a}}$`], `Multiply: $${a} \\times ${c}=${a*c}$.`),
-        _mkQ(`Simplify: $(x^{${a}})^{${c}}$`, [`$x^{${a*c}}$`,`$x^{${a+c}}$`,`$${c}x^{${a}}$`,`$x^2$`], `Multiply: $${a} \\times ${c}=${a*c}$.`),
+        _mkQ(`Simplify: $(${b}^{${a}})^{${c}}$`, [`$${b}^{${a*c}}$`,`$${b}^{${a*c === a+c ? a+c+1 : a+c}}$`,`$${b*c}^{${a}}$`,`$${b}^{${a}}$`], `Multiply: $${a} \\times ${c}=${a*c}$.`),
+        _mkQ(`Simplify: $(x^{${a}})^{${c}}$`, [`$x^{${a*c}}$`,`$x^{${a*c === a+c ? a+c+1 : a+c}}$`,`$${c}x^{${a}}$`,`$x^2$`], `Multiply: $${a} \\times ${c}=${a*c}$.`),
         _mkQ(`Simplify: $((${b}^{${a}})^{${c}})^{${d}}$`, [`$${b}^{${a*c*d}}$`,`$${b}^{${a+c+d}}$`,`$${b}^{${a*c}}$`,`$3${b}^{${a}}$`], `Multiply all three exponents.`),
         _mkQ(`Simplify: $((${l}^{${a}})^{${c}})^{${d}}$`, [`$${l}^{${a*c*d}}$`,`$${l}^{${a+c+d}}$`,`$${l}^{${a*c}}$`,`$${d}${l}^{${a}}$`], `Multiply all three exponents.`),
-        _mkQ(`Simplify: $(2x^{${a}})^{${c}} \\cdot x^{2}$`, [`$${Math.pow(2,c)}x^{${a*c+2}}$`,`$${2*c}x^{${a*c+2}}$`,`$${Math.pow(2,c)}x^{${a+c+2}}$`,`$2x^{${a*c+2}}$`], `Apply power to 2 and x first, then add 2.`),
+        _mkQ(`Simplify: $(2x^{${a}})^{${c}} \\cdot x^{2}$`, [`$${Math.pow(2,c)}x^{${a*c+2}}$`,`$${Math.pow(2,c)===2*c ? 2*c+2 : 2*c}x^{${a*c+2}}$`,`$${Math.pow(2,c)}x^{${a+c+2 === a*c+2 ? a+c+3 : a+c+2}}$`,`$2x^{${a*c+2}}$`], `Apply power to 2 and x first, then add 2.`),
     ];
 };
 
@@ -289,7 +289,7 @@ const generateEquationQuestionsLinear1 = () => {
     const result = a * x + b;
     return [_mkQ(
         `Solve for $x$: $${a}x + ${b} = ${result}$`,
-        [`$x=${x}$`, `$x=${x+1}$`, `$x=${x-1}$`, `$x=${a+b}$`],
+        [`$x=${x}$`, `$x=${x+1}$`, `$x=${x-1}$`, `$x=${[x, x+1, x-1].includes(a+b) ? a+b+2 : a+b}$`],
         `Subtract $${b}$: $${a}x=${result-b}$, divide by $${a}$: $x=${x}$.`
     )];
 };
@@ -299,7 +299,7 @@ const generateEquationQuestionsLinear2 = () => {
     if (!Number.isInteger(x) || !Number.isInteger(y)) return generateEquationQuestionsLinear2();
     return [_mkQ(
         `If $x+y=${S}$ and $x-y=${D}$, find $x$.`,
-        [`$${x}$`, `$${y}$`, `$${S}$`, `$${D}$`],
+        [`$${x}$`, `$${y}$`, `$${S}$`, `$${D === y ? D+1 : D}$`],
         `Add equations: $2x=${S+D}$, so $x=${x}$.`
     )];
 };
@@ -310,7 +310,7 @@ const generateEquationQuestionsQuadratic = () => {
     const absB = Math.abs(bCoeff);
     return [_mkQ(
         `Solve: $x^2 ${signB} ${absB}x + ${cCoeff} = 0$`,
-        [`$x=${r1}$ or $x=${r2}$`, `$x=${-r1}$ or $x=${-r2}$`, `$x=${r1+r2}$`, `$x=${cCoeff}$`],
+        [`$x=${r1}$ or $x=${r2}$`, `$x=${-r1}$ or $x=${-r2}$`, `$x=${r1+r2}$`, `$x=${cCoeff === r1+r2 ? cCoeff+1 : cCoeff}$`],
         `Factor as $(x-${r1})(x-${r2})=0$; roots are $${r1}$ and $${r2}$.`
     )];
 };

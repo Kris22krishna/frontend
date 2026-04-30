@@ -255,6 +255,7 @@ export default function AssessmentEngine({
             if (!window.confirm('You have unanswered questions. Are you sure you want to submit?')) return;
         }
         setFinished(true);
+        isFinishedRef.current = true; // Sync update to prevent cleanup race
         setPaletteOpen(false);
 
         // v4 Finish

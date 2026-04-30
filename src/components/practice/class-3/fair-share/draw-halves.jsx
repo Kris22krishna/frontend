@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
+import GenericReportCard from '../GenericReportCard';
 import '../../../../pages/juniors/grade3/fair-share.css';
 
 // --- Configuration ---
@@ -117,9 +118,14 @@ const FairShareDraw = () => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             }).catch(console.error);
         }
-        const timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
-        return () => clearInterval(timer);
-    }, []);
+        let timer;
+        if (!showResult) {
+            timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        }
+        return () => {
+            if (timer) clearInterval(timer);
+        };
+    }, [showResult]);
 
     // Load state when qIndex changes
     useEffect(() => {
@@ -316,7 +322,14 @@ const FairShareDraw = () => {
     };
 
     const nextQuestion = async () => {
-        setHistory(prev => ({ ...prev, [qIndex]: { userLines, isSubmitted, isCorrect } }));
+        const summary = {
+            text: `Question ${qIndex + 1}`,
+            selected: userLines.length > 0 ? "Shape drawn" : "Nothing drawn",
+            correctAnswer: "Accurate reflection",
+            isCorrect,
+            isSubmitted
+        };
+        setHistory(prev => ({ ...prev, [qIndex]: summary }));
         if (qIndex < TOTAL_QUESTIONS - 1) {
             setQIndex(p => p + 1);
         } else {
@@ -333,19 +346,16 @@ const FairShareDraw = () => {
 
 
     
-    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
-    if (showRes) {
-        const scoreVal = typeof score !== 'undefined' 
-            ? score 
-            : (typeof stats !== 'undefined' && stats.correct !== undefined 
-                ? stats.correct 
-                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
-        const totalVal = typeof questions !== 'undefined' 
-            ? questions.length 
-            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
-                ? sessionQuestions.length 
-                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
-        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
+    if (showResult) {
+        return (
+            <GenericReportCard 
+                score={Object.values(history).filter(v => v.isCorrect).length + (isCorrect ? 1 : 0)} 
+                totalQuestions={TOTAL_QUESTIONS} 
+                onRestart={() => window.location.reload()} 
+                timeElapsed={timeElapsed} 
+                summaryData={Object.values(history)} 
+            />
+        );
     }
 
     return (

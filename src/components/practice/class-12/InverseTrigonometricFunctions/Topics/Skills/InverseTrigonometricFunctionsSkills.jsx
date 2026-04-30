@@ -3,6 +3,7 @@ import "../../InverseTrigonometricFunctions.css";
 import MathRenderer from "../../../../../MathRenderer";
 import { LatexText } from "../../../../../LatexText";
 import InverseTrigonometricFunctionsTopNav from "../../InverseTrigonometricFunctionsTopNav";
+import { NODE_IDS } from "@/lib/curriculumIds";
 import {
   generateInverseConceptQuestions,
   generateInverseConceptAssessment,
@@ -197,11 +198,20 @@ export default function InverseTrigonometricFunctionsSkills() {
   const [activeSkill, setActiveSkill] = useState(null);
   const [selectedLearnIdx, setSelectedLearnIdx] = useState(0);
 
+  const skillMap = {
+    concept: NODE_IDS.g12MathITFConcept,
+    definitions: NODE_IDS.g12MathITFDefinitions,
+    properties: NODE_IDS.g12MathITFProperties,
+    principal: NODE_IDS.g12MathITFPrincipal,
+    simplification: NODE_IDS.g12MathITFSimplification,
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   const skill = activeSkill !== null ? SKILLS[activeSkill] : null;
+  const currentNodeId = React.useMemo(() => skill ? skillMap[skill.id] : null, [skill]);
 
   if (view !== "list" && skill) {
     return (
@@ -456,9 +466,9 @@ export default function InverseTrigonometricFunctionsSkills() {
               </div>
             </div>
           ) : view === "practice" ? (
-            <QuizEngine questions={skill.practice} title={`Practice: ${skill.title}`} onBack={() => setView("list")} color={skill.color} prefix="rel" />
+            <QuizEngine questions={skill.practice} title={`Practice: ${skill.title}`} onBack={() => setView("list")} color={skill.color} prefix="rel" nodeId={currentNodeId} />
           ) : (
-            <AssessmentEngine questions={skill.assessment} title={`Assessment: ${skill.title}`} onBack={() => setView("list")} color={skill.color} prefix="rel" />
+            <AssessmentEngine questions={skill.assessment} title={`Assessment: ${skill.title}`} onBack={() => setView("list")} color={skill.color} prefix="rel" nodeId={currentNodeId} />
           )}
         </div>
       </div>

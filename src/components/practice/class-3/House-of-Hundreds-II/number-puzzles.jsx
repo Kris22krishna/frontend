@@ -185,11 +185,12 @@ const NumberPuzzles = () => {
     }, [currentQIndex, currentQ]);
 
     useEffect(() => {
+        if (showResult) return;
         const timer = setInterval(() => {
             setTimeElapsed(prev => prev + 1);
         }, 1000);
         return () => clearInterval(timer);
-    }, []);
+    }, [showResult]);
 
     useEffect(() => {
         const handleResize = () => setTick(t => t + 1);
@@ -305,10 +306,21 @@ const NumberPuzzles = () => {
             setFeedback('wrong');
             setShowExplanationModal(true);
         }
+
+        setHistory(prev => ({ 
+            ...prev, 
+            [currentQIndex]: { 
+                text: currentQ.question,
+                selected: selectedOption,
+                correctAnswer: currentQ.correct,
+                isCorrect: isRight,
+                isSubmitted: true
+            } 
+        }));
     };
 
     const handleNext = () => {
-        setHistory(prev => ({ ...prev, [currentQIndex]: { isSubmitted, isCorrect, selectedOption, feedback } }));
+        setShowExplanationModal(false);
         // Reset happens in useEffect
         if (currentQIndex < questions.length - 1) {
             setCurrentQIndex(prev => prev + 1);
@@ -319,7 +331,6 @@ const NumberPuzzles = () => {
 
     const handlePrevious = () => {
         if (currentQIndex > 0) {
-            setHistory(prev => ({ ...prev, [currentQIndex]: { isSubmitted, isCorrect, selectedOption, feedback } }));
             setCurrentQIndex(prev => prev - 1);
         }
     };
@@ -334,6 +345,18 @@ const NumberPuzzles = () => {
 
 
     // --- Renderers ---
+    if (showResult) {
+        return (
+            <GenericReportCard 
+                score={score} 
+                totalQuestions={questions.length} 
+                onRestart={handleRestart} 
+                timeElapsed={timeElapsed} 
+                summaryData={Object.values(history)} 
+            />
+        );
+    }
+
     const renderVisualDiagram = () => {
         // Reduced size for better fit
         const diagramSize = "w-36 h-36 md:w-44 md:h-44";

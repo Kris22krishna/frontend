@@ -71,7 +71,9 @@ export default function QuizEngine({ questions, title, onBack, onSecondaryBack, 
 
     const handleTextSubmit = () => {
         if (isAnswered || !draftTextAnswer.trim()) return;
-        const isCorrect = draftTextAnswer.trim().toLowerCase() === String(q.answer).trim().toLowerCase();
+        const normalizedDraft = draftTextAnswer.replace(/\s+/g, ' ').replace(/[,]/g, '').trim().toLowerCase();
+        const normalizedAnswer = String(q.answer).replace(/\s+/g, ' ').replace(/[,]/g, '').trim().toLowerCase();
+        const isCorrect = normalizedDraft === normalizedAnswer;
         setAnswersMap(prev => ({ ...prev, [current]: { textAnswer: draftTextAnswer, isCorrect } }));
         if (nodeId) {
             const entry = { question_index: current, answer_json: { text: draftTextAnswer, correct_answer: q.answer }, is_correct: isCorrect, marks_awarded: isCorrect ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };

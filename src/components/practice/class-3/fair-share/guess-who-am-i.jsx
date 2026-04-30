@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../../../services/api';
 import ExplanationModal from '../../../ExplanationModal';
 import StickerExit from '../../../StickerExit';
+import GenericReportCard from '../GenericReportCard';
 import LatexContent from '../../../LatexContent';
 import '../../../../pages/juniors/grade3/fair-share.css';
 
@@ -57,6 +58,7 @@ const FairShareGuesswho = () => {
     const [showExplanationModal, setShowExplanationModal] = useState(false);
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [feedbackMessage, setFeedbackMessage] = useState("");
+    const [history, setHistory] = useState({});
     const [shuffledOptions, setShuffledOptions] = useState([]);
 
     const [sessionId, setSessionId] = useState(null);
@@ -75,9 +77,14 @@ const FairShareGuesswho = () => {
                 if (sess && sess.session_id) setSessionId(sess.session_id);
             }).catch(console.error);
         }
-        const timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
-        return () => clearInterval(timer);
-    }, []);
+        let timer;
+        if (!showResult) {
+            timer = setInterval(() => setTimeElapsed(p => p + 1), 1000);
+        }
+        return () => {
+            if (timer) clearInterval(timer);
+        };
+    }, [showResult]);
 
     useEffect(() => {
         generateQuestion();
@@ -210,6 +217,17 @@ const FairShareGuesswho = () => {
             setShowExplanationModal(true);
         }
 
+        setHistory(prev => ({
+            ...prev,
+            [qIndex]: {
+                text: "Guess the number based on hints",
+                selected: selectedOption,
+                correctAnswer: currentQuestion?.correctAnswer,
+                isCorrect: isRight,
+                isSubmitted: true
+            }
+        }));
+
         const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
         if (userId) {
             api.recordAttempt({
@@ -243,19 +261,16 @@ const FairShareGuesswho = () => {
     if (!currentQuestion) return <div>Loading...</div>;
 
     
-    const showRes = typeof showResult !== 'undefined' ? showResult : (typeof showResults !== 'undefined' ? showResults : false);
-    if (showRes) {
-        const scoreVal = typeof score !== 'undefined' 
-            ? score 
-            : (typeof stats !== 'undefined' && stats.correct !== undefined 
-                ? stats.correct 
-                : (typeof answers !== 'undefined' ? Object.values(answers).filter(val => val === true || val?.isCorrect === true).length : 0));
-        const totalVal = typeof questions !== 'undefined' 
-            ? questions.length 
-            : (typeof sessionQuestions !== 'undefined' && sessionQuestions.length > 0 
-                ? sessionQuestions.length 
-                : (typeof TOTAL_QUESTIONS !== 'undefined' ? TOTAL_QUESTIONS : 10));
-        return <GenericReportCard score={scoreVal} totalQuestions={totalVal} onRestart={typeof handleRestart !== 'undefined' ? handleRestart : undefined} />;
+    if (showResult) {
+        return (
+            <GenericReportCard 
+                score={Object.values(answers).filter(val => val === true).length} 
+                totalQuestions={TOTAL_QUESTIONS} 
+                onRestart={() => window.location.reload()} 
+                timeElapsed={timeElapsed} 
+                summaryData={Object.values(history)} 
+            />
+        );
     }
 
     return (

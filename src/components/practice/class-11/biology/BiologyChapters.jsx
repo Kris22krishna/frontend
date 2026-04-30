@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronRight, BookOpen, Microscope, FlaskConical, Dna, Brain } from 'lucide-react';
+import { useAuth } from '../../../../contexts/AuthContext';
+import LoginPromptModal from '../../../auth/LoginPromptModal';
 import '../../../../pages/high/SeniorGradeSyllabus.css';
 
 const chapters = [
@@ -12,6 +14,7 @@ const chapters = [
         questions: 20,
         gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
         shadow: 'rgba(67,233,123,0.35)',
+        hidden: true,
     },
     {
         key: 'the-cell',
@@ -27,6 +30,27 @@ const chapters = [
 
 const BiologyChapters = () => {
     const navigate = useNavigate();
+    const { isAuthenticated } = useAuth();
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [pendingChapter, setPendingChapter] = useState(null);
+
+    const handleChapterClick = (chapter) => {
+        if (!isAuthenticated) {
+            setPendingChapter(chapter);
+            setShowLoginModal(true);
+        } else {
+            navigate(`/senior/grade/11/biology/${chapter.key}`);
+        }
+    };
+
+    const handleLoginSuccess = () => {
+        if (pendingChapter) {
+            navigate(`/senior/grade/11/biology/${pendingChapter.key}`);
+            setPendingChapter(null);
+        }
+    };
+
+    const visibleChapters = chapters.filter(ch => !ch.hidden);
 
     return (
         <div className="senior-syllabus-page">
@@ -49,12 +73,12 @@ const BiologyChapters = () => {
 
             <main className="senior-content-grid">
                 <div className="g11-subject-grid" style={{ maxWidth: 1100 }}>
-                    {chapters.map(ch => (
+                    {visibleChapters.map(ch => (
                         <div
                             key={ch.key}
                             className="g11-subject-card"
                             style={{ '--card-gradient': ch.gradient, '--card-shadow': ch.shadow }}
-                            onClick={() => navigate(`/senior/grade/11/biology/${ch.key}`)}
+                            onClick={() => handleChapterClick(ch)}
                         >
                             <div className="g11-card-bg"></div>
                             <div className="g11-card-content">
@@ -70,6 +94,14 @@ const BiologyChapters = () => {
                     ))}
                 </div>
             </main>
+
+            {showLoginModal && (
+                <LoginPromptModal
+                    isOpen={showLoginModal}
+                    onClose={() => setShowLoginModal(false)}
+                    onLoginSuccess={handleLoginSuccess}
+                />
+            )}
         </div>
     );
 };

@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronRight, Atom, Zap, Maximize } from 'lucide-react';
+import { useAuth } from '../../../../contexts/AuthContext';
+import LoginPromptModal from '../../../auth/LoginPromptModal';
 import '../../../../pages/high/SeniorGradeSyllabus.css';
 
 const chapters = [
@@ -14,6 +16,15 @@ const chapters = [
         shadow: 'rgba(30,60,114,0.35)',
     },
     {
+        key: 'motion-in-a-straight-line',
+        title: 'Motion in a Straight Line',
+        desc: 'Kinematics: distance, displacement, velocity, acceleration, equations of motion, and motion graphs.',
+        icon: '📐',
+        questions: 30,
+        gradient: 'linear-gradient(135deg, #0f4c4c 0%, #0d9488 100%)',
+        shadow: 'rgba(13,148,136,0.35)',
+    },
+    {
         key: 'work-energy-power',
         title: 'Work, Energy and Power',
         desc: 'Work-energy theorem, conservative forces, potential energy, mechanical energy conservation, and collisions.',
@@ -23,10 +34,30 @@ const chapters = [
         shadow: 'rgba(15, 23, 42, 0.35)',
     },
     // Future chapters can be added here
+
 ];
 
 const PhysicsChapters = () => {
     const navigate = useNavigate();
+    const { isAuthenticated } = useAuth();
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [pendingChapter, setPendingChapter] = useState(null);
+
+    const handleChapterClick = (chapter) => {
+        if (!isAuthenticated) {
+            setPendingChapter(chapter);
+            setShowLoginModal(true);
+        } else {
+            navigate(`/senior/grade/11/physics/${chapter.key}`);
+        }
+    };
+
+    const handleLoginSuccess = () => {
+        if (pendingChapter) {
+            navigate(`/senior/grade/11/physics/${pendingChapter.key}`);
+            setPendingChapter(null);
+        }
+    };
 
     return (
         <div className="senior-syllabus-page">
@@ -54,7 +85,7 @@ const PhysicsChapters = () => {
                             key={ch.key}
                             className="g11-subject-card"
                             style={{ '--card-gradient': ch.gradient, '--card-shadow': ch.shadow }}
-                            onClick={() => navigate(`/senior/grade/11/physics/${ch.key}`)}
+                            onClick={() => handleChapterClick(ch)}
                         >
                             <div className="g11-card-bg"></div>
                             <div className="g11-card-content">
@@ -70,6 +101,14 @@ const PhysicsChapters = () => {
                     ))}
                 </div>
             </main>
+
+            {showLoginModal && (
+                <LoginPromptModal
+                    isOpen={showLoginModal}
+                    onClose={() => setShowLoginModal(false)}
+                    onLoginSuccess={handleLoginSuccess}
+                />
+            )}
         </div>
     );
 };

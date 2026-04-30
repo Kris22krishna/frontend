@@ -34,7 +34,13 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
         const type = getQuestionType(question);
         if (type === 'text') return question.answer ?? 'No answer provided';
         if (type === 'factor-tree' || type === 'division-table') return question.correctAnswer ?? 'No answer provided';
-        return question.options?.[question.correct] ?? 'No answer provided';
+                if (question.options && question.options[question.correct] !== undefined) {
+            return question.options[question.correct];
+        }
+        if (question.correct !== undefined && question.correct !== null) {
+            return String(question.correct);
+        }
+        return 'No answer provided';
     };
 
     const getUserAnswerLabel = (question, answer) => {

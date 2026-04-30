@@ -27,6 +27,7 @@ export default function ChemQuizEngine({ questions, title, onBack, onSecondaryBa
     const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
     const isFinishedRef = useRef(false);
     const sessionStartedRef = useRef(false);
+    const answersPayload = useRef([]);
 
     const [questionSet, setQuestionSet] = useState(() => resolveQuestions(questions));
     const [current, setCurrent] = useState(0);
@@ -37,26 +38,33 @@ export default function ChemQuizEngine({ questions, title, onBack, onSecondaryBa
 
     useEffect(() => {
         if (nodeId && !sessionStartedRef.current) {
-            startSession({ nodeId, sessionType: 'practice' });
-            sessionStartedRef.current = true;
+            const sessionId = startSession({ nodeId, sessionType: 'practice' });
+            sessionStartedRef.current = Boolean(sessionId);
+            answersPayload.current = [];
         }
     }, [nodeId, startSession]);
 
     useEffect(() => {
         return () => {
-            if (sessionStartedRef.current && !isFinishedRef.current) {
-                abandonSession({ totalQuestions: questionSet.length });
+            if (sessionStartedRef.current && !isFinishedRef.current && answersPayload.current.length > 0) {
+                abandonSession({
+                    answersPayload: answersPayload.current,
+                    totalQuestions: questionSet.length
+                });
             }
         };
     }, [abandonSession, questionSet.length]);
 
     useEffect(() => {
-        setQuestionSet(resolveQuestions(questions));
+        const newQs = resolveQuestions(questions);
+        setQuestionSet(newQs);
         setCurrent(0);
         setSelected(null);
         setAnswered(false);
         setScore(0);
         setFinished(false);
+        setAnswers(Array(newQs.length).fill(null));
+        answersPayload.current = [];
     }, [questions]);
 
     // Timer state for Practice: Starts at 0, counts up
@@ -80,9 +88,48 @@ export default function ChemQuizEngine({ questions, title, onBack, onSecondaryBa
     const q = questionSet[current];
     const progress = ((current + (finished ? 1 : 0)) / questionSet.length) * 100;
 
-    const [answers, setAnswers] = useState(() => Array(resolveQuestions(questions).length).fill(null));
+    const [answers, setAnswers] = useState(() => Array(questionSet.length).fill(null));
 
-    const handleSelect = (optIdx) => {
+    const buildAnswerData = (question, optionIndex, questionIndex) => {
+        const isCorrect = optionIndex === question.correct;
+        return {
+            question_index: questionIndex + 1,
+            answer_json: {
+                question_text: question.question,
+                options: question.options,
+                selection: optionIndex,
+                selected_answer: question.options?.[optionIndex],
+                correct_index: question.correct,
+                correct_answer: question.options?.[question.correct],
+                is_correct: isCorrect,
+                explanation: question.explanation
+            },
+            is_correct: isCorrect ? 1.0 : 0.0,
+            marks_awarded: isCorrect ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        };
+    };
+
+    const startNewPracticeAttempt = () => {
+        const newQs = resolveQuestions(questions);
+        if (nodeId) {
+            const sessionId = startSession({ nodeId, sessionType: 'practice' });
+            sessionStartedRef.current = Boolean(sessionId);
+        }
+        answersPayload.current = [];
+        setQuestionSet(newQs);
+        setCurrent(0);
+        setSelected(null);
+        setAnswered(false);
+        setScore(0);
+        setTimeTaken(0);
+        setAnswers(Array(newQs.length).fill(null));
+        setFinished(false);
+        isFinishedRef.current = false;
+    };
+
+    const handleSelect = async (optIdx) => {
         if (answered) return;
         setSelected(optIdx);
         setAnswered(true);
@@ -93,36 +140,18 @@ export default function ChemQuizEngine({ questions, title, onBack, onSecondaryBa
         const correct = optIdx === q.correct;
         if (correct) setScore(s => s + 1);
 
-        logAnswer({
-            question_index: current + 1,
-            answer_json: { selection: optIdx },
-            is_correct: correct ? 1.0 : 0.0,
-            marks_awarded: correct ? 1 : 0,
-            marks_possible: 1,
-            time_taken_ms: 0
-        });
+        const answerData = buildAnswerData(q, optIdx, current);
+        answersPayload.current[current] = answerData;
+        await logAnswer(answerData);
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (current + 1 >= questionSet.length) {
             setFinished(true);
             isFinishedRef.current = true;
-            const payload = answers.map((ans, idx) => {
-                if (ans === null && idx !== current) return null;
-                const finalAns = idx === current ? selected : ans;
-                if (finalAns === null) return null;
-                const isCorrect = finalAns === questionSet[idx].correct;
-                return {
-                    question_index: idx + 1,
-                    answer_json: { selection: finalAns },
-                    is_correct: isCorrect ? 1.0 : 0.0,
-                    marks_awarded: isCorrect ? 1 : 0,
-                    marks_possible: 1,
-                    time_taken_ms: 0
-                };
-            }).filter(Boolean);
+            const payload = answersPayload.current.filter(Boolean);
 
-            finishSession({
+            await finishSession({
                 totalQuestions: questionSet.length,
                 questionsAnswered: payload.length,
                 answersPayload: payload
@@ -192,10 +221,7 @@ export default function ChemQuizEngine({ questions, title, onBack, onSecondaryBa
                 <div className={`${prefix}-quiz-finished-actions`} style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
                     <button
                         className={`${prefix}-btn-primary`}
-                        onClick={() => {
-                            if (typeof questions === 'function') { setQuestionSet(questions()); }
-                            setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setTimeTaken(0); setFinished(false);
-                        }}
+                        onClick={startNewPracticeAttempt}
                         style={{ padding: '16px 32px', background: color, fontSize: 16, boxShadow: `0 8px 24px ${color}40`, flex: 1, minWidth: 200 }}
                     >
                         Try Again

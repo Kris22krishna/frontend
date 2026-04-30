@@ -8,6 +8,7 @@ import { NODE_IDS } from '@/lib/curriculumIds';
 
 import QuizEngine from './Engines/QuizEngine';
 import AssessmentEngine from './Engines/AssessmentEngine';
+import VennDiagram from './VennDiagram';
 
 // ─── Skill-ID → canonical node-ID map ────────────────────────────────────────
 const SKILL_NODE_ID_MAP = {
@@ -123,9 +124,17 @@ export default function SetsSkills() {
                                             <h4 style={{ textTransform: 'uppercase', fontSize: 12, letterSpacing: 1, color: 'var(--sets-muted)', marginBottom: 10 }}>
                                                 Explanation
                                             </h4>
-                                            <p style={{ fontSize: 17, lineHeight: 1.6, margin: 0, color: 'var(--sets-text)' }}>
-                                                {skill.learn.rules[selectedLearnIdx].d}
-                                            </p>
+                                            <div style={{ fontSize: 17, lineHeight: 1.6, margin: 0, color: 'var(--sets-text)', whiteSpace: 'pre-line' }}>
+                                                <LatexText text={skill.learn.rules[selectedLearnIdx].d} />
+                                            </div>
+                                            {skill.learn.rules[selectedLearnIdx].diagram && (
+                                                <div style={{ marginTop: 24, padding: 20, background: '#fff', borderRadius: 20, border: `2px dashed ${skill.color}30`, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                                    <div style={{ width: '100%', maxWidth: 300 }}>
+                                                        <VennDiagram type={skill.learn.rules[selectedLearnIdx].diagram} color={skill.color} />
+                                                    </div>
+                                                    <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--sets-muted)', marginTop: 12 }}>Visual Representation</span>
+                                                </div>
+                                            )}
                                             <div style={{ marginTop: 24, background: 'rgba(13,148,136,0.05)', padding: 16, borderRadius: 16, border: '1px solid rgba(13,148,136,0.1)' }}>
                                                 <p style={{ margin: 0, fontSize: 15, lineHeight: 1.6, color: 'var(--sets-muted)' }}>
                                                     <span style={{ fontWeight: 800, color: 'var(--sets-teal)' }}>🛡️ Survival Tip: </span>

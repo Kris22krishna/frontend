@@ -13,6 +13,7 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
 
     const normalizeTextAnswer = (value) => String(value ?? '')
         .replace(/\s+/g, ' ')
+        .replace(/[,]/g, '')
         .trim()
         .toLowerCase();
 
@@ -46,7 +47,13 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                 ? question.correct.map((index) => question.options?.[index]).filter(Boolean).join(', ')
                 : 'No answer provided';
         }
-        return question.options?.[question.correct] ?? 'No answer provided';
+                if (question.options && question.options[question.correct] !== undefined) {
+            return question.options[question.correct];
+        }
+        if (question.correct !== undefined && question.correct !== null) {
+            return String(question.correct);
+        }
+        return 'No answer provided';
     };
 
     const getUserAnswerLabel = (question, answer) => {
@@ -263,11 +270,11 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                                 style={{
                                     padding: 20,
                                     borderRadius: 12,
-                                    border: `2px solid ${isCorrect ? `var(--${prefix}-teal)` : `var(--${prefix}-red)`}`,
-                                    background: isCorrect ? 'rgba(16,185,129,0.05)' : 'rgba(239,68,68,0.05)'
+                                    border: `2px solid ${isSkipped ? '#eab308' : isCorrect ? `var(--${prefix}-teal)` : `var(--${prefix}-red)`}`,
+                                    background: statusBg
                                 }}
                             >
-                                <div style={{ fontWeight: 800, marginBottom: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: isCorrect ? `var(--${prefix}-teal)` : `var(--${prefix}-red)` }}>
+                                <div style={{ fontWeight: 800, marginBottom: 8, display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: statusColor }}>
                                     <span>Question {index + 1} - {statusText}</span>
                                     <span style={{ fontSize: 12, fontWeight: 700, color: `var(--${prefix}-muted, #64748b)`, background: '#f1f5f9', padding: '3px 10px', borderRadius: 6 }}>⏱️ {formatTime(questionTimes[index])}</span>
                                 </div>
@@ -290,7 +297,7 @@ export default function AssessmentEngine({ questions, title, onBack, onSecondary
                                         </div>
                                     </div>
                                     <div className={`${prefix}-summary-item user-ans`}>
-                                        <strong style={{ color: isCorrect ? `var(--${prefix}-teal)` : `var(--${prefix}-red)` }}>Your Answer:</strong>
+                                        <strong style={{ color: statusColor }}>Your Answer:</strong>
                                         <div style={{ marginTop: 6 }}>
                                             {userOptText === 'Not Answered'
                                                 ? 'Not Answered'

@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import "../../Determinants.css";
 import MathRenderer from "../../../../../MathRenderer";
 import DeterminantsTopNav from "../../DeterminantsTopNav";
-
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 // ─── DATA SECTIONS ─────────────────────────────────────────────────────────
 
 const TERMS = [
@@ -300,6 +301,9 @@ export default function DeterminantsTerminology() {
   const [quizAnswered, setQuizAnswered] = useState(false);
   const [quizTotalScore, setQuizTotalScore] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
+  const quizPayload = React.useRef([]);
+  const isFinishingRef = React.useRef(false);
+  const { startSession, logAnswer, finishSession } = useSessionLogger();
 
   const activeTerm = TERMS[selectedIdx];
   const activeRule = SIX_RULES[selectedRuleIdx];
@@ -311,13 +315,34 @@ export default function DeterminantsTerminology() {
     setQuizAnswered(false);
     setQuizTotalScore(0);
     setQuizFinished(false);
+    quizPayload.current = [];
+    isFinishingRef.current = false;
+    startSession({ nodeId: NODE_IDS.g12MathDeterminantsTerminologyQuiz, sessionType: 'practice' });
   };
 
   const handleQuizSelect = (optIdx) => {
     if (quizAnswered) return;
     setQuizSelected(optIdx);
     setQuizAnswered(true);
-    if (optIdx === activeQuiz.correct) setQuizTotalScore((s) => s + 1);
+    const correct = optIdx === activeQuiz.correct;
+    if (correct) {
+      setQuizTotalScore((s) => s + 1);
+    }
+        
+    const answerData = {
+      question_index: quizIdx + 1,
+      answer_json: { selected: optIdx, text: activeQuiz.options[optIdx] },
+      is_correct: correct ? 1.0 : 0.0,
+      marks_awarded: correct ? 1 : 0,
+      marks_possible: 1
+    };
+    quizPayload.current.push(answerData);
+
+    logAnswer({
+      questionIndex: answerData.question_index,
+      answerJson: answerData.answer_json,
+      isCorrect: answerData.is_correct
+    });
   };
 
   const nextQuiz = () => {
@@ -326,7 +351,14 @@ export default function DeterminantsTerminology() {
       setQuizSelected(null);
       setQuizAnswered(false);
     } else {
+      if (isFinishingRef.current) return;
+      isFinishingRef.current = true;
       setQuizFinished(true);
+      finishSession({
+        totalQuestions: VOCAB_QUIZ.length,
+        questionsAnswered: quizIdx + 1,
+        answersPayload: quizPayload.current
+      });
     }
   };
 
@@ -449,7 +481,12 @@ export default function DeterminantsTerminology() {
           </button>
           <button
             className={`det-tab ${activeTab === "quiz" ? "active" : ""}`}
-            onClick={() => setActiveTab("quiz")}
+            onClick={() => {
+              if (activeTab !== "quiz") {
+                setActiveTab("quiz");
+                resetQuiz();
+              }
+            }}
           >
             🧪 Test Prep
           </button>

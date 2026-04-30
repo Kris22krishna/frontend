@@ -70,9 +70,14 @@ const SimpleInterest = () => {
                         text: `<div class='question-container'>
                                   <p>Find Simple Interest on ₹${P} at ${R}% per annum for 1 year.</p>
                                </div>`,
-                        correctAnswer: `₹${SI}`,
-                        solution: `$$SI = \\frac{P \\times R \\times T}{100} = \\frac{${P} \\times ${R} \\times 1}{100} = ₹${SI}$$`,
-                        options: shuffle([`₹${SI}`, `₹${SI + 100}`, `₹${SI / 2}`, `₹${SI * 2}`])
+                        correctAnswer: `₹${SI.toFixed(2).replace(/\.?0+$/, '')}`,
+                        solution: `$$SI = \\frac{P \\times R \\times T}{100} = \\frac{${P} \\times ${R} \\times 1}{100} = ₹${SI.toFixed(2).replace(/\.?0+$/, '')}$$`,
+                        options: shuffle([
+                            `₹${SI.toFixed(2).replace(/\.?0+$/, '')}`, 
+                            `₹${(SI + 100).toFixed(2).replace(/\.?0+$/, '')}`, 
+                            `₹${(SI / 2).toFixed(2).replace(/\.?0+$/, '')}`, 
+                            `₹${(SI * 2).toFixed(2).replace(/\.?0+$/, '')}`
+                        ])
                     };
                 } else if (i < 4) {
                     // Subtopic 2: Interest for multiple years
@@ -87,9 +92,14 @@ const SimpleInterest = () => {
                         text: `<div class='question-container'>
                                   <p>Find Simple Interest on ₹${P} at ${R}% per annum for ${T} years.</p>
                                </div>`,
-                        correctAnswer: `₹${SI}`,
-                        solution: `$$SI = \\frac{P \\times R \\times T}{100} = \\frac{${P} \\times ${R} \\times ${T}}{100} = ₹${SI}$$`,
-                        options: shuffle([`₹${SI}`, `₹${SI + 50}`, `₹${SI * 1.5}`, `₹${SI - 20}`])
+                        correctAnswer: `₹${SI.toFixed(2).replace(/\.?0+$/, '')}`,
+                        solution: `$$SI = \\frac{P \\times R \\times T}{100} = \\frac{${P} \\times ${R} \\times ${T}}{100} = ₹${SI.toFixed(2).replace(/\.?0+$/, '')}$$`,
+                        options: shuffle([
+                            `₹${SI.toFixed(2).replace(/\.?0+$/, '')}`, 
+                            `₹${(SI + 50).toFixed(2).replace(/\.?0+$/, '')}`, 
+                            `₹${(SI * 1.5).toFixed(2).replace(/\.?0+$/, '')}`, 
+                            `₹${(SI - 20).toFixed(2).replace(/\.?0+$/, '')}`
+                        ])
                     };
                 } else if (i < 7) {
                     // Subtopic 3: Using formula SI = PRT/100 (Variables given)
@@ -104,9 +114,14 @@ const SimpleInterest = () => {
                         text: `<div class='question-container'>
                                   <p>P = ₹${P}, R = ${R}%, T = ${T} years. Find SI.</p>
                                </div>`,
-                        correctAnswer: `₹${SI}`,
-                        solution: `$$SI = \\frac{P \\times R \\times T}{100} = \\frac{${P} \\times ${R} \\times ${T}}{100} = ₹${SI}$$`,
-                        options: shuffle([`₹${SI}`, `₹${SI + 10}`, `₹${SI * 2}`, `₹${Math.floor(SI / 2)}`])
+                        correctAnswer: `₹${SI.toFixed(2).replace(/\.?0+$/, '')}`,
+                        solution: `$$SI = \\frac{P \\times R \\times T}{100} = \\frac{${P} \\times ${R} \\times ${T}}{100} = ₹${SI.toFixed(2).replace(/\.?0+$/, '')}$$`,
+                        options: shuffle([
+                            `₹${SI.toFixed(2).replace(/\.?0+$/, '')}`, 
+                            `₹${(SI + 10).toFixed(2).replace(/\.?0+$/, '')}`, 
+                            `₹${(SI * 2).toFixed(2).replace(/\.?0+$/, '')}`, 
+                            `₹${Math.floor(SI / 2)}`
+                        ])
                     };
                 } else {
                     // Subtopic 4: Finding Rate, Time, Principal
