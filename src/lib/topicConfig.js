@@ -272,6 +272,29 @@ export const TOPIC_CONFIGS = {
             { id: "VN-08", name: "Estimation Around 100", route: "vacation-with-my-nani-maa/estimation-around-100" },
             { id: "VN-09", name: "Open Number Line", route: "vacation-with-my-nani-maa/open-number-line" },
             { id: "VN-TEST", name: "Chapter Test", route: "vacation-with-my-nani-maa/chapter-test" }
+        ],
+        'Filling and Lifting': [
+            { id: "FL-01", name: "Comparing Capacity",       route: "filling-and-lifting/comparing-capacity" },
+            { id: "FL-02", name: "Estimating Capacity",      route: "filling-and-lifting/estimating-capacity" },
+            { id: "FL-03", name: "Measuring by Filling",     route: "filling-and-lifting/measuring-by-filling" },
+            { id: "FL-04", name: "Understanding Litre",      route: "filling-and-lifting/understanding-litre" },
+            { id: "FL-05", name: "Heavy and Light",          route: "filling-and-lifting/heavy-and-light" },
+            { id: "FL-06", name: "Measuring with Balance",   route: "filling-and-lifting/measuring-with-balance" },
+            { id: "FL-07", name: "Understanding Kilogram",   route: "filling-and-lifting/understanding-kilogram" },
+            { id: "FL-08", name: "Half and Quarter kg",      route: "filling-and-lifting/half-and-quarter-kg" },
+            { id: "FL-09", name: "Logical Weight Puzzles",   route: "filling-and-lifting/weight-puzzles" },
+            { id: "FL-TEST", name: "Chapter Test",           route: "filling-and-lifting/chapter-test" },
+        ],
+        'Give and Take': [
+            { id: "GT-01", name: "Addition with H-T-O",          route: "give-and-take/addition-hto" },
+            { id: "GT-02", name: "Subtraction with Borrowing",    route: "give-and-take/subtraction-borrowing" },
+            { id: "GT-03", name: "Number Line Method",            route: "give-and-take/number-line-method" },
+            { id: "GT-04", name: "Word Problems",                 route: "give-and-take/word-problems" },
+            { id: "GT-05", name: "Money & Exchange",              route: "give-and-take/money-exchange" },
+            { id: "GT-06", name: "Making Amounts",                route: "give-and-take/making-amounts" },
+            { id: "GT-07", name: "Number Patterns",               route: "give-and-take/number-patterns" },
+            { id: "GT-08", name: "Mental Math & Estimation",      route: "give-and-take/mental-math" },
+            { id: "GT-TEST", name: "Chapter Test",                route: "give-and-take/chapter-test" },
         ]
     },
 
