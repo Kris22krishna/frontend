@@ -5,7 +5,17 @@ import { useAuth } from '../../../../contexts/AuthContext';
 import LoginPromptModal from '../../../auth/LoginPromptModal';
 import '../../../../pages/high/SeniorGradeSyllabus.css';
 
-const chapters = []; // Coming soon
+const chapters = [
+    {
+        key: 'sexual-reproduction',
+        title: 'Sexual Reproduction in Flowering Plants',
+        desc: 'Interactive Chapter on Sexual Reproduction in Flowering Plants.',
+        icon: '🌸',
+        questions: 0,
+        gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+        shadow: 'rgba(16,185,129,0.35)',
+    }
+];
 
 const BiologyChapters12 = () => {
     const navigate = useNavigate();
