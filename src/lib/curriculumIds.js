@@ -454,6 +454,21 @@ export const NODE_IDS = {
   g10MathTrigIdentities:                    'a4101008-0006-0000-0000-000000000000',
   g10MathTrigSimplifyProve:                 'a4101008-0007-0000-0000-000000000000',
   g10MathTrigAngleProblems:                 'a4101008-0008-0000-0000-000000000000',
+  g10MathTrigIntroTerminologyQuiz:          'a4101008-0010-0000-0000-000000000000',
+
+  // Grade 10 Math: Some Applications of Trigonometry (Chapter 9)
+  g10MathTrigApp:                           'a3101009-0000-0000-0000-000000000001',
+  g10MathTrigAppHeightsDistances:           'a4101009-0001-0000-0000-000000000000',
+  g10MathTrigAppMultiStep:                  'a4101009-0002-0000-0000-000000000000',
+  g10MathTrigAppTerminologyQuiz:            'a4101009-0010-0000-0000-000000000000',
+
+  // Grade 11 Math: Trigonometric Functions (Chapter 3)
+  g11MathTrigFunc:                          'a3111003-0000-0000-0000-000000000001',
+  g11MathTrigFuncRadians:                   'a4111003-0001-0000-0000-000000000000',
+  g11MathTrigFuncGraphs:                    'a4111003-0002-0000-0000-000000000000',
+  g11MathTrigFuncEquations:                 'a4111003-0003-0000-0000-000000000000',
+  g11MathTrigFuncRules:                     'a4111003-0004-0000-0000-000000000000',
+  g11MathTrigFuncTerminologyQuiz:           'a4111003-0010-0000-0000-000000000000',
   
   // Grade 10 Math: Probability (Chapter 15)
   g10MathProbability:                       'a3101015-0000-0000-0000-000000000001',
@@ -1329,6 +1344,7 @@ export const SLUG_TO_NODE_ID = {
   'g12-math-itf-simplification':               NODE_IDS.g12MathITFSimplification,
   'g12-math-itf-terminology':                  NODE_IDS.g12MathITFTerminologyQuiz,
 
+
   // Grade 9 Math: Polynomials
   'g9-math-polynomials':                NODE_IDS.g9MathPolynomials,
   'g9-math-poly-identifying':           NODE_IDS.g9MathPolyIdentifying,
@@ -1465,4 +1481,27 @@ export const SLUG_TO_NODE_ID = {
   'g12-bio-sr-post-fertilisation':             NODE_IDS.g12BiolSRPostFertilisation,
   'g12-bio-sr-apomixis-polyembryony':          NODE_IDS.g12BiolSRApomixisPolyembryony,
   'g12-bio-sr-terminology':                    NODE_IDS.g12BiolSRTerminologyQuiz,
+};
+
+export const curriculumPathToNodeId = {
+  // Grade 10 Intro
+  'trig-intro-terminology': 'a4101008-0004-0000-0000-000000000001',
+  'trig-intro-1':           'a4101008-0004-0000-0000-000000000002',
+  'trig-intro-2':           'a4101008-0004-0000-0000-000000000003',
+  'trig-intro-3':           'a4101008-0004-0000-0000-000000000004',
+  // Grade 10 Apps
+  'trig-app-terminology':   'a4101008-0004-0000-0000-000000000005',
+  'trig-app-1':             'a4101008-0004-0000-0000-000000000006',
+  'trig-app-2':             'a4101008-0004-0000-0000-000000000007',
+  // Grade 11 Functions
+  'trig-func-terminology':  'a4101008-0004-0000-0000-000000000008',
+  'trig-func-1':            'a4101008-0004-0000-0000-000000000009',
+  'trig-func-2':            'a4101008-0004-0000-0000-00000000000a',
+  'trig-func-3':            'a4101008-0004-0000-0000-00000000000b',
+  'trig-func-4':            'a4101008-0004-0000-0000-00000000000c',
+  // Grade 12 Inverse
+  'inverse-trig-terminology':'a4101008-0004-0000-0000-00000000000d',
+  'inverse-trig-1':         'a4101008-0004-0000-0000-00000000000e',
+  'inverse-trig-2':         'a4101008-0004-0000-0000-00000000000f',
+  'inverse-trig-3':         'a4101008-0004-0000-0000-000000000010',
 };

@@ -77,6 +77,35 @@ import HCFDashboard from './components/Math-Branches/Arithmetic/HCF/HCFDashboard
 import HCFIntro from './components/Math-Branches/Arithmetic/HCF/Topics/5W1H/HCFIntro';
 import HCFTerminology from './components/Math-Branches/Arithmetic/HCF/Topics/Terminology/HCFTerminology';
 import HCFSkills from './components/Math-Branches/Arithmetic/HCF/Topics/Skills/HCFSkills';
+
+// Trigonometry Math-Branch
+import TrigonometryMainDashboard from './components/Math-Branches/Trigonometry/TrigonometryMainDashboard';
+import TrigonometrySparks from './components/Math-Branches/Trigonometry/TrigonometrySparks';
+
+// Trigonometry: Grade 10 Introduction
+import TrigIntroGr10Dashboard from './components/Math-Branches/Trigonometry/Grade10-Intro/TrigIntroGr10Dashboard';
+import TrigIntroGr10Intro from './components/Math-Branches/Trigonometry/Grade10-Intro/Topics/5W1H/TrigIntroGr10Intro';
+import TrigIntroGr10Terminology from './components/Math-Branches/Trigonometry/Grade10-Intro/Topics/Terminology/TrigIntroGr10Terminology';
+import TrigIntroGr10Skills from './components/Math-Branches/Trigonometry/Grade10-Intro/Topics/Skills/TrigIntroGr10Skills';
+
+// Trigonometry: Grade 10 Applications
+import TrigAppGr10Dashboard from './components/Math-Branches/Trigonometry/Grade10-Applications/TrigAppGr10Dashboard';
+import TrigAppGr10Intro from './components/Math-Branches/Trigonometry/Grade10-Applications/Topics/5W1H/TrigAppGr10Intro';
+import TrigAppGr10Terminology from './components/Math-Branches/Trigonometry/Grade10-Applications/Topics/Terminology/TrigAppGr10Terminology';
+import TrigAppGr10Skills from './components/Math-Branches/Trigonometry/Grade10-Applications/Topics/Skills/TrigAppGr10Skills';
+
+// Trigonometry: Grade 11 Functions
+import TrigFuncGr11Dashboard from './components/Math-Branches/Trigonometry/Grade11-TrigFunctions/TrigFuncGr11Dashboard';
+import TrigFuncGr11Intro from './components/Math-Branches/Trigonometry/Grade11-TrigFunctions/Topics/5W1H/TrigFuncGr11Intro';
+import TrigFuncGr11Terminology from './components/Math-Branches/Trigonometry/Grade11-TrigFunctions/Topics/Terminology/TrigFuncGr11Terminology';
+import TrigFuncGr11Skills from './components/Math-Branches/Trigonometry/Grade11-TrigFunctions/Topics/Skills/TrigFuncGr11Skills';
+
+// Trigonometry: Grade 12 Inverse Trig
+import InverseTrigGr12Dashboard from './components/Math-Branches/Trigonometry/Grade12-InverseTrig/InverseTrigGr12Dashboard';
+import InverseTrigGr12Intro from './components/Math-Branches/Trigonometry/Grade12-InverseTrig/Topics/5W1H/InverseTrigGr12Intro';
+import InverseTrigGr12Terminology from './components/Math-Branches/Trigonometry/Grade12-InverseTrig/Topics/Terminology/InverseTrigGr12Terminology';
+import InverseTrigGr12Skills from './components/Math-Branches/Trigonometry/Grade12-InverseTrig/Topics/Skills/InverseTrigGr12Skills';
+
 // Functions
 import FunctionsDashboard from './components/Math-Branches/Calculus/Functions/FunctionsDashboard';
 import FunctionsIntro5W1H from './components/Math-Branches/Calculus/Functions/Topics/5W1H/FunctionsIntro5W1H';
@@ -1494,7 +1523,35 @@ function App() {
           <Route path="arithmetic/hcf/introduction" element={<ProtectedRoute redirectTo="/login"><HCFIntro /></ProtectedRoute>} />
           <Route path="arithmetic/hcf/terminology" element={<ProtectedRoute redirectTo="/login"><HCFTerminology /></ProtectedRoute>} />
           <Route path="arithmetic/hcf/skills" element={<ProtectedRoute redirectTo="/login"><HCFSkills /></ProtectedRoute>} />
-          
+
+          {/* Trigonometry Math-Branch */}
+          <Route path="trigonometry/dashboard" element={<ProtectedRoute redirectTo="/login"><TrigonometryMainDashboard /></ProtectedRoute>} />
+          <Route path="trigonometry/sparks" element={<ProtectedRoute redirectTo="/login"><TrigonometrySparks /></ProtectedRoute>} />
+
+          {/* Trigonometry: Grade 10 Introduction */}
+          <Route path="trigonometry/grade-10-intro" element={<ProtectedRoute redirectTo="/login"><TrigIntroGr10Dashboard /></ProtectedRoute>} />
+          <Route path="trigonometry/grade-10-intro/introduction" element={<ProtectedRoute redirectTo="/login"><TrigIntroGr10Intro /></ProtectedRoute>} />
+          <Route path="trigonometry/grade-10-intro/terminology" element={<ProtectedRoute redirectTo="/login"><TrigIntroGr10Terminology /></ProtectedRoute>} />
+          <Route path="trigonometry/grade-10-intro/skills" element={<ProtectedRoute redirectTo="/login"><TrigIntroGr10Skills /></ProtectedRoute>} />
+
+          {/* Trigonometry: Grade 10 Applications */}
+          <Route path="trigonometry/grade-10-applications" element={<ProtectedRoute redirectTo="/login"><TrigAppGr10Dashboard /></ProtectedRoute>} />
+          <Route path="trigonometry/grade-10-applications/introduction" element={<ProtectedRoute redirectTo="/login"><TrigAppGr10Intro /></ProtectedRoute>} />
+          <Route path="trigonometry/grade-10-applications/terminology" element={<ProtectedRoute redirectTo="/login"><TrigAppGr10Terminology /></ProtectedRoute>} />
+          <Route path="trigonometry/grade-10-applications/skills" element={<ProtectedRoute redirectTo="/login"><TrigAppGr10Skills /></ProtectedRoute>} />
+
+          {/* Trigonometry: Grade 11 Functions */}
+          <Route path="trigonometry/grade-11-functions" element={<ProtectedRoute redirectTo="/login"><TrigFuncGr11Dashboard /></ProtectedRoute>} />
+          <Route path="trigonometry/grade-11-functions/introduction" element={<ProtectedRoute redirectTo="/login"><TrigFuncGr11Intro /></ProtectedRoute>} />
+          <Route path="trigonometry/grade-11-functions/terminology" element={<ProtectedRoute redirectTo="/login"><TrigFuncGr11Terminology /></ProtectedRoute>} />
+          <Route path="trigonometry/grade-11-functions/skills" element={<ProtectedRoute redirectTo="/login"><TrigFuncGr11Skills /></ProtectedRoute>} />
+
+          {/* Trigonometry: Grade 12 Inverse Trig */}
+          <Route path="trigonometry/grade-12-inverse" element={<ProtectedRoute redirectTo="/login"><InverseTrigGr12Dashboard /></ProtectedRoute>} />
+          <Route path="trigonometry/grade-12-inverse/introduction" element={<ProtectedRoute redirectTo="/login"><InverseTrigGr12Intro /></ProtectedRoute>} />
+          <Route path="trigonometry/grade-12-inverse/terminology" element={<ProtectedRoute redirectTo="/login"><InverseTrigGr12Terminology /></ProtectedRoute>} />
+          <Route path="trigonometry/grade-12-inverse/skills" element={<ProtectedRoute redirectTo="/login"><InverseTrigGr12Skills /></ProtectedRoute>} />
+
           {/* Calculus Master Dashboard */}
           <Route path="calculus" element={<ProtectedRoute redirectTo="/login"><CalculusMainDashboard /></ProtectedRoute>} />
           <Route path="calculus/sparks" element={<ProtectedRoute redirectTo="/login"><CalculusSparks /></ProtectedRoute>} />

@@ -1,0 +1,257 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styles from '../../../trigonometry.module.css';
+import MathRenderer from '../../../../../MathRenderer';
+import { TERMS, KEY_IDENTITIES, VOCAB_QUIZ } from './TrigAppGr10TerminologyData';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { curriculumPathToNodeId } from '@/lib/curriculumIds';
+
+export default function TrigAppGr10Terminology() {
+    const navigate = useNavigate();
+    const [activeTab, setActiveTab] = useState('terms');
+    const [selectedIdx, setSelectedIdx] = useState(0);
+    const [selectedIdentityIdx, setSelectedIdentityIdx] = useState(0);
+
+    const [quizAnswers, setQuizAnswers] = useState({});
+    const [showResults, setShowResults] = useState(false);
+    const { startSession, finishSession } = useSessionLogger();
+
+    useEffect(() => window.scrollTo(0, 0), []);
+
+    const activeTerm = TERMS[selectedIdx];
+    const activeIdentity = KEY_IDENTITIES[selectedIdentityIdx];
+
+    const handleQuizSelect = (qId, optionIdx) => {
+        if (showResults) return;
+        setQuizAnswers(prev => ({ ...prev, [qId]: optionIdx }));
+    };
+
+    const handleCheckAnswers = async () => {
+        if (Object.keys(quizAnswers).length < VOCAB_QUIZ.length) {
+            alert('Please answer all questions first!');
+            return;
+        }
+        setShowResults(true);
+
+        const nodeId = curriculumPathToNodeId['trig-app-terminology'];
+        startSession({ nodeId, sessionType: 'practice' });
+        
+        const payload = VOCAB_QUIZ.map((q, idx) => {
+            const isCorrect = quizAnswers[q.id] === q.correct;
+            return {
+                question_index: idx,
+                answer_json: { selected: quizAnswers[q.id] },
+                is_correct: isCorrect ? 1.0 : 0.0,
+                marks_awarded: isCorrect ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0
+            };
+        });
+
+        await finishSession({
+            totalQuestions: VOCAB_QUIZ.length,
+            questionsAnswered: VOCAB_QUIZ.length,
+            answersPayload: payload
+        });
+    };
+
+    const handleRetry = () => {
+        setQuizAnswers({});
+        setShowResults(false);
+    };
+
+    const accentColor = '#0ea5e9';
+    const accentBg = 'rgba(14, 165, 233, 0.08)';
+
+    return (
+        <div className={styles.arithPage}>
+            <nav className={styles.introNav}>
+                <button className={styles.arithBackBtn} onClick={() => navigate('/trigonometry/grade-10-applications')} style={{ marginBottom: 0 }}>← Back to Branch</button>
+                <div className={styles.arithIntroNavLinks}>
+                    <button className={styles.arithIntroNavLink} onClick={() => navigate('/trigonometry/grade-10-applications/introduction')}>🌟 Introduction</button>
+                    <button className={`${styles.arithIntroNavLink} ${styles.arithIntroNavLinkActive}`}>📖 Terminology</button>
+                    <button className={styles.arithIntroNavLink} onClick={() => navigate('/trigonometry/grade-10-applications/skills')}>🎯 Skills</button>
+                </div>
+            </nav>
+
+            <div className={styles.arithTermContainer}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: 20, paddingTop: 32 }}>
+                    <h1 style={{ fontFamily: '"Outfit", sans-serif', fontSize: '2.8rem', fontWeight: 900, color: '#0f172a', margin: '0 0 8px' }}>
+                        Heights & Distances{' '}
+                        <span style={{ background: 'linear-gradient(135deg, #0ea5e9, #38bdf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Vocabulary</span>
+                    </h1>
+                    <div style={{ fontSize: 16, fontWeight: 700, color: '#64748b', letterSpacing: 0.5 }}>
+                        {activeTab === 'quiz'
+                            ? 'Test your knowledge with interactive questions!'
+                            : `Select any ${activeTab === 'terms' ? 'term' : 'principle'} below to explore details.`}
+                    </div>
+                </div>
+
+                <div className={styles.arithTabSwitcher}>
+                    <button
+                        style={{ padding: '8px 16px', borderRadius: 100, border: 'none', background: activeTab === 'terms' ? accentColor : '#e2e8f0', color: activeTab === 'terms' ? '#fff' : '#475569', fontWeight: 700, cursor: 'pointer' }}
+                        onClick={() => setActiveTab('terms')}
+                    >📚 Terms</button>
+                    <button
+                        style={{ padding: '8px 16px', borderRadius: 100, border: 'none', background: activeTab === 'identities' ? accentColor : '#e2e8f0', color: activeTab === 'identities' ? '#fff' : '#475569', fontWeight: 700, cursor: 'pointer' }}
+                        onClick={() => setActiveTab('identities')}
+                    >⚡ Key Principles</button>
+                    <button
+                        style={{ padding: '8px 16px', borderRadius: 100, border: 'none', background: activeTab === 'quiz' ? accentColor : '#e2e8f0', color: activeTab === 'quiz' ? '#fff' : '#475569', fontWeight: 700, cursor: 'pointer' }}
+                        onClick={() => setActiveTab('quiz')}
+                    >🧪 Vocab Check</button>
+                </div>
+
+                {activeTab !== 'quiz' ? (
+                    <div className={styles.arithTermLayout}>
+                        <aside className={styles.arithTermPanel} style={{
+                            background: 'rgba(255,255,255,0.7)', padding: '14px', borderRadius: 20,
+                            border: '1px solid rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column', gap: 10,
+                            backdropFilter: 'blur(10px)'
+                        }}>
+                            {activeTab === 'terms' ? (
+                                TERMS.map((term, i) => {
+                                    const isActive = selectedIdx === i;
+                                    return (
+                                        <button key={i}
+                                            onClick={() => setSelectedIdx(i)}
+                                            style={{
+                                                background: isActive ? `linear-gradient(135deg, ${accentColor}, ${accentColor}dd)` : `linear-gradient(135deg, rgba(14,165,233,0.08), rgba(14,165,233,0.02))`,
+                                                borderColor: isActive ? accentColor : 'rgba(14,165,233,0.15)',
+                                                borderWidth: 1.5, borderStyle: 'solid', display: 'flex', alignItems: 'center', gap: 10,
+                                                padding: '10px 14px', borderRadius: 12, cursor: 'pointer', outline: 'none'
+                                            }}
+                                        >
+                                            <div style={{ width: 36, height: 36, borderRadius: 10, background: isActive ? 'rgba(255,255,255,0.25)' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>{term.icon}</div>
+                                            <span style={{ fontWeight: 800, fontSize: 14, color: isActive ? '#fff' : '#1e293b', textAlign: 'left' }}>{term.word}</span>
+                                        </button>
+                                    );
+                                })
+                            ) : (
+                                KEY_IDENTITIES.map((identity, i) => {
+                                    const isActive = selectedIdentityIdx === i;
+                                    return (
+                                        <button key={i}
+                                            onClick={() => setSelectedIdentityIdx(i)}
+                                            style={{
+                                                background: isActive ? `linear-gradient(135deg, ${accentColor}, ${accentColor}dd)` : `linear-gradient(135deg, rgba(14,165,233,0.08), rgba(14,165,233,0.02))`,
+                                                borderColor: isActive ? accentColor : 'rgba(14,165,233,0.15)',
+                                                borderWidth: 1.5, borderStyle: 'solid', display: 'flex', alignItems: 'center', gap: 10,
+                                                padding: '12px 16px', borderRadius: 12, cursor: 'pointer', outline: 'none'
+                                            }}
+                                        >
+                                            <div style={{ width: 36, height: 36, borderRadius: 10, background: isActive ? 'rgba(255,255,255,0.25)' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, color: isActive ? '#fff' : accentColor, fontWeight: 900 }}>{i + 1}</div>
+                                            <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
+                                                <span style={{ fontWeight: 800, fontSize: 13, color: isActive ? '#fff' : '#1e293b', lineHeight: 1.2 }}>Principle {i + 1}</span>
+                                                <span style={{ fontSize: 11, fontWeight: 700, color: isActive ? 'rgba(255,255,255,0.8)' : '#64748b', textTransform: 'uppercase', letterSpacing: 0.5, marginTop: 3 }}>{identity.name.substring(0, 18)}…</span>
+                                            </div>
+                                        </button>
+                                    );
+                                })
+                            )}
+                        </aside>
+
+                        <main className={styles.arithTermPanel} key={activeTab === 'terms' ? selectedIdx : `id${selectedIdentityIdx}`} style={{
+                            background: '#ffffff', borderRadius: 20, padding: '30px 40px',
+                            boxShadow: '0 8px 24px rgba(0,0,0,0.03)', border: `2px solid ${accentBg}`, minHeight: 330
+                        }}>
+                            {activeTab === 'terms' ? (
+                                <>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                                        <div style={{ width: 44, height: 44, borderRadius: 12, background: accentBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24 }}>{activeTerm.icon}</div>
+                                        <h2 style={{ fontFamily: '"Outfit", sans-serif', fontSize: 26, fontWeight: 900, color: accentColor, margin: 0 }}>{activeTerm.word}</h2>
+                                    </div>
+                                    <p style={{ fontSize: 17, color: '#334155', lineHeight: 1.6, margin: '0 0 24px' }}>{activeTerm.def}</p>
+
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                                        <div>
+                                            <h4 style={{ textTransform: 'uppercase', fontSize: 11, letterSpacing: 1, color: accentColor, marginBottom: 8 }}>Mathematical Context</h4>
+                                            <div style={{ background: 'rgba(14,165,233,0.04)', padding: 14, borderRadius: 12, border: '1px solid rgba(14,165,233,0.1)' }}>
+                                                <div style={{ fontSize: 16, color: '#1e293b', fontWeight: 600 }}>
+                                                    <MathRenderer text={activeTerm.example} />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {activeTerm.realLifeExample && (
+                                            <div>
+                                                <h4 style={{ textTransform: 'uppercase', fontSize: 11, letterSpacing: 1, color: '#10b981', marginBottom: 8 }}>Real World Application</h4>
+                                                <div style={{ background: 'rgba(16,185,129,0.04)', padding: 14, borderRadius: 12, border: '1px solid rgba(16,185,129,0.15)' }}>
+                                                    <div style={{ fontSize: 15, color: '#065f46', fontWeight: 500, lineHeight: 1.5 }}>
+                                                        🌍 {activeTerm.realLifeExample}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                                        <div style={{ width: 44, height: 44, borderRadius: 12, background: accentBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, color: accentColor, fontWeight: 900 }}>⚡</div>
+                                        <h2 style={{ fontFamily: '"Outfit", sans-serif', fontSize: 22, fontWeight: 900, color: accentColor, margin: 0 }}>{activeIdentity.name}</h2>
+                                    </div>
+                                    <p style={{ fontSize: 17, color: '#334155', lineHeight: 1.6, margin: '0 0 24px' }}>{activeIdentity.desc}</p>
+                                    <div>
+                                        <h4 style={{ textTransform: 'uppercase', fontSize: 11, letterSpacing: 1, color: accentColor, marginBottom: 10 }}>Formula</h4>
+                                        <div style={{ background: 'rgba(14,165,233,0.04)', padding: 20, borderRadius: 16, border: '1px solid rgba(14,165,233,0.1)', textAlign: 'center' }}>
+                                            <div style={{ fontSize: 18, fontWeight: 700, color: accentColor }}>
+                                                <MathRenderer text={`$$${activeIdentity.formula}$$`} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+                        </main>
+                    </div>
+                ) : (
+                    <div className={styles.arithQuizPanel}>
+                        <h2 style={{ textAlign: 'center', margin: '0 0 32px 0', color: '#0f172a' }}>Quick Knowledge Check</h2>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+                            {VOCAB_QUIZ.map((q) => (
+                                <div key={q.id}>
+                                    <div style={{ fontWeight: 600, color: '#1e293b', fontSize: 16, marginBottom: 16 }}>{q.q}</div>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                        {q.options.map((opt, optIdx) => {
+                                            const isSelected = quizAnswers[q.id] === optIdx;
+                                            const isCorrect = optIdx === q.correct;
+                                            let bg = '#f8fafc', border = '1px solid #e2e8f0', color = '#475569';
+                                            if (showResults) {
+                                                if (isCorrect) { bg = '#dcfce7'; border = '1px solid #22c55e'; color = '#15803d'; }
+                                                else if (isSelected && !isCorrect) { bg = '#fee2e2'; border = '1px solid #ef4444'; color = '#b91c1c'; }
+                                            } else if (isSelected) { bg = accentBg; border = `1px solid ${accentColor}`; color = accentColor; }
+                                            return (
+                                                <button key={optIdx} onClick={() => handleQuizSelect(q.id, optIdx)}
+                                                    style={{ padding: '16px 20px', borderRadius: 12, background: bg, border, color, textAlign: 'left', fontSize: 15, cursor: showResults ? 'default' : 'pointer', transition: 'all 0.2s ease', fontWeight: isSelected ? 600 : 400 }}
+                                                >
+                                                    {opt}
+                                                    {showResults && isCorrect && <span style={{ float: 'right' }}>✅</span>}
+                                                    {showResults && isSelected && !isCorrect && <span style={{ float: 'right' }}>❌</span>}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div style={{ marginTop: 40, textAlign: 'center', paddingTop: 32, borderTop: '1px solid #e2e8f0' }}>
+                            {!showResults ? (
+                                <button onClick={handleCheckAnswers} style={{ padding: '14px 32px', background: accentColor, color: '#fff', border: 'none', borderRadius: 100, fontSize: 16, fontWeight: 700, cursor: 'pointer' }}>Check Answers</button>
+                            ) : (
+                                <div>
+                                    <div style={{ fontSize: 24, fontWeight: 700, color: '#0f172a', marginBottom: 16 }}>
+                                        You scored {Object.entries(quizAnswers).filter(([qId, ans]) => VOCAB_QUIZ.find(q => q.id === parseInt(qId)).correct === ans).length} out of {VOCAB_QUIZ.length}! 🎉
+                                    </div>
+                                    <div className={styles.arithActionRow}>
+                                        <button onClick={handleRetry} style={{ padding: '12px 24px', background: '#fff', color: '#475569', border: '1.5px solid #e2e8f0', borderRadius: 100, fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>Try Again</button>
+                                        <button onClick={() => navigate('/trigonometry/grade-10-applications/skills')} style={{ padding: '12px 24px', background: accentColor, color: '#fff', border: 'none', borderRadius: 100, fontSize: 15, fontWeight: 700, cursor: 'pointer' }}>Go to Skills →</button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
