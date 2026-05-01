@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Circle Explorer</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=JetBrains+Mono:wght@500;700&display=swap');
+        
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; padding: 24px;
+            background: #f0f9ff;
+            color: #1e293b;
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+        
+        .container {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 1000px;
+            height: 100%;
+        }
+
+        .canvas-container {
+            position: relative;
+            background: #ffffff;
+            border-radius: 24px;
+            border: 1.5px solid #bae6fd;
+            padding: 20px;
+            box-shadow: 0 8px 30px rgba(14, 165, 233, 0.12);
+        }
+
+        canvas {
+            display: block;
+            cursor: pointer;
+        }
+
+        .info-panel {
+            background: #ffffff;
+            border: 1.5px solid #bae6fd;
+            border-radius: 24px;
+            padding: 28px;
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 8px 30px rgba(14, 165, 233, 0.10);
+        }
+
+        .value-box {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid transparent;
+        }
+
+        .val-sin  { border-left-color: #f43f5e; background: #fff1f2; }
+        .val-cos  { border-left-color: #3b82f6; background: #eff6ff; }
+        .val-tan  { border-left-color: #10b981; background: #f0fdf4; }
+        .val-angle { border-left-color: #f59e0b; background: #fffbeb; }
+
+        .label {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+        }
+
+        .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .val-sin   .value { color: #e11d48; }
+        .val-cos   .value { color: #2563eb; }
+        .val-tan   .value { color: #059669; }
+        .val-angle .value { color: #d97706; }
+
+        h2 { margin: 0; font-size: 22px; font-weight: 800; color: #1e293b; }
+        p  { margin: 0; color: #64748b; font-size: 13.5px; line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="canvas-container">
+            <canvas id="circleCanvas" width="460" height="460"></canvas>
+        </div>
+        <div class="info-panel">
+            <div>
+                <h2>Unit Circle</h2>
+                <p>Drag the point around the circle to explore trigonometric ratios in real-time.</p>
+            </div>
+            
+            <div class="value-box val-angle">
+                <span class="label">Angle θ</span>
+                <span class="value" id="valTheta">45°</span>
+            </div>
+            
+            <div class="value-box val-sin">
+                <span class="label">sin θ (y)</span>
+                <span class="value" id="valSin">0.71</span>
+            </div>
+            
+            <div class="value-box val-cos">
+                <span class="label">cos θ (x)</span>
+                <span class="value" id="valCos">0.71</span>
+            </div>
+            
+            <div class="value-box val-tan">
+                <span class="label">tan θ (y/x)</span>
+                <span class="value" id="valTan">1.00</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('circleCanvas');
+        const ctx = canvas.getContext('2d');
+        const center = { x: 230, y: 230 };
+        const radius = 185;
+        let angle = -Math.PI / 4;
+        let isDragging = false;
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Background
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Grid lines
+            ctx.strokeStyle = '#e0f2fe';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(center.x, 0); ctx.lineTo(center.x, canvas.height);
+            ctx.moveTo(0, center.y); ctx.lineTo(canvas.width, center.y);
+            ctx.stroke();
+
+            // Tick marks
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '12px Outfit';
+            ctx.textAlign = 'center';
+            [[-radius,'−1'],[radius,'1']].forEach(([x, lbl]) => {
+                ctx.fillText(lbl, center.x + x, center.y + 18);
+            });
+            ctx.textAlign = 'right';
+            [[-radius,'−1'],[radius,'1']].forEach(([y, lbl]) => {
+                ctx.fillText(lbl, center.x - 8, center.y - y + 4);
+            });
+
+            // Circle
+            ctx.strokeStyle = '#93c5fd';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.arc(center.x, center.y, radius, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Point
+            const px = center.x + Math.cos(angle) * radius;
+            const py = center.y + Math.sin(angle) * radius;
+
+            // Triangle fill
+            ctx.fillStyle = 'rgba(59, 130, 246, 0.07)';
+            ctx.beginPath();
+            ctx.moveTo(center.x, center.y);
+            ctx.lineTo(px, center.y);
+            ctx.lineTo(px, py);
+            ctx.fill();
+
+            // Cosine (x-side) — blue
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(center.x, center.y);
+            ctx.lineTo(px, center.y);
+            ctx.stroke();
+
+            // Sine (y-side) — rose
+            ctx.strokeStyle = '#f43f5e';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(px, center.y);
+            ctx.lineTo(px, py);
+            ctx.stroke();
+
+            // Hypotenuse — slate
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.moveTo(center.x, center.y);
+            ctx.lineTo(px, py);
+            ctx.stroke();
+
+            // Angle arc — amber
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            const startA = angle < 0 ? angle : 0;
+            const endA   = angle < 0 ? 0 : angle;
+            ctx.arc(center.x, center.y, 42, startA, endA);
+            ctx.stroke();
+
+            // Draggable point — white with colored border
+            ctx.fillStyle = '#ffffff';
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.arc(px, py, 9, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // Origin dot
+            ctx.fillStyle = '#94a3b8';
+            ctx.beginPath();
+            ctx.arc(center.x, center.y, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            updateDOM();
+        }
+
+        function updateDOM() {
+            let deg = Math.round(-angle * 180 / Math.PI);
+            if (deg < 0) deg += 360;
+            const sinVal = -Math.sin(angle);
+            const cosVal = Math.cos(angle);
+            const tanVal = sinVal / cosVal;
+            document.getElementById('valTheta').textContent = `${deg}°`;
+            document.getElementById('valSin').textContent = sinVal.toFixed(2);
+            document.getElementById('valCos').textContent = cosVal.toFixed(2);
+            document.getElementById('valTan').textContent = Math.abs(tanVal) > 100 ? '∞' : tanVal.toFixed(2);
+        }
+
+        function updateAngle(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const mouseX = (e.clientX - rect.left) * scaleX;
+            const mouseY = (e.clientY - rect.top)  * scaleY;
+            angle = Math.atan2(mouseY - center.y, mouseX - center.x);
+            draw();
+        }
+
+        canvas.addEventListener('mousedown', (e) => { isDragging = true; updateAngle(e); });
+        canvas.addEventListener('mousemove', (e) => { if (isDragging) updateAngle(e); });
+        window.addEventListener('mouseup', () => { isDragging = false; });
+
+        draw();
+    </script>
+</body>
+</html>

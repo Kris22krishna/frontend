@@ -161,7 +161,9 @@ export default function TrigFuncGr11Terminology() {
                                         <div style={{ width: 44, height: 44, borderRadius: 12, background: accentBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24 }}>{activeTerm.icon}</div>
                                         <h2 style={{ fontFamily: '"Outfit", sans-serif', fontSize: 26, fontWeight: 900, color: accentColor, margin: 0 }}>{activeTerm.word}</h2>
                                     </div>
-                                    <p style={{ fontSize: 17, color: '#334155', lineHeight: 1.6, margin: '0 0 24px' }}>{activeTerm.def}</p>
+                                    <div style={{ fontSize: 17, color: '#334155', lineHeight: 1.6, margin: '0 0 24px' }}>
+                                        <MathRenderer text={activeTerm.def} />
+                                    </div>
 
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                                         <div>
@@ -191,7 +193,9 @@ export default function TrigFuncGr11Terminology() {
                                         <div style={{ width: 44, height: 44, borderRadius: 12, background: accentBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, color: accentColor, fontWeight: 900 }}>⚡</div>
                                         <h2 style={{ fontFamily: '"Outfit", sans-serif', fontSize: 22, fontWeight: 900, color: accentColor, margin: 0 }}>{activeIdentity.name}</h2>
                                     </div>
-                                    <p style={{ fontSize: 17, color: '#334155', lineHeight: 1.6, margin: '0 0 24px' }}>{activeIdentity.desc}</p>
+                                    <div style={{ fontSize: 17, color: '#334155', lineHeight: 1.6, margin: '0 0 24px' }}>
+                                        <MathRenderer text={activeIdentity.desc} />
+                                    </div>
                                     <div>
                                         <h4 style={{ textTransform: 'uppercase', fontSize: 11, letterSpacing: 1, color: accentColor, marginBottom: 10 }}>Formula</h4>
                                         <div style={{ background: 'rgba(16,185,129,0.04)', padding: 20, borderRadius: 16, border: '1px solid rgba(16,185,129,0.1)', textAlign: 'center' }}>

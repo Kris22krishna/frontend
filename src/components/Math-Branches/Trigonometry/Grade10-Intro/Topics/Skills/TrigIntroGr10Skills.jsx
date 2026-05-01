@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../../../trigonometry-practice.css';
 import styles from '../../../trigonometry.module.css';
 import MathRenderer from '../../../../../MathRenderer';
-import QuizEngine from '../../../../../Math-Branches/Arithmetic/Skills/Engines/QuizEngine';
-import AssessmentEngine from '../../../../../Math-Branches/Arithmetic/Skills/Engines/AssessmentEngine';
+import TrigPracticeEngine from '../../../../../Math-Branches/Trigonometry/Engines/TrigPracticeEngine';
+import TrigAssessmentEngine from '../../../../../Math-Branches/Trigonometry/Engines/TrigAssessmentEngine';
 import { SKILLS } from './TrigIntroGr10SkillsIndex';
 import { curriculumPathToNodeId } from '@/lib/curriculumIds';
 
@@ -13,154 +12,251 @@ export default function TrigIntroGr10Skills() {
     const [view, setView] = useState('list');
     const [activeSkillIdx, setActiveSkillIdx] = useState(null);
     const [sessionQuestions, setSessionQuestions] = useState([]);
+    const [selectedLearnIdx, setSelectedLearnIdx] = useState(0);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, [view, activeSkillIdx]);
+    }, [view, activeSkillIdx, selectedLearnIdx]);
 
     const openSkill = (index, nextView) => {
         const skill = SKILLS[index];
         const qs = nextView === 'practice' ? skill.practice : nextView === 'assessment' ? skill.assessment : [];
         setSessionQuestions(qs);
         setActiveSkillIdx(index);
+        setSelectedLearnIdx(0);
         setView(nextView);
+    };
+
+    const backToList = () => {
+        setView('list');
+        setActiveSkillIdx(null);
+        setSelectedLearnIdx(0);
+        window.scrollTo(0, 0);
     };
 
     const skill = activeSkillIdx !== null ? SKILLS[activeSkillIdx] : null;
 
-    if (view !== 'list' && skill) {
+    if (view === 'learn' && skill) {
+        const { learn, title, color } = skill;
+        const currentRule = learn.rules[selectedLearnIdx];
+
         return (
-            <div className={styles.arithPage}>
-                <nav className={styles.introNav}>
-                    <button className={styles.arithBackBtn} onClick={() => setView('list')}>
-                        ← Back to Skills
-                    </button>
-                    <div className={styles.arithIntroNavLinks}>
-                        <button className={styles.arithIntroNavLink} onClick={() => navigate('/trigonometry/grade-10-intro/introduction')}>🌟 Introduction</button>
-                        <button className={styles.arithIntroNavLink} onClick={() => navigate('/trigonometry/grade-10-intro/terminology')}>📖 Terminology</button>
-                        <button className={`${styles.arithIntroNavLink} ${styles.arithIntroNavLinkActive}`}>🎯 Skills</button>
+            <div className={styles['ccr-page']}>
+                <nav className={styles['ccr-nav']}>
+                    <button className={styles['ccr-nav-back']} onClick={backToList}>← Skills</button>
+                    <div className={styles['ccr-nav-links']}>
+                        <button className={styles['ccr-nav-link']} onClick={() => navigate('/trigonometry/grade-10-intro')}>Home</button>
+                        <button className={styles['ccr-nav-link']} onClick={() => navigate('/trigonometry/grade-10-intro/terminology')}>Terminology</button>
+                        <button className={`${styles['ccr-nav-link']} ${styles['ccr-nav-link--active']}`}>Skills</button>
                     </div>
                 </nav>
 
-                <div style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 20px' }}>
-                    {view === 'learn' ? (
-                        <div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 24, justifyContent: 'center' }}>
-                                <div style={{ width: 56, height: 56, borderRadius: 16, background: `${skill.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24 }}>
-                                    {skill.icon}
+                <div className={styles['ccr-module-hero']}>
+                    <h1 className={styles['ccr-module-title']}>Skill {activeSkillIdx + 1}: <span className={styles['ccr-accent-text']}>{title}</span></h1>
+                    <p className={styles['ccr-module-subtitle']}>Learn the chapter flow from the textbook</p>
+                </div>
+
+                <div className={styles['ccr-section']}>
+                    <div className={styles['ccr-learn-grid']}>
+                        <div className={styles['ccr-learn-sidebar']}>
+                            <div style={{ padding: '4px 12px 12px', fontSize: 11, fontWeight: 800, color: '#64748b', textTransform: 'uppercase', letterSpacing: 1 }}>Learning Path</div>
+                            {learn.rules.map((rule, ri) => (
+                                <button
+                                    key={ri}
+                                    className={`${styles['ccr-sidebar-btn']}${selectedLearnIdx === ri ? ` ${styles.active}` : ''}`}
+                                    style={{ '--skill-color': color }}
+                                    onClick={() => setSelectedLearnIdx(ri)}
+                                >
+                                    <span className={styles['ccr-sidebar-btn-num']}>{ri + 1}</span>
+                                    <span className={styles['ccr-sidebar-btn-title']}>{rule.title}</span>
+                                </button>
+                            ))}
+                            <div style={{ marginTop: 'auto', padding: '20px 12px 0' }}>
+                                <div style={{ background: `${color}10`, padding: 12, borderRadius: 12, border: `1px solid ${color}20` }}>
+                                    <div style={{ fontSize: 11, fontWeight: 800, color, marginBottom: 4 }}>GOAL</div>
+                                    <div style={{ fontSize: 12, color: '#475569', lineHeight: 1.4 }}>Finish all {learn.rules.length} topics, then move into practice and assessment.</div>
                                 </div>
-                                <h1 style={{ fontFamily: '"Outfit", sans-serif', fontSize: '2.5rem', fontWeight: 900, color: '#0f172a', margin: 0 }}>
-                                    Learn: {skill.title}
-                                </h1>
-                            </div>
-
-                            <div style={{ fontSize: 16, lineHeight: 1.65, color: '#475569', marginBottom: 32, textAlign: 'center', maxWidth: 800, margin: '0 auto 40px' }}>
-                                <MathRenderer text={skill.learn.concept} />
-                            </div>
-
-                            <div style={{ display: 'grid', gap: 24 }}>
-                                {skill.learn.rules && skill.learn.rules.map((rule, idx) => (
-                                    <div key={idx} style={{ background: '#fff', borderRadius: 24, padding: 32, border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
-                                        <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start', marginBottom: 24 }}>
-                                            <div style={{ width: 40, height: 40, borderRadius: 12, background: skill.color, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: 18, flexShrink: 0 }}>
-                                                {idx + 1}
-                                            </div>
-                                            <div>
-                                                <h3 style={{ margin: '0 0 8px', fontSize: 22, fontWeight: 800, color: '#1e293b' }}>{rule.title}</h3>
-                                                <MathRenderer text={`$$${rule.f}$$`} />
-                                            </div>
-                                        </div>
-
-                                        <div style={{ padding: 20, background: '#f8fafc', borderRadius: 16, marginBottom: 16 }}>
-                                            <p style={{ margin: 0, fontSize: 16, color: '#475569', lineHeight: 1.6 }}>
-                                                <MathRenderer text={rule.d} />
-                                            </p>
-                                        </div>
-
-                                        <div style={{ padding: 20, background: '#fff', border: '1px solid #f1f5f9', borderRadius: 16, marginBottom: rule.tip ? 16 : 0 }}>
-                                            <strong style={{ display: 'block', marginBottom: 8, color: '#94a3b8', textTransform: 'uppercase', fontSize: 12, letterSpacing: 1 }}>Example</strong>
-                                            <div style={{ fontSize: 16, color: '#1e293b', fontWeight: 600 }}>
-                                                <MathRenderer text={rule.ex} />
-                                            </div>
-                                        </div>
-
-                                        {rule.tip && (
-                                            <div style={{ padding: 16, background: `${skill.color}10`, borderRadius: 16, border: `1px solid ${skill.color}20`, display: 'flex', gap: 12 }}>
-                                                <div style={{ fontSize: 20 }}>💡</div>
-                                                <p style={{ margin: 0, fontSize: 15, color: '#334155', lineHeight: 1.5 }}>
-                                                    <MathRenderer text={rule.tip} />
-                                                </p>
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
                             </div>
                         </div>
-                    ) : view === 'practice' ? (
-                        <QuizEngine
-                            questions={sessionQuestions}
-                            title={`Practice: ${skill.title}`}
-                            color={skill.color}
-                            onBack={() => setView('list')}
-                            prefix="trig"
-                            nodeId={curriculumPathToNodeId[`trig-intro-${activeSkillIdx + 1}`]}
-                        />
-                    ) : (
-                        <AssessmentEngine
-                            questions={sessionQuestions}
-                            title={skill.title}
-                            color={skill.color}
-                            onBack={() => setView('list')}
-                            prefix="trig"
-                            nodeId={curriculumPathToNodeId[`trig-intro-${activeSkillIdx + 1}`]}
-                        />
-                    )}
+
+                        <div className={`${styles['ccr-details-window']} ${styles['ccr-details-window-anim']}`} key={selectedLearnIdx}>
+                            <div className={styles['ccr-learn-header-row']} style={{ '--skill-color': color, marginBottom: 28 }}>
+                                <div>
+                                    <div className={styles['ccr-learn-skill-meta']}>TOPIC {selectedLearnIdx + 1} OF {learn.rules.length}</div>
+                                    <h2 className={styles['ccr-learn-title']} style={{ color: '#1e293b' }}>{currentRule.title}</h2>
+                                </div>
+                                <span className={styles['ccr-learn-icon']} style={{ fontSize: 32, fontWeight: 900, color }}>{skill.icon}</span>
+                            </div>
+
+                            <div style={{ background: `${color}05`, padding: '24px', borderRadius: 20, border: `2px solid ${color}10`, marginBottom: 30 }}>
+                                <div style={{ fontSize: 18, lineHeight: 1.7, color: '#1e293b', fontWeight: 500 }}>
+                                    <MathRenderer text={currentRule.d} />
+                                </div>
+                            </div>
+
+                            <div style={{ background: '#fff', padding: 24, borderRadius: 16, border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.03)', marginBottom: 30, display: 'flex', justifyContent: 'center' }}>
+                                <MathRenderer text={`$$${currentRule.f}$$`} />
+                            </div>
+
+                            <div className={styles['ccr-rule-split']}>
+                                <div className={styles['ccr-rule-card']} style={{ background: '#fff', padding: 20, borderRadius: 16, border: '1px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.03)' }}>
+                                    <h4 style={{ textTransform: 'uppercase', fontSize: 11, letterSpacing: 1.2, color: '#64748b', marginBottom: 12, fontWeight: 800 }}>Core Concept</h4>
+                                    <div style={{ fontSize: 15, color: '#475569', lineHeight: 1.6 }}>
+                                        <MathRenderer text={learn.concept} />
+                                    </div>
+                                </div>
+
+                                <div className={styles['ccr-rule-card']} style={{ background: '#f8fafc', padding: 20, borderRadius: 16, border: '1px solid #e2e8f0' }}>
+                                    <h4 style={{ textTransform: 'uppercase', fontSize: 11, letterSpacing: 1.2, color, marginBottom: 12, fontWeight: 800 }}>Example</h4>
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                                        <div style={{ fontWeight: 700, color: '#1e293b', fontSize: 15 }}>
+                                            <MathRenderer text={currentRule.ex} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {currentRule.tip && (
+                                <div style={{ marginTop: 30, background: '#fffbeb', padding: 18, borderRadius: 16, border: '1px solid #fde68a', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                                    <span style={{ fontSize: 18, fontWeight: 900, color: '#92400e' }}>TIP</span>
+                                    <div style={{ fontSize: 14, color: '#92400e', lineHeight: 1.5, fontWeight: 500 }}>
+                                        <MathRenderer text={currentRule.tip} />
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className={styles['ccr-learn-footer']} style={{ borderTop: '1px solid #f1f5f9', paddingTop: 24 }}>
+                                {selectedLearnIdx < learn.rules.length - 1 ? (
+                                    <button className={styles['ccr-btn-primary']} style={{ background: color }} onClick={() => setSelectedLearnIdx(selectedLearnIdx + 1)}>
+                                        Next Topic {'->'}
+                                    </button>
+                                ) : (
+                                    <button className={styles['ccr-btn-primary']} style={{ background: color }} onClick={() => openSkill(activeSkillIdx, 'practice')}>
+                                        Start Practice {'->'}
+                                    </button>
+                                )}
+                                <button className={styles['ccr-btn-secondary']} onClick={() => openSkill(activeSkillIdx, 'assessment')}>
+                                    Take Assessment
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (view === 'practice' && skill) {
+        return (
+            <div className={styles['ccr-page']}>
+                <nav className={styles['ccr-nav']}>
+                    <button className={styles['ccr-nav-back']} onClick={backToList}>← Skills</button>
+                    <div className={styles['ccr-nav-links']}>
+                        <button className={styles['ccr-nav-link']} onClick={() => openSkill(activeSkillIdx, 'learn')}>Learn</button>
+                        <button className={`${styles['ccr-nav-link']} ${styles['ccr-nav-link--active']}`}>Practice</button>
+                        <button className={styles['ccr-nav-link']} onClick={() => openSkill(activeSkillIdx, 'assessment')}>Assessment</button>
+                    </div>
+                </nav>
+                <div className={styles['ccr-module-hero']}>
+                    <h1 className={styles['ccr-module-title']}>Practice: <span className={styles['ccr-accent-text']}>{skill.title}</span></h1>
+                    <p className={styles['ccr-module-subtitle']}>Practice questions based on the textbook section</p>
+                </div>
+                <div className={styles['ccr-section']}>
+                    <TrigPracticeEngine
+                        questions={sessionQuestions}
+                        questionPool={sessionQuestions}
+                        sampleSize={sessionQuestions.length}
+                        title={`Practice: ${skill.title}`}
+                        color={skill.color}
+                        onBack={backToList}
+                        nodeId={curriculumPathToNodeId[`trig-intro-${activeSkillIdx + 1}`]}
+                    />
+                </div>
+            </div>
+        );
+    }
+
+    if (view === 'assessment' && skill) {
+        return (
+            <div className={styles['ccr-page']}>
+                <nav className={styles['ccr-nav']}>
+                    <button className={styles['ccr-nav-back']} onClick={backToList}>← Skills</button>
+                    <div className={styles['ccr-nav-links']}>
+                        <button className={styles['ccr-nav-link']} onClick={() => openSkill(activeSkillIdx, 'learn')}>Learn</button>
+                        <button className={styles['ccr-nav-link']} onClick={() => openSkill(activeSkillIdx, 'practice')}>Practice</button>
+                        <button className={`${styles['ccr-nav-link']} ${styles['ccr-nav-link--active']}`}>Assessment</button>
+                    </div>
+                </nav>
+                <div className={styles['ccr-module-hero']}>
+                    <h1 className={styles['ccr-module-title']}>Assessment: <span className={styles['ccr-accent-text']}>{skill.title}</span></h1>
+                    <p className={styles['ccr-module-subtitle']}>Short review set for this chapter block</p>
+                </div>
+                <div className={styles['ccr-section']}>
+                    <TrigAssessmentEngine
+                        questionPool={sessionQuestions}
+                        sampleSize={sessionQuestions.length}
+                        title={skill.title}
+                        color={skill.color}
+                        onBack={backToList}
+                        nodeId={curriculumPathToNodeId[`trig-intro-${activeSkillIdx + 1}`]}
+                    />
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="skills-page calc-skills-stage" style={{ background: '#f8fafc', minHeight: '100vh', paddingBottom: '60px' }}>
-            <nav className="intro-nav">
-                <button className="intro-nav-back" onClick={() => navigate('/trigonometry/grade-10-intro')}>← Back to Branch</button>
-                <div className="intro-nav-links">
-                    <button className="intro-nav-link" onClick={() => navigate('/trigonometry/grade-10-intro/introduction')}>Intro</button>
-                    <button className="intro-nav-link" onClick={() => navigate('/trigonometry/grade-10-intro/terminology')}>Terminology</button>
-                    <button className="intro-nav-link intro-nav-link--active">Skills</button>
+        <div className={styles['ccr-page']}>
+            <nav className={styles['ccr-nav']}>
+                <button className={styles['ccr-nav-back']} onClick={() => navigate('/trigonometry/grade-10-intro')}>← Intro to Trigonometry</button>
+                <div className={styles['ccr-nav-links']}>
+                    <button className={styles['ccr-nav-link']} onClick={() => navigate('/trigonometry/grade-10-intro/introduction')}>Introduction</button>
+                    <button className={styles['ccr-nav-link']} onClick={() => navigate('/trigonometry/grade-10-intro/terminology')}>Terminology</button>
+                    <button className={`${styles['ccr-nav-link']} ${styles['ccr-nav-link--active']}`}>Skills</button>
                 </div>
             </nav>
 
-            <div className="calc-lexicon-container calc-skills-stage-body calc-skills-stage-body--list">
-                <div style={{ textAlign: 'center', marginBottom: 40 }}>
-                    <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '2.8rem', fontWeight: 900, color: 'var(--calc-text)', margin: '0 0 8px' }}>
-                        Intro to Trig{' '}
-                        <span style={{ background: 'linear-gradient(135deg, #7c3aed, #6366f1)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Skills</span>
-                    </h1>
-                    <p style={{ color: 'var(--calc-muted)', fontWeight: 600, fontSize: 16, margin: 0 }}>
-                        From standard angle tables to real-world height problems — master it all.
-                    </p>
-                </div>
+            <div className={styles['ccr-module-hero']}>
+                <h1 className={styles['ccr-module-title']}>Intro to Trig <span className={styles['ccr-accent-text']}>Skills</span></h1>
+                <p className={styles['ccr-module-subtitle']}>From standard angle tables to real-world height problems — master it all.</p>
+            </div>
 
-                <div className="calc-skills-grid">
-                    {SKILLS.map((item, index) => (
-                        <div key={item.id} className="calc-skill-card" style={{ '--skill-color': item.color, '--skill-color-30': `${item.color}30`, '--skill-color-40': `${item.color}40` }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 16, width: '100%' }}>
-                                <div className="calc-skill-icon" style={{ background: `${item.color}10`, color: item.color, flexShrink: 0 }}>
-                                    {item.icon}
+            <div className={styles['ccr-section']}>
+                <div className={styles['ccr-skills-list']}>
+                    {SKILLS.map((skill, index) => (
+                        <div key={skill.id} className={styles['ccr-skill-card']} style={{ '--skill-color': skill.color }}>
+                            <div className={styles['ccr-skill-info']}>
+                                <div className={styles['ccr-skill-icon']} style={{ background: `${skill.color}15`, color: skill.color, fontSize: 18, fontWeight: 900 }}>{skill.icon}</div>
+                                <div>
+                                    <div className={styles['ccr-skill-meta']} style={{ fontSize: 11, fontWeight: 800, color: skill.color, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>Skill {index + 1}</div>
+                                    <div className={styles['ccr-skill-title']} style={{ fontFamily: 'Outfit, sans-serif', fontSize: 20, fontWeight: 800, color: '#1e293b', marginBottom: 4 }}>{skill.title}</div>
+                                    <div className={styles['ccr-skill-desc']} style={{ fontSize: 13, color: '#475569', lineHeight: 1.5 }}>
+                                        <MathRenderer text={skill.desc} />
+                                    </div>
                                 </div>
-
-                                <div style={{ flex: 1, minWidth: 0 }}>
-                                    <span style={{ fontSize: 11, fontWeight: 900, color: item.color, textTransform: 'uppercase', letterSpacing: 1.2 }}>{item.subtitle || `SKILL ${index + 1}`}</span>
-                                    <h3 style={{ fontSize: 20, fontWeight: 900, color: 'var(--calc-text)', margin: '2px 0 4px' }}>{item.title}</h3>
-                                    <p style={{ fontSize: 14, color: 'var(--calc-muted)', fontWeight: 500, margin: 0, opacity: 0.85 }}>{item.desc}</p>
-                                </div>
-
-                                <div className="calc-skill-actions">
-                                    <button className="calc-skill-btn-outline" onClick={() => openSkill(index, 'learn')}>Learn</button>
-                                    <button className="calc-skill-btn-outline" onClick={() => openSkill(index, 'practice')}>Practice</button>
-                                    <button className="calc-skill-btn-filled" style={{ '--skill-color': item.color }} onClick={() => openSkill(index, 'assessment')}>Assess</button>
-                                </div>
+                            </div>
+                            <div className={styles['ccr-skill-actions']}>
+                                <button
+                                    className={styles['ccr-skill-btn-outline']}
+                                    style={{ '--btn-color': skill.color }}
+                                    onClick={() => openSkill(index, 'learn')}
+                                >
+                                    Learn
+                                </button>
+                                <button
+                                    className={styles['ccr-skill-btn-outline']}
+                                    style={{ '--btn-color': skill.color }}
+                                    onClick={() => openSkill(index, 'practice')}
+                                >
+                                    Practice
+                                </button>
+                                <button
+                                    className={styles['ccr-skill-btn-filled']}
+                                    style={{ '--btn-color': skill.color }}
+                                    onClick={() => openSkill(index, 'assessment')}
+                                >
+                                    Assess
+                                </button>
                             </div>
                         </div>
                     ))}

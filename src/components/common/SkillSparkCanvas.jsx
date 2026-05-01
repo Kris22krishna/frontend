@@ -14,7 +14,7 @@ export default function SkillSparkCanvas({ spark, title, returnPath, returnLabel
             height: '100vh',
             display: 'flex',
             flexDirection: 'column',
-            background: '#0f172a',
+            background: '#ffffff',
             margin: 0,
             overflow: 'hidden'
         }}>
@@ -23,26 +23,26 @@ export default function SkillSparkCanvas({ spark, title, returnPath, returnLabel
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '16px 20px',
-                background: 'rgba(15,23,42,0.9)',
+                background: 'rgba(255,255,255,0.9)',
                 backdropFilter: 'blur(10px)',
-                borderBottom: tabs.length > 0 ? 'none' : '1px solid rgba(255,255,255,0.1)',
+                borderBottom: tabs.length > 0 ? 'none' : '1px solid #e2e8f0',
                 zIndex: 50,
                 flexWrap: 'wrap',
                 gap: '12px'
             }}>
                 <button onClick={() => navigate(returnPath)} style={{
                     display: 'flex', alignItems: 'center', gap: '8px',
-                    background: 'rgba(255,255,255,0.1)', color: '#fff', border: 'none',
+                    background: '#f1f5f9', color: '#1e293b', border: 'none',
                     padding: '8px 16px', borderRadius: '100px', cursor: 'pointer',
                     fontWeight: 700, transition: 'all 0.2s', fontFamily: 'Outfit, sans-serif'
                 }}
-                onMouseOver={(e) => e.target.style.background = 'rgba(255,255,255,0.2)'}
-                onMouseOut={(e) => e.target.style.background = 'rgba(255,255,255,0.1)'}
+                onMouseOver={(e) => e.target.style.background = '#e2e8f0'}
+                onMouseOut={(e) => e.target.style.background = '#f1f5f9'}
                 >
                     ← Back to {returnLabel}
                 </button>
                 <div style={{
-                    color: '#fff', fontSize: '20px', fontWeight: 800, fontFamily: 'Outfit, sans-serif',
+                    color: '#0f172a', fontSize: '20px', fontWeight: 800, fontFamily: 'Outfit, sans-serif',
                     display: 'flex', alignItems: 'center', gap: 10
                 }}>
                     <span style={{ fontSize: '24px' }}>⚡</span>
@@ -56,9 +56,9 @@ export default function SkillSparkCanvas({ spark, title, returnPath, returnLabel
                     alignItems: 'center',
                     justifyContent: 'flex-start',
                     gap: 8,
-                    background: 'rgba(15,23,42,0.9)',
+                    background: 'rgba(255,255,255,0.9)',
                     backdropFilter: 'blur(10px)',
-                    borderBottom: '1px solid rgba(255,255,255,0.1)',
+                    borderBottom: '1px solid #e2e8f0',
                     padding: '0 20px 16px',
                     zIndex: 50,
                     overflowX: 'auto',
@@ -74,8 +74,8 @@ export default function SkillSparkCanvas({ spark, title, returnPath, returnLabel
                                     padding: '8px 16px',
                                     borderRadius: '100px',
                                     border: 'none',
-                                    background: isActive ? '#3b82f6' : 'rgba(255,255,255,0.05)',
-                                    color: isActive ? '#fff' : '#94a3b8',
+                                    background: isActive ? '#3b82f6' : '#f1f5f9',
+                                    color: isActive ? '#ffffff' : '#64748b',
                                     fontFamily: 'Outfit, sans-serif',
                                     fontWeight: 700,
                                     fontSize: '14px',
@@ -84,10 +84,10 @@ export default function SkillSparkCanvas({ spark, title, returnPath, returnLabel
                                     whiteSpace: 'nowrap'
                                 }}
                                 onMouseOver={(e) => {
-                                    if (!isActive) e.target.style.background = 'rgba(255,255,255,0.1)';
+                                    if (!isActive) e.target.style.background = '#e2e8f0';
                                 }}
                                 onMouseOut={(e) => {
-                                    if (!isActive) e.target.style.background = 'rgba(255,255,255,0.05)';
+                                    if (!isActive) e.target.style.background = '#f1f5f9';
                                 }}
                             >
                                 {tab.label}
