@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../../calculus.css';
 import MathRenderer from '../../../../../MathRenderer';
-import QuizEngine from '../../../../Algebra/Topics/Skills/Engines/QuizEngine';
-import AssessmentEngine from '../../../../Algebra/Topics/Skills/Engines/AssessmentEngine';
+import QuizEngine from '../../../Engines/QuizEngine';
+import AssessmentEngine from '../../../Engines/AssessmentEngine';
 import { SKILLS } from './LimitsSkillsData';
 
 export default function LimitsSkills() {
@@ -254,22 +254,27 @@ export default function LimitsSkills() {
                 <div className="calc-skills-grid">
                     {SKILLS.map((item, index) => (
                         <div key={item.id} className="calc-skill-card" style={{ '--skill-color': item.color, '--skill-color-30': `${item.color}30`, '--skill-color-40': `${item.color}40` }}>
-                            <div className="calc-skill-icon" style={{ background: `${item.color}10`, color: item.color }}>
-                                {item.icon}
-                            </div>
-
-                            <div className="calc-skill-content">
-                                <div className="calc-skill-text-stack">
-                                    <span style={{ fontSize: 11, fontWeight: 900, color: item.color, textTransform: 'uppercase', letterSpacing: 1.2 }}>{item.subtitle}</span>
-                                    <h3 style={{ fontSize: 22, fontWeight: 900, color: 'var(--calc-text)', margin: 0 }}>{item.title}</h3>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 16,
+                                width: '100%',
+                            }}>
+                                <div className="calc-skill-icon" style={{ background: `${item.color}10`, color: item.color, flexShrink: 0, cursor: 'pointer' }} onClick={() => openSkill(index, 'learn')}>
+                                    {item.icon}
                                 </div>
-                                <p style={{ fontSize: 14, color: 'var(--calc-muted)', fontWeight: 500, margin: 0, opacity: 0.85 }}>{item.desc}</p>
-                            </div>
 
-                            <div className="calc-skill-actions">
-                                <button className="calc-skill-btn-outline" onClick={() => openSkill(index, 'learn')}>Learn</button>
-                                <button className="calc-skill-btn-outline" onClick={() => openSkill(index, 'practice')}>Practice</button>
-                                <button className="calc-skill-btn-filled" style={{ '--skill-color': item.color }} onClick={() => openSkill(index, 'assessment')}>Assess</button>
+                                <div style={{ flex: 1, minWidth: 0, cursor: 'pointer' }} onClick={() => openSkill(index, 'learn')}>
+                                    <span style={{ fontSize: 11, fontWeight: 900, color: item.color, textTransform: 'uppercase', letterSpacing: 1.2 }}>{item.subtitle || `SKILL ${index + 1}`}</span>
+                                    <h3 style={{ fontSize: 20, fontWeight: 900, color: 'var(--calc-text)', margin: '2px 0 4px' }}>{item.title}</h3>
+                                    <p style={{ fontSize: 14, color: 'var(--calc-muted)', fontWeight: 500, margin: 0, opacity: 0.85 }}>{item.desc}</p>
+                                </div>
+
+                                <div className="calc-skill-actions">
+                                    <button className="calc-skill-btn-outline" onClick={() => openSkill(index, 'learn')}>Learn</button>
+                                    <button className="calc-skill-btn-outline" onClick={() => openSkill(index, 'practice')}>Practice</button>
+                                    <button className="calc-skill-btn-filled" style={{ '--skill-color': item.color }} onClick={() => openSkill(index, 'assessment')}>Assess</button>
+                                </div>
                             </div>
                         </div>
                     ))}
