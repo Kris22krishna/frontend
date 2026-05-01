@@ -14,16 +14,44 @@ export default function TrigIntroGr10Terminology() {
 
     const [quizAnswers, setQuizAnswers] = useState({});
     const [showResults, setShowResults] = useState(false);
-    const { startSession, finishSession } = useSessionLogger();
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
+    const sessionStartedRef = useRef(false);
+    const isFinishedRef = useRef(false);
+    const answersPayload = useRef([]);
 
     useEffect(() => window.scrollTo(0, 0), []);
 
     const activeTerm = TERMS[selectedIdx];
     const activeIdentity = KEY_IDENTITIES[selectedIdentityIdx];
 
-    const handleQuizSelect = (qId, optionIdx) => {
+    useEffect(() => {
+        return () => {
+            if (sessionStartedRef.current && !isFinishedRef.current && answersPayload.current.length > 0) {
+                abandonSession({ totalQuestions: VOCAB_QUIZ.length, answersPayload: answersPayload.current.filter(Boolean) });
+            }
+        };
+    }, [abandonSession]);
+
+    const handleQuizSelect = async (qId, optionIdx) => {
         if (showResults) return;
         setQuizAnswers(prev => ({ ...prev, [qId]: optionIdx }));
+
+        const qIdx = VOCAB_QUIZ.findIndex(q => q.id === qId);
+        const q = VOCAB_QUIZ[qIdx];
+        const isCorrect = optionIdx === q.correct;
+        const entry = {
+            question_index: qIdx + 1,
+            answer_json: { selected: optionIdx, correct_answer: q.correct },
+            is_correct: isCorrect ? 1.0 : 0.0,
+            marks_awarded: isCorrect ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: 0
+        };
+        answersPayload.current[qIdx] = entry;
+
+        if (sessionStartedRef.current) {
+            await logAnswer({ questionIndex: entry.question_index, answerJson: entry.answer_json, isCorrect: entry.is_correct });
+        }
     };
 
     const handleCheckAnswers = async () => {
@@ -33,31 +61,43 @@ export default function TrigIntroGr10Terminology() {
         }
         setShowResults(true);
 
-        const nodeId = curriculumPathToNodeId['trig-intro-terminology'];
-        startSession({ nodeId, sessionType: 'practice' });
-        
-        const payload = VOCAB_QUIZ.map((q, idx) => {
-            const isCorrect = quizAnswers[q.id] === q.correct;
-            return {
-                question_index: idx,
-                answer_json: { selected: quizAnswers[q.id] },
-                is_correct: isCorrect ? 1.0 : 0.0,
-                marks_awarded: isCorrect ? 1 : 0,
-                marks_possible: 1,
-                time_taken_ms: 0
-            };
-        });
-
-        await finishSession({
-            totalQuestions: VOCAB_QUIZ.length,
-            questionsAnswered: VOCAB_QUIZ.length,
-            answersPayload: payload
-        });
+        if (sessionStartedRef.current && !isFinishedRef.current) {
+            isFinishedRef.current = true;
+            await finishSession({
+                totalQuestions: VOCAB_QUIZ.length,
+                questionsAnswered: answersPayload.current.filter(Boolean).length,
+                answersPayload: answersPayload.current.filter(Boolean)
+            });
+        }
     };
 
     const handleRetry = () => {
         setQuizAnswers({});
         setShowResults(false);
+        answersPayload.current = [];
+        isFinishedRef.current = false;
+        
+        const nodeId = curriculumPathToNodeId['trig-intro-terminology'];
+        if (nodeId) {
+            startSession({ nodeId, sessionType: 'practice' });
+            sessionStartedRef.current = true;
+        }
+    };
+
+    const handleTabSwitch = (tab) => {
+        if (activeTab === 'quiz' && tab !== 'quiz' && sessionStartedRef.current && !isFinishedRef.current) {
+            isFinishedRef.current = true;
+            abandonSession({ totalQuestions: VOCAB_QUIZ.length, answersPayload: answersPayload.current.filter(Boolean) });
+        }
+        setActiveTab(tab);
+        if (tab === 'quiz' && !sessionStartedRef.current) {
+            const nodeId = curriculumPathToNodeId['trig-intro-terminology'];
+            if (nodeId) {
+                startSession({ nodeId, sessionType: 'practice' });
+                sessionStartedRef.current = true;
+                answersPayload.current = [];
+            }
+        }
     };
 
     const accentColor = '#7c3aed';
@@ -90,15 +130,15 @@ export default function TrigIntroGr10Terminology() {
                 <div className={styles.arithTabSwitcher}>
                     <button
                         style={{ padding: '8px 16px', borderRadius: 100, border: 'none', background: activeTab === 'terms' ? accentColor : '#e2e8f0', color: activeTab === 'terms' ? '#fff' : '#475569', fontWeight: 700, cursor: 'pointer' }}
-                        onClick={() => setActiveTab('terms')}
+                        onClick={() => handleTabSwitch('terms')}
                     >📚 Terms</button>
                     <button
                         style={{ padding: '8px 16px', borderRadius: 100, border: 'none', background: activeTab === 'identities' ? accentColor : '#e2e8f0', color: activeTab === 'identities' ? '#fff' : '#475569', fontWeight: 700, cursor: 'pointer' }}
-                        onClick={() => setActiveTab('identities')}
-                    >⚡ Key Identities</button>
+                        onClick={() => handleTabSwitch('identities')}
+                    >⚡ Key Principles</button>
                     <button
                         style={{ padding: '8px 16px', borderRadius: 100, border: 'none', background: activeTab === 'quiz' ? accentColor : '#e2e8f0', color: activeTab === 'quiz' ? '#fff' : '#475569', fontWeight: 700, cursor: 'pointer' }}
-                        onClick={() => setActiveTab('quiz')}
+                        onClick={() => handleTabSwitch('quiz')}
                     >🧪 Vocab Check</button>
                 </div>
 

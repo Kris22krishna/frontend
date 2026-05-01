@@ -13,8 +13,11 @@ function shuffle(arr) {
 }
 
 export default function TrigAssessmentEngine({ questionPool, sampleSize = 10, title, color, onBack, nodeId }) {
-    const { startSession, finishSession } = useSessionLogger();
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
     const isFinishedRef = useRef(false);
+    const sessionStartedRef = useRef(false);
+    const answersPayload = useRef([]);
+    const qStartRef = useRef(Date.now());
 
     const safePool = Array.isArray(questionPool) ? questionPool : [];
     // Trig data uses `answer` as the correct-index key; normalise to `correct`
@@ -37,26 +40,30 @@ export default function TrigAssessmentEngine({ questionPool, sampleSize = 10, ti
     const [timeLeft, setTimeLeft] = useState(600);
     const [finished, setFinished] = useState(false);
 
-    const finish = useCallback(() => setFinished(true), []);
+
 
     useEffect(() => {
         if (!nodeId) return;
         startSession({ nodeId, sessionType: 'assessment' });
+        sessionStartedRef.current = true;
+        answersPayload.current = [];
     }, [nodeId]);
 
     useEffect(() => {
-        if (!finished || !nodeId || isFinishedRef.current) return;
-        isFinishedRef.current = true;
-        const payload = questions.map((q, i) => ({
-            question_index: i,
-            answer_json: { selected: answers[i] ?? null, correct_answer: q.correct ?? null },
-            is_correct: answers[i] === q.correct,
-            marks_awarded: answers[i] === q.correct ? 1 : 0,
-            marks_possible: 1,
-            time_taken_ms: 0,
-        }));
-        finishSession({ answers_payload: payload });
-    }, [finished]);
+        return () => {
+            if (sessionStartedRef.current && !isFinishedRef.current && answersPayload.current.length > 0) {
+                abandonSession({ totalQuestions: questions.length, answersPayload: answersPayload.current });
+            }
+        };
+    }, [abandonSession, questions.length]);
+
+    const finish = useCallback(async () => {
+        setFinished(true);
+        if (nodeId && !isFinishedRef.current) {
+            isFinishedRef.current = true;
+            await finishSession({ totalQuestions: questions.length, questionsAnswered: answersPayload.current.length, answersPayload: answersPayload.current });
+        }
+    }, [nodeId, questions.length, finishSession]);
 
     useEffect(() => {
         if (finished) return;
@@ -77,11 +84,40 @@ export default function TrigAssessmentEngine({ questionPool, sampleSize = 10, ti
         setReviewed(next);
     };
 
-    const handleSelect = (optIdx) => {
+    const handleSelect = async (optIdx) => {
         if (finished) return;
+        const timeSpent = Date.now() - qStartRef.current;
         const next = [...answers];
         next[current] = optIdx;
         setAnswers(next);
+        const correct = optIdx === questions[current].correct;
+        qStartRef.current = Date.now();
+        if (nodeId) {
+            const entry = { 
+                question_index: current + 1, 
+                answer_json: { selected: optIdx, text: questions[current].options[optIdx] }, 
+                is_correct: correct ? 1.0 : 0.0, 
+                marks_awarded: correct ? 1 : 0, 
+                marks_possible: 1, 
+                time_taken_ms: timeSpent 
+            };
+            // Upsert in sparse array or append if doing assessment (sparse makes sense here since they can jump around)
+            const idxInPayload = answersPayload.current.findIndex(e => e.question_index === current + 1);
+            if (idxInPayload >= 0) {
+                answersPayload.current[idxInPayload] = entry;
+            } else {
+                answersPayload.current.push(entry);
+            }
+            await logAnswer({ questionIndex: entry.question_index, answerJson: entry.answer_json, isCorrect: entry.is_correct });
+        }
+    };
+
+    const handleExit = () => {
+        if (nodeId && !isFinishedRef.current && answersPayload.current.length > 0) {
+            isFinishedRef.current = true;
+            abandonSession({ totalQuestions: questions.length, answersPayload: answersPayload.current });
+        }
+        onBack();
     };
 
     const handleSubmit = () => {
@@ -178,7 +214,7 @@ export default function TrigAssessmentEngine({ questionPool, sampleSize = 10, ti
                         <div style={{ fontSize: 11, fontWeight: 800, color, textTransform: 'uppercase', letterSpacing: 1.2 }}>Assessment</div>
                         <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 18, fontWeight: 800, color: '#1e293b' }}>{title}</div>
                     </div>
-                    <button className={styles['ccr-btn-exit']} onClick={onBack}>
+                    <button className={styles['ccr-btn-exit']} onClick={handleExit}>
                         <span>✕</span> Exit
                     </button>
                 </div>

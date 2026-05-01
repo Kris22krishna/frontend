@@ -13,9 +13,10 @@ function shuffle(arr) {
 }
 
 export default function TrigPracticeEngine({ questionPool, sampleSize, title, color, onBack, nodeId }) {
-    const { startSession, logAnswer, finishSession } = useSessionLogger();
+    const { startSession, logAnswer, finishSession, abandonSession } = useSessionLogger();
     const answersPayload = useRef([]);
     const isFinishedRef = useRef(false);
+    const sessionStartedRef = useRef(false);
 
     const safePool = Array.isArray(questionPool) ? questionPool : [];
     const n = sampleSize || safePool.length;
@@ -42,7 +43,16 @@ export default function TrigPracticeEngine({ questionPool, sampleSize, title, co
     useEffect(() => {
         if (!nodeId) return;
         startSession({ nodeId, sessionType: 'practice' });
+        sessionStartedRef.current = true;
     }, [nodeId]);
+
+    useEffect(() => {
+        return () => {
+            if (sessionStartedRef.current && !isFinishedRef.current && answersPayload.current.length > 0) {
+                abandonSession({ totalQuestions: questions.length, answersPayload: answersPayload.current.filter(Boolean) });
+            }
+        };
+    }, [abandonSession, questions.length]);
 
     useEffect(() => {
         if (finished) return;
@@ -70,9 +80,16 @@ export default function TrigPracticeEngine({ questionPool, sampleSize, title, co
         const isCorrect = idx === q.correct;
         if (isCorrect) setScore((s) => s + 1);
         if (nodeId) {
-            const entry = { question_index: current, answer_json: { selected: idx, correct_answer: q.correct }, is_correct: isCorrect, marks_awarded: isCorrect ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+            const entry = { 
+                question_index: current + 1, 
+                answer_json: { selected: idx, correct_answer: q.correct }, 
+                is_correct: isCorrect ? 1.0 : 0.0, 
+                marks_awarded: isCorrect ? 1 : 0, 
+                marks_possible: 1, 
+                time_taken_ms: 0 
+            };
             answersPayload.current[current] = entry;
-            logAnswer(entry);
+            logAnswer({ questionIndex: entry.question_index, answerJson: entry.answer_json, isCorrect: entry.is_correct });
         }
     };
 
@@ -89,7 +106,8 @@ export default function TrigPracticeEngine({ questionPool, sampleSize, title, co
         if (current + 1 >= questions.length) {
             if (nodeId && !isFinishedRef.current) {
                 isFinishedRef.current = true;
-                await finishSession({ answers_payload: answersPayload.current.filter(Boolean) });
+                const finalPayload = answersPayload.current.filter(Boolean);
+                await finishSession({ totalQuestions: questions.length, questionsAnswered: finalPayload.length, answersPayload: finalPayload });
             }
             setFinished(true);
         } else {
@@ -112,7 +130,18 @@ export default function TrigPracticeEngine({ questionPool, sampleSize, title, co
         setScore(0);
         setFinished(false);
         setTimeTaken(0);
-        if (nodeId) startSession({ nodeId, sessionType: 'practice' });
+        if (nodeId) {
+            startSession({ nodeId, sessionType: 'practice' });
+            sessionStartedRef.current = true;
+        }
+    };
+
+    const handleExit = async () => {
+        if (nodeId && !isFinishedRef.current && answersPayload.current.length > 0) {
+            isFinishedRef.current = true;
+            await abandonSession({ totalQuestions: questions.length, answersPayload: answersPayload.current.filter(Boolean) });
+        }
+        onBack();
     };
 
     if (finished) {
@@ -188,7 +217,7 @@ export default function TrigPracticeEngine({ questionPool, sampleSize, title, co
                             <div style={{ fontSize: 13, color, fontWeight: 800, background: `${color}15`, padding: '4px 10px', borderRadius: 8, display: 'inline-block', marginBottom: 4 }}>{formatTime(timeTaken)}</div>
                             <div style={{ fontSize: 13, color: '#64748b', fontWeight: 700 }}>Q <span style={{ color }}>{current + 1}</span> / {questions.length}</div>
                         </div>
-                        <button className={styles['ccr-btn-exit']} onClick={onBack}>
+                        <button className={styles['ccr-btn-exit']} onClick={handleExit}>
                             <span>✕</span> Exit
                         </button>
                     </div>
