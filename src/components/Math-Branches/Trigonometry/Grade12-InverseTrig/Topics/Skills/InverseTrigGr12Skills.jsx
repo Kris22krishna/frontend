@@ -5,7 +5,7 @@ import MathRenderer from '../../../../../MathRenderer';
 import TrigPracticeEngine from '../../../../../Math-Branches/Trigonometry/Engines/TrigPracticeEngine';
 import TrigAssessmentEngine from '../../../../../Math-Branches/Trigonometry/Engines/TrigAssessmentEngine';
 import { SKILLS } from './InverseTrigGr12SkillsIndex';
-import { curriculumPathToNodeId } from '@/lib/curriculumIds';
+import { SLUG_TO_NODE_ID } from '@/lib/curriculumIds';
 
 export default function InverseTrigGr12Skills() {
     const navigate = useNavigate();
@@ -169,7 +169,7 @@ export default function InverseTrigGr12Skills() {
                         title={`Practice: ${skill.title}`}
                         color={skill.color}
                         onBack={backToList}
-                        nodeId={curriculumPathToNodeId[`inverse-trig-${activeSkillIdx + 1}`]}
+                        nodeId={SLUG_TO_NODE_ID[`inverse-trig-${activeSkillIdx + 1}`]}
                     />
                 </div>
             </div>
@@ -198,7 +198,7 @@ export default function InverseTrigGr12Skills() {
                         title={skill.title}
                         color={skill.color}
                         onBack={backToList}
-                        nodeId={curriculumPathToNodeId[`inverse-trig-${activeSkillIdx + 1}`]}
+                        nodeId={SLUG_TO_NODE_ID[`inverse-trig-${activeSkillIdx + 1}`]}
                     />
                 </div>
             </div>

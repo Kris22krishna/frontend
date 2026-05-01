@@ -336,6 +336,34 @@ export const NODE_IDS = {
   mathBranchAlgebraExponentsFractionalLaw:  'f3000000-0000-0000-0000-000000000009',
   mathBranchAlgebraExponentsStandardForm:   'f3000000-0000-0000-0000-000000000010',
   mathBranchAlgebraExponentsComparing:      'f3000000-0000-0000-0000-000000000011',
+
+  // ── MATH-BRANCHES MODULE: TRIGONOMETRY ─────────────────────────────────────
+  mathBranchTrigonometry:                   'f1000000-0000-0000-0000-000000000002',
+
+  // Grade 10 Intro
+  mathBranchTrigIntroTerminology:           'f3000000-0000-0000-0000-000000000100',
+  mathBranchTrigIntro1:                     'f3000000-0000-0000-0000-000000000101',
+  mathBranchTrigIntro2:                     'f3000000-0000-0000-0000-000000000102',
+  mathBranchTrigIntro3:                     'f3000000-0000-0000-0000-000000000103',
+  
+  // Grade 10 Apps
+  mathBranchTrigAppTerminology:             'f3000000-0000-0000-0000-000000000110',
+  mathBranchTrigApp1:                       'f3000000-0000-0000-0000-000000000111',
+  mathBranchTrigApp2:                       'f3000000-0000-0000-0000-000000000112',
+  
+  // Grade 11 Functions
+  mathBranchTrigFuncTerminology:            'f3000000-0000-0000-0000-000000000120',
+  mathBranchTrigFunc1:                      'f3000000-0000-0000-0000-000000000121',
+  mathBranchTrigFunc2:                      'f3000000-0000-0000-0000-000000000122',
+  mathBranchTrigFunc3:                      'f3000000-0000-0000-0000-000000000123',
+  mathBranchTrigFunc4:                      'f3000000-0000-0000-0000-000000000124',
+  
+  // Grade 12 Inverse
+  mathBranchInverseTrigTerminology:         'f3000000-0000-0000-0000-000000000130',
+  mathBranchInverseTrig1:                   'f3000000-0000-0000-0000-000000000131',
+  mathBranchInverseTrig2:                   'f3000000-0000-0000-0000-000000000132',
+  mathBranchInverseTrig3:                   'f3000000-0000-0000-0000-000000000133',
+
   // ── 5. CLASS 10 MATH ─────────────────────────────────────────────────────
 
   // Grade 10 Math: Surface Areas and Volumes (Chapter 13)
@@ -1121,6 +1149,25 @@ export const SLUG_TO_NODE_ID = {
   'math-branch-algebra-solving':        NODE_IDS.mathBranchAlgebraSolving,
   'math-branch-algebra-word-problems':  NODE_IDS.mathBranchAlgebraWordProblems,
   
+  // Math Branches: Trigonometry
+  'math-branch-trigonometry':           NODE_IDS.mathBranchTrigonometry,
+  'trig-intro-terminology':             NODE_IDS.mathBranchTrigIntroTerminology,
+  'trig-intro-1':                       NODE_IDS.mathBranchTrigIntro1,
+  'trig-intro-2':                       NODE_IDS.mathBranchTrigIntro2,
+  'trig-intro-3':                       NODE_IDS.mathBranchTrigIntro3,
+  'trig-app-terminology':               NODE_IDS.mathBranchTrigAppTerminology,
+  'trig-app-1':                         NODE_IDS.mathBranchTrigApp1,
+  'trig-app-2':                         NODE_IDS.mathBranchTrigApp2,
+  'trig-func-terminology':              NODE_IDS.mathBranchTrigFuncTerminology,
+  'trig-func-1':                        NODE_IDS.mathBranchTrigFunc1,
+  'trig-func-2':                        NODE_IDS.mathBranchTrigFunc2,
+  'trig-func-3':                        NODE_IDS.mathBranchTrigFunc3,
+  'trig-func-4':                        NODE_IDS.mathBranchTrigFunc4,
+  'inverse-trig-terminology':           NODE_IDS.mathBranchInverseTrigTerminology,
+  'inverse-trig-1':                     NODE_IDS.mathBranchInverseTrig1,
+  'inverse-trig-2':                     NODE_IDS.mathBranchInverseTrig2,
+  'inverse-trig-3':                     NODE_IDS.mathBranchInverseTrig3,
+  
   // Grade-based Slugs
   'g10-science-chemical-reactions':    NODE_IDS.g10ScienceChemicalReactions,
   'g10-science-cr-equations':          NODE_IDS.g10ScienceChemicalEquations,
@@ -1481,27 +1528,4 @@ export const SLUG_TO_NODE_ID = {
   'g12-bio-sr-post-fertilisation':             NODE_IDS.g12BiolSRPostFertilisation,
   'g12-bio-sr-apomixis-polyembryony':          NODE_IDS.g12BiolSRApomixisPolyembryony,
   'g12-bio-sr-terminology':                    NODE_IDS.g12BiolSRTerminologyQuiz,
-};
-
-export const curriculumPathToNodeId = {
-  // Grade 10 Intro
-  'trig-intro-terminology': 'a4101008-0004-0000-0000-000000000001',
-  'trig-intro-1':           'a4101008-0004-0000-0000-000000000002',
-  'trig-intro-2':           'a4101008-0004-0000-0000-000000000003',
-  'trig-intro-3':           'a4101008-0004-0000-0000-000000000004',
-  // Grade 10 Apps
-  'trig-app-terminology':   'a4101008-0004-0000-0000-000000000005',
-  'trig-app-1':             'a4101008-0004-0000-0000-000000000006',
-  'trig-app-2':             'a4101008-0004-0000-0000-000000000007',
-  // Grade 11 Functions
-  'trig-func-terminology':  'a4101008-0004-0000-0000-000000000008',
-  'trig-func-1':            'a4101008-0004-0000-0000-000000000009',
-  'trig-func-2':            'a4101008-0004-0000-0000-00000000000a',
-  'trig-func-3':            'a4101008-0004-0000-0000-00000000000b',
-  'trig-func-4':            'a4101008-0004-0000-0000-00000000000c',
-  // Grade 12 Inverse
-  'inverse-trig-terminology':'a4101008-0004-0000-0000-00000000000d',
-  'inverse-trig-1':         'a4101008-0004-0000-0000-00000000000e',
-  'inverse-trig-2':         'a4101008-0004-0000-0000-00000000000f',
-  'inverse-trig-3':         'a4101008-0004-0000-0000-000000000010',
 };

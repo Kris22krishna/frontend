@@ -4,7 +4,7 @@ import styles from '../../../trigonometry.module.css';
 import MathRenderer from '../../../../../MathRenderer';
 import { TERMS, KEY_IDENTITIES, VOCAB_QUIZ } from './TrigIntroGr10TerminologyData';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
-import { curriculumPathToNodeId } from '@/lib/curriculumIds';
+import { SLUG_TO_NODE_ID } from '@/lib/curriculumIds';
 
 export default function TrigIntroGr10Terminology() {
     const navigate = useNavigate();
@@ -77,7 +77,7 @@ export default function TrigIntroGr10Terminology() {
         answersPayload.current = [];
         isFinishedRef.current = false;
         
-        const nodeId = curriculumPathToNodeId['trig-intro-terminology'];
+        const nodeId = SLUG_TO_NODE_ID['trig-intro-terminology'];
         if (nodeId) {
             startSession({ nodeId, sessionType: 'practice' });
             sessionStartedRef.current = true;
@@ -91,7 +91,7 @@ export default function TrigIntroGr10Terminology() {
         }
         setActiveTab(tab);
         if (tab === 'quiz' && !sessionStartedRef.current) {
-            const nodeId = curriculumPathToNodeId['trig-intro-terminology'];
+            const nodeId = SLUG_TO_NODE_ID['trig-intro-terminology'];
             if (nodeId) {
                 startSession({ nodeId, sessionType: 'practice' });
                 sessionStartedRef.current = true;
