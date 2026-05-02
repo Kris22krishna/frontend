@@ -386,11 +386,19 @@ export const LAGraphMini = ({ config, onProtractorChange }) => {
     }
 
     if (type === 'intersecting-extra-ray') {
-        const { angleBOD, angleBOE, pointLabels } = data;
+        const { angleBOD, angleBOE, angleAOE, pointLabels } = data;
         const [pA, pB, pC, pD, pO, pE] = pointLabels || ['A', 'B', 'C', 'D', 'O', 'E'];
         const r = 85;
         const radCD = (angleBOD * Math.PI) / 180;
-        const radOE = (angleBOE * Math.PI) / 180;
+        
+        let radOE;
+        let isAOE = false;
+        if (angleAOE !== undefined) {
+            radOE = (180 + angleAOE) * Math.PI / 180;
+            isAOE = true;
+        } else {
+            radOE = (angleBOE * Math.PI) / 180;
+        }
 
         return (
             <svg viewBox="0 0 340 220" width="100%" style={{ maxWidth: 320, maxHeight: 200, background: '#f8fafc', borderRadius: 12 }}>
@@ -414,6 +422,18 @@ export const LAGraphMini = ({ config, onProtractorChange }) => {
 
                 <path d={describeArc(170, 120, 25, 0, angleBOD)} stroke="#0284c7" strokeWidth="2" fill="none" />
                 <AngleLabel cx={170} cy={120} angleRadius={45} angleMid={angleBOD/2} text={`${angleBOD}°`} color="#0284c7" />
+                
+                {isAOE ? (
+                    <>
+                        <path d={describeArc(170, 120, 22, 180, 180 + angleAOE)} stroke="#e11d48" strokeWidth="2" fill="none" strokeDasharray="3,3" />
+                        <AngleLabel cx={170} cy={120} angleRadius={40} angleMid={180 + angleAOE/2} text={`${angleAOE}°`} color="#e11d48" />
+                    </>
+                ) : (
+                    <>
+                        <path d={describeArc(170, 120, 22, 0, angleBOE)} stroke="#e11d48" strokeWidth="2" fill="none" strokeDasharray="3,3" />
+                        <AngleLabel cx={170} cy={120} angleRadius={40} angleMid={angleBOE/2} text={`${angleBOE}°`} color="#e11d48" />
+                    </>
+                )}
             </svg>
         );
     }
@@ -828,21 +848,61 @@ export const LAGraphMini = ({ config, onProtractorChange }) => {
         const { intA, intB, extC, pointLabels } = data;
         const [pP, pQ, pR, pS] = pointLabels || ['P', 'Q', 'R', 'S'];
 
-        // Triangle vertices
-        const Px = 180, Py = 40;
-        const Qx = 80, Qy = 180;
-        const Rx = 260, Ry = 180;
-        const Sx = 340, Sy = 180;
+        // Dynamic Triangle vertices
+        let L = 160;
+        let Qx = 60, Qy = 180;
+        let extC_val = extC;
+        if (extC_val >= 180) extC_val = 179; // Safety
+        
+        // Use Sine rule to find length of side PQ
+        const angR_interior = 180 - extC_val;
+        const PQ_len = L * Math.sin(angR_interior * Math.PI / 180) / Math.sin(intA * Math.PI / 180);
+        
+        let Px = Qx + PQ_len * Math.cos(intB * Math.PI / 180);
+        let Py = Qy - PQ_len * Math.sin(intB * Math.PI / 180);
+
+        // Scale to fit vertically if P goes too high (above y=40)
+        if (Py < 40) {
+            const scale = (Qy - 40) / (Qy - Py);
+            L *= scale;
+            Px = Qx + (Px - Qx) * scale;
+            Py = Qy - (Qy - Py) * scale;
+        }
+        
+        // Scale to fit horizontally if P goes too far right (beyond x=280)
+        if (Px > 280) {
+            const scale = (280 - Qx) / (Px - Qx);
+            L *= scale;
+            Px = Qx + (Px - Qx) * scale;
+            Py = Qy - (Qy - Py) * scale;
+        }
+
+        const Rx = Qx + L;
+        const Ry = Qy;
+        const Sx = Rx + 50; // Extend line to S
+        const Sy = Qy;
 
         // Angle at P: direction from P to Q and P to R
-        const pAngQ = Math.atan2(-(Qy - Py), Qx - Px) * 180 / Math.PI;
-        const pAngR = Math.atan2(-(Ry - Py), Rx - Px) * 180 / Math.PI;
-        const pMid = (pAngQ + pAngR) / 2;
+        let pAngQ = Math.atan2(-(Qy - Py), Qx - Px) * 180 / Math.PI;
+        let pAngR = Math.atan2(-(Ry - Py), Rx - Px) * 180 / Math.PI;
+        if (pAngQ < 0) pAngQ += 360;
+        if (pAngR < 0) pAngR += 360;
+        
+        let diffP = pAngR - pAngQ;
+        if (diffP < 0) diffP += 360;
+        if (diffP > 180) {
+            const temp = pAngQ; pAngQ = pAngR; pAngR = temp;
+            diffP = 360 - diffP;
+        }
+        const pMid = pAngQ + diffP / 2;
 
-        // Angle at Q: direction from Q to P and Q to R (=0 since horizontal)
+        // Angle at Q
         const qAngP = Math.atan2(-(Py - Qy), Px - Qx) * 180 / Math.PI;
-        const qAngR = Math.atan2(-(Ry - Qy), Rx - Qx) * 180 / Math.PI;
-        const qMid = (qAngP + qAngR) / 2;
+        if (qAngP < 0) qAngP += 360;
+        
+        // Exterior angle at R
+        const rAngP = Math.atan2(-(Py - Ry), Px - Rx) * 180 / Math.PI;
+        if (rAngP < 0) rAngP += 360;
 
         return (
             <svg viewBox="0 0 360 230" width="100%" style={{ maxWidth: 340, maxHeight: 210, background: '#f8fafc', borderRadius: 12 }}>
@@ -854,18 +914,18 @@ export const LAGraphMini = ({ config, onProtractorChange }) => {
                 <polygon points={`${Px},${Py} ${Qx},${Qy} ${Rx},${Ry}`} fill="none" stroke="#0ea5e9" strokeWidth="3" strokeLinejoin="round" />
                 <line markerEnd="url(#arrow)" markerStart="url(#arrow)" x1={Rx} y1={Ry} x2={Sx} y2={Sy} stroke="#0ea5e9" strokeWidth="3" strokeLinecap="round" />
 
-                <path d={describeArc(Px, Py, 18, pAngR, pAngQ)} stroke="#0284c7" strokeWidth="2" fill="none" />
-                <path d={describeArc(Qx, Qy, 18, qAngR, qAngP)} stroke="#059669" strokeWidth="2" fill="none" />
-                <path d={describeArc(Rx, Ry, 20, 0, 180 - Math.atan2(Ry - Py, Rx - Px) * 180 / Math.PI)} stroke="#e11d48" strokeWidth="2.5" fill="none" />
+                <path d={describeArc(Px, Py, 20, pAngQ, pAngR)} stroke="#0284c7" strokeWidth="2" fill="none" />
+                <path d={describeArc(Qx, Qy, 20, 0, qAngP)} stroke="#059669" strokeWidth="2" fill="none" />
+                <path d={describeArc(Rx, Ry, 20, 0, rAngP)} stroke="#e11d48" strokeWidth="2.5" fill="none" />
 
-                <AngleLabel cx={Px} cy={Py} angleRadius={32} angleMid={pMid} text={`${intA}°`} color="#0284c7" />
-                <AngleLabel cx={Qx} cy={Qy} angleRadius={32} angleMid={qMid} text={`${intB}°`} color="#059669" />
-                <text x="300" y="172" fontSize="16" fill="#e11d48" fontWeight="bold" style={{ filter: 'drop-shadow(0px 0px 3px rgba(255,255,255,0.9))' }}>x</text>
+                <AngleLabel cx={Px} cy={Py} angleRadius={35} angleMid={pMid} text={`${intA}°`} color="#0284c7" />
+                <AngleLabel cx={Qx} cy={Qy} angleRadius={35} angleMid={qAngP / 2} text={`${intB}°`} color="#059669" />
+                <AngleLabel cx={Rx} cy={Ry} angleRadius={35} angleMid={rAngP / 2} text="x" color="#e11d48" />
 
-                <text x={Px} y={Py - 12} fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" textAnchor="middle">{pP}</text>
-                <text x={Qx - 12} y={Qy + 12} fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pQ}</text>
-                <text x={Rx} y={Ry + 15} fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" textAnchor="middle">{pR}</text>
-                <text x={Sx} y={Sy + 15} fontSize="12" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pS}</text>
+                <text x={Px} y={Py - 15} fontSize="13" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" textAnchor="middle">{pP}</text>
+                <text x={Qx - 12} y={Qy + 15} fontSize="13" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pQ}</text>
+                <text x={Rx} y={Ry + 18} fontSize="13" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold" textAnchor="middle">{pR}</text>
+                <text x={Sx - 5} y={Sy + 15} fontSize="13" fill="#0ea5e9" fontFamily="Times New Roman, serif" fontStyle="italic" fontWeight="bold">{pS}</text>
             </svg>
         );
     }
