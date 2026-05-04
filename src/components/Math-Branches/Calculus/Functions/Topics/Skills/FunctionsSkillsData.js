@@ -7,7 +7,8 @@ const shuffle = (arr) => {
     return a;
 };
 const mcq = (question, correctAnswer, distractors, explanation) => {
-    const options = [correctAnswer, ...distractors];
+    const uniqueDistractors = Array.from(new Set(distractors)).filter(d => d !== correctAnswer);
+    const options = [correctAnswer, ...uniqueDistractors];
     const shuffled = shuffle(options);
     return { question, options: shuffled, correct: shuffled.indexOf(correctAnswer), explanation };
 };
