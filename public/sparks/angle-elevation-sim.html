@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angle of Elevation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=JetBrains+Mono:wght@500;700&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            width: 100%; height: 100%;
+            background: #fff7ed;
+            color: #1e293b;
+            font-family: 'Outfit', sans-serif;
+            user-select: none;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 12px;
+            gap: 12px;
+            overflow-y: auto;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+            align-items: stretch;
+            flex: 1;
+            min-height: 0;
+        }
+        .canvas-container {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1.5px solid #fed7aa;
+            box-shadow: 0 8px 30px rgba(249, 115, 22, 0.10);
+            flex: 1;
+            overflow: hidden;
+            min-height: 200px;
+        }
+        canvas { display: block; width: 100%; height: 100%; }
+        .info-panel {
+            background: #ffffff;
+            border: 1.5px solid #fed7aa;
+            border-radius: 20px;
+            padding: 20px;
+            width: 280px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 8px 30px rgba(249, 115, 22, 0.10);
+        }
+        h2 { font-size: 18px; font-weight: 800; color: #1e293b; }
+        p  { color: #64748b; font-size: 13px; }
+
+        .slider-group { display: flex; flex-direction: column; gap: 6px; }
+        .slider-group label {
+            font-weight: 700;
+            color: #475569;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .slider-group label span { color: #ea580c; font-weight: 800; }
+        input[type=range] { width: 100%; accent-color: #ea580c; }
+        
+        .result-box {
+            background: #fff7ed;
+            border-radius: 12px;
+            padding: 14px;
+            border: 1.5px solid #fed7aa;
+        }
+        .result-label { font-size: 11px; font-weight: 700; color: #9a3412; text-align: center; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .result-math {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: #c2410c;
+            text-align: center;
+            font-weight: 700;
+            line-height: 1.7;
+        }
+
+        /* ── Mobile: stack canvas on top, controls below ── */
+        @media (max-width: 620px) {
+            body { padding: 10px; gap: 10px; overflow-y: auto; height: auto; min-height: 100%; }
+            .container { flex-direction: column; align-items: stretch; flex: none; }
+            .canvas-container { height: 260px; border-radius: 16px; }
+            .info-panel { width: 100%; padding: 14px; gap: 12px; border-radius: 16px; }
+            h2 { font-size: 15px; }
+            .slider-group label { font-size: 12px; }
+            .result-math { font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="canvas-container" id="container">
+            <canvas id="simCanvas"></canvas>
+        </div>
+        <div class="info-panel">
+            <div>
+                <h2>Height & Distance</h2>
+                <p>Adjust the sliders to see how the <strong>angle of elevation</strong> changes with distance and height.</p>
+            </div>
+            
+            <div class="slider-group">
+                <label>Distance from Tower (d) <span id="lblDist">40 m</span></label>
+                <input type="range" id="slideDist" min="10" max="80" value="40">
+            </div>
+            
+            <div class="slider-group">
+                <label>Height of Tower (h) <span id="lblHeight">30 m</span></label>
+                <input type="range" id="slideHeight" min="10" max="80" value="30">
+            </div>
+            
+            <div class="result-box">
+                <div class="result-label">Calculation using Tangent</div>
+                <div class="result-math" id="lblCalc">tan(θ) = 30 / 40<br>θ = 36.9°</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas     = document.getElementById('simCanvas');
+        const ctx        = canvas.getContext('2d');
+        const container  = document.getElementById('container');
+        const slideDist  = document.getElementById('slideDist');
+        const slideHeight= document.getElementById('slideHeight');
+        const lblDist    = document.getElementById('lblDist');
+        const lblHeight  = document.getElementById('lblHeight');
+        const lblCalc    = document.getElementById('lblCalc');
+
+        let width, height;
+
+        function resize() {
+            width  = container.clientWidth;
+            height = container.clientHeight;
+            canvas.width  = width;
+            canvas.height = height;
+            draw();
+        }
+        window.addEventListener('resize', resize);
+
+        function draw() {
+            ctx.clearRect(0, 0, width, height);
+
+            // Sky gradient background
+            const grad = ctx.createLinearGradient(0, 0, 0, height * 0.75);
+            grad.addColorStop(0, '#e0f2fe');
+            grad.addColorStop(1, '#f0f9ff');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, width, height * 0.85);
+
+            // Ground
+            ctx.fillStyle = '#bbf7d0';
+            ctx.fillRect(0, height * 0.85, width, height * 0.15);
+
+            const d = parseInt(slideDist.value);
+            const h = parseInt(slideHeight.value);
+            lblDist.textContent   = `${d} m`;
+            lblHeight.textContent = `${h} m`;
+
+            const angleRad = Math.atan2(h, d);
+            const angleDeg = (angleRad * 180 / Math.PI).toFixed(1);
+            lblCalc.innerHTML = `tan(θ) = ${h} / ${d} = ${(h/d).toFixed(2)}<br>θ = <strong>${angleDeg}°</strong>`;
+
+            const groundY  = height * 0.85;
+            const originX  = 60;
+            const scaleX   = (width - 160) / 80;
+            const scaleY   = (height * 0.8) / 80;
+            const scale    = Math.min(scaleX, scaleY);
+            const targetX  = originX + d * scale;
+            const targetY  = groundY - h * scale;
+
+            // Ground line
+            ctx.strokeStyle = '#6ee7b7';
+            ctx.lineWidth   = 3;
+            ctx.lineCap     = 'round';
+            ctx.beginPath();
+            ctx.moveTo(originX - 10, groundY);
+            ctx.lineTo(width, groundY);
+            ctx.stroke();
+
+            // Tower
+            const tw = 18;
+            const towerGrad = ctx.createLinearGradient(targetX - tw/2, 0, targetX + tw/2, 0);
+            towerGrad.addColorStop(0, '#fb923c');
+            towerGrad.addColorStop(1, '#ea580c');
+            ctx.fillStyle = towerGrad;
+            ctx.beginPath();
+            ctx.roundRect(targetX - tw/2, targetY, tw, groundY - targetY, [4, 4, 0, 0]);
+            ctx.fill();
+
+            // Tower window (decorative)
+            ctx.fillStyle = '#fff7ed';
+            ctx.fillRect(targetX - 4, targetY + 8, 8, 8);
+
+            // Height label
+            ctx.fillStyle = '#c2410c';
+            ctx.font = 'bold 13px Outfit';
+            ctx.textAlign = 'left';
+            ctx.fillText(`h = ${h}m`, targetX + tw/2 + 6, groundY - (groundY - targetY) / 2);
+
+            // Distance label
+            ctx.fillStyle = '#065f46';
+            ctx.font = 'bold 13px Outfit';
+            ctx.textAlign = 'center';
+            ctx.fillText(`d = ${d}m`, originX + (targetX - originX) / 2, groundY + 22);
+
+            // Line of sight (dashed)
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth   = 2.5;
+            ctx.setLineDash([7, 5]);
+            ctx.beginPath();
+            ctx.moveTo(originX, groundY);
+            ctx.lineTo(targetX, targetY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Angle arc
+            ctx.strokeStyle = '#d97706';
+            ctx.lineWidth   = 2.5;
+            ctx.beginPath();
+            ctx.arc(originX, groundY, 42, 0, -angleRad, true);
+            ctx.stroke();
+
+            // Angle label
+            ctx.fillStyle = '#92400e';
+            ctx.font = 'bold 15px Outfit';
+            ctx.textAlign = 'center';
+            ctx.fillText(`θ=${angleDeg}°`, originX + 56, groundY - 16);
+
+            // Observer dot
+            ctx.fillStyle = '#1e293b';
+            ctx.beginPath();
+            ctx.arc(originX, groundY, 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.textAlign = 'left';
+        }
+
+        slideDist.addEventListener('input', draw);
+        slideHeight.addEventListener('input', draw);
+
+        setTimeout(resize, 100);
+    </script>
+</body>
+</html>

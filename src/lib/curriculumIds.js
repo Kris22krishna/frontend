@@ -336,6 +336,34 @@ export const NODE_IDS = {
   mathBranchAlgebraExponentsFractionalLaw:  'f3000000-0000-0000-0000-000000000009',
   mathBranchAlgebraExponentsStandardForm:   'f3000000-0000-0000-0000-000000000010',
   mathBranchAlgebraExponentsComparing:      'f3000000-0000-0000-0000-000000000011',
+
+  // ── MATH-BRANCHES MODULE: TRIGONOMETRY ─────────────────────────────────────
+  mathBranchTrigonometry:                   'f1000000-0000-0000-0000-000000000002',
+
+  // Grade 10 Intro
+  mathBranchTrigIntroTerminology:           'f3000000-0000-0000-0000-000000000100',
+  mathBranchTrigIntro1:                     'f3000000-0000-0000-0000-000000000101',
+  mathBranchTrigIntro2:                     'f3000000-0000-0000-0000-000000000102',
+  mathBranchTrigIntro3:                     'f3000000-0000-0000-0000-000000000103',
+  
+  // Grade 10 Apps
+  mathBranchTrigAppTerminology:             'f3000000-0000-0000-0000-000000000110',
+  mathBranchTrigApp1:                       'f3000000-0000-0000-0000-000000000111',
+  mathBranchTrigApp2:                       'f3000000-0000-0000-0000-000000000112',
+  
+  // Grade 11 Functions
+  mathBranchTrigFuncTerminology:            'f3000000-0000-0000-0000-000000000120',
+  mathBranchTrigFunc1:                      'f3000000-0000-0000-0000-000000000121',
+  mathBranchTrigFunc2:                      'f3000000-0000-0000-0000-000000000122',
+  mathBranchTrigFunc3:                      'f3000000-0000-0000-0000-000000000123',
+  mathBranchTrigFunc4:                      'f3000000-0000-0000-0000-000000000124',
+  
+  // Grade 12 Inverse
+  mathBranchInverseTrigTerminology:         'f3000000-0000-0000-0000-000000000130',
+  mathBranchInverseTrig1:                   'f3000000-0000-0000-0000-000000000131',
+  mathBranchInverseTrig2:                   'f3000000-0000-0000-0000-000000000132',
+  mathBranchInverseTrig3:                   'f3000000-0000-0000-0000-000000000133',
+
   // ── 5. CLASS 10 MATH ─────────────────────────────────────────────────────
 
   // Grade 10 Math: Surface Areas and Volumes (Chapter 13)
@@ -454,6 +482,21 @@ export const NODE_IDS = {
   g10MathTrigIdentities:                    'a4101008-0006-0000-0000-000000000000',
   g10MathTrigSimplifyProve:                 'a4101008-0007-0000-0000-000000000000',
   g10MathTrigAngleProblems:                 'a4101008-0008-0000-0000-000000000000',
+  g10MathTrigIntroTerminologyQuiz:          'a4101008-0010-0000-0000-000000000000',
+
+  // Grade 10 Math: Some Applications of Trigonometry (Chapter 9)
+  g10MathTrigApp:                           'a3101009-0000-0000-0000-000000000001',
+  g10MathTrigAppHeightsDistances:           'a4101009-0001-0000-0000-000000000000',
+  g10MathTrigAppMultiStep:                  'a4101009-0002-0000-0000-000000000000',
+  g10MathTrigAppTerminologyQuiz:            'a4101009-0010-0000-0000-000000000000',
+
+  // Grade 11 Math: Trigonometric Functions (Chapter 3)
+  g11MathTrigFunc:                          'a3111003-0000-0000-0000-000000000001',
+  g11MathTrigFuncRadians:                   'a4111003-0001-0000-0000-000000000000',
+  g11MathTrigFuncGraphs:                    'a4111003-0002-0000-0000-000000000000',
+  g11MathTrigFuncEquations:                 'a4111003-0003-0000-0000-000000000000',
+  g11MathTrigFuncRules:                     'a4111003-0004-0000-0000-000000000000',
+  g11MathTrigFuncTerminologyQuiz:           'a4111003-0010-0000-0000-000000000000',
   
   // Grade 10 Math: Probability (Chapter 15)
   g10MathProbability:                       'a3101015-0000-0000-0000-000000000001',
@@ -1082,6 +1125,18 @@ export const NODE_IDS = {
   g12ChemSolutionsConnectomics:                'e4121601-0012-0000-0000-000000000000',
   g12ChemSolutionsVirtualLab:                  'e4121601-0013-0000-0000-000000000000',
   g12ChemSolutionsExamEdge:                    'e4121601-0014-0000-0000-000000000000',
+
+  // ── GRADE 12 BIOLOGY: Sexual Reproduction in Flowering Plants (Chapter 2) ─
+  // Prefix: e = Biology | Biology subject code: 16 | Chapter: 02
+  g12BiolSexualReproduction:                   'e3121602-0000-0000-0000-000000000001',
+
+  // Skills (5 skills)
+  g12BiolSRTheFlower:                          'e4121602-0001-0000-0000-000000000000',
+  g12BiolSRPreFertilisation:                   'e4121602-0002-0000-0000-000000000000',
+  g12BiolSRDoubleFertilisation:                'e4121602-0003-0000-0000-000000000000',
+  g12BiolSRPostFertilisation:                  'e4121602-0004-0000-0000-000000000000',
+  g12BiolSRApomixisPolyembryony:               'e4121602-0005-0000-0000-000000000000',
+  g12BiolSRTerminologyQuiz:                    'e4121602-0010-0000-0000-000000000000',
 };
 
 /**
@@ -1093,6 +1148,25 @@ export const SLUG_TO_NODE_ID = {
   'math-branch-algebra-exponents':      NODE_IDS.mathBranchAlgebraExponents,
   'math-branch-algebra-solving':        NODE_IDS.mathBranchAlgebraSolving,
   'math-branch-algebra-word-problems':  NODE_IDS.mathBranchAlgebraWordProblems,
+  
+  // Math Branches: Trigonometry
+  'math-branch-trigonometry':           NODE_IDS.mathBranchTrigonometry,
+  'trig-intro-terminology':             NODE_IDS.mathBranchTrigIntroTerminology,
+  'trig-intro-1':                       NODE_IDS.mathBranchTrigIntro1,
+  'trig-intro-2':                       NODE_IDS.mathBranchTrigIntro2,
+  'trig-intro-3':                       NODE_IDS.mathBranchTrigIntro3,
+  'trig-app-terminology':               NODE_IDS.mathBranchTrigAppTerminology,
+  'trig-app-1':                         NODE_IDS.mathBranchTrigApp1,
+  'trig-app-2':                         NODE_IDS.mathBranchTrigApp2,
+  'trig-func-terminology':              NODE_IDS.mathBranchTrigFuncTerminology,
+  'trig-func-1':                        NODE_IDS.mathBranchTrigFunc1,
+  'trig-func-2':                        NODE_IDS.mathBranchTrigFunc2,
+  'trig-func-3':                        NODE_IDS.mathBranchTrigFunc3,
+  'trig-func-4':                        NODE_IDS.mathBranchTrigFunc4,
+  'inverse-trig-terminology':           NODE_IDS.mathBranchInverseTrigTerminology,
+  'inverse-trig-1':                     NODE_IDS.mathBranchInverseTrig1,
+  'inverse-trig-2':                     NODE_IDS.mathBranchInverseTrig2,
+  'inverse-trig-3':                     NODE_IDS.mathBranchInverseTrig3,
   
   // Grade-based Slugs
   'g10-science-chemical-reactions':    NODE_IDS.g10ScienceChemicalReactions,
@@ -1317,6 +1391,7 @@ export const SLUG_TO_NODE_ID = {
   'g12-math-itf-simplification':               NODE_IDS.g12MathITFSimplification,
   'g12-math-itf-terminology':                  NODE_IDS.g12MathITFTerminologyQuiz,
 
+
   // Grade 9 Math: Polynomials
   'g9-math-polynomials':                NODE_IDS.g9MathPolynomials,
   'g9-math-poly-identifying':           NODE_IDS.g9MathPolyIdentifying,
@@ -1444,4 +1519,13 @@ export const SLUG_TO_NODE_ID = {
   'g12-chem-solutions-connectomics':           NODE_IDS.g12ChemSolutionsConnectomics,
   'g12-chem-solutions-virtual-lab':            NODE_IDS.g12ChemSolutionsVirtualLab,
   'g12-chem-solutions-exam-edge':               NODE_IDS.g12ChemSolutionsExamEdge,
+
+  // Grade 12 Biology: Sexual Reproduction in Flowering Plants
+  'g12-bio-sexual-reproduction':               NODE_IDS.g12BiolSexualReproduction,
+  'g12-bio-sr-the-flower':                     NODE_IDS.g12BiolSRTheFlower,
+  'g12-bio-sr-pre-fertilisation':              NODE_IDS.g12BiolSRPreFertilisation,
+  'g12-bio-sr-double-fertilisation':           NODE_IDS.g12BiolSRDoubleFertilisation,
+  'g12-bio-sr-post-fertilisation':             NODE_IDS.g12BiolSRPostFertilisation,
+  'g12-bio-sr-apomixis-polyembryony':          NODE_IDS.g12BiolSRApomixisPolyembryony,
+  'g12-bio-sr-terminology':                    NODE_IDS.g12BiolSRTerminologyQuiz,
 };

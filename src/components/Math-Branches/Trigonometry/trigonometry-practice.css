@@ -1,0 +1,525 @@
+.calc-skills-stage {
+  --calc-text: #0f172a;
+  --calc-muted: #64748b;
+  --calc-teal: #10b981;
+  --calc-red: #ef4444;
+  --calc-blue: #3b82f6;
+}
+
+.calc-quiz-active,
+.calc-quiz-container,
+.calc-assessment-layout > div:first-child,
+.calc-quiz-card,
+.calc-quiz-options {
+  min-width: 0;
+}
+
+.calc-quiz-container {
+  max-width: none;
+  margin: 0;
+}
+
+.calc-quiz-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px 36px;
+  margin-bottom: 20px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.calc-quiz-finished {
+  width: 100%;
+}
+
+.calc-quiz-finished-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.calc-quiz-finished-actions > button {
+  min-width: 180px;
+}
+
+.calc-score-header {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.calc-score-header > div:last-child {
+  min-width: 0;
+}
+
+.calc-btn-exit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fef2f2;
+  color: #ef4444;
+  border: 1px solid #fee2e2;
+  border-radius: 10px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1);
+}
+
+.calc-btn-exit:hover {
+  background: #fee2e2;
+  border-color: #fecaca;
+}
+
+.calc-btn-review {
+  padding: 10px 24px;
+  background: #fff;
+  color: var(--calc-text);
+  border: 2px solid #e2e8f0;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.calc-btn-review:hover {
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+
+.calc-btn-review.active {
+  border-color: #f59e0b;
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.calc-quiz-question-text .math-content p {
+  margin: 0;
+  color: inherit;
+  line-height: inherit;
+}
+
+.calc-quiz-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.calc-quiz-option {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.calc-skills-grid {
+  display: grid;
+  gap: 16px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.calc-skill-card {
+  background: #fff;
+  border-radius: 20px;
+  border: 2px solid #f1f5f9;
+  padding: 22px 24px;
+  box-shadow: 0 2px 12px rgba(26, 32, 44, 0.04);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.calc-skill-card:hover {
+  box-shadow: 0 8px 24px rgba(26, 32, 44, 0.08);
+  transform: translateY(-2px);
+}
+
+.calc-skill-card > div {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.calc-skill-card > div > div:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+
+.calc-skill-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+}
+
+.calc-skill-actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  margin-left: auto;
+}
+
+.calc-skill-btn-outline,
+.calc-skill-btn-filled {
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.calc-skill-btn-outline {
+  border: 2px solid var(--skill-color, #0f766e);
+  color: var(--skill-color, #0f766e);
+  background: #fff;
+}
+
+.calc-skill-btn-outline:hover {
+  background: color-mix(in srgb, var(--skill-color, #0f766e) 8%, white);
+  transform: translateY(-1px);
+}
+
+.calc-skill-btn-filled {
+  border: none;
+  color: #fff;
+  background: var(--skill-color, #0f766e);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--skill-color, #0f766e) 28%, transparent);
+}
+
+.calc-skill-btn-filled:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px color-mix(in srgb, var(--skill-color, #0f766e) 34%, transparent);
+}
+
+.calc-btn-primary,
+.calc-btn-secondary {
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.calc-btn-primary {
+  padding: 10px 24px;
+  background: var(--calc-violet);
+  border: none;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(139, 92, 246, 0.18);
+}
+
+.calc-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(139, 92, 246, 0.24);
+}
+
+.calc-btn-secondary {
+  padding: 9px 24px;
+  background: #fff;
+  border: 1.5px solid rgba(0, 0, 0, 0.1);
+  color: var(--calc-text);
+}
+
+.calc-btn-secondary:hover {
+  background: #f8fafc;
+  border-color: #64748b;
+  transform: translateY(-2px);
+}
+
+/* ── ASSESSMENT LAYOUT ──────────────────────────────────────── */
+.calc-assessment-layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.calc-assessment-palette {
+  width: 220px;
+  flex-shrink: 0;
+  background: #fff;
+  border-radius: 20px;
+  padding: 20px;
+  border: 2px solid #f1f5f9;
+  box-shadow: 0 4px 20px rgba(26, 32, 44, 0.04);
+  position: sticky;
+  top: 80px;
+}
+
+@media (max-width: 900px) {
+  .calc-assessment-layout {
+    flex-direction: column;
+  }
+  .calc-assessment-palette {
+    width: 100%;
+    position: static;
+  }
+}
+
+
+
+.calc-summary-split {
+  display: flex;
+  gap: 20px;
+  font-size: 15px;
+  background: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+
+.calc-summary-item {
+  flex: 1;
+}
+
+.calc-summary-item.user-ans {
+  border-left: 2px solid rgba(0, 0, 0, 0.04);
+  padding-left: 20px;
+}
+
+.calc-quiz-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+@media (max-width: 700px) {
+  .calc-quiz-options {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Only keep .calc-rule-split from the 900 breakpoint now — assessment handled above */
+@media (max-width: 900px) {
+  .calc-rule-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .calc-main-title {
+    font-size: 2.5rem;
+  }
+
+  .calc-right {
+    padding: 32px 16px;
+  }
+
+  .calc-card-btn {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .calc-card-strip {
+    width: 100%;
+    height: 6px;
+  }
+
+  .calc-card-icon {
+    margin: 16px 16px 0 16px;
+  }
+
+  .calc-card-text {
+    padding: 16px;
+    width: 100%;
+  }
+
+  .calc-card-chevron {
+    display: none;
+  }
+
+  .calc-section {
+    padding: 40px 16px;
+  }
+
+  .calc-quiz-options {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .calc-quiz-card {
+    padding: 24px 18px;
+  }
+
+  .calc-skill-card {
+    padding: 20px;
+  }
+
+  .calc-skill-card > div {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .calc-skill-card > div > div:nth-child(2) {
+    width: 100%;
+  }
+
+  .calc-skill-actions {
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .calc-skill-actions button {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .calc-quiz-card {
+    padding: 20px 16px;
+  }
+
+  .calc-quiz-finished {
+    padding: 20px 16px;
+  }
+
+  .calc-quiz-finished-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .calc-quiz-finished-actions > button {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .calc-quiz-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .calc-quiz-stats-grid > div:last-child {
+    grid-column: auto !important;
+  }
+
+  .calc-summary-split {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .calc-summary-item.user-ans {
+    border-left: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.04);
+    padding-left: 0;
+    padding-top: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .calc-palette-cell {
+    min-height: 48px;
+  }
+
+  .calc-quiz-card {
+    padding: 18px 14px;
+    border-radius: 16px;
+  }
+
+  /* Practice "Next Question" button full-width on tiny screens */
+  .calc-quiz-container > div:last-child button {
+    width: 100%;
+    max-width: none;
+    border-radius: 14px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ASSESS PAGE — MOBILE (≤ 768px)
+   Mirrors the DH reference pattern exactly:
+   • Layout stacks vertically (quiz card → palette)
+   • Palette becomes a normal block below — no fixed pos, no clips
+   • Everything scrolls naturally on the page
+   ══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* 1. Kill the fixed-height assessment layout entirely */
+  .calc-assessment-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+    align-items: stretch !important;
+    min-height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    position: static !important;
+  }
+
+  /* 2. Main quiz area — full width, scrollable */
+  .calc-assessment-layout > div:first-child {
+    flex: 1 !important;
+    width: 100% !important;
+    min-height: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* 3. Quiz card — natural height, no flex tricks */
+  .calc-quiz-card {
+    padding: 20px 16px !important;
+    overflow: visible !important;
+    min-height: auto !important;
+    flex: none !important;
+  }
+
+  /* 4. Options — single column */
+  .calc-quiz-options {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* 5. Palette — detach from fixed, become a normal block below */
+  .calc-assessment-palette {
+    position: static !important;
+    transform: none !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    width: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    border-radius: 20px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+    margin-top: 8px;
+    padding: 20px !important;
+  }
+}
+
+/* Mobile Palette Hint */
+.calc-palette-hint {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .calc-palette-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 24px;
+    margin-bottom: 8px;
+    animation: calcBounceSoft 2.5s infinite;
+  }
+}
+
+@keyframes calcBounceSoft {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(4px); }
+  60% { transform: translateY(2px); }
+}
