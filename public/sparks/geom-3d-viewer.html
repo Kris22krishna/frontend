@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Geometry — Skill100 Skill Spark</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#F0F4FF;--card:#fff;--indigo:#4F46E5;--indigo-light:#EEF2FF;--indigo-dark:#3730A3;--blue:#185FA5;--green:#3B6D11;--green-light:#EAF3DE;--green-dark:#27500A;--amber:#BA7517;--text:#1C1917;--muted:#78716C;--border:#E7E5E4;--sh:0 4px 24px rgba(0,0,0,0.08)}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem 1rem 4rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#A5B4FC 1px,transparent 1px);background-size:28px 28px;opacity:0.3;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:660px;margin:0 auto}
+.header{text-align:center;margin-bottom:2rem}
+.badge{display:inline-block;background:var(--indigo);color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:4px 14px;border-radius:999px;margin-bottom:12px;text-transform:uppercase}
+.header h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,7vw,44px);line-height:1.1;margin-bottom:8px}
+.header h1 span{color:var(--indigo)}
+.header p{font-size:16px;color:var(--muted);font-weight:600}
+.card{background:var(--card);border-radius:20px;padding:1.75rem;box-shadow:var(--sh);margin-bottom:1.25rem;border:1.5px solid var(--border)}
+.card-title{font-family:'Fredoka One',cursive;font-size:18px;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.story{background:var(--indigo-light);border:2px solid var(--indigo);border-radius:14px;padding:14px 18px;font-size:15px;font-weight:700;color:var(--indigo-dark);line-height:1.5;margin-bottom:1.25rem}
+.canvas-wrap{background:#1E1B4B;border-radius:14px;padding:8px;margin:.5rem 0 1rem;border:1.5px solid var(--indigo)}
+canvas{display:block;width:100%;border-radius:10px}
+.slider-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.slider-row label{font-size:13px;font-weight:700;min-width:100px}
+.slider-row label.x{color:#EF4444}
+.slider-row label.y{color:#22C55E}
+.slider-row label.z{color:#3B82F6}
+.slider-row label.cam{color:#A78BFA}
+.slider-row input[type=range]{-webkit-appearance:none;flex:1;height:6px;border-radius:3px;background:var(--border);outline:none;cursor:pointer}
+.sr-x::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#EF4444;border:3px solid #fff;box-shadow:0 0 0 2px #EF4444;cursor:pointer}
+.sr-y::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#22C55E;border:3px solid #fff;box-shadow:0 0 0 2px #22C55E;cursor:pointer}
+.sr-z::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#3B82F6;border:3px solid #fff;box-shadow:0 0 0 2px #3B82F6;cursor:pointer}
+.sr-cam::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#A78BFA;border:3px solid #fff;box-shadow:0 0 0 2px #A78BFA;cursor:pointer}
+.slider-row span{font-family:'Fredoka One',cursive;font-size:22px;min-width:36px;text-align:right;color:var(--text)}
+.rrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:.5rem}
+.rcard{flex:1;min-width:80px;background:var(--bg);border-radius:12px;padding:12px;text-align:center;border:1.5px solid var(--border)}
+.rlabel{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:4px;text-transform:uppercase}
+.rval{font-family:'Fredoka One',cursive;font-size:22px}
+.octant-box{background:var(--indigo-light);border:2px solid var(--indigo);border-radius:14px;padding:12px 18px;text-align:center;margin-top:10px}
+.octant-label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.octant-val{font-family:'Fredoka One',cursive;font-size:22px;color:var(--indigo)}
+.score-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.score-pill{background:var(--indigo-light);color:var(--indigo);font-size:14px;font-weight:800;padding:6px 14px;border-radius:999px}
+.quiz-q{font-size:15px;font-weight:700;margin-bottom:14px;line-height:1.4}
+.quiz-opts{display:flex;gap:10px;flex-wrap:wrap}
+.qbtn{border:2px solid var(--border);border-radius:12px;padding:10px 20px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;background:#fff;color:var(--text);transition:all .15s}
+.qbtn:hover{border-color:var(--indigo);color:var(--indigo);transform:translateY(-1px)}
+.qbtn.ok{background:var(--green-light);border-color:var(--green);color:var(--green-dark)}
+.qbtn.no{background:#FCEBEB;border-color:#A32D2D;color:#791F1F}
+.qfb{margin-top:12px;font-size:15px;font-weight:700;min-height:22px}
+.qfb.g{color:var(--green)} .qfb.b{color:#A32D2D}
+.nxt{display:none;margin-top:10px;background:var(--indigo);color:#fff;border:none;border-radius:12px;padding:10px 22px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer}
+.nxt:hover{opacity:.88}
+.footer{text-align:center;font-size:13px;font-weight:700;color:var(--muted);margin-top:2rem}
+.footer span{color:var(--indigo)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="badge">Geometry Skill Spark · 3 of 4</div>
+    <h1>3D Points — explore the <span>8 Octants!</span></h1>
+    <p>Spin the camera and place a point anywhere in 3D space!</p>
+  </div>
+
+  <div class="story">In 3D geometry, every point needs THREE coordinates: (x, y, z). The 3D space is divided into 8 octants — just like how 2D has 4 quadrants. The wireframe box helps you see exactly where your point sits relative to all three planes!</div>
+
+  <div class="card">
+    <div class="card-title"><div class="icon" style="background:var(--indigo-light)">🎲</div> Move point P(x, y, z)</div>
+    <div class="canvas-wrap"><canvas id="c3d" height="260"></canvas></div>
+    <div class="slider-row"><label class="x">X = </label><input type="range" class="sr-x" min="-6" max="6" step="1" value="3" id="sx" oninput="update()"><span id="sxv" style="color:#EF4444">3</span></div>
+    <div class="slider-row"><label class="y">Y = </label><input type="range" class="sr-y" min="-6" max="6" step="1" value="4" id="sy" oninput="update()"><span id="syv" style="color:#22C55E">4</span></div>
+    <div class="slider-row"><label class="z">Z = </label><input type="range" class="sr-z" min="-6" max="6" step="1" value="3" id="sz" oninput="update()"><span id="szv" style="color:#3B82F6">3</span></div>
+    <div class="slider-row"><label class="cam">📷 Camera</label><input type="range" class="sr-cam" min="0" max="360" step="1" value="30" id="scam" oninput="update()"><span id="scamv" style="color:#A78BFA">30°</span></div>
+    <div class="rrow">
+      <div class="rcard"><div class="rlabel">Point P</div><div class="rval" style="color:var(--indigo);font-size:18px" id="rv-pt">(3, 4, 3)</div></div>
+      <div class="rcard"><div class="rlabel">XY proj.</div><div class="rval" style="color:#8B5CF6;font-size:18px" id="rv-xy">(3,4,0)</div></div>
+      <div class="rcard"><div class="rlabel">YZ proj.</div><div class="rval" style="color:#06B6D4;font-size:18px" id="rv-yz">(0,4,3)</div></div>
+    </div>
+    <div class="octant-box">
+      <div class="octant-label">Current Octant</div>
+      <div class="octant-val" id="octant-val">Octant I (x>0, y>0, z>0)</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="score-row">
+      <div class="card-title" style="margin-bottom:0"><div class="icon" style="background:var(--indigo-light)">🧠</div> Quick quiz!</div>
+      <div class="score-pill">Score: <span id="sc">0</span>/<span id="tq">0</span></div>
+    </div>
+    <div class="quiz-q" id="qq">Loading...</div>
+    <div class="quiz-opts" id="qopts"></div>
+    <div class="qfb" id="qfb"></div>
+    <button class="nxt" id="nxt" onclick="newQuiz()">Next question →</button>
+  </div>
+  <div class="footer">Made with ❤️ by <span>Skill100</span></div>
+</div>
+<script>
+const octants=[
+  'Octant I (x>0, y>0, z>0)',
+  'Octant II (x<0, y>0, z>0)',
+  'Octant III (x<0, y<0, z>0)',
+  'Octant IV (x>0, y<0, z>0)',
+  'Octant V (x>0, y>0, z<0)',
+  'Octant VI (x<0, y>0, z<0)',
+  'Octant VII (x<0, y<0, z<0)',
+  'Octant VIII (x>0, y<0, z<0)',
+  'On a Plane/Axis',
+];
+
+function getOctant(x,y,z){
+  if(x===0||y===0||z===0)return 8;
+  if(x>0&&y>0&&z>0)return 0;
+  if(x<0&&y>0&&z>0)return 1;
+  if(x<0&&y<0&&z>0)return 2;
+  if(x>0&&y<0&&z>0)return 3;
+  if(x>0&&y>0&&z<0)return 4;
+  if(x<0&&y>0&&z<0)return 5;
+  if(x<0&&y<0&&z<0)return 6;
+  return 7;
+}
+
+// Isometric projection with camera angle
+function project(x,y,z,camDeg){
+  const cam=camDeg*Math.PI/180;
+  const sc=22;
+  // x axis goes right-ish, y axis goes left-ish, z axis goes up
+  const px=x*Math.cos(cam)*sc - y*Math.cos(Math.PI/3-cam)*sc;
+  const py=-x*Math.sin(cam)*sc/1.5 - y*Math.sin(Math.PI/3-cam)*sc/1.5 + z*sc;
+  return {px,py};
+}
+
+function drawLine(ctx,x1,y1,z1,x2,y2,z2,cam,ox,oy,color,lw,dash){
+  const p1=project(x1,y1,z1,cam);
+  const p2=project(x2,y2,z2,cam);
+  ctx.strokeStyle=color;ctx.lineWidth=lw;
+  ctx.setLineDash(dash||[]);
+  ctx.beginPath();ctx.moveTo(ox+p1.px,oy-p1.py);ctx.lineTo(ox+p2.px,oy-p2.py);ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+function drawPoint(ctx,x,y,z,cam,ox,oy,color,r){
+  const p=project(x,y,z,cam);
+  ctx.beginPath();ctx.arc(ox+p.px,oy-p.py,r,0,Math.PI*2);
+  ctx.fillStyle=color+'44';ctx.fill();
+  ctx.beginPath();ctx.arc(ox+p.px,oy-p.py,r*0.55,0,Math.PI*2);
+  ctx.fillStyle=color;ctx.fill();
+  ctx.strokeStyle='rgba(255,255,255,0.7)';ctx.lineWidth=1.5;ctx.stroke();
+}
+
+function update(){
+  const x=parseInt(document.getElementById('sx').value);
+  const y=parseInt(document.getElementById('sy').value);
+  const z=parseInt(document.getElementById('sz').value);
+  const cam=parseInt(document.getElementById('scam').value);
+  document.getElementById('sxv').textContent=x;
+  document.getElementById('syv').textContent=y;
+  document.getElementById('szv').textContent=z;
+  document.getElementById('scamv').textContent=cam+'°';
+  document.getElementById('rv-pt').textContent=`(${x}, ${y}, ${z})`;
+  document.getElementById('rv-xy').textContent=`(${x},${y},0)`;
+  document.getElementById('rv-yz').textContent=`(0,${y},${z})`;
+  document.getElementById('octant-val').textContent=octants[getOctant(x,y,z)];
+  draw(x,y,z,cam);
+}
+
+function draw(px,py,pz,camDeg){
+  const canvas=document.getElementById('c3d');
+  canvas.width=(canvas.offsetWidth||560)*devicePixelRatio;
+  canvas.height=260*devicePixelRatio;
+  const ctx=canvas.getContext('2d');
+  ctx.scale(devicePixelRatio,devicePixelRatio);
+  const W=canvas.offsetWidth||560,H=260;
+  const cam=camDeg*Math.PI/180;
+  const ox=W/2,oy=H/2+20;
+
+  ctx.clearRect(0,0,W,H);
+
+  // Background
+  ctx.fillStyle='#1E1B4B';ctx.fillRect(0,0,W,H);
+
+  // Subtle star dots
+  ctx.fillStyle='rgba(255,255,255,0.15)';
+  for(let i=0;i<40;i++){
+    const sx=(Math.sin(i*137.5)*0.5+0.5)*W;
+    const sy=(Math.cos(i*97.3)*0.5+0.5)*H;
+    ctx.beginPath();ctx.arc(sx,sy,0.8,0,Math.PI*2);ctx.fill();
+  }
+
+  const MAX=6;
+
+  // Grid floor (z=0 plane) - very faint
+  ctx.strokeStyle='rgba(99,102,241,0.15)';ctx.lineWidth=0.5;
+  for(let i=-MAX;i<=MAX;i++){
+    const p1=project(i,-MAX,0,cam),p2=project(i,MAX,0,cam);
+    ctx.beginPath();ctx.moveTo(ox+p1.px,oy-p1.py);ctx.lineTo(ox+p2.px,oy-p2.py);ctx.stroke();
+    const p3=project(-MAX,i,0,cam),p4=project(MAX,i,0,cam);
+    ctx.beginPath();ctx.moveTo(ox+p3.px,oy-p3.py);ctx.lineTo(ox+p4.px,oy-p4.py);ctx.stroke();
+  }
+
+  // Main axes
+  drawLine(ctx,0,0,0,MAX,0,0,cam,ox,oy,'#EF4444',2.5);
+  drawLine(ctx,0,0,0,0,MAX,0,cam,ox,oy,'#22C55E',2.5);
+  drawLine(ctx,0,0,0,0,0,MAX,cam,ox,oy,'#60A5FA',2.5);
+  drawLine(ctx,0,0,0,-MAX,0,0,cam,ox,oy,'rgba(239,68,68,0.25)',1.5,[4,4]);
+  drawLine(ctx,0,0,0,0,-MAX,0,cam,ox,oy,'rgba(34,197,94,0.25)',1.5,[4,4]);
+  drawLine(ctx,0,0,0,0,0,-MAX,cam,ox,oy,'rgba(96,165,250,0.25)',1.5,[4,4]);
+
+  // Axis labels
+  ctx.font='bold 13px Nunito';
+  const lx=project(MAX+0.5,0,0,cam);
+  const ly=project(0,MAX+0.5,0,cam);
+  const lz=project(0,0,MAX+0.5,cam);
+  ctx.fillStyle='#EF4444';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('X',ox+lx.px,oy-lx.py);
+  ctx.fillStyle='#22C55E';ctx.fillText('Y',ox+ly.px,oy-ly.py);
+  ctx.fillStyle='#60A5FA';ctx.fillText('Z',ox+lz.px,oy-lz.py);
+
+  // Wireframe box from origin to (px,py,pz)
+  const bx=px,by=py,bz=pz;
+  const edges=[
+    [0,0,0,bx,0,0],[0,0,0,0,by,0],[0,0,0,0,0,bz],
+    [bx,0,0,bx,by,0],[bx,0,0,bx,0,bz],
+    [0,by,0,bx,by,0],[0,by,0,0,by,bz],
+    [0,0,bz,bx,0,bz],[0,0,bz,0,by,bz],
+    [bx,by,0,bx,by,bz],[bx,0,bz,bx,by,bz],[0,by,bz,bx,by,bz],
+  ];
+  edges.forEach(([x1,y1,z1,x2,y2,z2])=>{
+    drawLine(ctx,x1,y1,z1,x2,y2,z2,cam,ox,oy,'rgba(167,139,250,0.35)',1,[3,3]);
+  });
+
+  // Face highlights (projections)
+  // XY plane projection
+  const xyCorners=[[0,0,0],[bx,0,0],[bx,by,0],[0,by,0]].map(([a,b,c])=>{const p=project(a,b,c,cam);return[ox+p.px,oy-p.py];});
+  ctx.beginPath();xyCorners.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();
+  ctx.fillStyle='rgba(139,92,246,0.1)';ctx.fill();
+  ctx.strokeStyle='rgba(139,92,246,0.4)';ctx.lineWidth=1;ctx.stroke();
+
+  // Dashed lines from point to the three axes
+  drawLine(ctx,bx,by,bz,bx,by,0,cam,ox,oy,'rgba(96,165,250,0.6)',1.2,[5,4]);
+  drawLine(ctx,bx,by,bz,bx,0,bz,cam,ox,oy,'rgba(34,197,94,0.6)',1.2,[5,4]);
+  drawLine(ctx,bx,by,bz,0,by,bz,cam,ox,oy,'rgba(239,68,68,0.6)',1.2,[5,4]);
+
+  // Glowing point
+  const pp=project(bx,by,bz,cam);
+  const dotX=ox+pp.px,dotY=oy-pp.py;
+  // Outer glow
+  const grd=ctx.createRadialGradient(dotX,dotY,0,dotX,dotY,22);
+  grd.addColorStop(0,'rgba(167,139,250,0.5)');grd.addColorStop(1,'rgba(167,139,250,0)');
+  ctx.fillStyle=grd;ctx.beginPath();ctx.arc(dotX,dotY,22,0,Math.PI*2);ctx.fill();
+  // Dot
+  ctx.beginPath();ctx.arc(dotX,dotY,8,0,Math.PI*2);ctx.fillStyle='#A78BFA';ctx.fill();
+  ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+  // Label
+  ctx.fillStyle='#E9D5FF';ctx.font='bold 12px Nunito';ctx.textAlign='left';ctx.textBaseline='bottom';
+  ctx.fillText(`P(${bx},${by},${bz})`,dotX+10,dotY-4);
+
+  // Tick marks on axes
+  ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='9px Nunito';ctx.textAlign='center';ctx.textBaseline='middle';
+  for(let i=1;i<=MAX;i++){
+    const tx=project(i,0,0,cam),ty=project(0,i,0,cam),tz=project(0,0,i,cam);
+    ctx.fillText(i,ox+tx.px,oy-tx.py+8);
+    ctx.fillText(i,ox+ty.px-8,oy-ty.py);
+    ctx.fillText(i,ox+tz.px-10,oy-tz.py);
+  }
+}
+
+const quizPool=[
+  {q:'What is the projection of point (3, 4, 5) onto the XY plane?',opts:['(3,4,0)','(0,4,5)','(3,0,5)','(3,4,5)'],ans:'(3,4,0)'},
+  {q:'If X>0, Y<0, and Z>0, which octant is the point in?',opts:['I','II','IV','III'],ans:'IV'},
+  {q:'How many octants does 3D space have?',opts:['4','6','8','12'],ans:'8'},
+  {q:'The projection of (2, 3, 7) onto the YZ plane is?',opts:['(2,3,0)','(0,3,7)','(2,0,7)','(2,3,7)'],ans:'(0,3,7)'},
+  {q:'A point on the Z-axis has x = ? and y = ?',opts:['x=1,y=0','x=0,y=0','x=0,y=1','x=1,y=1'],ans:'x=0,y=0'},
+  {q:'Which octant has x>0, y>0, z>0?',opts:['I','II','VII','V'],ans:'I'},
+];
+let sc=0,tq=0,answered=false,cq=null;
+function newQuiz(){answered=false;document.getElementById('qfb').textContent='';document.getElementById('qfb').className='qfb';document.getElementById('nxt').style.display='none';cq=quizPool[Math.floor(Math.random()*quizPool.length)];document.getElementById('qq').textContent=cq.q;const el=document.getElementById('qopts');el.innerHTML='';cq.opts.forEach(o=>{const b=document.createElement('button');b.className='qbtn';b.textContent=o;b.onclick=()=>checkQ(o,b);el.appendChild(b);});}
+function checkQ(ans,btn){if(answered)return;answered=true;tq++;document.getElementById('tq').textContent=tq;const fb=document.getElementById('qfb');if(ans===cq.ans){sc++;document.getElementById('sc').textContent=sc;fb.textContent='🎉 Correct!';fb.className='qfb g';btn.classList.add('ok');}else{fb.textContent='Not quite — answer is '+cq.ans;fb.className='qfb b';btn.classList.add('no');document.querySelectorAll('.qbtn').forEach(b=>{if(b.textContent===cq.ans)b.classList.add('ok');});}document.getElementById('nxt').style.display='inline-block';}
+update();newQuiz();window.addEventListener('resize',update);
+</script>
+</body>
+</html>

@@ -364,6 +364,13 @@ export const NODE_IDS = {
   mathBranchInverseTrig2:                   'f3000000-0000-0000-0000-000000000132',
   mathBranchInverseTrig3:                   'f3000000-0000-0000-0000-000000000133',
 
+  // ── MATH-BRANCHES MODULE: COORDINATE GEOMETRY ──────────────────────────────
+  mathBranchCoordinateGeometry:             'f1000000-0000-0000-0000-000000000003',
+  mathBranchCoordinateGeometry2D:           'f2000000-0000-0000-0000-000000000010',
+  mathBranchCoordinateGeometry3D:           'f2000000-0000-0000-0000-000000000011',
+  mathBranchCoordinateGeometryLines:        'f2000000-0000-0000-0000-000000000012',
+  mathBranchCoordinateGeometryApps:         'f2000000-0000-0000-0000-000000000013',
+
   // ── 5. CLASS 10 MATH ─────────────────────────────────────────────────────
 
   // Grade 10 Math: Surface Areas and Volumes (Chapter 13)

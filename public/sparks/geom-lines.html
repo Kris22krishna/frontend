@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Line Angles — Skill100 Skill Spark</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#FDF4FF;--card:#fff;--violet:#7C3AED;--violet-light:#F5F3FF;--violet-dark:#5B21B6;--blue:#185FA5;--green:#3B6D11;--green-light:#EAF3DE;--green-dark:#27500A;--red:#DC2626;--amber:#BA7517;--text:#1C1917;--muted:#78716C;--border:#E7E5E4;--sh:0 4px 24px rgba(0,0,0,0.08)}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem 1rem 4rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#DDD6FE 1px,transparent 1px);background-size:28px 28px;opacity:0.35;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:660px;margin:0 auto}
+.header{text-align:center;margin-bottom:2rem}
+.badge{display:inline-block;background:var(--violet);color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:4px 14px;border-radius:999px;margin-bottom:12px;text-transform:uppercase}
+.header h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,7vw,44px);line-height:1.1;margin-bottom:8px}
+.header h1 span{color:var(--violet)}
+.header p{font-size:16px;color:var(--muted);font-weight:600}
+.card{background:var(--card);border-radius:20px;padding:1.75rem;box-shadow:var(--sh);margin-bottom:1.25rem;border:1.5px solid var(--border)}
+.card-title{font-family:'Fredoka One',cursive;font-size:18px;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.story{background:var(--violet-light);border:2px solid var(--violet);border-radius:14px;padding:14px 18px;font-size:15px;font-weight:700;color:var(--violet-dark);line-height:1.5;margin-bottom:1.25rem}
+.preset-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+.preset-btn{border:2px solid var(--border);border-radius:10px;padding:8px 14px;font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:var(--muted);transition:all .18s}
+.preset-btn:hover{border-color:var(--violet);color:var(--violet)}
+.preset-btn.active{background:var(--violet-light);border-color:var(--violet);color:var(--violet-dark)}
+.canvas-wrap{background:#1E1B4B;border-radius:14px;padding:8px;margin:.5rem 0 1rem;border:1.5px solid var(--violet)}
+canvas{display:block;width:100%;border-radius:10px}
+.dr-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1rem}
+.dr-card{flex:1;min-width:140px;border-radius:14px;padding:12px 14px;border:2px solid var(--border)}
+.dr-card.l1{border-color:#F59E0B;background:#FFFBEB}
+.dr-card.l2{border-color:#06B6D4;background:#ECFEFF}
+.dr-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.dr-label.l1{color:#B45309} .dr-label.l2{color:#0E7490}
+.slider-row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.slider-row label{font-size:12px;font-weight:700;color:var(--muted);min-width:16px}
+.slider-row input[type=range]{-webkit-appearance:none;flex:1;height:5px;border-radius:3px;background:var(--border);outline:none;cursor:pointer}
+.sl1::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:#F59E0B;border:2px solid #fff;box-shadow:0 0 0 2px #F59E0B;cursor:pointer}
+.sl2::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:#06B6D4;border:2px solid #fff;box-shadow:0 0 0 2px #06B6D4;cursor:pointer}
+.slider-row span{font-family:'Fredoka One',cursive;font-size:17px;min-width:26px;text-align:right}
+.formula-box{background:#F5F0FF;border:2px solid var(--violet);border-radius:14px;padding:14px 18px;font-size:14px;font-weight:700;color:var(--violet-dark);line-height:1.8;margin:.5rem 0}
+.formula-box .eq{font-size:18px;font-weight:800;color:var(--violet);margin-top:4px}
+.angle-display{text-align:center;padding:16px;margin-top:8px;border-radius:14px;border:2px solid var(--border);background:var(--bg);transition:all .3s}
+.angle-val{font-family:'Fredoka One',cursive;font-size:48px;line-height:1}
+.angle-lbl{font-size:13px;font-weight:700;color:var(--muted);margin-top:4px;text-transform:uppercase}
+.score-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.score-pill{background:var(--violet-light);color:var(--violet);font-size:14px;font-weight:800;padding:6px 14px;border-radius:999px}
+.quiz-q{font-size:15px;font-weight:700;margin-bottom:14px;line-height:1.4}
+.quiz-opts{display:flex;gap:10px;flex-wrap:wrap}
+.qbtn{border:2px solid var(--border);border-radius:12px;padding:10px 20px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;background:#fff;color:var(--text);transition:all .15s}
+.qbtn:hover{border-color:var(--violet);color:var(--violet);transform:translateY(-1px)}
+.qbtn.ok{background:var(--green-light);border-color:var(--green);color:var(--green-dark)}
+.qbtn.no{background:#FCEBEB;border-color:#A32D2D;color:#791F1F}
+.qfb{margin-top:12px;font-size:15px;font-weight:700;min-height:22px}
+.qfb.g{color:var(--green)} .qfb.b{color:#A32D2D}
+.nxt{display:none;margin-top:10px;background:var(--violet);color:#fff;border:none;border-radius:12px;padding:10px 22px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer}
+.nxt:hover{opacity:.88}
+.footer{text-align:center;font-size:13px;font-weight:700;color:var(--muted);margin-top:2rem}
+.footer span{color:var(--violet)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="badge">Geometry Skill Spark · 4 of 4</div>
+    <h1>Line Angles — <span>direction ratios</span> in 3D!</h1>
+    <p>Watch the angle between two 3D lines update instantly!</p>
+  </div>
+
+  <div class="story">A 3D line's direction is described by three numbers (a, b, c) called Direction Ratios. To find the angle between two lines, we use the dot product formula. Parallel lines have angle 0°, perpendicular lines have angle 90°!</div>
+
+  <div class="card">
+    <div class="card-title"><div class="icon" style="background:var(--violet-light)">📏</div> Set Direction Ratios</div>
+    <div class="preset-row">
+      <button class="preset-btn active" id="pb0" onclick="setPreset(0)">Perpendicular ⊥</button>
+      <button class="preset-btn" id="pb1" onclick="setPreset(1)">Parallel ∥</button>
+      <button class="preset-btn" id="pb2" onclick="setPreset(2)">Acute Angle</button>
+      <button class="preset-btn" id="pb3" onclick="setPreset(3)">Obtuse Angle</button>
+    </div>
+    <div class="dr-row">
+      <div class="dr-card l1">
+        <div class="dr-label l1">🟡 Line 1 (a₁, b₁, c₁)</div>
+        <div class="slider-row"><label>a₁</label><input type="range" class="sl1" min="-5" max="5" step="1" value="1" id="a1" oninput="update()"><span id="a1v" style="color:#B45309">1</span></div>
+        <div class="slider-row"><label>b₁</label><input type="range" class="sl1" min="-5" max="5" step="1" value="0" id="b1" oninput="update()"><span id="b1v" style="color:#B45309">0</span></div>
+        <div class="slider-row"><label>c₁</label><input type="range" class="sl1" min="-5" max="5" step="1" value="0" id="c1" oninput="update()"><span id="c1v" style="color:#B45309">0</span></div>
+      </div>
+      <div class="dr-card l2">
+        <div class="dr-label l2">🔵 Line 2 (a₂, b₂, c₂)</div>
+        <div class="slider-row"><label>a₂</label><input type="range" class="sl2" min="-5" max="5" step="1" value="0" id="a2" oninput="update()"><span id="a2v" style="color:#0E7490">0</span></div>
+        <div class="slider-row"><label>b₂</label><input type="range" class="sl2" min="-5" max="5" step="1" value="1" id="b2" oninput="update()"><span id="b2v" style="color:#0E7490">1</span></div>
+        <div class="slider-row"><label>c₂</label><input type="range" class="sl2" min="-5" max="5" step="1" value="0" id="c2" oninput="update()"><span id="c2v" style="color:#0E7490">0</span></div>
+      </div>
+    </div>
+    <div class="canvas-wrap"><canvas id="lineCanvas" height="240"></canvas></div>
+    <div class="formula-box">
+      cos(θ) = (a₁a₂ + b₁b₂ + c₁c₂) / (|V₁| × |V₂|)
+      <div class="eq" id="formula-val">= (0) / (1 × 1) = 0  →  θ = 90°</div>
+    </div>
+    <div class="angle-display" id="angle-display">
+      <div class="angle-val" id="angle-val">90°</div>
+      <div class="angle-lbl" id="angle-lbl">⊥ Perpendicular lines!</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="score-row">
+      <div class="card-title" style="margin-bottom:0"><div class="icon" style="background:var(--violet-light)">🧠</div> Quick quiz!</div>
+      <div class="score-pill">Score: <span id="sc">0</span>/<span id="tq">0</span></div>
+    </div>
+    <div class="quiz-q" id="qq">Loading...</div>
+    <div class="quiz-opts" id="qopts"></div>
+    <div class="qfb" id="qfb"></div>
+    <button class="nxt" id="nxt" onclick="newQuiz()">Next question →</button>
+  </div>
+  <div class="footer">Made with ❤️ by <span>Skill100</span></div>
+</div>
+<script>
+const presets=[
+  {a1:1,b1:0,c1:0,a2:0,b2:1,c2:0},  // perpendicular
+  {a1:2,b1:3,c1:1,a2:4,b2:6,c2:2},  // parallel
+  {a1:1,b1:1,c1:0,a2:1,b2:0,c2:1},  // acute
+  {a1:1,b1:2,c1:0,a2:-3,b2:1,c2:0}, // obtuse
+];
+
+function setPreset(i){
+  const p=presets[i];
+  document.getElementById('a1').value=p.a1;document.getElementById('b1').value=p.b1;document.getElementById('c1').value=p.c1;
+  document.getElementById('a2').value=p.a2;document.getElementById('b2').value=p.b2;document.getElementById('c2').value=p.c2;
+  document.querySelectorAll('.preset-btn').forEach((b,j)=>b.classList.toggle('active',j===i));
+  update();
+}
+
+function update(){
+  const a1=parseInt(document.getElementById('a1').value);
+  const b1=parseInt(document.getElementById('b1').value);
+  const c1=parseInt(document.getElementById('c1').value);
+  const a2=parseInt(document.getElementById('a2').value);
+  const b2=parseInt(document.getElementById('b2').value);
+  const c2=parseInt(document.getElementById('c2').value);
+  ['a1','b1','c1','a2','b2','c2'].forEach(id=>{
+    document.getElementById(id+'v').textContent=parseInt(document.getElementById(id).value);
+  });
+  const dot=a1*a2+b1*b2+c1*c2;
+  const mag1=Math.sqrt(a1*a1+b1*b1+c1*c1);
+  const mag2=Math.sqrt(a2*a2+b2*b2+c2*c2);
+  let thetaDeg=90;
+  if(mag1>0&&mag2>0){
+    const cosT=Math.min(1,Math.max(-1,Math.abs(dot)/(mag1*mag2)));
+    thetaDeg=Math.round(Math.acos(cosT)*180/Math.PI);
+  }
+  document.getElementById('formula-val').textContent=
+    `= (${dot}) / (${mag1.toFixed(2)} × ${mag2.toFixed(2)}) = ${(mag1>0&&mag2>0?Math.abs(dot)/(mag1*mag2):0).toFixed(3)}  →  θ = ${thetaDeg}°`;
+  const avEl=document.getElementById('angle-val');
+  const alEl=document.getElementById('angle-lbl');
+  const adEl=document.getElementById('angle-display');
+  avEl.textContent=thetaDeg+'°';
+  if(thetaDeg===90){avEl.style.color='#DC2626';alEl.textContent='⊥ Perpendicular lines!';adEl.style.borderColor='#DC2626';adEl.style.background='#FEF2F2';}
+  else if(thetaDeg===0){avEl.style.color='#7C3AED';alEl.textContent='∥ Parallel lines!';adEl.style.borderColor='#7C3AED';adEl.style.background='#F5F3FF';}
+  else if(thetaDeg<90){avEl.style.color='#059669';alEl.textContent='↗ Acute angle';adEl.style.borderColor='#059669';adEl.style.background='#ECFDF5';}
+  else{avEl.style.color='#D97706';alEl.textContent='↖ Obtuse angle';adEl.style.borderColor='#D97706';adEl.style.background='#FFFBEB';}
+  draw(a1,b1,c1,a2,b2,c2,thetaDeg,dot,mag1,mag2);
+}
+
+function proj3d(x,y,z){
+  const cam=0.5;
+  const px=x*Math.cos(cam)*24-y*Math.cos(Math.PI/3-cam)*24;
+  const py=-x*Math.sin(cam)*16-y*Math.sin(Math.PI/3-cam)*16+z*24;
+  return {px,py};
+}
+
+function draw(a1,b1,c1,a2,b2,c2,thetaDeg,dot,mag1,mag2){
+  const canvas=document.getElementById('lineCanvas');
+  canvas.width=(canvas.offsetWidth||560)*devicePixelRatio;
+  canvas.height=240*devicePixelRatio;
+  const ctx=canvas.getContext('2d');
+  ctx.scale(devicePixelRatio,devicePixelRatio);
+  const W=canvas.offsetWidth||560,H=240;
+  const ox=W/2,oy=H/2+10;
+
+  ctx.fillStyle='#1E1B4B';ctx.fillRect(0,0,W,H);
+
+  // Stars
+  ctx.fillStyle='rgba(255,255,255,0.12)';
+  for(let i=0;i<35;i++){ctx.beginPath();ctx.arc((Math.sin(i*97)*0.5+0.5)*W,(Math.cos(i*53)*0.5+0.5)*H,0.7,0,Math.PI*2);ctx.fill();}
+
+  // Axes (faint)
+  [[[0,0,0],[5,0,0],'rgba(239,68,68,0.4)'],[[0,0,0],[0,5,0],'rgba(34,197,94,0.4)'],[[0,0,0],[0,0,5],'rgba(96,165,250,0.4)']].forEach(([s,e,c])=>{
+    const ps=proj3d(...s),pe=proj3d(...e);
+    ctx.strokeStyle=c;ctx.lineWidth=1;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(ox+ps.px,oy-ps.py);ctx.lineTo(ox+pe.px,oy-pe.py);ctx.stroke();
+  });
+  ctx.setLineDash([]);
+  const ax=['X','Y','Z'],apts=[[5.5,0,0],[0,5.5,0],[0,0,5.5]],ac=['#EF4444','#22C55E','#60A5FA'];
+  ax.forEach((l,i)=>{const p=proj3d(...apts[i]);ctx.fillStyle=ac[i];ctx.font='bold 11px Nunito';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(l,ox+p.px,oy-p.py);});
+
+  const scale=5;
+  const normalize=(a,b,c,s)=>{const m=Math.sqrt(a*a+b*b+c*c)||1;return[a/m*s,b/m*s,c/m*s];};
+  const [n1x,n1y,n1z]=normalize(a1,b1,c1,scale);
+  const [n2x,n2y,n2z]=normalize(a2,b2,c2,scale);
+
+  const p0=proj3d(0,0,0);
+  const p1e=proj3d(n1x,n1y,n1z);
+  const p2e=proj3d(n2x,n2y,n2z);
+
+  // Angle arc
+  if(thetaDeg>1&&thetaDeg<179&&mag1>0&&mag2>0){
+    const arcR=36;
+    const ang1=Math.atan2(-(oy-p1e.py-(oy-p0.py)),ox+p1e.px-(ox+p0.px));
+    const ang2=Math.atan2(-(oy-p2e.py-(oy-p0.py)),ox+p2e.px-(ox+p0.px));
+    const arcColor=thetaDeg===90?'rgba(220,38,38,0.7)':thetaDeg===0?'rgba(124,58,237,0.7)':'rgba(167,139,250,0.5)';
+    ctx.strokeStyle=arcColor;ctx.lineWidth=2;
+    ctx.beginPath();ctx.arc(ox+p0.px,oy-p0.py,arcR,Math.min(ang1,ang2),Math.max(ang1,ang2));ctx.stroke();
+    ctx.fillStyle=arcColor.replace('0.7','0.15').replace('0.5','0.12');
+    ctx.beginPath();ctx.moveTo(ox+p0.px,oy-p0.py);ctx.arc(ox+p0.px,oy-p0.py,arcR,Math.min(ang1,ang2),Math.max(ang1,ang2));ctx.closePath();ctx.fill();
+    // θ label
+    const midAng=(ang1+ang2)/2;
+    ctx.fillStyle='rgba(255,255,255,0.8)';ctx.font='bold 12px Nunito';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('θ',ox+p0.px+Math.cos(midAng)*50,oy-p0.py+Math.sin(midAng)*50);
+  }
+
+  // 90-degree square for perpendicular
+  if(thetaDeg===90){
+    const sq=18;
+    const d1x=ox+p1e.px-(ox+p0.px),d1y=oy-p1e.py-(oy-p0.py);
+    const d2x=ox+p2e.px-(ox+p0.px),d2y=oy-p2e.py-(oy-p0.py);
+    const m1=Math.sqrt(d1x*d1x+d1y*d1y)||1,m2=Math.sqrt(d2x*d2x+d2y*d2y)||1;
+    const u1x=d1x/m1*sq,u1y=d1y/m1*sq,u2x=d2x/m2*sq,u2y=d2y/m2*sq;
+    const bx=ox+p0.px,by=oy-p0.py;
+    ctx.strokeStyle='#EF4444';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(bx+u1x,by+u1y);ctx.lineTo(bx+u1x+u2x,by+u1y+u2y);ctx.lineTo(bx+u2x,by+u2y);ctx.stroke();
+  }
+
+  // Parallel highlight
+  if(thetaDeg===0&&mag1>0&&mag2>0){
+    ctx.strokeStyle='rgba(167,139,250,0.5)';ctx.lineWidth=8;ctx.lineCap='round';
+    ctx.beginPath();ctx.moveTo(ox+p0.px,oy-p0.py);ctx.lineTo(ox+p1e.px,oy-p1e.py);ctx.stroke();
+    ctx.lineCap='butt';
+  }
+
+  // Line 1
+  ctx.strokeStyle='#F59E0B';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(ox+p0.px,oy-p0.py);ctx.lineTo(ox+p1e.px,oy-p1e.py);ctx.stroke();
+  // Arrow 1
+  drawArrow(ctx,ox+p0.px,oy-p0.py,ox+p1e.px,oy-p1e.py,'#F59E0B');
+
+  // Line 2
+  ctx.strokeStyle='#06B6D4';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(ox+p0.px,oy-p0.py);ctx.lineTo(ox+p2e.px,oy-p2e.py);ctx.stroke();
+  drawArrow(ctx,ox+p0.px,oy-p0.py,ox+p2e.px,oy-p2e.py,'#06B6D4');
+
+  // Labels
+  ctx.fillStyle='#FEF3C7';ctx.font='bold 12px Nunito';ctx.textAlign='left';ctx.textBaseline='bottom';
+  if(mag1>0)ctx.fillText(`V₁(${a1},${b1},${c1})`,ox+p1e.px+8,oy-p1e.py);
+  ctx.fillStyle='#CFFAFE';ctx.textBaseline=p2e.py>p1e.py?'top':'bottom';
+  if(mag2>0)ctx.fillText(`V₂(${a2},${b2},${c2})`,ox+p2e.px+8,oy-p2e.py);
+
+  // Origin dot
+  const grd=ctx.createRadialGradient(ox+p0.px,oy-p0.py,0,ox+p0.px,oy-p0.py,15);
+  grd.addColorStop(0,'rgba(167,139,250,0.6)');grd.addColorStop(1,'rgba(167,139,250,0)');
+  ctx.fillStyle=grd;ctx.beginPath();ctx.arc(ox+p0.px,oy-p0.py,15,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(ox+p0.px,oy-p0.py,5,0,Math.PI*2);ctx.fillStyle='#A78BFA';ctx.fill();
+}
+
+function drawArrow(ctx,x1,y1,x2,y2,color){
+  const ang=Math.atan2(y2-y1,x2-x1);
+  const len=12;
+  ctx.fillStyle=color;ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-len*Math.cos(ang-0.4),y2-len*Math.sin(ang-0.4));
+  ctx.lineTo(x2-len*Math.cos(ang+0.4),y2-len*Math.sin(ang+0.4));
+  ctx.closePath();ctx.fill();
+}
+
+const quizPool=[
+  {q:'If Line 1 has DRs (1,0,0) and Line 2 has DRs (0,1,0), what is the angle?',opts:['0°','45°','90°','180°'],ans:'90°'},
+  {q:'What is the condition for two lines to be perpendicular?',opts:['a₁a₂+b₁b₂+c₁c₂=1','a₁a₂+b₁b₂+c₁c₂=0','a₁/a₂=b₁/b₂','None'],ans:'a₁a₂+b₁b₂+c₁c₂=0'},
+  {q:'Lines with DRs (2,4,6) and (1,2,3) are?',opts:['Perpendicular','Parallel','Skew','At 45°'],ans:'Parallel'},
+  {q:'The dot product a₁a₂+b₁b₂+c₁c₂ for perpendicular lines equals?',opts:['1','-1','0','∞'],ans:'0'},
+  {q:'What formula gives the angle between two 3D lines?',opts:['sin formula','cos formula','tan formula','Distance formula'],ans:'cos formula'},
+  {q:'If DRs (1,0,0) and (1,0,0), lines are?',opts:['Perpendicular','Parallel','Skew','At 60°'],ans:'Parallel'},
+];
+let sc=0,tq=0,answered=false,cq=null;
+function newQuiz(){answered=false;document.getElementById('qfb').textContent='';document.getElementById('qfb').className='qfb';document.getElementById('nxt').style.display='none';cq=quizPool[Math.floor(Math.random()*quizPool.length)];document.getElementById('qq').textContent=cq.q;const el=document.getElementById('qopts');el.innerHTML='';cq.opts.forEach(o=>{const b=document.createElement('button');b.className='qbtn';b.textContent=o;b.onclick=()=>checkQ(o,b);el.appendChild(b);});}
+function checkQ(ans,btn){if(answered)return;answered=true;tq++;document.getElementById('tq').textContent=tq;const fb=document.getElementById('qfb');if(ans===cq.ans){sc++;document.getElementById('sc').textContent=sc;fb.textContent='🎉 Correct!';fb.className='qfb g';btn.classList.add('ok');}else{fb.textContent='Not quite — answer is '+cq.ans;fb.className='qfb b';btn.classList.add('no');document.querySelectorAll('.qbtn').forEach(b=>{if(b.textContent===cq.ans)b.classList.add('ok');});}document.getElementById('nxt').style.display='inline-block';}
+update();newQuiz();window.addEventListener('resize',update);
+</script>
+</body>
+</html>

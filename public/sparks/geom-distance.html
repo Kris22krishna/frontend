@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Distance Formula — Skill100 Skill Spark</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#FFF7ED;--card:#fff;--orange:#EA580C;--orange-light:#FFEDD5;--orange-dark:#9A3412;--blue:#185FA5;--blue-light:#E6F1FB;--green:#3B6D11;--green-light:#EAF3DE;--green-dark:#27500A;--teal:#0D9488;--text:#1C1917;--muted:#78716C;--border:#E7E5E4;--sh:0 4px 24px rgba(0,0,0,0.08)}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem 1rem 4rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#FED7AA 1px,transparent 1px);background-size:28px 28px;opacity:0.35;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:660px;margin:0 auto}
+.header{text-align:center;margin-bottom:2rem}
+.badge{display:inline-block;background:var(--orange);color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:4px 14px;border-radius:999px;margin-bottom:12px;text-transform:uppercase}
+.header h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,7vw,44px);line-height:1.1;margin-bottom:8px}
+.header h1 span{color:var(--orange)}
+.header p{font-size:16px;color:var(--muted);font-weight:600}
+.card{background:var(--card);border-radius:20px;padding:1.75rem;box-shadow:var(--sh);margin-bottom:1.25rem;border:1.5px solid var(--border)}
+.card-title{font-family:'Fredoka One',cursive;font-size:18px;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.story{background:var(--orange-light);border:2px solid var(--orange);border-radius:14px;padding:14px 18px;font-size:15px;font-weight:700;color:var(--orange-dark);line-height:1.5;margin-bottom:1.25rem}
+.canvas-wrap{background:var(--bg);border-radius:12px;padding:8px;margin:.5rem 0 1rem;border:1.5px dashed var(--border)}
+canvas{display:block;width:100%;border-radius:8px}
+.pts-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1rem}
+.pt-card{flex:1;min-width:140px;border-radius:14px;padding:12px 14px;border:2px solid var(--border)}
+.pt-card.a{border-color:#3B82F6;background:#EFF6FF}
+.pt-card.b{border-color:#10B981;background:#ECFDF5}
+.pt-label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.pt-label.a{color:#1D4ED8} .pt-label.b{color:#047857}
+.slider-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.slider-row label{font-size:12px;font-weight:700;color:var(--muted);min-width:22px}
+.slider-row input[type=range]{-webkit-appearance:none;flex:1;height:5px;border-radius:3px;background:var(--border);outline:none;cursor:pointer}
+.slider-row input[type=range].a::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#3B82F6;border:2px solid #fff;box-shadow:0 0 0 2px #3B82F6;cursor:pointer}
+.slider-row input[type=range].b::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#10B981;border:2px solid #fff;box-shadow:0 0 0 2px #10B981;cursor:pointer}
+.slider-row span{font-family:'Fredoka One',cursive;font-size:18px;min-width:28px;text-align:right}
+.formula-box{background:#FEF9C3;border:2px solid #CA8A04;border-radius:14px;padding:14px 18px;font-size:14px;font-weight:700;color:#713F12;line-height:1.8;margin:.5rem 0 1rem}
+.formula-box .eq{font-size:18px;font-weight:800;color:#92400E}
+.rrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:.5rem}
+.rcard{flex:1;min-width:100px;background:var(--bg);border-radius:12px;padding:12px;text-align:center;border:1.5px solid var(--border)}
+.rlabel{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:4px;text-transform:uppercase}
+.rval{font-family:'Fredoka One',cursive;font-size:26px}
+.rval.blue{color:#3B82F6} .rval.green{color:#10B981} .rval.orange{color:var(--orange)}
+.score-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.score-pill{background:var(--orange-light);color:var(--orange);font-size:14px;font-weight:800;padding:6px 14px;border-radius:999px}
+.quiz-q{font-size:15px;font-weight:700;margin-bottom:14px;line-height:1.4}
+.quiz-opts{display:flex;gap:10px;flex-wrap:wrap}
+.qbtn{border:2px solid var(--border);border-radius:12px;padding:10px 20px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;background:#fff;color:var(--text);transition:all .15s}
+.qbtn:hover{border-color:var(--orange);color:var(--orange);transform:translateY(-1px)}
+.qbtn.ok{background:var(--green-light);border-color:var(--green);color:var(--green-dark)}
+.qbtn.no{background:#FCEBEB;border-color:#A32D2D;color:#791F1F}
+.qfb{margin-top:12px;font-size:15px;font-weight:700;min-height:22px}
+.qfb.g{color:var(--green)} .qfb.b{color:#A32D2D}
+.nxt{display:none;margin-top:10px;background:var(--orange);color:#fff;border:none;border-radius:12px;padding:10px 22px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer}
+.nxt:hover{opacity:.88}
+.footer{text-align:center;font-size:13px;font-weight:700;color:var(--muted);margin-top:2rem}
+.footer span{color:var(--orange)}
+.preset-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+.preset-btn{border:2px solid var(--border);border-radius:10px;padding:7px 12px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;background:#fff;color:var(--muted);transition:all .18s}
+.preset-btn:hover{border-color:var(--orange);color:var(--orange)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="badge">Geometry Skill Spark · 2 of 4</div>
+    <h1>Distance Formula — <span>Pythagoras strikes again!</span></h1>
+    <p>Two points, a right triangle, and one magic formula!</p>
+  </div>
+
+  <div class="story">The distance formula is just Pythagoras in disguise! Draw a right triangle between two points, find the two legs (Δx and Δy), and use a² + b² = c² to get the straight-line distance!</div>
+
+  <div class="card">
+    <div class="card-title"><div class="icon" style="background:var(--orange-light)">📐</div> Place two points</div>
+    <div class="preset-row">
+      <button class="preset-btn" onclick="setPreset(0,0,3,4)">3-4-5 Triangle</button>
+      <button class="preset-btn" onclick="setPreset(-4,0,4,0)">Horizontal</button>
+      <button class="preset-btn" onclick="setPreset(0,-3,0,5)">Vertical</button>
+      <button class="preset-btn" onclick="setPreset(-3,-3,5,5)">Diagonal</button>
+    </div>
+    <div class="pts-row">
+      <div class="pt-card a">
+        <div class="pt-label a">📍 Point A (x₁, y₁)</div>
+        <div class="slider-row"><label>x₁</label><input type="range" class="a" min="-8" max="8" step="1" value="0" id="ax" oninput="update()"><span id="axv" style="color:#3B82F6">0</span></div>
+        <div class="slider-row"><label>y₁</label><input type="range" class="a" min="-6" max="6" step="1" value="0" id="ay" oninput="update()"><span id="ayv" style="color:#3B82F6">0</span></div>
+      </div>
+      <div class="pt-card b">
+        <div class="pt-label b">📍 Point B (x₂, y₂)</div>
+        <div class="slider-row"><label>x₂</label><input type="range" class="b" min="-8" max="8" step="1" value="3" id="bx" oninput="update()"><span id="bxv" style="color:#10B981">3</span></div>
+        <div class="slider-row"><label>y₂</label><input type="range" class="b" min="-6" max="6" step="1" value="4" id="by" oninput="update()"><span id="byv" style="color:#10B981">4</span></div>
+      </div>
+    </div>
+    <div class="canvas-wrap"><canvas id="distCanvas" height="240"></canvas></div>
+    <div class="formula-box">
+      <div>d = √[(x₂ − x₁)² + (y₂ − y₁)²]</div>
+      <div class="eq" id="formula-step">= √[(3−0)² + (4−0)²] = √[9+16] = √25 = 5</div>
+    </div>
+    <div class="rrow">
+      <div class="rcard"><div class="rlabel">Δx (horiz leg)</div><div class="rval blue" id="rv-dx">3</div></div>
+      <div class="rcard"><div class="rlabel">Δy (vert leg)</div><div class="rval green" id="rv-dy">4</div></div>
+      <div class="rcard"><div class="rlabel">Distance d</div><div class="rval orange" id="rv-d">5.00</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="score-row">
+      <div class="card-title" style="margin-bottom:0"><div class="icon" style="background:var(--orange-light)">🧠</div> Quick quiz!</div>
+      <div class="score-pill">Score: <span id="sc">0</span>/<span id="tq">0</span></div>
+    </div>
+    <div class="quiz-q" id="qq">Loading...</div>
+    <div class="quiz-opts" id="qopts"></div>
+    <div class="qfb" id="qfb"></div>
+    <button class="nxt" id="nxt" onclick="newQuiz()">Next question →</button>
+  </div>
+  <div class="footer">Made with ❤️ by <span>Skill100</span></div>
+</div>
+<script>
+function setPreset(ax,ay,bx,by){
+  document.getElementById('ax').value=ax;document.getElementById('ay').value=ay;
+  document.getElementById('bx').value=bx;document.getElementById('by').value=by;
+  update();
+}
+
+function update(){
+  const ax=parseInt(document.getElementById('ax').value);
+  const ay=parseInt(document.getElementById('ay').value);
+  const bx=parseInt(document.getElementById('bx').value);
+  const by=parseInt(document.getElementById('by').value);
+  document.getElementById('axv').textContent=ax;
+  document.getElementById('ayv').textContent=ay;
+  document.getElementById('bxv').textContent=bx;
+  document.getElementById('byv').textContent=by;
+  const dx=bx-ax,dy=by-ay;
+  const d=Math.sqrt(dx*dx+dy*dy);
+  document.getElementById('rv-dx').textContent=Math.abs(dx);
+  document.getElementById('rv-dy').textContent=Math.abs(dy);
+  document.getElementById('rv-d').textContent=d.toFixed(2);
+  document.getElementById('formula-step').textContent=
+    `= √[(${bx}−${ax})² + (${by}−${ay})²] = √[${dx*dx}+${dy*dy}] = √${dx*dx+dy*dy} ≈ ${d.toFixed(2)}`;
+  draw(ax,ay,bx,by);
+}
+
+function draw(ax,ay,bx,by){
+  const canvas=document.getElementById('distCanvas');
+  canvas.width=(canvas.offsetWidth||560)*devicePixelRatio;
+  canvas.height=240*devicePixelRatio;
+  const ctx=canvas.getContext('2d');
+  ctx.scale(devicePixelRatio,devicePixelRatio);
+  const W=canvas.offsetWidth||560,H=240;
+  const pad=32;
+  const gW=W-pad*2,gH=H-pad*2;
+  const cx=pad+gW/2,cy=pad+gH/2;
+  const sc=Math.min(gW,gH)/18;
+
+  // Grid
+  ctx.strokeStyle='rgba(234,88,12,0.1)';ctx.lineWidth=1;
+  for(let i=-9;i<=9;i++){
+    ctx.beginPath();ctx.moveTo(cx+i*sc,pad);ctx.lineTo(cx+i*sc,H-pad);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(pad,cy+i*sc);ctx.lineTo(W-pad,cy+i*sc);ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle='rgba(0,0,0,0.2)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(pad,cy);ctx.lineTo(W-pad,cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,pad);ctx.lineTo(cx,H-pad);ctx.stroke();
+
+  // Tick labels
+  ctx.fillStyle='#A8A29E';ctx.font='9px Nunito';ctx.textAlign='center';ctx.textBaseline='top';
+  for(let i=-9;i<=9;i++){if(i===0)continue;const px=cx+i*sc;if(px>pad+5&&px<W-pad-5)ctx.fillText(i,px,cy+3);}
+  ctx.textAlign='right';ctx.textBaseline='middle';
+  for(let i=-6;i<=6;i++){if(i===0)continue;const py=cy-i*sc;if(py>pad+5&&py<H-pad-5)ctx.fillText(i,cx-3,py);}
+
+  const pax=cx+ax*sc,pay=cy-ay*sc;
+  const pbx=cx+bx*sc,pby=cy-by*sc;
+  const pcx=cx+bx*sc,pcy=cy-ay*sc; // right-angle corner
+
+  // Right-angle triangle fill
+  ctx.beginPath();ctx.moveTo(pax,pay);ctx.lineTo(pcx,pcy);ctx.lineTo(pbx,pby);ctx.closePath();
+  ctx.fillStyle='rgba(234,88,12,0.08)';ctx.fill();
+
+  // Horizontal leg (Δx) — blue
+  ctx.strokeStyle='#3B82F6';ctx.lineWidth=2.5;ctx.setLineDash([5,4]);
+  ctx.beginPath();ctx.moveTo(pax,pay);ctx.lineTo(pcx,pcy);ctx.stroke();
+
+  // Vertical leg (Δy) — green
+  ctx.strokeStyle='#10B981';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(pcx,pcy);ctx.lineTo(pbx,pby);ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Right-angle box
+  const s=8;
+  if(Math.abs(bx-ax)>0&&Math.abs(by-ay)>0){
+    const sx=bx>ax?-s:s,sy=by>ay?s:-s;
+    ctx.strokeStyle='rgba(0,0,0,0.3)';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.moveTo(pcx+sx,pcy);ctx.lineTo(pcx+sx,pcy+sy);ctx.lineTo(pcx,pcy+sy);ctx.stroke();
+  }
+
+  // Hypotenuse — orange
+  ctx.strokeStyle='#EA580C';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(pax,pay);ctx.lineTo(pbx,pby);ctx.stroke();
+
+  // Leg labels
+  const dx=bx-ax,dy=by-ay;
+  const d=Math.sqrt(dx*dx+dy*dy);
+  ctx.font='bold 12px Nunito';
+  if(Math.abs(dx)>0){
+    ctx.fillStyle='#1D4ED8';ctx.textAlign='center';ctx.textBaseline=ay>=by?'bottom':'top';
+    ctx.fillText('Δx='+Math.abs(dx),(pax+pcx)/2,pcy+(ay>=by?-4:4));
+  }
+  if(Math.abs(dy)>0){
+    ctx.fillStyle='#047857';ctx.textAlign=bx>=ax?'left':'right';ctx.textBaseline='middle';
+    ctx.fillText('Δy='+Math.abs(dy),pcx+(bx>=ax?6:-6),(pby+pcy)/2);
+  }
+  // Distance label
+  if(d>0.5){
+    ctx.fillStyle='#EA580C';ctx.textAlign='center';ctx.textBaseline='middle';
+    const mx=(pax+pbx)/2,my=(pay+pby)/2;
+    const angle=Math.atan2(pby-pay,pbx-pax);
+    ctx.save();ctx.translate(mx,my);ctx.rotate(angle);ctx.fillText('d≈'+d.toFixed(2),0,-12);ctx.restore();
+  }
+
+  // Points
+  [[pax,pay,'#3B82F6',`A(${ax},${ay})`],[pbx,pby,'#10B981',`B(${bx},${by})`]].forEach(([x,y,c,lbl])=>{
+    ctx.beginPath();ctx.arc(x,y,14,0,Math.PI*2);ctx.fillStyle=c+'22';ctx.fill();
+    ctx.beginPath();ctx.arc(x,y,7,0,Math.PI*2);ctx.fillStyle=c;ctx.fill();
+    ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+    ctx.fillStyle=c;ctx.font='bold 12px Nunito';ctx.textAlign='left';ctx.textBaseline='bottom';
+    ctx.fillText(lbl,x+10,y-6);
+  });
+}
+
+const quizPool=[
+  {q:'What is the distance between (0,0) and (3,4)?',opts:['5','7','12','3'],ans:'5'},
+  {q:'What is the length of the horizontal leg (Δx) between (1,2) and (7,10)?',opts:['8','6','10','4'],ans:'6'},
+  {q:'Distance formula comes from which theorem?',opts:['Euclid','Fermat','Pythagoras','Newton'],ans:'Pythagoras'},
+  {q:'What is the distance between (0,0) and (0,5)?',opts:['0','5','25','10'],ans:'5'},
+  {q:'The vertical leg (Δy) between (2,1) and (2,8) is?',opts:['6','8','7','10'],ans:'7'},
+  {q:'Distance between (-1,-1) and (2,3)?',opts:['5','4','7','25'],ans:'5'},
+];
+let sc=0,tq=0,answered=false,cq=null;
+function newQuiz(){answered=false;document.getElementById('qfb').textContent='';document.getElementById('qfb').className='qfb';document.getElementById('nxt').style.display='none';cq=quizPool[Math.floor(Math.random()*quizPool.length)];document.getElementById('qq').textContent=cq.q;const el=document.getElementById('qopts');el.innerHTML='';cq.opts.forEach(o=>{const b=document.createElement('button');b.className='qbtn';b.textContent=o;b.onclick=()=>checkQ(o,b);el.appendChild(b);});}
+function checkQ(ans,btn){if(answered)return;answered=true;tq++;document.getElementById('tq').textContent=tq;const fb=document.getElementById('qfb');if(ans===cq.ans){sc++;document.getElementById('sc').textContent=sc;fb.textContent='🎉 Correct!';fb.className='qfb g';btn.classList.add('ok');}else{fb.textContent='Not quite — answer is '+cq.ans;fb.className='qfb b';btn.classList.add('no');document.querySelectorAll('.qbtn').forEach(b=>{if(b.textContent===cq.ans)b.classList.add('ok');});}document.getElementById('nxt').style.display='inline-block';}
+update();newQuiz();window.addEventListener('resize',update);
+</script>
+</body>
+</html>

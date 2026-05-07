@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coordinate Plotter — Skill100 Skill Spark</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#F0F9FF;--card:#fff;--teal:#0D9488;--teal-light:#CCFBF1;--teal-dark:#0F766E;--blue:#185FA5;--blue-light:#E6F1FB;--green:#3B6D11;--green-light:#EAF3DE;--green-dark:#27500A;--amber:#BA7517;--amber-light:#FAEEDA;--text:#1C1917;--muted:#78716C;--border:#E7E5E4;--sh:0 4px 24px rgba(0,0,0,0.08)}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2rem 1rem 4rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#5EEAD4 1px,transparent 1px);background-size:28px 28px;opacity:0.25;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:660px;margin:0 auto}
+.header{text-align:center;margin-bottom:2rem}
+.badge{display:inline-block;background:var(--teal);color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:4px 14px;border-radius:999px;margin-bottom:12px;text-transform:uppercase}
+.header h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,7vw,44px);line-height:1.1;margin-bottom:8px}
+.header h1 span{color:var(--teal)}
+.header p{font-size:16px;color:var(--muted);font-weight:600}
+.card{background:var(--card);border-radius:20px;padding:1.75rem;box-shadow:var(--sh);margin-bottom:1.25rem;border:1.5px solid var(--border)}
+.card-title{font-family:'Fredoka One',cursive;font-size:18px;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.story{background:var(--teal-light);border:2px solid var(--teal);border-radius:14px;padding:14px 18px;font-size:15px;font-weight:700;color:var(--teal-dark);line-height:1.5;margin-bottom:1.25rem}
+.canvas-wrap{background:var(--bg);border-radius:12px;padding:8px;margin:.5rem 0 1rem;border:1.5px dashed var(--border)}
+canvas{display:block;width:100%;border-radius:8px}
+.slider-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.slider-row label{font-size:13px;font-weight:700;color:var(--muted);min-width:64px}
+.slider-row input[type=range]{-webkit-appearance:none;flex:1;height:6px;border-radius:3px;background:var(--border);outline:none;cursor:pointer}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--teal);border:3px solid #fff;box-shadow:0 0 0 2px var(--teal);cursor:pointer}
+.slider-row span{font-family:'Fredoka One',cursive;font-size:22px;min-width:36px;text-align:right;color:var(--text)}
+.rrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:.5rem}
+.rcard{flex:1;min-width:100px;background:var(--bg);border-radius:12px;padding:12px;text-align:center;border:1.5px solid var(--border)}
+.rlabel{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:4px;text-transform:uppercase}
+.rval{font-family:'Fredoka One',cursive;font-size:24px}
+.rval.teal{color:var(--teal)} .rval.amber{color:var(--amber)} .rval.blue{color:var(--blue)}
+.quadrant-badge{display:inline-block;padding:6px 18px;border-radius:999px;font-family:'Fredoka One',cursive;font-size:20px;margin-top:8px;transition:all .3s}
+.score-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.score-pill{background:var(--teal-light);color:var(--teal);font-size:14px;font-weight:800;padding:6px 14px;border-radius:999px}
+.quiz-q{font-size:15px;font-weight:700;margin-bottom:14px;line-height:1.4}
+.quiz-opts{display:flex;gap:10px;flex-wrap:wrap}
+.qbtn{border:2px solid var(--border);border-radius:12px;padding:10px 20px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;background:#fff;color:var(--text);transition:all .15s}
+.qbtn:hover{border-color:var(--teal);color:var(--teal);transform:translateY(-1px)}
+.qbtn.ok{background:var(--green-light);border-color:var(--green);color:var(--green-dark)}
+.qbtn.no{background:#FCEBEB;border-color:#A32D2D;color:#791F1F}
+.qfb{margin-top:12px;font-size:15px;font-weight:700;min-height:22px}
+.qfb.g{color:var(--green)} .qfb.b{color:#A32D2D}
+.nxt{display:none;margin-top:10px;background:var(--teal);color:#fff;border:none;border-radius:12px;padding:10px 22px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer}
+.nxt:hover{opacity:.88}
+.footer{text-align:center;font-size:13px;font-weight:700;color:var(--muted);margin-top:2rem}
+.footer span{color:var(--teal)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="badge">Geometry Skill Spark · 1 of 4</div>
+    <h1>Plot any point on the <span>Cartesian Plane!</span></h1>
+    <p>Drag the sliders and watch your point jump to life!</p>
+  </div>
+
+  <div class="story" id="story">The Cartesian plane has two axes: X (horizontal) and Y (vertical). Every point is an address: (x, y). The plane is split into 4 quadrants. Move the sliders to explore where your point lands!</div>
+
+  <div class="card">
+    <div class="card-title"><div class="icon" style="background:var(--teal-light)">📍</div> Move point P(x, y)</div>
+    <div class="canvas-wrap"><canvas id="plotCanvas" height="260"></canvas></div>
+    <div class="slider-row"><label>X = </label><input type="range" min="-10" max="10" step="1" value="3" id="slx" oninput="update()"><span id="slxv">3</span></div>
+    <div class="slider-row"><label>Y = </label><input type="range" min="-10" max="10" step="1" value="4" id="sly" oninput="update()"><span id="slyv">4</span></div>
+    <div class="rrow">
+      <div class="rcard"><div class="rlabel">Point P</div><div class="rval teal" id="rv-point">(3, 4)</div></div>
+      <div class="rcard"><div class="rlabel">|Distance to Y-axis|</div><div class="rval amber" id="rv-dx">3</div></div>
+      <div class="rcard"><div class="rlabel">|Distance to X-axis|</div><div class="rval blue" id="rv-dy">4</div></div>
+    </div>
+    <div style="text-align:center;margin-top:10px">
+      <div class="rlabel">Current Quadrant</div>
+      <div class="quadrant-badge" id="quad-badge">Quadrant I</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="score-row">
+      <div class="card-title" style="margin-bottom:0"><div class="icon" style="background:var(--teal-light)">🧠</div> Quick quiz!</div>
+      <div class="score-pill">Score: <span id="sc">0</span>/<span id="tq">0</span></div>
+    </div>
+    <div class="quiz-q" id="qq">Loading...</div>
+    <div class="quiz-opts" id="qopts"></div>
+    <div class="qfb" id="qfb"></div>
+    <button class="nxt" id="nxt" onclick="newQuiz()">Next question →</button>
+  </div>
+  <div class="footer">Made with ❤️ by <span>Skill100</span></div>
+</div>
+<script>
+const quadColors=[
+  {bg:'#ECFDF5',border:'#10B981',text:'#065F46',label:'Quadrant I ✨ (x>0, y>0)'},
+  {bg:'#EFF6FF',border:'#3B82F6',text:'#1E3A8A',label:'Quadrant II 🌊 (x<0, y>0)'},
+  {bg:'#FFF7ED',border:'#F97316',text:'#7C2D12',label:'Quadrant III 🔥 (x<0, y<0)'},
+  {bg:'#FDF4FF',border:'#A855F7',text:'#581C87',label:'Quadrant IV 🌙 (x>0, y<0)'},
+  {bg:'#F8FAFC',border:'#64748B',text:'#1E293B',label:'On an Axis ➕'},
+];
+
+function getQuadrant(x,y){
+  if(x===0||y===0)return 4;
+  if(x>0&&y>0)return 0;
+  if(x<0&&y>0)return 1;
+  if(x<0&&y<0)return 2;
+  return 3;
+}
+
+function update(){
+  const x=parseInt(document.getElementById('slx').value);
+  const y=parseInt(document.getElementById('sly').value);
+  document.getElementById('slxv').textContent=x;
+  document.getElementById('slyv').textContent=y;
+  document.getElementById('rv-point').textContent=`(${x}, ${y})`;
+  document.getElementById('rv-dx').textContent=Math.abs(x);
+  document.getElementById('rv-dy').textContent=Math.abs(y);
+  const qi=getQuadrant(x,y);
+  const qc=quadColors[qi];
+  const badge=document.getElementById('quad-badge');
+  badge.textContent=qc.label;
+  badge.style.background=qc.bg;
+  badge.style.border=`2px solid ${qc.border}`;
+  badge.style.color=qc.text;
+  draw(x,y);
+}
+
+function draw(px,py){
+  const canvas=document.getElementById('plotCanvas');
+  canvas.width=(canvas.offsetWidth||560)*devicePixelRatio;
+  canvas.height=260*devicePixelRatio;
+  const ctx=canvas.getContext('2d');
+  ctx.scale(devicePixelRatio,devicePixelRatio);
+  const W=canvas.offsetWidth||560,H=260;
+  const pad=30;
+  const gW=W-pad*2,gH=H-pad*2;
+  const cx=pad+gW/2,cy=pad+gH/2;
+  const scale=Math.min(gW,gH)/22;
+
+  // Grid lines
+  ctx.strokeStyle='rgba(13,148,136,0.1)';ctx.lineWidth=1;
+  for(let i=-10;i<=10;i++){
+    if(i===0)continue;
+    ctx.beginPath();ctx.moveTo(cx+i*scale,pad);ctx.lineTo(cx+i*scale,H-pad);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(pad,cy+i*scale);ctx.lineTo(W-pad,cy+i*scale);ctx.stroke();
+  }
+
+  // Quadrant shading
+  const qi=getQuadrant(px,py);
+  if(qi<4){
+    const qx=[cx,pad,pad,cx][qi];
+    const qy=[pad,pad,cy,cy][qi];
+    const qw=[gW/2,gW/2,gW/2,gW/2][qi];
+    const qh=[gH/2,gH/2,gH/2,gH/2][qi];
+    ctx.fillStyle=['rgba(16,185,129,0.08)','rgba(59,130,246,0.08)','rgba(249,115,22,0.08)','rgba(168,85,247,0.08)'][qi];
+    ctx.fillRect(qx,qy,qw,qh);
+  }
+
+  // Axes
+  ctx.strokeStyle='rgba(0,0,0,0.3)';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(pad,cy);ctx.lineTo(W-pad,cy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(cx,pad);ctx.lineTo(cx,H-pad);ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle='#78716C';ctx.font='bold 10px Nunito';ctx.textAlign='center';ctx.textBaseline='top';
+  for(let i=-10;i<=10;i++){
+    if(i===0)continue;
+    const spx=cx+i*scale;
+    if(spx>pad&&spx<W-pad)ctx.fillText(i,spx,cy+4);
+  }
+  ctx.textAlign='right';ctx.textBaseline='middle';
+  for(let i=-10;i<=10;i++){
+    if(i===0)continue;
+    const spy=cy-i*scale;
+    if(spy>pad&&spy<H-pad)ctx.fillText(i,cx-4,spy);
+  }
+
+  // Axis arrows
+  ctx.fillStyle='rgba(0,0,0,0.3)';
+  // Right arrow
+  ctx.beginPath();ctx.moveTo(W-pad,cy);ctx.lineTo(W-pad-8,cy-4);ctx.lineTo(W-pad-8,cy+4);ctx.fill();
+  // Up arrow
+  ctx.beginPath();ctx.moveTo(cx,pad);ctx.lineTo(cx-4,pad+8);ctx.lineTo(cx+4,pad+8);ctx.fill();
+  ctx.font='bold 12px Nunito';ctx.fillStyle='rgba(0,0,0,0.5)';
+  ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillText('x',W-pad+4,cy);
+  ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillText('y',cx,pad-2);
+
+  const dotX=cx+px*scale,dotY=cy-py*scale;
+
+  // Dashed lines to axes
+  ctx.setLineDash([5,4]);ctx.lineWidth=1.5;
+  // To x-axis (horizontal position line)
+  ctx.strokeStyle='#F97316';
+  ctx.beginPath();ctx.moveTo(dotX,dotY);ctx.lineTo(dotX,cy);ctx.stroke();
+  // To y-axis (vertical position line)
+  ctx.strokeStyle='#3B82F6';
+  ctx.beginPath();ctx.moveTo(dotX,dotY);ctx.lineTo(cx,dotY);ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Distance labels on dashed lines
+  if(Math.abs(px)>0){
+    ctx.fillStyle='#F97316';ctx.font='bold 11px Nunito';ctx.textAlign='center';ctx.textBaseline=py>=0?'top':'bottom';
+    ctx.fillText('|'+Math.abs(px)+'|',dotX,cy+(py>=0?4:-4));
+  }
+  if(Math.abs(py)>0){
+    ctx.fillStyle='#3B82F6';ctx.font='bold 11px Nunito';ctx.textAlign=px>=0?'right':'left';ctx.textBaseline='middle';
+    ctx.fillText('|'+Math.abs(py)+'|',cx+(px>=0?-4:4),dotY);
+  }
+
+  // Glow ring
+  ctx.beginPath();ctx.arc(dotX,dotY,14,0,Math.PI*2);
+  ctx.fillStyle='rgba(13,148,136,0.15)';ctx.fill();
+
+  // Point
+  ctx.beginPath();ctx.arc(dotX,dotY,7,0,Math.PI*2);
+  ctx.fillStyle='#0D9488';ctx.fill();
+  ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.stroke();
+
+  // Point label
+  ctx.fillStyle='#0D9488';ctx.font='bold 13px Nunito';ctx.textAlign='left';ctx.textBaseline='bottom';
+  const lblX=dotX+(px>=0?10:-40),lblY=dotY+(py>=0?-10:20);
+  ctx.fillText(`P(${px},${py})`,lblX,lblY);
+}
+
+const quizPool=[
+  {q:'If a point is at (-3, 4), which quadrant is it in?',opts:['I','II','III','IV'],ans:'II'},
+  {q:'What is the perpendicular distance of (5, -2) from the X-axis?',opts:['5','3','2','7'],ans:'2'},
+  {q:'Which quadrant has both x > 0 and y > 0?',opts:['I','II','III','IV'],ans:'I'},
+  {q:'The point (-4, -7) lies in which quadrant?',opts:['I','II','III','IV'],ans:'III'},
+  {q:'What is the distance of (6, 8) from the Y-axis?',opts:['8','6','14','2'],ans:'6'},
+  {q:'A point on the X-axis has y-coordinate = ?',opts:['1','0','-1','Any value'],ans:'0'},
+  {q:'Which quadrant contains points where x < 0 and y > 0?',opts:['I','II','III','IV'],ans:'II'},
+];
+let sc=0,tq=0,answered=false,cq=null;
+function newQuiz(){answered=false;document.getElementById('qfb').textContent='';document.getElementById('qfb').className='qfb';document.getElementById('nxt').style.display='none';cq=quizPool[Math.floor(Math.random()*quizPool.length)];document.getElementById('qq').textContent=cq.q;const el=document.getElementById('qopts');el.innerHTML='';cq.opts.forEach(o=>{const b=document.createElement('button');b.className='qbtn';b.textContent=o;b.onclick=()=>checkQ(o,b);el.appendChild(b);});}
+function checkQ(ans,btn){if(answered)return;answered=true;tq++;document.getElementById('tq').textContent=tq;const fb=document.getElementById('qfb');if(ans===cq.ans){sc++;document.getElementById('sc').textContent=sc;fb.textContent='🎉 Correct!';fb.className='qfb g';btn.classList.add('ok');}else{fb.textContent='Not quite — answer is '+cq.ans;fb.className='qfb b';btn.classList.add('no');document.querySelectorAll('.qbtn').forEach(b=>{if(b.textContent===cq.ans)b.classList.add('ok');});}document.getElementById('nxt').style.display='inline-block';}
+update();newQuiz();window.addEventListener('resize',()=>{const x=parseInt(document.getElementById('slx').value);const y=parseInt(document.getElementById('sly').value);draw(x,y);});
+</script>
+</body>
+</html>

@@ -135,6 +135,17 @@ import SetsExamEdge from './components/Math-Branches/Sets/Topics/ExamEdge/SetsEx
 
 // Class 11 - Maths: Relations & Functions
 import RelFuncDashboard from './components/practice/class-11/maths/RelationsAndFunctions/RelationsAndFunctions';
+// Coordinate Geometry
+import CoordinateGeometryMainDashboard from './components/Math-Branches/Coordinate-Geometry/CoordinateGeometryMainDashboard';
+import CoordinateGeometrySparks from './components/Math-Branches/Coordinate-Geometry/CoordinateGeometrySparks';
+import TwoDGeometryDashboard from './components/Math-Branches/Coordinate-Geometry/2D-Geometry/TwoDGeometryDashboard';
+import TwoDGeometrySkills from './components/Math-Branches/Coordinate-Geometry/2D-Geometry/Topics/Skills/TwoDGeometrySkills';
+import ThreeDGeometryDashboard from './components/Math-Branches/Coordinate-Geometry/3D-Geometry/ThreeDGeometryDashboard';
+import ThreeDGeometrySkills from './components/Math-Branches/Coordinate-Geometry/3D-Geometry/Topics/Skills/ThreeDGeometrySkills';
+import LinesInSpaceDashboard from './components/Math-Branches/Coordinate-Geometry/Lines-In-Space/LinesInSpaceDashboard';
+import LinesInSpaceSkills from './components/Math-Branches/Coordinate-Geometry/Lines-In-Space/Topics/Skills/LinesInSpaceSkills';
+import ApplicationsDashboard from './components/Math-Branches/Coordinate-Geometry/Applications/ApplicationsDashboard';
+import ApplicationsSkills from './components/Math-Branches/Coordinate-Geometry/Applications/Topics/Skills/ApplicationsSkills';
 import RelFuncIntro from './components/practice/class-11/maths/RelationsAndFunctions/Topics/5W1H/RelFuncIntro5W1H';
 import RelFuncTerminology from './components/practice/class-11/maths/RelationsAndFunctions/Topics/Terminology/RelFuncTerminology';
 import RelFuncSkills from './components/practice/class-11/maths/RelationsAndFunctions/Topics/Skills/RelFuncSkills';
@@ -1579,6 +1590,26 @@ function App() {
           <Route path="calculus/integration/introduction" element={<ProtectedRoute redirectTo="/login"><IntIntro5W1H /></ProtectedRoute>} />
           <Route path="calculus/integration/terminology" element={<ProtectedRoute redirectTo="/login"><IntTerminology /></ProtectedRoute>} />
           <Route path="calculus/integration/skills" element={<ProtectedRoute redirectTo="/login"><IntSkills /></ProtectedRoute>} />
+
+          {/* Coordinate Geometry Master Dashboard */}
+          <Route path="coordinate-geometry" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometryMainDashboard /></ProtectedRoute>} />
+          <Route path="coordinate-geometry/sparks" element={<ProtectedRoute redirectTo="/login"><CoordinateGeometrySparks /></ProtectedRoute>} />
+
+          {/* Coordinate Geometry: 2D Geometry */}
+          <Route path="coordinate-geometry/2d-geometry" element={<ProtectedRoute redirectTo="/login"><TwoDGeometryDashboard /></ProtectedRoute>} />
+          <Route path="coordinate-geometry/2d-geometry/skills" element={<ProtectedRoute redirectTo="/login"><TwoDGeometrySkills /></ProtectedRoute>} />
+
+          {/* Coordinate Geometry: 3D Geometry */}
+          <Route path="coordinate-geometry/3d-geometry" element={<ProtectedRoute redirectTo="/login"><ThreeDGeometryDashboard /></ProtectedRoute>} />
+          <Route path="coordinate-geometry/3d-geometry/skills" element={<ProtectedRoute redirectTo="/login"><ThreeDGeometrySkills /></ProtectedRoute>} />
+
+          {/* Coordinate Geometry: Lines In Space */}
+          <Route path="coordinate-geometry/lines-in-space" element={<ProtectedRoute redirectTo="/login"><LinesInSpaceDashboard /></ProtectedRoute>} />
+          <Route path="coordinate-geometry/lines-in-space/skills" element={<ProtectedRoute redirectTo="/login"><LinesInSpaceSkills /></ProtectedRoute>} />
+
+          {/* Coordinate Geometry: Applications */}
+          <Route path="coordinate-geometry/applications" element={<ProtectedRoute redirectTo="/login"><ApplicationsDashboard /></ProtectedRoute>} />
+          <Route path="coordinate-geometry/applications/skills" element={<ProtectedRoute redirectTo="/login"><ApplicationsSkills /></ProtectedRoute>} />
           {/* The Fish Tale Topic Pages */}
           <Route path="the-fish-tale" element={<ProtectedRoute redirectTo="/login"><TheFishTaleLanding /></ProtectedRoute>} />
           <Route path="the-fish-tale/introduction" element={<ProtectedRoute redirectTo="/login"><FishTaleIntro5W1H /></ProtectedRoute>} />
