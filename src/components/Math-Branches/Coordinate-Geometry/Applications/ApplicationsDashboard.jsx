@@ -1,110 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../coordinate-geometry.css';
-
-const MODULES = [
-    {
-        id: 'skills',
-        path: '/coordinate-geometry/applications/skills',
-        label: 'Skills',
-        emoji: '🎯',
-        tagline: 'Learn, Practice and Assess',
-        desc: 'Practice problems and master the core skills.',
-        gradFrom: '#f43f5e',
-        gradTo: '#fb7185',
-        shadow: 'rgba(244,63,94,0.4)',
-    },
-];
-
-const STATS = [
-    { val: '1', label: 'Core Skills', color: '#f43f5e' },
-];
+import styles from '../../Trigonometry/trigonometry.module.css';
 
 export default function ApplicationsDashboard() {
     const navigate = useNavigate();
-
+    useEffect(() => { window.scrollTo(0, 0); }, []);
+    const CARDS = [
+        { id: 'intro', path: '/coordinate-geometry/applications/introduction', tagline: 'Learn', title: 'Introduction', desc: 'See how coordinate geometry powers GPS, robotics, game design, and data science.', emoji: '💡', gradFrom: '#8b5cf6', gradTo: '#8b5cf6CC', shadow: '#8b5cf644' },
+        { id: 'terms', path: '/coordinate-geometry/applications/terminology', tagline: 'Memory', title: 'Terminology', desc: 'Understand locus, transformation matrices, slope-intercept form, and applied coordinate concepts.', emoji: '🧠', gradFrom: '#ec4899', gradTo: '#ec4899CC', shadow: '#ec489944' },
+        { id: 'skills', path: '/coordinate-geometry/applications/skills', tagline: 'Practice & Test', title: 'Skills', desc: 'Solve real-world coordinate geometry problems — from navigation to engineering.', emoji: '🎯', gradFrom: '#f59e0b', gradTo: '#f59e0bCC', shadow: '#f59e0b44' }
+    ];
     return (
-        <div className="geom-fullpage">
-            <div className="geom-left">
-                <div className="geom-deco geom-deco-a" />
-                <div className="geom-deco geom-deco-b" />
-                <div className="geom-deco geom-deco-c" />
-
-                <div className="geom-left-content">
-                    <button
-                        onClick={() => navigate('/coordinate-geometry')}
-                        style={{
-                            background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)',
-                            color: '#fff', borderRadius: '50px', padding: '8px 16px', fontSize: '13px',
-                            fontWeight: '600', cursor: 'pointer', marginBottom: '24px', display: 'inline-flex',
-                            alignItems: 'center', gap: '6px', backdropFilter: 'blur(10px)'
-                        }}
-                    >
-                        ← Back to Coordinate Geometry
-                    </button>
-
-                    <h1 className="geom-main-title">
-                        Master
-                        <br />
-                        <span className="geom-title-accent" style={{ background: 'linear-gradient(90deg, #38bdf8, #0ea5e9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Applications & Mastery</span>
-                    </h1>
-
-                    <p className="geom-main-sub">
-                        Apply your knowledge to navigation systems, robotics, and solve master-level coordinate problems.
-                    </p>
-
-                    <div className="geom-stats-grid">
-                        {STATS.map((item) => (
-                            <div className="geom-stat" key={item.label}>
-                                <span className="geom-stat-num" style={{ color: item.color }}>
-                                    {item.val}
-                                </span>
-                                <span className="geom-stat-lbl">{item.label}</span>
-                            </div>
-                        ))}
-                    </div>
+        <div className={styles.arithFullpage}>
+            <div className={styles.arithLeft} style={{ background: 'linear-gradient(145deg, #1e1b4b 0%, #4c1d95 25%, #6d28d9 55%, #8b5cf6 80%, #a78bfa 100%)' }}>
+                <div className={`${styles.arithDeco} ${styles.arithDecoA}`} /><div className={`${styles.arithDeco} ${styles.arithDecoB}`} />
+                <div className={styles.arithLeftContent}>
+                    <h1 className={styles.arithMainTitle} style={{ fontSize: 'clamp(2.5rem, 4vw, 3.8rem)' }}><span style={{ fontSize: '0.9rem', display: 'block', marginBottom: 12, color: 'rgba(255,255,255,0.6)', letterSpacing: 1.5, textTransform: 'uppercase', fontWeight: 800 }}>Branch 4 · Mastery</span>Applications &<br /><span className={styles.arithTitleAccent} style={{ background: 'linear-gradient(135deg, #c4b5fd, #e9d5ff)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Mastery</span></h1>
+                    <p className={styles.arithMainSub}>Apply coordinate geometry to solve real-world problems in navigation, engineering, and data science.</p>
+                    <div className={styles.arithStatsGrid}>{[{ val: '6', label: 'Big Questions', c: '#8b5cf6' }, { val: '7', label: 'Key Terms', c: '#ec4899' }, { val: '3', label: 'Skills', c: '#f59e0b' }].map(s => <div className={styles.arithStat} key={s.label}><span className={styles.arithStatNum} style={{ color: s.c }}>{s.val}</span><span className={styles.arithStatLbl}>{s.label}</span></div>)}</div>
                 </div>
             </div>
-
-            <div className="geom-right">
-                <p className="geom-right-eyebrow">Choose a topic to explore</p>
-
-                <div className="geom-cards-col">
-                    {MODULES.map((moduleItem) => (
-                        <button
-                            key={moduleItem.id}
-                            className="geom-card-btn"
-                            onClick={() => navigate(moduleItem.path)}
-                        >
-                            <div
-                                className="geom-card-strip"
-                                style={{ background: `linear-gradient(180deg, ${moduleItem.gradFrom}, ${moduleItem.gradTo})` }}
-                            />
-
-                            <div
-                                className="geom-card-icon"
-                                style={{
-                                    background: `linear-gradient(135deg, ${moduleItem.gradFrom}, ${moduleItem.gradTo})`,
-                                    boxShadow: `0 6px 20px ${moduleItem.shadow}`,
-                                }}
-                            >
-                                {moduleItem.emoji}
-                            </div>
-
-                            <div className="geom-card-text">
-                                <div className="geom-card-label" style={{ color: moduleItem.gradFrom }}>
-                                    {moduleItem.label}
-                                </div>
-                                <div className="geom-card-tagline">{moduleItem.tagline}</div>
-                                <div className="geom-card-desc">{moduleItem.desc}</div>
-                            </div>
-
-                            <div className="geom-card-chevron" style={{ color: moduleItem.gradFrom }}>
-                                {'>'}
-                            </div>
-                        </button>
-                    ))}
-                </div>
+            <div className={styles.arithRight}>
+                <button onClick={() => navigate('/coordinate-geometry')} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 18px', borderRadius: 100, width: 'fit-content', background: '#fff', border: '1.5px solid #e2e8f0', fontSize: 14, fontWeight: 700, color: '#334155', cursor: 'pointer', marginBottom: 16, boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>🏠 Dashboard</button>
+                <p className={styles.arithRightEyebrow}>Explore Applications & Mastery</p>
+                <div className={styles.arithCardsCol}>{CARDS.map(b => (<button key={b.id} className={styles.arithCardBtn} onClick={() => navigate(b.path)}><div className={styles.arithCardStrip} style={{ background: `linear-gradient(180deg, ${b.gradFrom}, ${b.gradTo})` }} /><div className={styles.arithCardIcon} style={{ background: `linear-gradient(135deg, ${b.gradFrom}, ${b.gradTo})`, boxShadow: `0 6px 20px ${b.shadow}` }}>{b.emoji}</div><div className={styles.arithCardText}><div className={styles.arithCardLabel} style={{ color: b.gradFrom }}>{b.title}</div><div className={styles.arithCardTagline}>{b.tagline}</div><div className={styles.arithCardDesc}>{b.desc}</div></div><div className={styles.arithCardChevron} style={{ color: b.gradFrom }}>{'>'}</div></button>))}</div>
             </div>
         </div>
     );

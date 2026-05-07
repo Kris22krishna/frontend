@@ -146,6 +146,14 @@ import LinesInSpaceDashboard from './components/Math-Branches/Coordinate-Geometr
 import LinesInSpaceSkills from './components/Math-Branches/Coordinate-Geometry/Lines-In-Space/Topics/Skills/LinesInSpaceSkills';
 import ApplicationsDashboard from './components/Math-Branches/Coordinate-Geometry/Applications/ApplicationsDashboard';
 import ApplicationsSkills from './components/Math-Branches/Coordinate-Geometry/Applications/Topics/Skills/ApplicationsSkills';
+import TwoDGeomIntro from './components/Math-Branches/Coordinate-Geometry/2D-Geometry/Topics/5W1H/TwoDGeomIntro';
+import TwoDGeomTerminology from './components/Math-Branches/Coordinate-Geometry/2D-Geometry/Topics/Terminology/TwoDGeomTerminology';
+import ThreeDGeomIntro from './components/Math-Branches/Coordinate-Geometry/3D-Geometry/Topics/5W1H/ThreeDGeomIntro';
+import ThreeDGeomTerminology from './components/Math-Branches/Coordinate-Geometry/3D-Geometry/Topics/Terminology/ThreeDGeomTerminology';
+import LinesIntro from './components/Math-Branches/Coordinate-Geometry/Lines-In-Space/Topics/5W1H/LinesIntro';
+import LinesTerminology from './components/Math-Branches/Coordinate-Geometry/Lines-In-Space/Topics/Terminology/LinesTerminology';
+import AppsIntro from './components/Math-Branches/Coordinate-Geometry/Applications/Topics/5W1H/AppsIntro';
+import AppsTerminology from './components/Math-Branches/Coordinate-Geometry/Applications/Topics/Terminology/AppsTerminology';
 import RelFuncIntro from './components/practice/class-11/maths/RelationsAndFunctions/Topics/5W1H/RelFuncIntro5W1H';
 import RelFuncTerminology from './components/practice/class-11/maths/RelationsAndFunctions/Topics/Terminology/RelFuncTerminology';
 import RelFuncSkills from './components/practice/class-11/maths/RelationsAndFunctions/Topics/Skills/RelFuncSkills';
@@ -1597,18 +1605,26 @@ function App() {
 
           {/* Coordinate Geometry: 2D Geometry */}
           <Route path="coordinate-geometry/2d-geometry" element={<ProtectedRoute redirectTo="/login"><TwoDGeometryDashboard /></ProtectedRoute>} />
+          <Route path="coordinate-geometry/2d-geometry/introduction" element={<ProtectedRoute redirectTo="/login"><TwoDGeomIntro /></ProtectedRoute>} />
+          <Route path="coordinate-geometry/2d-geometry/terminology" element={<ProtectedRoute redirectTo="/login"><TwoDGeomTerminology /></ProtectedRoute>} />
           <Route path="coordinate-geometry/2d-geometry/skills" element={<ProtectedRoute redirectTo="/login"><TwoDGeometrySkills /></ProtectedRoute>} />
 
           {/* Coordinate Geometry: 3D Geometry */}
           <Route path="coordinate-geometry/3d-geometry" element={<ProtectedRoute redirectTo="/login"><ThreeDGeometryDashboard /></ProtectedRoute>} />
+          <Route path="coordinate-geometry/3d-geometry/introduction" element={<ProtectedRoute redirectTo="/login"><ThreeDGeomIntro /></ProtectedRoute>} />
+          <Route path="coordinate-geometry/3d-geometry/terminology" element={<ProtectedRoute redirectTo="/login"><ThreeDGeomTerminology /></ProtectedRoute>} />
           <Route path="coordinate-geometry/3d-geometry/skills" element={<ProtectedRoute redirectTo="/login"><ThreeDGeometrySkills /></ProtectedRoute>} />
 
           {/* Coordinate Geometry: Lines In Space */}
           <Route path="coordinate-geometry/lines-in-space" element={<ProtectedRoute redirectTo="/login"><LinesInSpaceDashboard /></ProtectedRoute>} />
+          <Route path="coordinate-geometry/lines-in-space/introduction" element={<ProtectedRoute redirectTo="/login"><LinesIntro /></ProtectedRoute>} />
+          <Route path="coordinate-geometry/lines-in-space/terminology" element={<ProtectedRoute redirectTo="/login"><LinesTerminology /></ProtectedRoute>} />
           <Route path="coordinate-geometry/lines-in-space/skills" element={<ProtectedRoute redirectTo="/login"><LinesInSpaceSkills /></ProtectedRoute>} />
 
           {/* Coordinate Geometry: Applications */}
           <Route path="coordinate-geometry/applications" element={<ProtectedRoute redirectTo="/login"><ApplicationsDashboard /></ProtectedRoute>} />
+          <Route path="coordinate-geometry/applications/introduction" element={<ProtectedRoute redirectTo="/login"><AppsIntro /></ProtectedRoute>} />
+          <Route path="coordinate-geometry/applications/terminology" element={<ProtectedRoute redirectTo="/login"><AppsTerminology /></ProtectedRoute>} />
           <Route path="coordinate-geometry/applications/skills" element={<ProtectedRoute redirectTo="/login"><ApplicationsSkills /></ProtectedRoute>} />
           {/* The Fish Tale Topic Pages */}
           <Route path="the-fish-tale" element={<ProtectedRoute redirectTo="/login"><TheFishTaleLanding /></ProtectedRoute>} />

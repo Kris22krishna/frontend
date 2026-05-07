@@ -334,13 +334,31 @@
 
 .arithTermLayout {
     display: grid;
-    grid-template-columns: 220px minmax(0, 1fr);
-    gap: 20px;
-    align-items: start;
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 24px;
+    align-items: stretch;
+    max-width: 1100px;
+    margin: 0 auto;
 }
 
 .arithTermPanel {
     min-width: 0;
+    position: sticky;
+    top: 80px;
+    align-self: start;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,0,0,0.08) transparent;
+}
+
+.arithTermPanel::-webkit-scrollbar {
+    width: 4px;
+}
+
+.arithTermPanel::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.08);
+    border-radius: 4px;
 }
 
 .arithQuizPanel {
