@@ -29,7 +29,7 @@ export default function HeronsFormulaScenarioAssessmentEngine({ scenarios = [], 
     const isFinishedRef = useRef(false);
 
     useEffect(() => {
-        startSession({ nodeId: nodeId || 'herons-9-assess', sessionType: 'assessment' });
+        if (nodeId) startSession({ nodeId, sessionType: 'assessment' });
     }, []); // eslint-disable-line
 
     useEffect(() => {

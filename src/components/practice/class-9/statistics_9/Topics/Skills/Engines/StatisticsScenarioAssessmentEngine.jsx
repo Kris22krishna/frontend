@@ -29,7 +29,7 @@ export default function StatisticsScenarioAssessmentEngine({ scenarios = [], tit
     }, [scenarios]);
 
     useEffect(() => {
-        startSession({ nodeId: nodeId || 'stat9-skill-assessment', sessionType: 'assessment' });
+        if (nodeId) startSession({ nodeId, sessionType: 'assessment' });
     }, []); // eslint-disable-line
 
     useEffect(() => {

@@ -29,7 +29,7 @@ export default function LAScenarioAssessmentEngine({ scenarios = [], title, colo
     }, [scenarios]);
 
     useEffect(() => {
-        startSession({ nodeId: nodeId || 'la9-skill-assessment', sessionType: 'assessment' });
+        if (nodeId) startSession({ nodeId, sessionType: 'assessment' });
     }, []); // eslint-disable-line
 
     useEffect(() => {

@@ -28,7 +28,7 @@ export default function SurfaceAreasAndVolumesPracticeEngine({ skillId, color = 
     const isFinishedRef = useRef(false);
 
     useEffect(() => {
-        startSession({ nodeId: nodeId || `sav-9-skill-${skillId}`, sessionType: 'practice' });
+        if (nodeId) startSession({ nodeId, sessionType: 'practice' });
     }, []); // eslint-disable-line
 
     useEffect(() => {
@@ -99,7 +99,7 @@ export default function SurfaceAreasAndVolumesPracticeEngine({ skillId, color = 
 
     const handleRetry = () => {
         isFinishedRef.current = false;
-        startSession({ nodeId: nodeId || `sav-9-skill-${skillId}`, sessionType: 'practice' });
+        if (nodeId) startSession({ nodeId, sessionType: 'practice' });
         setQIndex(0);
         setAnswers({});
         setSelectedOpt(null);

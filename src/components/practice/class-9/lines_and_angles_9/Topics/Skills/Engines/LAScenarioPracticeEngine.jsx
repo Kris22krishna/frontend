@@ -31,7 +31,7 @@ export default function LAScenarioPracticeEngine({ scenarios = [], title, color 
     const isFinishedRef = useRef(false);
 
     useEffect(() => {
-        startSession({ nodeId: nodeId || 'la9-skill-practice', sessionType: 'practice' });
+        if (nodeId) startSession({ nodeId, sessionType: 'practice' });
     }, []); // eslint-disable-line
 
     useEffect(() => {
@@ -112,7 +112,7 @@ export default function LAScenarioPracticeEngine({ scenarios = [], title, color 
 
     const handleRetry = () => {
         isFinishedRef.current = false;
-        startSession({ nodeId: nodeId || 'la9-skill-practice', sessionType: 'practice' });
+        if (nodeId) startSession({ nodeId, sessionType: 'practice' });
         setQIndex(0);
         setAnswers({});
         setSelectedOpt(null);

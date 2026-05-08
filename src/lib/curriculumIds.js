@@ -936,6 +936,73 @@ export const NODE_IDS = {
   g9MathPolyZeroes:                        'a4091002-0002-0000-0000-000000000000',
   g9MathPolyFactorisation:                 'a4091002-0003-0000-0000-000000000000',
   g9MathPolyIdentities:                    'a4091002-0004-0000-0000-000000000000',
+
+  // Grade 9 Math: Linear Equations in Two Variables (Chapter 4)
+  g9MathLinearEquations2Var:               'a3091004-0000-0000-0000-000000000001',
+  g9MathLE2VFindingSolutions:              'a4091004-0001-0000-0000-000000000000',
+  g9MathLE2VStandardForm:                  'a4091004-0002-0000-0000-000000000000',
+  g9MathLE2VGraphing:                      'a4091004-0003-0000-0000-000000000000',
+  g9MathLE2VSpecialLines:                  'a4091004-0004-0000-0000-000000000000',
+  g9MathLE2VTerminologyQuiz:               'a4091004-0010-0000-0000-000000000000',
+
+  // Grade 9 Math: Lines and Angles (Chapter 5)
+  g9MathLinesAndAngles:                    'a3091005-0000-0000-0000-000000000001',
+  g9MathLALinearPair:                      'a4091005-0001-0000-0000-000000000000',
+  g9MathLAVerticallyOpposite:              'a4091005-0002-0000-0000-000000000000',
+  g9MathLAParallelTransversal:             'a4091005-0003-0000-0000-000000000000',
+  g9MathLAAngleSum:                        'a4091005-0004-0000-0000-000000000000',
+  g9MathLATerminologyQuiz:                 'a4091005-0010-0000-0000-000000000000',
+
+  // Grade 9 Math: Euclid's Geometry (Chapter 6)
+  g9MathEuclidsGeometry:                   'a3091006-0000-0000-0000-000000000001',
+  g9MathEGDefsAxioms:                      'a4091006-0001-0000-0000-000000000000',
+  g9MathEGPostulates:                      'a4091006-0002-0000-0000-000000000000',
+  g9MathEGEquivalents:                     'a4091006-0003-0000-0000-000000000000',
+  g9MathEGTerminologyQuiz:                 'a4091006-0010-0000-0000-000000000000',
+
+  // Grade 9 Math: Triangles (Chapter 7)
+  g9MathTriangles:                         'a3091007-0000-0000-0000-000000000001',
+  g9MathTriSkill1:                         'a4091007-0001-0000-0000-000000000000',
+  g9MathTriSkill2:                         'a4091007-0002-0000-0000-000000000000',
+  g9MathTriSkill3:                         'a4091007-0003-0000-0000-000000000000',
+  g9MathTriSkill4:                         'a4091007-0004-0000-0000-000000000000',
+  g9MathTriTerminologyQuiz:                'a4091007-0010-0000-0000-000000000000',
+
+  // Grade 9 Math: Quadrilaterals (Chapter 8)
+  g9MathQuadrilaterals:                    'a3091008-0000-0000-0000-000000000001',
+  g9MathQuadProperties:                    'a4091008-0001-0000-0000-000000000000',
+  g9MathQuadSpecialQuads:                  'a4091008-0002-0000-0000-000000000000',
+  g9MathQuadMidpointTheorem:               'a4091008-0003-0000-0000-000000000000',
+  g9MathQuadTerminologyQuiz:               'a4091008-0010-0000-0000-000000000000',
+
+  // Grade 9 Math: Circles (Chapter 10)
+  g9MathCircles:                           'a3091010-0000-0000-0000-000000000001',
+  g9MathCircleChordsPerp:                  'a4091010-0001-0000-0000-000000000000',
+  g9MathCircleArcsAngles:                  'a4091010-0002-0000-0000-000000000000',
+  g9MathCircleCyclicQuad:                  'a4091010-0003-0000-0000-000000000000',
+  g9MathCircleTerminologyQuiz:             'a4091010-0010-0000-0000-000000000000',
+
+  // Grade 9 Math: Heron's Formula (Chapter 12)
+  g9MathHeronsFormula:                     'a3091012-0000-0000-0000-000000000001',
+  g9MathHFSkill1:                          'a4091012-0001-0000-0000-000000000000',
+  g9MathHFSkill2:                          'a4091012-0002-0000-0000-000000000000',
+  g9MathHFSkill3:                          'a4091012-0003-0000-0000-000000000000',
+  g9MathHFTerminologyQuiz:                 'a4091012-0010-0000-0000-000000000000',
+
+  // Grade 9 Math: Surface Areas and Volumes (Chapter 13)
+  g9MathSurfaceAreasVolumes:               'a3091013-0000-0000-0000-000000000001',
+  g9MathSAVCuboidCube:                     'a4091013-0001-0000-0000-000000000000',
+  g9MathSAVCylinderCone:                   'a4091013-0002-0000-0000-000000000000',
+  g9MathSAVSphere:                         'a4091013-0003-0000-0000-000000000000',
+  g9MathSAVTerminologyQuiz:                'a4091013-0010-0000-0000-000000000000',
+
+  // Grade 9 Math: Statistics (Chapter 14)
+  g9MathStatistics:                        'a3091014-0000-0000-0000-000000000001',
+  g9MathStatSkill1:                        'a4091014-0001-0000-0000-000000000000',
+  g9MathStatSkill2:                        'a4091014-0002-0000-0000-000000000000',
+  g9MathStatSkill3:                        'a4091014-0003-0000-0000-000000000000',
+  g9MathStatTerminologyQuiz:               'a4091014-0010-0000-0000-000000000000',
+
   // ── GRADE 12 MATH: RELATIONS ──────────────────────────────────────────────
   g12MathRelations:                      'a3121001-0000-0000-0000-000000000001',
   g12MathRelationsCartesian:             'a4121001-0001-0000-0000-000000000000',
@@ -1399,6 +1466,72 @@ export const SLUG_TO_NODE_ID = {
   'g9-math-poly-factorisation':          NODE_IDS.g9MathPolyFactorisation,
   'g9-math-poly-identities':             NODE_IDS.g9MathPolyIdentities,
   'g9-math-poly-terminology':           NODE_IDS.g9MathPolyTerminologyQuiz,
+
+  // Grade 9 Math: Linear Equations in Two Variables
+  'g9-math-linear-equations-2var':          NODE_IDS.g9MathLinearEquations2Var,
+  'g9-math-le2v-finding-solutions':         NODE_IDS.g9MathLE2VFindingSolutions,
+  'g9-math-le2v-standard-form':             NODE_IDS.g9MathLE2VStandardForm,
+  'g9-math-le2v-graphing':                  NODE_IDS.g9MathLE2VGraphing,
+  'g9-math-le2v-special-lines':             NODE_IDS.g9MathLE2VSpecialLines,
+  'g9-math-le2v-terminology':               NODE_IDS.g9MathLE2VTerminologyQuiz,
+
+  // Grade 9 Math: Lines and Angles
+  'g9-math-lines-and-angles':               NODE_IDS.g9MathLinesAndAngles,
+  'g9-math-la-linear-pair':                 NODE_IDS.g9MathLALinearPair,
+  'g9-math-la-vertically-opposite':         NODE_IDS.g9MathLAVerticallyOpposite,
+  'g9-math-la-parallel-transversal':        NODE_IDS.g9MathLAParallelTransversal,
+  'g9-math-la-angle-sum':                   NODE_IDS.g9MathLAAngleSum,
+  'g9-math-la-terminology':                 NODE_IDS.g9MathLATerminologyQuiz,
+
+  // Grade 9 Math: Euclid's Geometry
+  'g9-math-euclids-geometry':               NODE_IDS.g9MathEuclidsGeometry,
+  'g9-math-eg-defs-axioms':                 NODE_IDS.g9MathEGDefsAxioms,
+  'g9-math-eg-postulates':                  NODE_IDS.g9MathEGPostulates,
+  'g9-math-eg-equivalents':                 NODE_IDS.g9MathEGEquivalents,
+  'g9-math-eg-terminology':                 NODE_IDS.g9MathEGTerminologyQuiz,
+
+  // Grade 9 Math: Triangles
+  'g9-math-triangles':                      NODE_IDS.g9MathTriangles,
+  'g9-math-tri-skill-1':                    NODE_IDS.g9MathTriSkill1,
+  'g9-math-tri-skill-2':                    NODE_IDS.g9MathTriSkill2,
+  'g9-math-tri-skill-3':                    NODE_IDS.g9MathTriSkill3,
+  'g9-math-tri-skill-4':                    NODE_IDS.g9MathTriSkill4,
+  'g9-math-tri-terminology':                NODE_IDS.g9MathTriTerminologyQuiz,
+
+  // Grade 9 Math: Quadrilaterals
+  'g9-math-quadrilaterals':                 NODE_IDS.g9MathQuadrilaterals,
+  'g9-math-quad-properties':                NODE_IDS.g9MathQuadProperties,
+  'g9-math-quad-special-quads':             NODE_IDS.g9MathQuadSpecialQuads,
+  'g9-math-quad-midpoint-theorem':          NODE_IDS.g9MathQuadMidpointTheorem,
+  'g9-math-quad-terminology':               NODE_IDS.g9MathQuadTerminologyQuiz,
+
+  // Grade 9 Math: Circles
+  'g9-math-circles':                        NODE_IDS.g9MathCircles,
+  'g9-math-circle-chords-perp':             NODE_IDS.g9MathCircleChordsPerp,
+  'g9-math-circle-arcs-angles':             NODE_IDS.g9MathCircleArcsAngles,
+  'g9-math-circle-cyclic-quad':             NODE_IDS.g9MathCircleCyclicQuad,
+  'g9-math-circle-terminology':             NODE_IDS.g9MathCircleTerminologyQuiz,
+
+  // Grade 9 Math: Heron's Formula
+  'g9-math-herons-formula':                 NODE_IDS.g9MathHeronsFormula,
+  'g9-math-hf-skill-1':                     NODE_IDS.g9MathHFSkill1,
+  'g9-math-hf-skill-2':                     NODE_IDS.g9MathHFSkill2,
+  'g9-math-hf-skill-3':                     NODE_IDS.g9MathHFSkill3,
+  'g9-math-hf-terminology':                 NODE_IDS.g9MathHFTerminologyQuiz,
+
+  // Grade 9 Math: Surface Areas and Volumes
+  'g9-math-surface-areas-volumes':          NODE_IDS.g9MathSurfaceAreasVolumes,
+  'g9-math-sav-cuboid-cube':                NODE_IDS.g9MathSAVCuboidCube,
+  'g9-math-sav-cylinder-cone':              NODE_IDS.g9MathSAVCylinderCone,
+  'g9-math-sav-sphere':                     NODE_IDS.g9MathSAVSphere,
+  'g9-math-sav-terminology':                NODE_IDS.g9MathSAVTerminologyQuiz,
+
+  // Grade 9 Math: Statistics
+  'g9-math-statistics':                     NODE_IDS.g9MathStatistics,
+  'g9-math-stat-skill-1':                   NODE_IDS.g9MathStatSkill1,
+  'g9-math-stat-skill-2':                   NODE_IDS.g9MathStatSkill2,
+  'g9-math-stat-skill-3':                   NODE_IDS.g9MathStatSkill3,
+  'g9-math-stat-terminology':               NODE_IDS.g9MathStatTerminologyQuiz,
 
   // Grade 8 Math: Comparing Quantities
   'g8-math-comparing-quantities':       NODE_IDS.g8MathComparingQuantities,

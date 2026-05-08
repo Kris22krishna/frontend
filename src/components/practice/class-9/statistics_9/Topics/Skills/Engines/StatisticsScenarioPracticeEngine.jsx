@@ -34,7 +34,7 @@ export default function StatisticsScenarioPracticeEngine({ scenarios = [], title
 
     // Initial load
     useEffect(() => {
-        startSession({ nodeId: nodeId || 'stat9-skill-practice', sessionType: 'practice' });
+        if (nodeId) startSession({ nodeId, sessionType: 'practice' });
     }, []); // eslint-disable-line
 
     // Timer
@@ -116,7 +116,7 @@ export default function StatisticsScenarioPracticeEngine({ scenarios = [], title
 
     const handleRetry = () => {
         isFinishedRef.current = false;
-        startSession({ nodeId: nodeId || 'stat9-skill-practice', sessionType: 'practice' });
+        if (nodeId) startSession({ nodeId, sessionType: 'practice' });
         setQIndex(0);
         setAnswers({});
         setSelectedOpt(null);

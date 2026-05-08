@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../surface_areas_and_volumes_9.module.css';
 import { LatexText } from '../../../../../LatexText';
+import { NODE_IDS } from '@/lib/curriculumIds';
 import {
     ConeAnatomyChart, ConeFormulasChart,
     SphereAnatomyChart, HemisphereChart, HemisphereVolumeChart,
@@ -14,7 +15,7 @@ import SurfaceAreasAndVolumesAssessmentEngine from './Engines/SurfaceAreasAndVol
 const SKILLS = [
     {
         id: 'cones',
-        nodeId: 'sav-9-1001-0000',
+        nodeId: NODE_IDS.g9MathSAVCuboidCube,
         title: 'Cones: Area & Volume',
         subtitle: 'Skill 1 · CSA, TSA & Volume',
         icon: '🍦',
@@ -51,7 +52,7 @@ const SKILLS = [
     },
     {
         id: 'spheres',
-        nodeId: 'sav-9-1002-0000',
+        nodeId: NODE_IDS.g9MathSAVCylinderCone,
         title: 'Spheres & Hemispheres',
         subtitle: 'Skill 2 · Areas & Volumes',
         icon: '🌍',
@@ -88,7 +89,7 @@ const SKILLS = [
     },
     {
         id: 'applications',
-        nodeId: 'sav-9-1003-0000',
+        nodeId: NODE_IDS.g9MathSAVSphere,
         title: 'Real World Costs & Applications',
         subtitle: 'Skill 3 · Applied Mathematics',
         icon: '💰',

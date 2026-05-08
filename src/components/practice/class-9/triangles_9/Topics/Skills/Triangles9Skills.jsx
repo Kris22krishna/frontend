@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../triangles_9.module.css';
 import { LatexText } from '../../../../../LatexText';
+import { NODE_IDS } from '@/lib/curriculumIds';
+
 
 import TrianglesScenarioPracticeEngine from './Engines/TrianglesScenarioPracticeEngine';
 import TrianglesScenarioAssessmentEngine from './Engines/TrianglesScenarioAssessmentEngine';
@@ -19,7 +21,7 @@ import {
 const SKILLS = [
     {
         id: 'sas-congruence',
-        nodeId: 'triangles9-0001',
+        nodeId: NODE_IDS.g9MathTriSkill1,
         title: 'SAS Congruence Axiom',
         subtitle: 'Skill 1 · Side-Angle-Side',
         icon: '📐',
@@ -42,7 +44,7 @@ const SKILLS = [
     },
     {
         id: 'asa-congruence',
-        nodeId: 'triangles9-0002',
+        nodeId: NODE_IDS.g9MathTriSkill2,
         title: 'ASA/AAS Congruence',
         subtitle: 'Skill 2 · Angle-Side-Angle',
         icon: '🔄',
@@ -65,7 +67,7 @@ const SKILLS = [
     },
     {
         id: 'sss-congruence',
-        nodeId: 'triangles9-0003',
+        nodeId: NODE_IDS.g9MathTriSkill3,
         title: 'SSS Congruence',
         subtitle: 'Skill 3 · Side-Side-Side',
         icon: '📏',
@@ -88,7 +90,7 @@ const SKILLS = [
     },
     {
         id: 'rhs-congruence',
-        nodeId: 'triangles9-0004',
+        nodeId: NODE_IDS.g9MathTriSkill4,
         title: 'RHS Congruence',
         subtitle: 'Skill 4 · Right angle-Hypotenuse-Side',
         icon: '📐',

@@ -27,7 +27,7 @@ export default function TrianglesScenarioAssessmentEngine({ scenarios = [], titl
     }, [scenarios]);
 
     useEffect(() => {
-        startSession({ nodeId: nodeId || 'triangles9-skill-assessment', sessionType: 'assessment' });
+        if (nodeId) startSession({ nodeId, sessionType: 'assessment' });
     }, []); // eslint-disable-line
 
     useEffect(() => {

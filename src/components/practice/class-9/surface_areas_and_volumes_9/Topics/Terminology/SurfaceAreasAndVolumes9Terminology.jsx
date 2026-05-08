@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../surface_areas_and_volumes_9.module.css';
 import { LatexText } from '../../../../../LatexText';
@@ -182,6 +184,13 @@ function QuizEngine({ onBack }) {
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
     const quizAnswersRef = useRef([]);
+    const isFinishedRef = useRef(false);
+
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+
+    useEffect(() => {
+        startSession({ nodeId: NODE_IDS.g9MathSAVTerminologyQuiz, sessionType: 'quiz' });
+    }, []); // eslint-disable-line
 
     const q = QUIZ_QUESTIONS[current];
     const color = '#0f4c81';
@@ -194,6 +203,7 @@ function QuizEngine({ onBack }) {
         const isCorrect = idx === q.ans;
         if (isCorrect) setScore((s) => s + 1);
         quizAnswersRef.current[current] = { question_index: current, answer: idx, is_correct: isCorrect };
+        logAnswer({ questionIndex: current + 1, answerJson: { selected: idx, correct: q.ans }, isCorrect: isCorrect ? 1.0 : 0.0 });
     };
 
     const handleNext = () => {
@@ -222,7 +232,11 @@ function QuizEngine({ onBack }) {
                     {pct >= 75 ? 'Great understanding of Surface Areas vocabulary!' : 'Review the formulas and try again for a higher score.'}
                 </p>
                 <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-                    <button className={styles['btn-primary']} onClick={() => { quizAnswersRef.current = []; setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false); }}>
+                    <button className={styles['btn-primary']} onClick={() => {
+                        quizAnswersRef.current = []; isFinishedRef.current = false;
+                        setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false);
+                        startSession({ nodeId: NODE_IDS.g9MathSAVTerminologyQuiz, sessionType: 'quiz' });
+                    }}>
                         Try Again
                     </button>
                     <button className={styles['nav-back']} onClick={onBack}>Return to Terms</button>

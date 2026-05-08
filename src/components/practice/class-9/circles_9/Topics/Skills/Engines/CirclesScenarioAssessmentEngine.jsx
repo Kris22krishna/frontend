@@ -29,7 +29,7 @@ export default function CirclesScenarioAssessmentEngine({ scenarios = [], title,
     }, [scenarios]);
 
     useEffect(() => {
-        startSession({ nodeId: nodeId || 'circles-9-skill-assessment', sessionType: 'assessment' });
+        if (nodeId) startSession({ nodeId, sessionType: 'assessment' });
     }, []); // eslint-disable-line
 
     useEffect(() => {

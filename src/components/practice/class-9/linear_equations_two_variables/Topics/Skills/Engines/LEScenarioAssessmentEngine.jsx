@@ -25,7 +25,7 @@ export default function LEScenarioAssessmentEngine({ scenarios = [], title, colo
     }, [scenarios]);
 
     useEffect(() => {
-        startSession({ nodeId: nodeId || 'le9-skill-assessment', sessionType: 'assessment' });
+        if (nodeId) startSession({ nodeId, sessionType: 'assessment' });
     }, []); // eslint-disable-line
 
     useEffect(() => {

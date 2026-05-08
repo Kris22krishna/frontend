@@ -27,7 +27,7 @@ export default function QuadrilateralsScenarioAssessmentEngine({ scenarios = [],
     }, [scenarios]);
 
     useEffect(() => {
-        startSession({ nodeId: nodeId || 'quadrilaterals9-skill-assessment', sessionType: 'assessment' });
+        if (nodeId) startSession({ nodeId, sessionType: 'assessment' });
     }, []); // eslint-disable-line
 
     useEffect(() => {

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from '../../../coordinate_geometry_9.module.css';
 import { LatexText } from '../../../../../../LatexText';
 import CGSvgGraph from './CGSvgGraph';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 // Fisher-Yates sample
 function sample(arr, n) {
@@ -13,7 +14,7 @@ function sample(arr, n) {
     return copy.slice(0, n);
 }
 
-export default function CGPracticeEngine({ questionPool, sampleSize = 20, title, color, onBack, skillId }) {
+export default function CGPracticeEngine({ questionPool, sampleSize = 20, title, color, onBack, nodeId }) {
     const [questions, setQuestions] = useState(() => sample(questionPool, sampleSize));
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);       // for mcq
@@ -23,6 +24,14 @@ export default function CGPracticeEngine({ questionPool, sampleSize = 20, title,
     const [plotCorrect, setPlotCorrect] = useState(false);
     const [finished, setFinished] = useState(false);
     const [timeTaken, setTimeTaken] = useState(0);
+    const answersRef = useRef([]);
+
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+
+    useEffect(() => {
+        if (nodeId) startSession({ nodeId, sessionType: 'practice' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [nodeId]);
 
     useEffect(() => {
         if (finished) return;
@@ -45,7 +54,11 @@ export default function CGPracticeEngine({ questionPool, sampleSize = 20, title,
         if (answered) return;
         setSelected(idx);
         setAnswered(true);
-        if (idx === q.correct) setScore((s) => s + 1);
+        const isCorrect = idx === q.correct;
+        if (isCorrect) setScore((s) => s + 1);
+        const entry = { nodeId, questionIndex: current, isCorrect: isCorrect ? 1 : 0, timeTakenMs: 0 };
+        answersRef.current.push(entry);
+        logAnswer(entry);
     };
 
     const handlePlotSubmit = () => {
@@ -54,11 +67,17 @@ export default function CGPracticeEngine({ questionPool, sampleSize = 20, title,
         setPlotCorrect(correct);
         setAnswered(true);
         if (correct) setScore((s) => s + 1);
+        const entry = { nodeId, questionIndex: current, isCorrect: correct ? 1 : 0, timeTakenMs: 0 };
+        answersRef.current.push(entry);
+        logAnswer(entry);
     };
 
-    const handleNext = () => {
-        if (current + 1 >= questions.length) { setFinished(true); }
-        else { 
+    const handleNext = async () => {
+        if (current + 1 >= questions.length) {
+            setFinished(true);
+            const finalScore = score + (answered && (selected === q.correct || plotCorrect) ? 0 : 0); // score is already updated
+            await finishSession({ answers_payload: answersRef.current });
+        } else { 
             setCurrent((c) => c + 1); 
             setSelected(null); 
             setUserPoint(null); 
@@ -68,8 +87,10 @@ export default function CGPracticeEngine({ questionPool, sampleSize = 20, title,
     };
 
     const handleRetry = () => {
+        answersRef.current = [];
         setQuestions(sample(questionPool, sampleSize));
         setCurrent(0); setSelected(null); setUserPoint(null); setAnswered(false); setPlotCorrect(false); setScore(0); setFinished(false); setTimeTaken(0);
+        if (nodeId) startSession({ nodeId, sessionType: 'practice' });
     };
     if (finished) {
         const pct = Math.round((score / questions.length) * 100);
