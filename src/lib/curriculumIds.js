@@ -336,6 +336,34 @@ export const NODE_IDS = {
   mathBranchAlgebraExponentsFractionalLaw:  'f3000000-0000-0000-0000-000000000009',
   mathBranchAlgebraExponentsStandardForm:   'f3000000-0000-0000-0000-000000000010',
   mathBranchAlgebraExponentsComparing:      'f3000000-0000-0000-0000-000000000011',
+
+  // ── MATH-BRANCHES MODULE: TRIGONOMETRY ─────────────────────────────────────
+  mathBranchTrigonometry:                   'f1000000-0000-0000-0000-000000000002',
+
+  // Grade 10 Intro
+  mathBranchTrigIntroTerminology:           'f3000000-0000-0000-0000-000000000100',
+  mathBranchTrigIntro1:                     'f3000000-0000-0000-0000-000000000101',
+  mathBranchTrigIntro2:                     'f3000000-0000-0000-0000-000000000102',
+  mathBranchTrigIntro3:                     'f3000000-0000-0000-0000-000000000103',
+  
+  // Grade 10 Apps
+  mathBranchTrigAppTerminology:             'f3000000-0000-0000-0000-000000000110',
+  mathBranchTrigApp1:                       'f3000000-0000-0000-0000-000000000111',
+  mathBranchTrigApp2:                       'f3000000-0000-0000-0000-000000000112',
+  
+  // Grade 11 Functions
+  mathBranchTrigFuncTerminology:            'f3000000-0000-0000-0000-000000000120',
+  mathBranchTrigFunc1:                      'f3000000-0000-0000-0000-000000000121',
+  mathBranchTrigFunc2:                      'f3000000-0000-0000-0000-000000000122',
+  mathBranchTrigFunc3:                      'f3000000-0000-0000-0000-000000000123',
+  mathBranchTrigFunc4:                      'f3000000-0000-0000-0000-000000000124',
+  
+  // Grade 12 Inverse
+  mathBranchInverseTrigTerminology:         'f3000000-0000-0000-0000-000000000130',
+  mathBranchInverseTrig1:                   'f3000000-0000-0000-0000-000000000131',
+  mathBranchInverseTrig2:                   'f3000000-0000-0000-0000-000000000132',
+  mathBranchInverseTrig3:                   'f3000000-0000-0000-0000-000000000133',
+
   // ── 5. CLASS 10 MATH ─────────────────────────────────────────────────────
 
   // Grade 10 Math: Surface Areas and Volumes (Chapter 13)
@@ -454,6 +482,21 @@ export const NODE_IDS = {
   g10MathTrigIdentities:                    'a4101008-0006-0000-0000-000000000000',
   g10MathTrigSimplifyProve:                 'a4101008-0007-0000-0000-000000000000',
   g10MathTrigAngleProblems:                 'a4101008-0008-0000-0000-000000000000',
+  g10MathTrigIntroTerminologyQuiz:          'a4101008-0010-0000-0000-000000000000',
+
+  // Grade 10 Math: Some Applications of Trigonometry (Chapter 9)
+  g10MathTrigApp:                           'a3101009-0000-0000-0000-000000000001',
+  g10MathTrigAppHeightsDistances:           'a4101009-0001-0000-0000-000000000000',
+  g10MathTrigAppMultiStep:                  'a4101009-0002-0000-0000-000000000000',
+  g10MathTrigAppTerminologyQuiz:            'a4101009-0010-0000-0000-000000000000',
+
+  // Grade 11 Math: Trigonometric Functions (Chapter 3)
+  g11MathTrigFunc:                          'a3111003-0000-0000-0000-000000000001',
+  g11MathTrigFuncRadians:                   'a4111003-0001-0000-0000-000000000000',
+  g11MathTrigFuncGraphs:                    'a4111003-0002-0000-0000-000000000000',
+  g11MathTrigFuncEquations:                 'a4111003-0003-0000-0000-000000000000',
+  g11MathTrigFuncRules:                     'a4111003-0004-0000-0000-000000000000',
+  g11MathTrigFuncTerminologyQuiz:           'a4111003-0010-0000-0000-000000000000',
   
   // Grade 10 Math: Probability (Chapter 15)
   g10MathProbability:                       'a3101015-0000-0000-0000-000000000001',
@@ -979,6 +1022,29 @@ export const NODE_IDS = {
   // Terminology Quiz
   g11PhysLOMTerminologyQuiz:               'd4111505-0010-0000-0000-000000000000',
 
+  // Ch 3: Motion in a Straight Line
+  g11PhysicsMSL:                           'd3111503-0000-0000-0000-000000000001',
+
+  // Skills (5 skills)
+  g11PhysMSLDistanceDisplacement:          'd4111503-0001-0000-0000-000000000000',
+  g11PhysMSLVelocityAcceleration:          'd4111503-0002-0000-0000-000000000000',
+  g11PhysMSLKinematicEquations:            'd4111503-0003-0000-0000-000000000000',
+  g11PhysMSLMotionGraphs:                  'd4111503-0004-0000-0000-000000000000',
+  g11PhysMSLRelativeVelocity:              'd4111503-0005-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11PhysMSLTerminologyQuiz:               'd4111503-0010-0000-0000-000000000000',
+
+  // ── GRADE 12 PHYSICS: Electric Charges and Fields (Chapter 1) ────────────
+  g12PhysECFChapter:               'b3121001-0000-0000-0000-000000000001',
+  g12PhysECFElectricChargeProps:   'b4121001-0001-0000-0000-000000000000',
+  g12PhysECFCoulombsLaw:           'b4121001-0002-0000-0000-000000000000',
+  g12PhysECFElectricField:         'b4121001-0003-0000-0000-000000000000',
+  g12PhysECFFieldLinesFlux:        'b4121001-0004-0000-0000-000000000000',
+  g12PhysECFElectricDipole:        'b4121001-0005-0000-0000-000000000000',
+  g12PhysECFGaussLaw:              'b4121001-0006-0000-0000-000000000000',
+  g12PhysECFChargeDistributions:   'b4121001-0007-0000-0000-000000000000',
+  g12PhysECFTerminologyQuiz:      'b4121001-0010-0000-0000-000000000000',
   // Ch 6: Work, Energy and Power
   g11PhysicsWEP:                           'd3111506-0000-0000-0000-000000000001',
 
@@ -1045,7 +1111,32 @@ export const NODE_IDS = {
   g11BiolTheCellTerminologyQuiz:           'e4111604-0010-0000-0000-000000000000',
 
   // Ch 8: Cell — Structure and Functions (legacy test)
-  g11BiologyCellStructure:                 'e4111608-0001-0000-0000-000000000000',
+  // g11BiologyCellStructure:                 'e4111608-0001-0000-0000-000000000000',
+  // Grade 12 Chemistry: Solutions
+  g12ChemSolutions:                            'e3121601-0000-0000-0000-000000000001',
+  g12ChemSolutionsTypes:                       'e4121601-0001-0000-0000-000000000000',
+  g12ChemSolutionsConcentration:               'e4121601-0002-0000-0000-000000000000',
+  g12ChemSolutionsSolubility:                  'e4121601-0003-0000-0000-000000000000',
+  g12ChemSolutionsVapourPressure:              'e4121601-0004-0000-0000-000000000000',
+  g12ChemSolutionsIdeal:                       'e4121601-0005-0000-0000-000000000000',
+  g12ChemSolutionsColligative:                 'e4121601-0006-0000-0000-000000000000',
+  g12ChemSolutionsTerminologyQuiz:             'e4121601-0010-0000-0000-000000000000',
+  g12ChemSolutionsIntro:                       'e4121601-0011-0000-0000-000000000000',
+  g12ChemSolutionsConnectomics:                'e4121601-0012-0000-0000-000000000000',
+  g12ChemSolutionsVirtualLab:                  'e4121601-0013-0000-0000-000000000000',
+  g12ChemSolutionsExamEdge:                    'e4121601-0014-0000-0000-000000000000',
+
+  // ── GRADE 12 BIOLOGY: Sexual Reproduction in Flowering Plants (Chapter 2) ─
+  // Prefix: e = Biology | Biology subject code: 16 | Chapter: 02
+  g12BiolSexualReproduction:                   'e3121602-0000-0000-0000-000000000001',
+
+  // Skills (5 skills)
+  g12BiolSRTheFlower:                          'e4121602-0001-0000-0000-000000000000',
+  g12BiolSRPreFertilisation:                   'e4121602-0002-0000-0000-000000000000',
+  g12BiolSRDoubleFertilisation:                'e4121602-0003-0000-0000-000000000000',
+  g12BiolSRPostFertilisation:                  'e4121602-0004-0000-0000-000000000000',
+  g12BiolSRApomixisPolyembryony:               'e4121602-0005-0000-0000-000000000000',
+  g12BiolSRTerminologyQuiz:                    'e4121602-0010-0000-0000-000000000000',
 };
 
 /**
@@ -1057,6 +1148,25 @@ export const SLUG_TO_NODE_ID = {
   'math-branch-algebra-exponents':      NODE_IDS.mathBranchAlgebraExponents,
   'math-branch-algebra-solving':        NODE_IDS.mathBranchAlgebraSolving,
   'math-branch-algebra-word-problems':  NODE_IDS.mathBranchAlgebraWordProblems,
+  
+  // Math Branches: Trigonometry
+  'math-branch-trigonometry':           NODE_IDS.mathBranchTrigonometry,
+  'trig-intro-terminology':             NODE_IDS.mathBranchTrigIntroTerminology,
+  'trig-intro-1':                       NODE_IDS.mathBranchTrigIntro1,
+  'trig-intro-2':                       NODE_IDS.mathBranchTrigIntro2,
+  'trig-intro-3':                       NODE_IDS.mathBranchTrigIntro3,
+  'trig-app-terminology':               NODE_IDS.mathBranchTrigAppTerminology,
+  'trig-app-1':                         NODE_IDS.mathBranchTrigApp1,
+  'trig-app-2':                         NODE_IDS.mathBranchTrigApp2,
+  'trig-func-terminology':              NODE_IDS.mathBranchTrigFuncTerminology,
+  'trig-func-1':                        NODE_IDS.mathBranchTrigFunc1,
+  'trig-func-2':                        NODE_IDS.mathBranchTrigFunc2,
+  'trig-func-3':                        NODE_IDS.mathBranchTrigFunc3,
+  'trig-func-4':                        NODE_IDS.mathBranchTrigFunc4,
+  'inverse-trig-terminology':           NODE_IDS.mathBranchInverseTrigTerminology,
+  'inverse-trig-1':                     NODE_IDS.mathBranchInverseTrig1,
+  'inverse-trig-2':                     NODE_IDS.mathBranchInverseTrig2,
+  'inverse-trig-3':                     NODE_IDS.mathBranchInverseTrig3,
   
   // Grade-based Slugs
   'g10-science-chemical-reactions':    NODE_IDS.g10ScienceChemicalReactions,
@@ -1169,6 +1279,15 @@ export const SLUG_TO_NODE_ID = {
   'g11-phys-lom-circular-motion':              NODE_IDS.g11PhysLOMCircularMotion,
   'g11-phys-lom-terminology':                  NODE_IDS.g11PhysLOMTerminologyQuiz,
 
+  // Grade 11 Physics: Motion in a Straight Line
+  'g11-phys-msl':                              NODE_IDS.g11PhysicsMSL,
+  'g11-phys-msl-distance-displacement':        NODE_IDS.g11PhysMSLDistanceDisplacement,
+  'g11-phys-msl-velocity-acceleration':        NODE_IDS.g11PhysMSLVelocityAcceleration,
+  'g11-phys-msl-kinematic-equations':          NODE_IDS.g11PhysMSLKinematicEquations,
+  'g11-phys-msl-motion-graphs':                NODE_IDS.g11PhysMSLMotionGraphs,
+  'g11-phys-msl-relative-velocity':            NODE_IDS.g11PhysMSLRelativeVelocity,
+  'g11-phys-msl-terminology':                  NODE_IDS.g11PhysMSLTerminologyQuiz,
+
   // Grade 11 Physics: Work, Energy and Power
   'g11-phys-wep':                              NODE_IDS.g11PhysicsWEP,
   'g11-phys-wep-work-calc':                    NODE_IDS.g11PhysWEPWorkCalc,
@@ -1213,7 +1332,18 @@ export const SLUG_TO_NODE_ID = {
   'g11-bio-the-cell-terminology':              NODE_IDS.g11BiolTheCellTerminologyQuiz,
 
   // Grade 11 Biology: Cell — Structure and Functions (legacy test)
-  'g11-bio-cell-structure':                    NODE_IDS.g11BiologyCellStructure,
+  // 'g11-bio-cell-structure':                    NODE_IDS.g11BiologyCellStructure,
+
+  // Grade 12 Physics: Electric Charges and Fields
+  'g12-phys-ecf':                       NODE_IDS.g12PhysECFChapter,
+  'g12-phys-ecf-charge-props':          NODE_IDS.g12PhysECFElectricChargeProps,
+  'g12-phys-ecf-coulombs-law':          NODE_IDS.g12PhysECFCoulombsLaw,
+  'g12-phys-ecf-electric-field':        NODE_IDS.g12PhysECFElectricField,
+  'g12-phys-ecf-field-lines-flux':      NODE_IDS.g12PhysECFFieldLinesFlux,
+  'g12-phys-ecf-electric-dipole':       NODE_IDS.g12PhysECFElectricDipole,
+  'g12-phys-ecf-gauss-law':             NODE_IDS.g12PhysECFGaussLaw,
+  'g12-phys-ecf-charge-distributions':  NODE_IDS.g12PhysECFChargeDistributions,
+  'g12-phys-ecf-terminology':           NODE_IDS.g12PhysECFTerminologyQuiz,
 
   // Grade 12 Math: Relations
   'g12-math-relations':                        NODE_IDS.g12MathRelations,
@@ -1260,6 +1390,7 @@ export const SLUG_TO_NODE_ID = {
   'g12-math-itf-principal':                    NODE_IDS.g12MathITFPrincipal,
   'g12-math-itf-simplification':               NODE_IDS.g12MathITFSimplification,
   'g12-math-itf-terminology':                  NODE_IDS.g12MathITFTerminologyQuiz,
+
 
   // Grade 9 Math: Polynomials
   'g9-math-polynomials':                NODE_IDS.g9MathPolynomials,
@@ -1374,4 +1505,27 @@ export const SLUG_TO_NODE_ID = {
   'g1-math-numbers-51-100-comparison': NODE_IDS.g1MathNumbers51100Comparison,
   'g1-math-numbers-51-100-skip':       NODE_IDS.g1MathNumbers51100Skip,
   'g1-math-numbers-51-100-mixed':      NODE_IDS.g1MathNumbers51100Mixed,
+
+  // Grade 12 Chemistry: Solutions
+  'g12-chem-solutions':                        NODE_IDS.g12ChemSolutions,
+  'g12-chem-solutions-types':                  NODE_IDS.g12ChemSolutionsTypes,
+  'g12-chem-solutions-concentration':          NODE_IDS.g12ChemSolutionsConcentration,
+  'g12-chem-solutions-solubility':             NODE_IDS.g12ChemSolutionsSolubility,
+  'g12-chem-solutions-vapour-pressure':        NODE_IDS.g12ChemSolutionsVapourPressure,
+  'g12-chem-solutions-ideal':                  NODE_IDS.g12ChemSolutionsIdeal,
+  'g12-chem-solutions-colligative':            NODE_IDS.g12ChemSolutionsColligative,
+  'g12-chem-solutions-terminology':            NODE_IDS.g12ChemSolutionsTerminologyQuiz,
+  'g12-chem-solutions-introduction':           NODE_IDS.g12ChemSolutionsIntro,
+  'g12-chem-solutions-connectomics':           NODE_IDS.g12ChemSolutionsConnectomics,
+  'g12-chem-solutions-virtual-lab':            NODE_IDS.g12ChemSolutionsVirtualLab,
+  'g12-chem-solutions-exam-edge':               NODE_IDS.g12ChemSolutionsExamEdge,
+
+  // Grade 12 Biology: Sexual Reproduction in Flowering Plants
+  'g12-bio-sexual-reproduction':               NODE_IDS.g12BiolSexualReproduction,
+  'g12-bio-sr-the-flower':                     NODE_IDS.g12BiolSRTheFlower,
+  'g12-bio-sr-pre-fertilisation':              NODE_IDS.g12BiolSRPreFertilisation,
+  'g12-bio-sr-double-fertilisation':           NODE_IDS.g12BiolSRDoubleFertilisation,
+  'g12-bio-sr-post-fertilisation':             NODE_IDS.g12BiolSRPostFertilisation,
+  'g12-bio-sr-apomixis-polyembryony':          NODE_IDS.g12BiolSRApomixisPolyembryony,
+  'g12-bio-sr-terminology':                    NODE_IDS.g12BiolSRTerminologyQuiz,
 };

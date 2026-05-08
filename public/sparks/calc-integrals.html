@@ -73,9 +73,7 @@ canvas{display:block;width:100%;border-radius:8px}
     <div class="canvas-wrap"><canvas id="intCanvas" height="200"></canvas></div>
     <div class="slider-row"><label>From a =</label><input type="range" min="0" max="2" step="0.1" value="0" id="sla" oninput="updateI()"><span id="slav">0.0</span></div>
     <div class="slider-row"><label>To b =</label><input type="range" min="0" max="4" step="0.1" value="2" id="slb" oninput="updateI()"><span id="slbv">2.0</span></div>
-    <div class="slider-row"><label>Rectangles</label><input type="range" min="2" max="60" step="1" value="8" id="slr" oninput="updateI()"><span id="slrv">8</span></div>
     <div class="rrow">
-      <div class="rcard"><div class="rlabel">Rectangles</div><div class="rval amber" id="rv-r">8</div></div>
       <div class="rcard"><div class="rlabel">Approx area</div><div class="rval amber" id="rv-approx">2.63</div></div>
       <div class="rcard"><div class="rlabel">True area</div><div class="rval green" id="rv-true">2.67</div></div>
     </div>
@@ -96,8 +94,8 @@ canvas{display:block;width:100%;border-radius:8px}
 </div>
 <script>
 const fns={
-  sq:{fn:x=>x*x,exact:(a,b)=>b*b*b/3-a*a*a/3,rule:'f(x)=x²  →  integral = x³/3. Slide more rectangles to get closer to 2.667!',story:'A parabola. The area under it grows quickly as we go right. More rectangles = much better accuracy!'},
-  lin:{fn:x=>x,exact:(a,b)=>b*b/2-a*a/2,rule:'f(x)=x  →  integral = x²/2. The area is a triangle — base × height ÷ 2!',story:'A straight line from zero. The area is just a triangle. Even a few rectangles get close!'},
+  sq:{fn:x=>x*x,exact:(a,b)=>b*b*b/3-a*a*a/3,rule:'f(x)=x²  →  integral = x³/3. The area is exact when calculated smoothly!',story:'A parabola. The area under it grows quickly as we go right. Filling it with infinite thin rectangles gives the exact area!'},
+  lin:{fn:x=>x,exact:(a,b)=>b*b/2-a*a/2,rule:'f(x)=x  →  integral = x²/2. The area is a triangle — base × height ÷ 2!',story:'A straight line from zero. The area is just a triangle.'},
   sin:{fn:x=>Math.sin(x),exact:(a,b)=>-Math.cos(b)+Math.cos(a),rule:'f(x)=sin(x)  →  integral = −cos(x). One full wave from 0 to π gives area = 2.',story:'A wave! The area under the first hump (0 to π) is exactly 2. Negative parts cancel positive!'},
   const:{fn:x=>2,exact:(a,b)=>2*(b-a),rule:'f(x)=2  →  integral = 2×(b−a). A flat line, area is just a rectangle!',story:'A flat line at height 2. The area is just width × height. Even 2 rectangles are perfect!'},
 };
@@ -106,12 +104,10 @@ function setFn(k,btn){cur=k;document.querySelectorAll('.fn-btn').forEach(b=>b.cl
 function updateI(){
   let a=parseFloat(document.getElementById('sla').value);
   let b=parseFloat(document.getElementById('slb').value);
-  const n=parseInt(document.getElementById('slr').value);
+  const n = 200;
   if(b<=a)b=a+0.1;
   document.getElementById('slav').textContent=a.toFixed(1);
   document.getElementById('slbv').textContent=b.toFixed(1);
-  document.getElementById('slrv').textContent=n;
-  document.getElementById('rv-r').textContent=n;
   const dx=(b-a)/n;let approx=0;
   for(let i=0;i<n;i++)approx+=fns[cur].fn(a+(i+0.5)*dx)*dx;
   const exact=fns[cur].exact(a,b);

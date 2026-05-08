@@ -130,6 +130,18 @@ export function HomeGrades() {
                                 </div>
                                 <span className="opacity-0 group-hover:opacity-100 transition-opacity text-purple-600 font-bold text-lg">→</span>
                             </button>
+                            <button
+                                id="trigonometry-btn"
+                                onClick={() => navigate('/trigonometry/dashboard')}
+                                className="w-full text-left px-6 py-4 rounded-xl bg-white/80 hover:bg-emerald-100 transition-all duration-300 shadow-[0_6px_12px_rgba(0,0,0,0.15),inset_0_-2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_16px_rgba(0,0,0,0.2),inset_0_-3px_6px_rgba(0,0,0,0.15)] hover:scale-105 border-b-4 border-emerald-400/50 group flex items-center justify-between"
+                                style={{ transform: 'translateZ(0)' }}
+                            >
+                                <div>
+                                    <span className="text-gray-800 font-semibold block">Trigonometry</span>
+                                    <span className="text-gray-500 text-xs">Angles, Ratios & Functions</span>
+                                </div>
+                                <span className="opacity-0 group-hover:opacity-100 transition-opacity text-emerald-600 font-bold text-lg">→</span>
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -74,6 +74,10 @@ tr:nth-child(even) td{background:var(--bg)}
       <button class="fn-btn" onclick="setFn('hole',this)">f(x) = (x²−1)/(x−1) — has a hole!</button>
     </div>
     <div class="canvas-wrap"><canvas id="limCanvas" height="180"></canvas></div>
+    <div class="hole-info" id="hole-info" style="display:none; background:var(--coral-light); border:1.5px solid var(--coral); border-radius:12px; padding:12px 16px; margin-bottom:1rem; font-size:14px; color:#712B13;">
+      <strong style="color:var(--coral); font-size: 15px;">🔍 What's that open circle?</strong>
+      <p style="margin-top:6px; line-height:1.5;">It's a <strong>hole (removable discontinuity)</strong>. It occurs because plugging in x=1 gives 0/0, which is undefined. The function has no value exactly <em>at</em> x=1, but the <strong>limit still exists</strong> because the graph approaches 2 from both sides!</p>
+    </div>
     <div class="side-row">
       <div class="side-btn al" onclick="setSide('left',this)">← From the left</div>
       <div class="side-btn" onclick="setSide('right',this)">From the right →</div>
@@ -107,7 +111,7 @@ const fns={
   hole:{fn:x=>(x*x-1)/(x-1),actual:x=>x===1?NaN:(x*x-1)/(x-1),story:'This function has a HOLE at x=1 (0÷0 is undefined!). But as we sneak close, f(x) heads to 2. The limit still exists!'},
 };
 let cur='linear',side='left';
-function setFn(k,btn){cur=k;document.querySelectorAll('.fn-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('story').textContent=fns[k].story;update();}
+function setFn(k,btn){cur=k;document.querySelectorAll('.fn-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('story').textContent=fns[k].story;document.getElementById('hole-info').style.display = k === 'hole' ? 'block' : 'none';update();}
 function setSide(s,btn){side=s;document.querySelectorAll('.side-btn').forEach(b=>{b.classList.remove('al','ar');});btn.classList.add(s==='left'?'al':'ar');update();}
 function update(){
   const steps=side==='left'?[0.5,0.8,0.9,0.95,0.99,0.999]:[1.5,1.2,1.1,1.05,1.01,1.001];
@@ -137,7 +141,11 @@ function drawGraph(){
   for(let px=0;px<W;px++){const x=(px-cx)/scx;if(Math.abs(x-1)<0.02){started=false;continue;}const y=fns[cur].fn(x);if(!isFinite(y)||Math.abs(y)>10){started=false;continue;}const py=cy-y*scy;started?(ctx.lineTo(px,py)):(ctx.moveTo(px,py));started=true;}
   ctx.stroke();
   const dotX=cx+1*scx,dotY=cy-fns[cur].fn(0.9999)*scy;
-  if(cur==='hole'){ctx.strokeStyle='#993C1D';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(dotX,dotY,5,0,Math.PI*2);ctx.stroke();}
+  if(cur==='hole'){
+    ctx.strokeStyle='#993C1D';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(dotX,dotY,5,0,Math.PI*2);ctx.stroke();
+    // Highlight ring
+    ctx.strokeStyle='rgba(153, 60, 29, 0.3)';ctx.lineWidth=8;ctx.beginPath();ctx.arc(dotX,dotY,5,0,Math.PI*2);ctx.stroke();
+  }
   else{ctx.fillStyle='#993C1D';ctx.beginPath();ctx.arc(dotX,dotY,5,0,Math.PI*2);ctx.fill();}
 }
 const quizPool=[

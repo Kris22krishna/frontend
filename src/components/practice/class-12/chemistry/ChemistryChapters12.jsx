@@ -5,7 +5,17 @@ import { useAuth } from '../../../../contexts/AuthContext';
 import LoginPromptModal from '../../../auth/LoginPromptModal';
 import '../../../../pages/high/SeniorGradeSyllabus.css';
 
-const chapters = []; // Coming soon
+const chapters = [
+    {
+        key: 'solutions',
+        title: 'Solutions',
+        desc: "Types of solutions, concentration terms, Raoult's law, Colligative properties and abnormal molar mass.",
+        icon: '💧',
+        questions: '10+',
+        gradient: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+        shadow: 'rgba(59, 130, 246, 0.25)',
+    }
+];
 
 const ChemistryChapters12 = () => {
     const navigate = useNavigate();

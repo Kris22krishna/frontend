@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Circle Explorer</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=JetBrains+Mono:wght@500;700&display=swap');
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            width: 100%; height: 100%;
+            background: #f0f9ff;
+            color: #1e293b;
+            font-family: 'Outfit', sans-serif;
+            overflow: hidden;
+            user-select: none;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 12px;
+            gap: 12px;
+            overflow-y: auto;
+        }
+        
+        .container {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .canvas-container {
+            position: relative;
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1.5px solid #bae6fd;
+            padding: 12px;
+            box-shadow: 0 8px 30px rgba(14, 165, 233, 0.12);
+            flex-shrink: 0;
+        }
+
+        canvas {
+            display: block;
+            cursor: pointer;
+        }
+
+        .info-panel {
+            background: #ffffff;
+            border: 1.5px solid #bae6fd;
+            border-radius: 20px;
+            padding: 20px;
+            width: 280px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 8px 30px rgba(14, 165, 233, 0.10);
+        }
+
+        .value-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid transparent;
+        }
+
+        .val-sin  { border-left-color: #f43f5e; background: #fff1f2; }
+        .val-cos  { border-left-color: #3b82f6; background: #eff6ff; }
+        .val-tan  { border-left-color: #10b981; background: #f0fdf4; }
+        .val-angle { border-left-color: #f59e0b; background: #fffbeb; }
+
+        .label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #64748b;
+        }
+
+        .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .val-sin   .value { color: #e11d48; }
+        .val-cos   .value { color: #2563eb; }
+        .val-tan   .value { color: #059669; }
+        .val-angle .value { color: #d97706; }
+
+        h2 { font-size: 18px; font-weight: 800; color: #1e293b; }
+        p  { color: #64748b; font-size: 13px; line-height: 1.5; }
+
+        /* ── Mobile: stack vertically ── */
+        @media (max-width: 620px) {
+            body { padding: 10px; overflow-y: auto; height: auto; min-height: 100%; }
+            .container { flex-direction: column; align-items: center; gap: 12px; }
+            .canvas-container { padding: 8px; border-radius: 16px; width: 100%; display: flex; justify-content: center; }
+            .info-panel { width: 100%; flex-direction: row; flex-wrap: wrap; gap: 8px; padding: 14px; }
+            .info-panel > div:first-child { width: 100%; }
+            .value-box { flex: 1 1 calc(50% - 4px); min-width: 130px; }
+            .value { font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="canvas-container">
+            <canvas id="circleCanvas" width="460" height="460"></canvas>
+        </div>
+        <div class="info-panel">
+            <div>
+                <h2>Unit Circle</h2>
+                <p>Drag the point around the circle to explore trigonometric ratios in real-time.</p>
+            </div>
+            
+            <div class="value-box val-angle">
+                <span class="label">Angle θ</span>
+                <span class="value" id="valTheta">45°</span>
+            </div>
+            
+            <div class="value-box val-sin">
+                <span class="label">sin θ (y)</span>
+                <span class="value" id="valSin">0.71</span>
+            </div>
+            
+            <div class="value-box val-cos">
+                <span class="label">cos θ (x)</span>
+                <span class="value" id="valCos">0.71</span>
+            </div>
+            
+            <div class="value-box val-tan">
+                <span class="label">tan θ (y/x)</span>
+                <span class="value" id="valTan">1.00</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('circleCanvas');
+        const ctx = canvas.getContext('2d');
+        let radius, center, canvasSize;
+        let angle = -Math.PI / 4;
+        let isDragging = false;
+
+        function resize() {
+            const isMobile = window.innerWidth <= 620;
+            const padding = isMobile ? 8 : 12;
+            const available = isMobile
+                ? Math.min(window.innerWidth - 20, 340)
+                : Math.min(window.innerWidth * 0.5, 460);
+            canvasSize = Math.floor(available);
+            canvas.width  = canvasSize;
+            canvas.height = canvasSize;
+            center = { x: canvasSize / 2, y: canvasSize / 2 };
+            radius = canvasSize * 0.4;
+            draw();
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = '#e0f2fe';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(center.x, 0); ctx.lineTo(center.x, canvas.height);
+            ctx.moveTo(0, center.y); ctx.lineTo(canvas.width, center.y);
+            ctx.stroke();
+
+            const fs = Math.max(10, canvasSize * 0.026);
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = `${fs}px Outfit`;
+            ctx.textAlign = 'center';
+            [[-radius,'−1'],[radius,'1']].forEach(([x, lbl]) => {
+                ctx.fillText(lbl, center.x + x, center.y + fs + 4);
+            });
+            ctx.textAlign = 'right';
+            [[-radius,'−1'],[radius,'1']].forEach(([y, lbl]) => {
+                ctx.fillText(lbl, center.x - 6, center.y - y + 4);
+            });
+
+            ctx.strokeStyle = '#93c5fd';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.arc(center.x, center.y, radius, 0, Math.PI * 2);
+            ctx.stroke();
+
+            const px = center.x + Math.cos(angle) * radius;
+            const py = center.y + Math.sin(angle) * radius;
+
+            ctx.fillStyle = 'rgba(59, 130, 246, 0.07)';
+            ctx.beginPath();
+            ctx.moveTo(center.x, center.y);
+            ctx.lineTo(px, center.y);
+            ctx.lineTo(px, py);
+            ctx.fill();
+
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 4; ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(center.x, center.y); ctx.lineTo(px, center.y);
+            ctx.stroke();
+
+            ctx.strokeStyle = '#f43f5e';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(px, center.y); ctx.lineTo(px, py);
+            ctx.stroke();
+
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.moveTo(center.x, center.y); ctx.lineTo(px, py);
+            ctx.stroke();
+
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            const startA = angle < 0 ? angle : 0;
+            const endA   = angle < 0 ? 0 : angle;
+            ctx.arc(center.x, center.y, radius * 0.22, startA, endA);
+            ctx.stroke();
+
+            ctx.fillStyle = '#ffffff';
+            ctx.strokeStyle = '#475569';
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.arc(px, py, Math.max(7, canvasSize * 0.02), 0, Math.PI * 2);
+            ctx.fill(); ctx.stroke();
+
+            ctx.fillStyle = '#94a3b8';
+            ctx.beginPath();
+            ctx.arc(center.x, center.y, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            updateDOM();
+        }
+
+        function updateDOM() {
+            let deg = Math.round(-angle * 180 / Math.PI);
+            if (deg < 0) deg += 360;
+            const sinVal = -Math.sin(angle);
+            const cosVal = Math.cos(angle);
+            const tanVal = sinVal / cosVal;
+            document.getElementById('valTheta').textContent = `${deg}°`;
+            document.getElementById('valSin').textContent = sinVal.toFixed(2);
+            document.getElementById('valCos').textContent = cosVal.toFixed(2);
+            document.getElementById('valTan').textContent = Math.abs(tanVal) > 100 ? '∞' : tanVal.toFixed(2);
+        }
+
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const src = e.touches ? e.touches[0] : e;
+            return {
+                x: (src.clientX - rect.left) * scaleX,
+                y: (src.clientY - rect.top)  * scaleY
+            };
+        }
+
+        function updateAngle(e) {
+            e.preventDefault();
+            const { x, y } = getPos(e);
+            angle = Math.atan2(y - center.y, x - center.x);
+            draw();
+        }
+
+        canvas.addEventListener('mousedown',  (e) => { isDragging = true;  updateAngle(e); });
+        canvas.addEventListener('mousemove',  (e) => { if (isDragging) updateAngle(e); });
+        window.addEventListener('mouseup',    ()  => { isDragging = false; });
+        canvas.addEventListener('touchstart', (e) => { isDragging = true;  updateAngle(e); }, { passive: false });
+        canvas.addEventListener('touchmove',  (e) => { if (isDragging) updateAngle(e); },    { passive: false });
+        window.addEventListener('touchend',   ()  => { isDragging = false; });
+
+        window.addEventListener('resize', resize);
+        resize();
+    </script>
+</body>
+</html>
