@@ -80,8 +80,9 @@ export default function AssessmentEngine({ questions, title, onBack, color, node
         if (answers.includes(null)) {
             if (!window.confirm("You have unanswered questions. Are you sure you want to submit?")) return;
         }
-        // Log all answers
+        // Log answered questions only (skip nulls so they don't appear as incorrect)
         questionSet.forEach((q, i) => {
+            if (answers[i] === null) return;
             const isCorrect = answers[i] === q.correct ? 1 : 0;
             const entry = { nodeId, questionIndex: i, isCorrect, timeTakenMs: 0 };
             answersLogRef.current.push(entry);

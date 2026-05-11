@@ -15,7 +15,7 @@ export default function LAScenarioAssessmentEngine({ scenarios = [], title, colo
     const [timeLeft, setTimeLeft] = useState(TIME_LIMIT_SEC);
     const [finished, setFinished] = useState(false);
     
-    const { startSession, finishSession } = useSessionLogger();
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
     const isFinishedRef = useRef(false);
 
     // Init questions
@@ -37,21 +37,20 @@ export default function LAScenarioAssessmentEngine({ scenarios = [], title, colo
         isFinishedRef.current = true;
         const mappedAnswers = questions.map((q, i) => {
             const ans = answers[i];
+            if (ans === null) return null;
             let isCorrect = false;
-            if (ans !== null) {
-                if (q.type === 'mcq') isCorrect = ans === q.ans;
-                if (q.type === 'protractor') isCorrect = Math.abs(ans - q.ans) <= 2;
-            }
+            if (q.type === 'mcq') isCorrect = ans === q.ans;
+            else if (q.type === 'protractor') isCorrect = Math.abs(ans - q.ans) <= 2;
             return {
                 question_index: i,
                 answer_json: { selected: ans, correct_answer: q.ans },
-                is_correct: isCorrect,
+                is_correct: isCorrect ? 1 : 0,
                 marks_awarded: isCorrect ? 1 : 0,
                 marks_possible: 1,
                 time_taken_ms: 0,
             };
-        });
-        finishSession({ answers_payload: mappedAnswers });
+        }).filter(Boolean);
+        finishSession({ answers_payload: mappedAnswers, totalQuestions: TOTAL_QUESTIONS });
     }, [finished, questions]); // eslint-disable-line
 
     // Timer countdown
@@ -76,6 +75,13 @@ export default function LAScenarioAssessmentEngine({ scenarios = [], title, colo
         const newAns = [...answers];
         newAns[currentStep] = val;
         setAnswers(newAns);
+        if (nodeId && questions[currentStep]) {
+            const q = questions[currentStep];
+            let isCorrect = false;
+            if (q.type === 'mcq') isCorrect = val === q.ans;
+            else if (q.type === 'protractor') isCorrect = Math.abs(val - q.ans) <= 2;
+            logAnswer({ question_index: currentStep, answer_json: { selected: val, correct_answer: q.ans }, is_correct: isCorrect ? 1.0 : 0.0 });
+        }
     };
 
     const toggleMark = () => {

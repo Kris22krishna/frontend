@@ -189,7 +189,7 @@ function QuizEngine({ onBack }) {
     const { startSession, logAnswer, finishSession } = useSessionLogger();
 
     useEffect(() => {
-        startSession({ nodeId: NODE_IDS.g9MathSAVTerminologyQuiz, sessionType: 'quiz' });
+        startSession({ nodeId: NODE_IDS.g9MathSAVTerminologyQuiz, sessionType: 'terminology' });
     }, []); // eslint-disable-line
 
     const q = QUIZ_QUESTIONS[current];
@@ -206,9 +206,18 @@ function QuizEngine({ onBack }) {
         logAnswer({ questionIndex: current + 1, answerJson: { selected: idx, correct: q.ans }, isCorrect: isCorrect ? 1.0 : 0.0 });
     };
 
-    const handleNext = () => {
-        if (current + 1 >= QUIZ_QUESTIONS.length) { setFinished(true); } 
-        else { setCurrent((c) => c + 1); setSelected(null); setAnswered(false); }
+    const handleNext = async () => {
+        if (current + 1 >= QUIZ_QUESTIONS.length) {
+            if (!isFinishedRef.current) {
+                isFinishedRef.current = true;
+                await finishSession({ totalQuestions: QUIZ_QUESTIONS.length, questionsAnswered: quizAnswersRef.current.length, answersPayload: quizAnswersRef.current });
+            }
+            setFinished(true);
+        } else {
+            setCurrent((c) => c + 1);
+            setSelected(null);
+            setAnswered(false);
+        }
     };
 
     if (finished) {
@@ -235,7 +244,7 @@ function QuizEngine({ onBack }) {
                     <button className={styles['btn-primary']} onClick={() => {
                         quizAnswersRef.current = []; isFinishedRef.current = false;
                         setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false);
-                        startSession({ nodeId: NODE_IDS.g9MathSAVTerminologyQuiz, sessionType: 'quiz' });
+                        startSession({ nodeId: NODE_IDS.g9MathSAVTerminologyQuiz, sessionType: 'terminology' });
                     }}>
                         Try Again
                     </button>

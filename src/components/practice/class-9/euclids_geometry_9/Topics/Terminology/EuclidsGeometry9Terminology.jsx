@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../euclids_geometry_9.module.css';
 import { LatexText } from '../../../../../LatexText';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 import { 
     PointLineSurfaceChart, 
     CoincideAxiomChart, 
@@ -150,6 +152,142 @@ const KEY_IDEAS = [
     },
 ];
 
+// ─── QUIZ DATA ───────────────────────────────────────────────────────────────
+const QUIZ_QUESTIONS = [
+    { q: 'How many definitions did Euclid list at the beginning of his Elements?', opts: ['5', '10', '23', '50'], ans: 2, exp: 'Euclid listed 23 definitions (like point, line, surface) to establish the vocabulary of geometry before stating his postulates and axioms.' },
+    { q: 'What is an Axiom (Common Notion) in Euclidean geometry?', opts: ['A statement specific only to geometry', 'A universally accepted truth applicable to all branches of mathematics', 'A theorem that has been proven', 'A definition of a geometric shape'], ans: 1, exp: 'Axioms are basic assumptions taken as self-evidently true, valid across all of mathematics—not just geometry. Postulates, by contrast, are specific to geometry.' },
+    { q: 'Which postulate states that a circle can be drawn with any centre and any radius?', opts: ['Postulate 1', 'Postulate 2', 'Postulate 3', 'Postulate 4'], ans: 2, exp: 'Postulate 3: A circle can be described with any centre and any distance (radius). This lets us construct circles anywhere in a plane.' },
+    { q: 'Postulate 4 states that all _____ are equal to one another.', opts: ['Circles', 'Right angles', 'Straight lines', 'Parallel lines'], ans: 1, exp: 'Postulate 4 declares that all right angles are equal, establishing 90° as an absolute universal constant regardless of the size or orientation of the angle.' },
+    { q: "Playfair's Axiom (modern version of Euclid's 5th Postulate) states: through a point NOT on a line, how many lines parallel to it can be drawn?", opts: ['Zero', 'Exactly one', 'Exactly two', 'Infinitely many'], ans: 1, exp: "Playfair's Axiom: For every line L and point P not on L, there exists exactly one line through P parallel to L. This is the foundation of Euclidean (flat) geometry." },
+    { q: "Euclid's 5th Common Notion states: 'The whole is _____ the part.'", opts: ['Equal to', 'Less than', 'Greater than', 'Similar to'], ans: 2, exp: "Euclid's 5th Axiom (Common Notion 5): The whole is always greater than the part. For example, if B is a part of A, then A > B." },
+    { q: "If a transversal makes interior angles summing to less than 180° on one side of two lines, the two lines will:", opts: ['Never meet', 'Meet on the side where the sum is less than 180°', 'Meet on the opposite side', 'Be parallel'], ans: 1, exp: "By Euclid's 5th Postulate: if the interior angles on one side are less than two right angles (180°), the lines converge and eventually meet on that same side." },
+];
+
+// ─── QUIZ ENGINE ─────────────────────────────────────────────────────────────
+function EGTerminologyQuiz({ onBack }) {
+    const [current, setCurrent] = useState(0);
+    const [selected, setSelected] = useState(null);
+    const [answered, setAnswered] = useState(false);
+    const [score, setScore] = useState(0);
+    const [finished, setFinished] = useState(false);
+    const quizAnswersRef = useRef([]);
+    const isFinishedRef = useRef(false);
+
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+
+    useEffect(() => {
+        startSession({ nodeId: NODE_IDS.g9MathEGTerminologyQuiz, sessionType: 'terminology' });
+    }, []); // eslint-disable-line
+
+    const q = QUIZ_QUESTIONS[current];
+    const color = '#6366f1';
+    const progress = ((current + (finished ? 1 : 0)) / QUIZ_QUESTIONS.length) * 100;
+
+    const handleSelect = (idx) => {
+        if (answered) return;
+        setSelected(idx);
+        setAnswered(true);
+        const isCorrect = idx === q.ans;
+        if (isCorrect) setScore(s => s + 1);
+        const entry = { question_index: current, answer: idx, is_correct: isCorrect ? 1.0 : 0.0 };
+        quizAnswersRef.current[current] = entry;
+        logAnswer({ questionIndex: current + 1, answerJson: { selected: idx, correct: q.ans }, isCorrect: isCorrect ? 1.0 : 0.0 });
+    };
+
+    const handleNext = async () => {
+        if (current + 1 >= QUIZ_QUESTIONS.length) {
+            if (!isFinishedRef.current) {
+                isFinishedRef.current = true;
+                await finishSession({ totalQuestions: QUIZ_QUESTIONS.length, questionsAnswered: quizAnswersRef.current.length, answersPayload: quizAnswersRef.current });
+            }
+            setFinished(true);
+        } else {
+            setCurrent(c => c + 1);
+            setSelected(null);
+            setAnswered(false);
+        }
+    };
+
+    if (finished) {
+        const pct = Math.round((score / QUIZ_QUESTIONS.length) * 100);
+        const msg = pct >= 90 ? '🏆 Mastered!' : pct >= 75 ? '🌟 Great Job!' : pct >= 50 ? '👍 Keep it up!' : '💪 Review & Retry!';
+        return (
+            <div style={{ textAlign: 'center', padding: '40px 20px' }}>
+                <div style={{ width: 140, height: 140, borderRadius: '50%', background: `conic-gradient(${color} ${pct * 3.6}deg, #f1f5f9 0deg)`, margin: '0 auto 24px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '8px solid #fff', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
+                    <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontFamily: 'Outfit, sans-serif', fontSize: 40, fontWeight: 900, color: '#0f172a', lineHeight: 1 }}>{score}</div>
+                        <div style={{ fontSize: 13, color: '#64748b', fontWeight: 700 }}>out of {QUIZ_QUESTIONS.length}</div>
+                    </div>
+                </div>
+                <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: 28, fontWeight: 900, color: '#0f172a', margin: '0 0 8px' }}>{msg}</h2>
+                <p style={{ color: '#64748b', fontSize: 15, margin: '0 0 32px' }}>
+                    {pct >= 75 ? "Great grasp of Euclid's Geometry vocabulary!" : 'Review the definitions and postulates, then try again.'}
+                </p>
+                <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+                    <button className={styles['btn-primary']} onClick={() => {
+                        quizAnswersRef.current = [];
+                        isFinishedRef.current = false;
+                        setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false);
+                        startSession({ nodeId: NODE_IDS.g9MathEGTerminologyQuiz, sessionType: 'terminology' });
+                    }}>Try Again</button>
+                    <button className={styles['btn-primary']} style={{ background: '#475569' }} onClick={onBack}>Back to Terms</button>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div style={{ maxWidth: 760, margin: '0 auto', padding: '0 16px' }}>
+            <div style={{ marginBottom: 20 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                    <div style={{ fontSize: 11, fontWeight: 800, color, textTransform: 'uppercase', letterSpacing: 1.2 }}>Vocabulary Quiz</div>
+                    <div style={{ fontSize: 13, color: '#64748b', fontWeight: 700 }}>Q <span style={{ color }}>{current + 1}</span> / {QUIZ_QUESTIONS.length}</div>
+                </div>
+                <div style={{ background: '#f1f5f9', borderRadius: 10, height: 6, overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: `${progress}%`, background: color, borderRadius: 10, transition: 'width 0.4s ease' }} />
+                </div>
+            </div>
+
+            <div style={{ background: '#fff', borderRadius: 16, padding: '24px', border: '1.5px solid #e2e8f0', boxShadow: '0 4px 12px rgba(0,0,0,0.04)' }}>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: `${color}15`, padding: '4px 12px', borderRadius: 8, fontSize: 12, fontWeight: 800, color, marginBottom: 16 }}>
+                    QUESTION {current + 1}
+                </div>
+                <div style={{ fontSize: 17, fontWeight: 600, color: '#0f172a', lineHeight: 1.6, marginBottom: 24 }}>
+                    <LatexText text={q.q} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {q.opts.map((opt, oi) => {
+                        let border = 'rgba(0,0,0,0.06)', bg = '#fff', txt = '#0f172a', dot = '#f1f5f9';
+                        if (answered) {
+                            if (oi === q.ans) { border = '#10b981'; bg = 'rgba(16,185,129,0.05)'; txt = '#059669'; dot = '#10b981'; }
+                            else if (oi === selected) { border = '#ef4444'; bg = 'rgba(239,68,68,0.05)'; txt = '#ef4444'; dot = '#ef4444'; }
+                        } else if (selected === oi) { border = color; bg = `${color}05`; dot = color; }
+                        return (
+                            <button key={oi} onClick={() => handleSelect(oi)} disabled={answered}
+                                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', borderRadius: 12, border: `2px solid ${border}`, background: bg, cursor: answered ? 'default' : 'pointer', fontSize: 14, color: txt, textAlign: 'left', transition: 'all 0.2s', fontWeight: selected === oi ? 700 : 500, fontFamily: 'Open Sans, sans-serif' }}>
+                                <div style={{ width: 9, height: 9, borderRadius: '50%', background: dot, flexShrink: 0 }} />
+                                <LatexText text={opt} />
+                            </button>
+                        );
+                    })}
+                </div>
+                {answered && (
+                    <div style={{ marginTop: 18, padding: '14px 18px', borderRadius: 12, background: `${color}08`, border: `1px solid ${color}20`, fontSize: 14, lineHeight: 1.6, color: '#475569' }}>
+                        <strong style={{ color }}>Explanation: </strong><LatexText text={q.exp} />
+                    </div>
+                )}
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
+                <button onClick={handleNext} disabled={!answered}
+                    style={{ padding: '12px 40px', background: answered ? color : '#f1f5f9', color: answered ? '#fff' : '#94a3b8', cursor: answered ? 'pointer' : 'not-allowed', border: 'none', borderRadius: 100, fontSize: 15, fontWeight: 800, boxShadow: answered ? `0 8px 20px ${color}30` : 'none', transition: 'all 0.2s', fontFamily: 'Open Sans, sans-serif' }}>
+                    {current + 1 >= QUIZ_QUESTIONS.length ? 'See Final Score' : 'Next Question →'}
+                </button>
+            </div>
+        </div>
+    );
+}
+
 // ─── HELPER ──────────────────────────────────────────────────────────────────
 const renderMarkdownLatex = (str) => {
     if (!str) return null;
@@ -190,6 +328,12 @@ export default function EuclidsGeometry9Terminology() {
                 </div>
             </nav>
 
+            {activeTab === 'quiz' ? (
+                <div style={{ padding: '24px 0' }}>
+                    <EGTerminologyQuiz onBack={() => setActiveTab('defs')} />
+                </div>
+            ) : null}
+            {activeTab !== 'quiz' ? (
             <div className={styles['term-layout']}>
                 {/* ── LEFT COLUMN: TABS & LIST ── */}
                 <div className={styles['term-left']}>
@@ -211,6 +355,12 @@ export default function EuclidsGeometry9Terminology() {
                             onClick={() => setActiveTab('keys')}
                         >
                             Key Ideas
+                        </button>
+                        <button
+                            className={`${styles['term-tab']} ${activeTab === 'quiz' ? styles['term-tab--active'] : ''}`}
+                            onClick={() => setActiveTab('quiz')}
+                        >
+                            🧪 Quiz
                         </button>
                     </div>
 
@@ -353,6 +503,7 @@ export default function EuclidsGeometry9Terminology() {
                     })()}
                 </div>
             </div>
+            ) : null}
         </div>
     );
 }

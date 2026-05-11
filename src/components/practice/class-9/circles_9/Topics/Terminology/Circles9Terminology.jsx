@@ -221,7 +221,7 @@ function QuizEngine({ onBack }) {
     const { startSession, logAnswer, finishSession } = useSessionLogger();
 
     useEffect(() => {
-        startSession({ nodeId: NODE_IDS.g9MathCircleTerminologyQuiz, sessionType: 'quiz' });
+        startSession({ nodeId: NODE_IDS.g9MathCircleTerminologyQuiz, sessionType: 'terminology' });
     }, []); // eslint-disable-line
 
     const q = QUIZ_QUESTIONS[current];
@@ -274,7 +274,7 @@ function QuizEngine({ onBack }) {
                         quizAnswersRef.current = [];
                         isFinishedRef.current = false;
                         setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false);
-                        startSession({ nodeId: NODE_IDS.g9MathCircleTerminologyQuiz, sessionType: 'quiz' });
+                        startSession({ nodeId: NODE_IDS.g9MathCircleTerminologyQuiz, sessionType: 'terminology' });
                     }}>
                         Try Again
                     </button>

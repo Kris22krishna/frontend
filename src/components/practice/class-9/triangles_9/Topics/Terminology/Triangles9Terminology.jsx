@@ -136,7 +136,7 @@ function QuizEngine({ onBack }) {
     const { startSession, logAnswer, finishSession } = useSessionLogger();
 
     useEffect(() => {
-        startSession({ nodeId: NODE_IDS.g9MathTriTerminologyQuiz, sessionType: 'quiz' });
+        startSession({ nodeId: NODE_IDS.g9MathTriTerminologyQuiz, sessionType: 'terminology' });
     }, []); // eslint-disable-line
 
     const q = QUIZ_QUESTIONS[current];
@@ -162,7 +162,7 @@ function QuizEngine({ onBack }) {
         if (current + 1 >= QUIZ_QUESTIONS.length) {
             if (!isFinishedRef.current) {
                 isFinishedRef.current = true;
-                await finishSession({ totalQuestions: QUIZ_QUESTIONS.length, questionsAnswered: quizAnswersRef.current.length });
+                await finishSession({ totalQuestions: QUIZ_QUESTIONS.length, questionsAnswered: quizAnswersRef.current.length, answersPayload: quizAnswersRef.current });
             }
             setFinished(true);
         } else { setCurrent((c) => c + 1); setSelected(null); setAnswered(false); }
@@ -192,7 +192,7 @@ function QuizEngine({ onBack }) {
                     <button className={styles['btn-primary']} onClick={() => {
                         quizAnswersRef.current = []; isFinishedRef.current = false;
                         setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false);
-                        startSession({ nodeId: NODE_IDS.g9MathTriTerminologyQuiz, sessionType: 'quiz' });
+                        startSession({ nodeId: NODE_IDS.g9MathTriTerminologyQuiz, sessionType: 'terminology' });
                     }} style={{ padding: '14px 32px', fontSize: 16, background: '#4F46E5', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold' }}>
                         Try Again
                     </button>

@@ -14,7 +14,7 @@ export default function EGScenarioAssessmentEngine({ scenarios = [], title, colo
     const [timeLeft, setTimeLeft] = useState(TIME_LIMIT_SEC);
     const [finished, setFinished] = useState(false);
 
-    const { startSession, finishSession } = useSessionLogger();
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
     const isFinishedRef = useRef(false);
 
     useEffect(() => {
@@ -33,10 +33,11 @@ export default function EGScenarioAssessmentEngine({ scenarios = [], title, colo
         isFinishedRef.current = true;
         const mappedAnswers = questions.map((q, i) => {
             const ans = answers[i];
-            const isCorrect = ans !== null && ans === q.ans;
-            return { question_index: i, answer_json: { selected: ans, correct_answer: q.ans }, is_correct: isCorrect, marks_awarded: isCorrect ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
-        });
-        finishSession({ answers_payload: mappedAnswers });
+            if (ans === null) return null;
+            const isCorrect = ans === q.ans;
+            return { question_index: i, answer_json: { selected: ans, correct_answer: q.ans }, is_correct: isCorrect ? 1 : 0, marks_awarded: isCorrect ? 1 : 0, marks_possible: 1, time_taken_ms: 0 };
+        }).filter(Boolean);
+        finishSession({ answers_payload: mappedAnswers, totalQuestions: TOTAL_QUESTIONS });
     }, [finished, questions]); // eslint-disable-line
 
     useEffect(() => {
@@ -49,7 +50,16 @@ export default function EGScenarioAssessmentEngine({ scenarios = [], title, colo
 
     const formatTime = (sec) => { const m = Math.floor(sec / 60); const s = sec % 60; return `${m}:${s < 10 ? '0' : ''}${s}`; };
 
-    const handleAnswerUpdate = (val) => { const newAns = [...answers]; newAns[currentStep] = val; setAnswers(newAns); };
+    const handleAnswerUpdate = (val) => {
+        const newAns = [...answers];
+        newAns[currentStep] = val;
+        setAnswers(newAns);
+        if (nodeId && questions[currentStep]) {
+            const q = questions[currentStep];
+            const isCorrect = val === q.ans;
+            logAnswer({ question_index: currentStep, answer_json: { selected: val, correct_answer: q.ans }, is_correct: isCorrect ? 1.0 : 0.0 });
+        }
+    };
 
     const toggleMark = () => {
         const newMarked = new Set(marked);

@@ -1458,6 +1458,23 @@ export const SLUG_TO_NODE_ID = {
   'g12-math-itf-simplification':               NODE_IDS.g12MathITFSimplification,
   'g12-math-itf-terminology':                  NODE_IDS.g12MathITFTerminologyQuiz,
 
+  // Grade 9 Math: Number System
+  'g9-math-number-system':              NODE_IDS.g9MathNumberSystem,
+  'g9-math-ns-classification':          NODE_IDS.g9MathNSClassification,
+  'g9-math-ns-decimal-expansion':       NODE_IDS.g9MathNSDecimalExpansion,
+  'g9-math-ns-surds':                   NODE_IDS.g9MathNSSurds,
+  'g9-math-ns-rationalisation':         NODE_IDS.g9MathNSRationalisation,
+  'g9-math-ns-laws-of-exponents':       NODE_IDS.g9MathNSLawsOfExponents,
+  'g9-math-ns-chapter-assessment':      NODE_IDS.g9MathNSChapterAssessment,
+  'g9-math-ns-terminology':             NODE_IDS.g9MathNSTerminologyQuiz,
+
+  // Grade 9 Math: Coordinate Geometry
+  'g9-math-coordinate-geometry':        NODE_IDS.g9MathCoordinateGeometry,
+  'g9-math-cg-identify-quadrants':      NODE_IDS.g9MathCGIdentifyQuadrants,
+  'g9-math-cg-reading-coordinates':     NODE_IDS.g9MathCGReadingCoordinates,
+  'g9-math-cg-plotting-points':         NODE_IDS.g9MathCGPlottingPoints,
+  'g9-math-cg-distance-reflections':    NODE_IDS.g9MathCGDistanceReflections,
+  'g9-math-cg-terminology':             NODE_IDS.g9MathCGTerminologyQuiz,
 
   // Grade 9 Math: Polynomials
   'g9-math-polynomials':                NODE_IDS.g9MathPolynomials,
