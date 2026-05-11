@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../../trigonometry.module.css';
 import MathRenderer from '../../../../../MathRenderer';
@@ -254,7 +254,7 @@ export default function TrigIntroGr10Terminology() {
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
                             {VOCAB_QUIZ.map((q) => (
                                 <div key={q.id}>
-                                    <div style={{ fontWeight: 600, color: '#1e293b', fontSize: 16, marginBottom: 16 }}>{q.q}</div>
+                                    <div style={{ fontWeight: 600, color: '#1e293b', fontSize: 16, marginBottom: 16 }}><MathRenderer text={q.q} /></div>
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                                         {q.options.map((opt, optIdx) => {
                                             const isSelected = quizAnswers[q.id] === optIdx;
@@ -266,11 +266,11 @@ export default function TrigIntroGr10Terminology() {
                                             } else if (isSelected) { bg = accentBg; border = `1px solid ${accentColor}`; color = accentColor; }
                                             return (
                                                 <button key={optIdx} onClick={() => handleQuizSelect(q.id, optIdx)}
-                                                    style={{ padding: '16px 20px', borderRadius: 12, background: bg, border, color, textAlign: 'left', fontSize: 15, cursor: showResults ? 'default' : 'pointer', transition: 'all 0.2s ease', fontWeight: isSelected ? 600 : 400 }}
+                                                    style={{ padding: '16px 20px', borderRadius: 12, background: bg, border, color, textAlign: 'left', fontSize: 15, cursor: showResults ? 'default' : 'pointer', transition: 'all 0.2s ease', fontWeight: isSelected ? 600 : 400, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                                                 >
-                                                    {opt}
-                                                    {showResults && isCorrect && <span style={{ float: 'right' }}>✅</span>}
-                                                    {showResults && isSelected && !isCorrect && <span style={{ float: 'right' }}>❌</span>}
+                                                    <div style={{ flex: 1 }}><MathRenderer text={opt} /></div>
+                                                    {showResults && isCorrect && <span>✅</span>}
+                                                    {showResults && isSelected && !isCorrect && <span>❌</span>}
                                                 </button>
                                             );
                                         })}

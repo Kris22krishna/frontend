@@ -62,26 +62,26 @@ export const KEY_IDENTITIES = [
 export const VOCAB_QUIZ = [
     {
         id: 1,
-        q: 'What is the principal value range for arcsin(x)?',
-        options: ['[0, π]', '(-π/2, π/2)', '[-π/2, π/2]', '(0, π)'],
+        q: 'What is the principal value range for $\\arcsin(x)$?',
+        options: ['$[0, \\pi]$', '$(-\\frac{\\pi}{2}, \\frac{\\pi}{2})$', '$[-\\frac{\\pi}{2}, \\frac{\\pi}{2}]$', '$(0, \\pi)$'],
         correct: 2
     },
     {
         id: 2,
-        q: 'What is the value of arccos(-1/2)?',
-        options: ['-π/3', '2π/3', '4π/3', '5π/3'],
+        q: 'What is the value of $\\arccos(-\\frac{1}{2})$?',
+        options: ['$-\\frac{\\pi}{3}$', '$\\frac{2\\pi}{3}$', '$\\frac{4\\pi}{3}$', '$\\frac{5\\pi}{3}$'],
         correct: 1
     },
     {
         id: 3,
-        q: 'Why does sin(arcsin(2)) have no real solution?',
-        options: ['2 is not an angle', 'The domain of arcsin is [-1, 1]', 'It equals pi', 'The range of sine is (0, infinity)'],
+        q: 'Why does $\\sin(\\arcsin(2))$ have no real solution?',
+        options: ['$2$ is not an angle', 'The domain of $\\arcsin$ is $[-1, 1]$', 'It equals $\\pi$', 'The range of sine is $(0, \\infty)$'],
         correct: 1
     },
     {
         id: 4,
-        q: 'What does arctan(1) + arccot(1) equal?',
-        options: ['π/4', 'π/2', 'π', '0'],
+        q: 'What does $\\arctan(1) + \\text{arccot}(1)$ equal?',
+        options: ['$\\frac{\\pi}{4}$', '$\\frac{\\pi}{2}$', '$\\pi$', '$0$'],
         correct: 1
     }
 ];
