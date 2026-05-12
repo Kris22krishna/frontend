@@ -126,6 +126,39 @@ import IntDashboard from './components/Math-Branches/Calculus/Integration/IntDas
 import IntIntro5W1H from './components/Math-Branches/Calculus/Integration/Topics/5W1H/IntIntro5W1H';
 import IntTerminology from './components/Math-Branches/Calculus/Integration/Topics/Terminology/IntTerminology';
 import IntSkills from './components/Math-Branches/Calculus/Integration/Topics/Skills/IntSkills';
+
+// Geometry Math-Branch
+import GeometryMainDashboard from './components/Math-Branches/Geometry/GeometryMainDashboard';
+import BasicGeometryDashboard from './components/Math-Branches/Geometry/BasicGeometry/BasicGeometryDashboard';
+import GeoIntro5W1H from './components/Math-Branches/Geometry/BasicGeometry/Topics/5W1H/GeoIntro5W1H';
+import GeoTerminology from './components/Math-Branches/Geometry/BasicGeometry/Topics/Terminology/GeoTerminology';
+import GeoSkills from './components/Math-Branches/Geometry/BasicGeometry/Topics/Skills/GeoSkills';
+import GeoTrianglesDashboard from './components/Math-Branches/Geometry/Triangles/TrianglesDashboard';
+import GeoCirclesDashboard from './components/Math-Branches/Geometry/Circles/CirclesDashboard';
+import GeoMensurationDashboard from './components/Math-Branches/Geometry/Mensuration/MensurationDashboard';
+import GeoSolidGeometryDashboard from './components/Math-Branches/Geometry/SolidGeometry/SolidGeometryDashboard';
+import GeoTransformationsDashboard from './components/Math-Branches/Geometry/Transformations/TransformationsDashboard';
+import GeoPolygonsDashboard from './components/Math-Branches/Geometry/Polygons/PolygonsDashboard';
+import GeoPolygonsIntro5W1H from './components/Math-Branches/Geometry/Polygons/Topics/5W1H/PolygonsIntro5W1H';
+import GeoPolygonsTerminology from './components/Math-Branches/Geometry/Polygons/Topics/Terminology/PolygonsTerminology';
+import GeoPolygonsSkills from './components/Math-Branches/Geometry/Polygons/Topics/Skills/PolygonsSkills';
+import GeoTrianglesIntro5W1H from './components/Math-Branches/Geometry/Triangles/Topics/5W1H/TrianglesIntro5W1H';
+import GeoTrianglesTerminology from './components/Math-Branches/Geometry/Triangles/Topics/Terminology/TrianglesTerminology';
+import GeoTrianglesSkills from './components/Math-Branches/Geometry/Triangles/Topics/Skills/TrianglesSkills';
+import GeoCirclesIntro5W1H from './components/Math-Branches/Geometry/Circles/Topics/5W1H/CirclesIntro5W1H';
+import GeoCirclesTerminology from './components/Math-Branches/Geometry/Circles/Topics/Terminology/CirclesTerminology';
+import GeoCirclesSkills from './components/Math-Branches/Geometry/Circles/Topics/Skills/CirclesSkills';
+import GeoMensurationIntro5W1H from './components/Math-Branches/Geometry/Mensuration/Topics/5W1H/MensurationIntro5W1H';
+import GeoMensurationTerminology from './components/Math-Branches/Geometry/Mensuration/Topics/Terminology/MensurationTerminology';
+import GeoMensurationSkills from './components/Math-Branches/Geometry/Mensuration/Topics/Skills/MensurationSkills';
+import GeoSolidGeoIntro5W1H from './components/Math-Branches/Geometry/SolidGeometry/Topics/5W1H/SolidGeoIntro5W1H';
+import GeoSolidGeoTerminology from './components/Math-Branches/Geometry/SolidGeometry/Topics/Terminology/SolidGeoTerminology';
+import GeoSolidGeoSkills from './components/Math-Branches/Geometry/SolidGeometry/Topics/Skills/SolidGeoSkills';
+import GeoTransformationsIntro5W1H from './components/Math-Branches/Geometry/Transformations/Topics/5W1H/TransformationsIntro5W1H';
+import GeoTransformationsTerminology from './components/Math-Branches/Geometry/Transformations/Topics/Terminology/TransformationsTerminology';
+import GeoTransformationsSkills from './components/Math-Branches/Geometry/Transformations/Topics/Skills/TransformationsSkills';
+import GeometrySparks from './components/Math-Branches/Geometry/GeometrySparks';
+
 import SetsDashboard from './components/Math-Branches/Sets/SetsDashboard';
 import SetsIntro from './components/Math-Branches/Sets/Topics/Introduction/SetsIntro';
 import SetsTerminology from './components/Math-Branches/Sets/Topics/Terminology/SetsTerminology';
@@ -1579,6 +1612,55 @@ function App() {
           <Route path="calculus/integration/introduction" element={<ProtectedRoute redirectTo="/login"><IntIntro5W1H /></ProtectedRoute>} />
           <Route path="calculus/integration/terminology" element={<ProtectedRoute redirectTo="/login"><IntTerminology /></ProtectedRoute>} />
           <Route path="calculus/integration/skills" element={<ProtectedRoute redirectTo="/login"><IntSkills /></ProtectedRoute>} />
+
+          {/* Geometry Master Dashboard */}
+          <Route path="geometry" element={<ProtectedRoute redirectTo="/login"><GeometryMainDashboard /></ProtectedRoute>} />
+
+          {/* Geometry: Basic Geometry */}
+          <Route path="geometry/basic-geometry" element={<ProtectedRoute redirectTo="/login"><BasicGeometryDashboard /></ProtectedRoute>} />
+          <Route path="geometry/basic-geometry/introduction" element={<ProtectedRoute redirectTo="/login"><GeoIntro5W1H /></ProtectedRoute>} />
+          <Route path="geometry/basic-geometry/terminology" element={<ProtectedRoute redirectTo="/login"><GeoTerminology /></ProtectedRoute>} />
+          <Route path="geometry/basic-geometry/skills" element={<ProtectedRoute redirectTo="/login"><GeoSkills /></ProtectedRoute>} />
+
+          {/* Geometry: Polygons */}
+          <Route path="geometry/polygons" element={<ProtectedRoute redirectTo="/login"><GeoPolygonsDashboard /></ProtectedRoute>} />
+          <Route path="geometry/polygons/introduction" element={<ProtectedRoute redirectTo="/login"><GeoPolygonsIntro5W1H /></ProtectedRoute>} />
+          <Route path="geometry/polygons/terminology" element={<ProtectedRoute redirectTo="/login"><GeoPolygonsTerminology /></ProtectedRoute>} />
+          <Route path="geometry/polygons/skills" element={<ProtectedRoute redirectTo="/login"><GeoPolygonsSkills /></ProtectedRoute>} />
+
+          {/* Geometry: Triangles */}
+          <Route path="geometry/triangles" element={<ProtectedRoute redirectTo="/login"><GeoTrianglesDashboard /></ProtectedRoute>} />
+          <Route path="geometry/triangles/introduction" element={<ProtectedRoute redirectTo="/login"><GeoTrianglesIntro5W1H /></ProtectedRoute>} />
+          <Route path="geometry/triangles/terminology" element={<ProtectedRoute redirectTo="/login"><GeoTrianglesTerminology /></ProtectedRoute>} />
+          <Route path="geometry/triangles/skills" element={<ProtectedRoute redirectTo="/login"><GeoTrianglesSkills /></ProtectedRoute>} />
+
+          {/* Geometry: Circles */}
+          <Route path="geometry/circles" element={<ProtectedRoute redirectTo="/login"><GeoCirclesDashboard /></ProtectedRoute>} />
+          <Route path="geometry/circles/introduction" element={<ProtectedRoute redirectTo="/login"><GeoCirclesIntro5W1H /></ProtectedRoute>} />
+          <Route path="geometry/circles/terminology" element={<ProtectedRoute redirectTo="/login"><GeoCirclesTerminology /></ProtectedRoute>} />
+          <Route path="geometry/circles/skills" element={<ProtectedRoute redirectTo="/login"><GeoCirclesSkills /></ProtectedRoute>} />
+
+          {/* Geometry: Mensuration */}
+          <Route path="geometry/mensuration" element={<ProtectedRoute redirectTo="/login"><GeoMensurationDashboard /></ProtectedRoute>} />
+          <Route path="geometry/mensuration/introduction" element={<ProtectedRoute redirectTo="/login"><GeoMensurationIntro5W1H /></ProtectedRoute>} />
+          <Route path="geometry/mensuration/terminology" element={<ProtectedRoute redirectTo="/login"><GeoMensurationTerminology /></ProtectedRoute>} />
+          <Route path="geometry/mensuration/skills" element={<ProtectedRoute redirectTo="/login"><GeoMensurationSkills /></ProtectedRoute>} />
+
+          {/* Geometry: 3D Geometry */}
+          <Route path="geometry/3d-geometry" element={<ProtectedRoute redirectTo="/login"><GeoSolidGeometryDashboard /></ProtectedRoute>} />
+          <Route path="geometry/3d-geometry/introduction" element={<ProtectedRoute redirectTo="/login"><GeoSolidGeoIntro5W1H /></ProtectedRoute>} />
+          <Route path="geometry/3d-geometry/terminology" element={<ProtectedRoute redirectTo="/login"><GeoSolidGeoTerminology /></ProtectedRoute>} />
+          <Route path="geometry/3d-geometry/skills" element={<ProtectedRoute redirectTo="/login"><GeoSolidGeoSkills /></ProtectedRoute>} />
+
+          {/* Geometry: Transformations */}
+          <Route path="geometry/transformations" element={<ProtectedRoute redirectTo="/login"><GeoTransformationsDashboard /></ProtectedRoute>} />
+          <Route path="geometry/transformations/introduction" element={<ProtectedRoute redirectTo="/login"><GeoTransformationsIntro5W1H /></ProtectedRoute>} />
+          <Route path="geometry/transformations/terminology" element={<ProtectedRoute redirectTo="/login"><GeoTransformationsTerminology /></ProtectedRoute>} />
+          <Route path="geometry/transformations/skills" element={<ProtectedRoute redirectTo="/login"><GeoTransformationsSkills /></ProtectedRoute>} />
+
+          {/* Geometry: Unified Skill Sparks */}
+          <Route path="geometry/sparks" element={<ProtectedRoute redirectTo="/login"><GeometrySparks /></ProtectedRoute>} />
+
           {/* The Fish Tale Topic Pages */}
           <Route path="the-fish-tale" element={<ProtectedRoute redirectTo="/login"><TheFishTaleLanding /></ProtectedRoute>} />
           <Route path="the-fish-tale/introduction" element={<ProtectedRoute redirectTo="/login"><FishTaleIntro5W1H /></ProtectedRoute>} />

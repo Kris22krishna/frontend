@@ -1,0 +1,387 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Parallel Lines — Skill100 Spark</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#f0fdf4;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#86efac 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.header{text-align:center;margin-bottom:1.5rem}
+.badge{display:inline-block;background:#10b981;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#10b981}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#f0fdf4;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#86efac 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.header{text-align:center;margin-bottom:1.5rem}
+.badge{display:inline-block;background:#10b981;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#10b981}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+.ctitle{font-family:'Fredoka One',cursive;font-size:22px;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#f0fdf4;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#86efac 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.header{text-align:center;margin-bottom:1.5rem}
+.badge{display:inline-block;background:#10b981;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#10b981}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#f0fdf4;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#86efac 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.header{text-align:center;margin-bottom:1.5rem}
+.badge{display:inline-block;background:#10b981;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#10b981}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+.ctitle{font-family:'Fredoka One',cursive;font-size:22px;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.story{background:#fef3c7;border:2px solid #f59e0b;border-radius:14px;padding:18px 22px;font-size:16px;font-weight:700;color:#78350f;line-height:1.5;margin-bottom:2rem}
+.slider-row{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.slider-row label{font-size:16px;font-weight:700;color:#64748b;min-width:76px}
+input[type=range]{-webkit-appearance:none;flex:1;height:6px;border-radius:3px;background:#e2e8f0;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#10b981;border:3px solid #fff;box-shadow:0 0 0 2px #10b981;cursor:pointer}
+.canvas-wrap{background:#f8fafc;border-radius:14px;padding:14px;margin-bottom:1.5rem;border:1.5px dashed #e2e8f0}
+canvas{display:block;width:100%;border-radius:6px}
+.angle-info{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1rem}
+.ainfo{border-radius:12px;padding:10px;text-align:center}
+.ainfo h3{font-size:15px;font-weight:800;margin-bottom:5px}
+.ainfo p{font-size:22px;font-weight:800;font-family:'Fredoka One',cursive}
+.score-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#f0fdf4;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#86efac 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.header{text-align:center;margin-bottom:1.5rem}
+.badge{display:inline-block;background:#10b981;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#10b981}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#f0fdf4;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#86efac 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.header{text-align:center;margin-bottom:1.5rem}
+.badge{display:inline-block;background:#10b981;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#10b981}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+.ctitle{font-family:'Fredoka One',cursive;font-size:22px;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#f0fdf4;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#86efac 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.header{text-align:center;margin-bottom:1.5rem}
+.badge{display:inline-block;background:#10b981;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#10b981}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#f0fdf4;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#86efac 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.header{text-align:center;margin-bottom:1.5rem}
+.badge{display:inline-block;background:#10b981;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#10b981}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+.ctitle{font-family:'Fredoka One',cursive;font-size:22px;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.story{background:#fef3c7;border:2px solid #f59e0b;border-radius:14px;padding:18px 22px;font-size:16px;font-weight:700;color:#78350f;line-height:1.5;margin-bottom:2rem}
+.slider-row{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.slider-row label{font-size:16px;font-weight:700;color:#64748b;min-width:76px}
+input[type=range]{-webkit-appearance:none;flex:1;height:6px;border-radius:3px;background:#e2e8f0;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#10b981;border:3px solid #fff;box-shadow:0 0 0 2px #10b981;cursor:pointer}
+.canvas-wrap{background:#f8fafc;border-radius:14px;padding:14px;margin-bottom:1.5rem;border:1.5px dashed #e2e8f0}
+canvas{display:block;width:100%;border-radius:6px}
+.angle-info{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1rem}
+.ainfo{border-radius:12px;padding:10px;text-align:center}
+.ainfo h3{font-size:15px;font-weight:800;margin-bottom:5px}
+.ainfo p{font-size:22px;font-weight:800;font-family:'Fredoka One',cursive}
+.score-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.score-pill{background:#d1fae5;color:#065f46;font-size:14px;font-weight:800;padding:7px 16px;border-radius:999px}
+.quiz-q{font-size:19px;font-weight:700;margin-bottom:20px;line-height:1.6}
+.quiz-opts{display:flex;gap:12px;flex-wrap:wrap}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#f0fdf4;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#86efac 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.header{text-align:center;margin-bottom:1.5rem}
+.badge{display:inline-block;background:#10b981;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#10b981}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#f0fdf4;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#86efac 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.header{text-align:center;margin-bottom:1.5rem}
+.badge{display:inline-block;background:#10b981;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#10b981}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+.ctitle{font-family:'Fredoka One',cursive;font-size:22px;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#f0fdf4;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#86efac 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.header{text-align:center;margin-bottom:1.5rem}
+.badge{display:inline-block;background:#10b981;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#10b981}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#f0fdf4;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#86efac 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.header{text-align:center;margin-bottom:1.5rem}
+.badge{display:inline-block;background:#10b981;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#10b981}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+.ctitle{font-family:'Fredoka One',cursive;font-size:22px;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.story{background:#fef3c7;border:2px solid #f59e0b;border-radius:14px;padding:18px 22px;font-size:16px;font-weight:700;color:#78350f;line-height:1.5;margin-bottom:2rem}
+.slider-row{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.slider-row label{font-size:16px;font-weight:700;color:#64748b;min-width:76px}
+input[type=range]{-webkit-appearance:none;flex:1;height:6px;border-radius:3px;background:#e2e8f0;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#10b981;border:3px solid #fff;box-shadow:0 0 0 2px #10b981;cursor:pointer}
+.canvas-wrap{background:#f8fafc;border-radius:14px;padding:14px;margin-bottom:1.5rem;border:1.5px dashed #e2e8f0}
+canvas{display:block;width:100%;border-radius:6px}
+.angle-info{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1rem}
+.ainfo{border-radius:12px;padding:10px;text-align:center}
+.ainfo h3{font-size:15px;font-weight:800;margin-bottom:5px}
+.ainfo p{font-size:22px;font-weight:800;font-family:'Fredoka One',cursive}
+.score-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#f0fdf4;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#86efac 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.header{text-align:center;margin-bottom:1.5rem}
+.badge{display:inline-block;background:#10b981;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#10b981}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#f0fdf4;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#86efac 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.header{text-align:center;margin-bottom:1.5rem}
+.badge{display:inline-block;background:#10b981;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#10b981}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+.ctitle{font-family:'Fredoka One',cursive;font-size:22px;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#f0fdf4;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#86efac 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.header{text-align:center;margin-bottom:1.5rem}
+.badge{display:inline-block;background:#10b981;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#10b981}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#f0fdf4;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#86efac 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.header{text-align:center;margin-bottom:1.5rem}
+.badge{display:inline-block;background:#10b981;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#10b981}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+.ctitle{font-family:'Fredoka One',cursive;font-size:22px;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.story{background:#fef3c7;border:2px solid #f59e0b;border-radius:14px;padding:18px 22px;font-size:16px;font-weight:700;color:#78350f;line-height:1.5;margin-bottom:2rem}
+.slider-row{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.slider-row label{font-size:16px;font-weight:700;color:#64748b;min-width:76px}
+input[type=range]{-webkit-appearance:none;flex:1;height:6px;border-radius:3px;background:#e2e8f0;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#10b981;border:3px solid #fff;box-shadow:0 0 0 2px #10b981;cursor:pointer}
+.canvas-wrap{background:#f8fafc;border-radius:14px;padding:14px;margin-bottom:1.5rem;border:1.5px dashed #e2e8f0}
+canvas{display:block;width:100%;border-radius:6px}
+.angle-info{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1rem}
+.ainfo{border-radius:12px;padding:10px;text-align:center}
+.ainfo h3{font-size:15px;font-weight:800;margin-bottom:5px}
+.ainfo p{font-size:22px;font-weight:800;font-family:'Fredoka One',cursive}
+.score-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.score-pill{background:#d1fae5;color:#065f46;font-size:14px;font-weight:800;padding:7px 16px;border-radius:999px}
+.quiz-q{font-size:19px;font-weight:700;margin-bottom:20px;line-height:1.6}
+.quiz-opts{display:flex;gap:12px;flex-wrap:wrap}
+.qbtn{border:2px solid #e2e8f0;border-radius:10px;padding:9px 18px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:#fff;transition:all .15s}
+.qbtn:hover{border-color:#10b981;color:#10b981}
+.qbtn.ok{background:#d1fae5;border-color:#10b981;color:#065f46}
+.qbtn.no{background:#fee2e2;border-color:#ef4444;color:#991b1b}
+.qfb{margin-top:14px;font-size:16px;font-weight:700;min-height:22px}
+.qfb.g{color:#10b981}.qfb.b{color:#ef4444}
+.nxt{display:none;margin-top:10px;background:#10b981;color:#fff;border:none;border-radius:10px;padding:11px 26px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer}
+.footer{text-align:center;font-size:13px;font-weight:700;color:#64748b;margin-top:3.5rem}
+.footer span{color:#10b981}
+/* ── SKILL100 FONT OVERRIDES (v2) ─────────────────── */
+h1 { font-size: clamp(28px,5.5vw,44px) !important; line-height:1.2; margin-bottom:14px; }
+.sub, .header p, p.sub { font-size: 17px !important; }
+.badge, .bdg { font-size: 14px !important; padding: 7px 18px !important; }
+.story { font-size: 17px !important; line-height: 1.65 !important; }
+.card .ctitle, .card .ct { font-size: 22px !important; }
+.ctitle { font-size: 22px !important; }
+.slider-row label, .sr label { font-size: 16px !important; min-width: 80px !important; }
+.result-box, .rb, #res, .res-bar { font-size: 26px !important; }
+.fml h3, .fm h3, .ainfo h3, .atype h3, .ttype h3 { font-size: 16px !important; margin-bottom: 7px !important; font-weight: 800 !important; }
+.fml p, .fm p { font-size: 20px !important; }
+.ainfo p { font-size: 26px !important; font-weight: 800 !important; }
+.ttype p { font-size: 13px !important; }
+.info-box h3 { font-size: 22px !important; margin-bottom: 8px !important; }
+.info-box p { font-size: 17px !important; font-weight: 700 !important; }
+.score-pill, .sp { font-size: 15px !important; padding: 8px 18px !important; }
+.quiz-q, .qq { font-size: 19px !important; line-height: 1.6 !important; margin-bottom: 22px !important; }
+.qbtn, .qb { font-size: 17px !important; padding: 12px 26px !important; border-radius: 12px !important; }
+.qfb, .fb { font-size: 17px !important; margin-top: 18px !important; }
+.nxt, .nx { font-size: 16px !important; padding: 12px 28px !important; }
+.angle-disp { font-size: 40px !important; }
+.type-lbl { font-size: 18px !important; padding: 10px 24px !important; }
+.footer, .ft { font-size: 14px !important; }</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="badge">SKILL SPARK · BASIC GEOMETRY</div>
+    <h1>Parallel Lines &amp; <span>Transversals</span></h1>
+    <p class="sub">Adjust the transversal angle to see all angle pairs.</p>
+  </div>
+  <div class="story">When a <b>transversal</b> crosses two parallel lines, it creates 8 angles. These angles have special relationships — alternate angles are equal, co-interior angles add to 180°!</div>
+  <div class="card">
+    <div class="ctitle"><div class="icon" style="background:#d1fae5">📏</div> Transversal Explorer</div>
+    <div class="slider-row">
+      <label>Angle θ</label>
+      <input type="range" min="10" max="170" step="1" value="55" id="sl" oninput="upd()">
+      <span style="font-family:'Fredoka One',cursive;font-size:22px;min-width:52px;text-align:right" id="lbl">55°</span>
+    </div>
+    <div class="canvas-wrap"><canvas id="cv" height="200"></canvas></div>
+    <div class="angle-info">
+      <div class="ainfo" style="background:#eff6ff;color:#1d4ed8"><h3>Corresponding (equal)</h3><p id="corr">55°</p></div>
+      <div class="ainfo" style="background:#f0fdf4;color:#166534"><h3>Alternate (equal)</h3><p id="alt">55°</p></div>
+      <div class="ainfo" style="background:#fef3c7;color:#92400e"><h3>Co-interior (180°)</h3><p id="coint">125°</p></div>
+      <div class="ainfo" style="background:#fdf2f8;color:#86198f"><h3>Vertically opp. (equal)</h3><p id="vert">55°</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="score-row">
+      <div class="ctitle" style="margin-bottom:0"><div class="icon" style="background:#d1fae5">🧠</div> Quick Quiz!</div>
+      <div class="score-pill">Score: <span id="sc">0</span>/<span id="tq">0</span></div>
+    </div>
+    <div class="quiz-q" id="qq">Loading...</div>
+    <div class="quiz-opts" id="qopts"></div>
+    <div class="qfb" id="qfb"></div>
+    <button class="nxt" id="nxt" onclick="newQ()">Next →</button>
+  </div>
+  <div class="footer">Made with ❤️ by <span>Skill100</span></div>
+</div>
+<script>
+function upd(){
+  const a=+document.getElementById('sl').value;
+  document.getElementById('lbl').textContent=a+'°';
+  document.getElementById('corr').textContent=a+'°';
+  document.getElementById('alt').textContent=a+'°';
+  document.getElementById('coint').textContent=(180-a)+'°';
+  document.getElementById('vert').textContent=a+'°';
+  draw(a);
+}
+function draw(deg){
+  const cv=document.getElementById('cv'),dpr=window.devicePixelRatio||1;
+  cv.width=cv.offsetWidth*dpr||600; cv.height=200*dpr;
+  const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr);
+  const W=cv.offsetWidth||600,H=200;
+  ctx.clearRect(0,0,W,H);
+  const y1=60,y2=150;
+  ctx.strokeStyle='#10b981';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(30,y1);ctx.lineTo(W-30,y1);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(30,y2);ctx.lineTo(W-30,y2);ctx.stroke();
+
+  const rad=deg*Math.PI/180;
+  const mx=W/2;
+  ctx.strokeStyle='#ef4444';ctx.lineWidth=3;
+  const len=120;
+  const dx=len*Math.cos(rad),dy=len*Math.sin(rad);
+  ctx.beginPath();ctx.moveTo(mx-dx,y1+dy);ctx.lineTo(mx+dx,y1-dy);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(mx-dx,y2+dy);ctx.lineTo(mx+dx,y2-dy);ctx.stroke();
+  ctx.strokeStyle='#1d4ed888';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.arc(mx,y1,30,0,-rad,true);ctx.stroke();
+  ctx.beginPath();ctx.arc(mx,y2,30,0,-rad,true);ctx.stroke();
+  ctx.fillStyle='#1d4ed8';ctx.font='bold 16px Nunito';ctx.textAlign='center';
+  ctx.fillText(deg+'°',mx+40,y1-8);
+  ctx.fillText(deg+'°',mx+40,y2-8);
+  ctx.fillStyle='#f59e0b';
+  ctx.fillText((180-deg)+'°',mx-42,y1+18);
+  ctx.fillText((180-deg)+'°',mx-42,y2+18);
+}
+const pool=[
+  {q:'Alternate interior angles are:',opts:['Equal','Supplementary','Complementary','Adjacent'],ans:'Equal'},
+  {q:'Co-interior angles (same-side interior) always add up to:',opts:['90°','180°','270°','360°'],ans:'180°'},
+  {q:'Corresponding angles are:',opts:['Equal','Supplementary','Different','Complementary'],ans:'Equal'},
+  {q:'Vertically opposite angles are always:',opts:['Equal','Supplementary','Adjacent','Complementary'],ans:'Equal'},
+  {q:'If a transversal angle is 70°, the co-interior angle is:',opts:['70°','110°','80°','90°'],ans:'110°'},
+  {q:'If a corresponding angle is 65°, what is the alternate angle?',opts:['115°','65°','45°','90°'],ans:'65°'},
+  {q:'Parallel lines are lines that:',opts:['Always meet','Never meet','Are perpendicular','Are curved'],ans:'Never meet'},
+];
+let sc=0,tq=0,ans=false,cq=null;
+function newQ(){
+  ans=false;document.getElementById('qfb').textContent='';document.getElementById('qfb').className='qfb';
+  document.getElementById('nxt').style.display='none';
+  cq=pool[Math.floor(Math.random()*pool.length)];
+  document.getElementById('qq').textContent=cq.q;
+  const el=document.getElementById('qopts');el.innerHTML='';
+  cq.opts.forEach(o=>{const b=document.createElement('button');b.className='qbtn';b.textContent=o;b.onclick=()=>chk(o,b);el.appendChild(b);});
+}
+function chk(a,btn){
+  if(ans)return;ans=true;tq++;document.getElementById('tq').textContent=tq;
+  const fb=document.getElementById('qfb');
+  if(a===cq.ans){sc++;document.getElementById('sc').textContent=sc;fb.textContent='🎉 Correct!';fb.className='qfb g';btn.classList.add('ok');}
+  else{fb.textContent='Answer: '+cq.ans;fb.className='qfb b';btn.classList.add('no');document.querySelectorAll('.qbtn').forEach(b=>{if(b.textContent===cq.ans)b.classList.add('ok');});}
+  document.getElementById('nxt').style.display='inline-block';
+}
+window.addEventListener('resize',upd);window.addEventListener('load',function(){upd();newQ();});
+</script>
+</body>
+</html>

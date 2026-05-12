@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>geo-arc-sector.html - Skill100</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box;margin:0;padding:0}body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#fff1f2;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#fda4af 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}.pg{position:relative;z-index:1;max-width:760px;margin:0 auto}.hdr{text-align:center;margin-bottom:2.5rem}.bdg{display:inline-block;background:#f43f5e;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}h1{font-family:'Fredoka One',cursive;font-size:clamp(26px,5vw,42px);line-height:1.2;margin-bottom:12px}h1 span{color:#f43f5e}.sub{font-size:17px;color:#64748b;font-weight:600}.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+.ct{font-family:'Fredoka One',cursive;font-size:20px;margin-bottom:1.4rem;display:flex;align-items:center;gap:10px}
+.ic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.story{background:#fee2e2;border:2px solid #f43f5e;border-radius:14px;padding:18px 22px;font-size:15px;font-weight:700;color:#9f1239;line-height:1.55;margin-bottom:2rem}
+.sr{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.sr label{font-size:14px;font-weight:700;color:#64748b;min-width:80px}
+input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:6px;border-radius:3px;background:#e2e8f0;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#f43f5e;border:3px solid #fff;box-shadow:0 0 0 2px #f43f5e;cursor:pointer}
+.cw{background:#f8fafc;border-radius:14px;padding:14px;margin-bottom:1.5rem;border:1.5px dashed #e2e8f0}
+canvas{display:block;width:100%;border-radius:6px}
+.rb{background:#fee2e2;border:2px solid #f43f5e;border-radius:14px;padding:16px;text-align:center;margin-bottom:1.25rem;font-family:'Fredoka One',cursive;font-size:22px;color:#9f1239}
+.fg{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:1.25rem}
+.fm{border-radius:14px;padding:18px 16px;text-align:center}
+.fm h3{font-size:12px;font-weight:800;margin-bottom:6px}
+.fm p{font-size:16px;font-weight:800;font-family:'Fredoka One',cursive}
+.scr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.sp{background:#fee2e2;color:#9f1239;font-size:13px;font-weight:800;padding:6px 14px;border-radius:999px}
+.qq{font-size:16px;font-weight:700;margin-bottom:14px;line-height:1.5}
+.qo{display:flex;gap:10px;flex-wrap:wrap}
+.qb{border:2px solid #e2e8f0;border-radius:10px;padding:10px 20px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:#fff;transition:all .15s}
+.qb:hover{border-color:#f43f5e;color:#f43f5e}
+.qb.ok{background:#d1fae5;border-color:#10b981;color:#065f46}
+.qb.no{background:#fee2e2;border-color:#ef4444;color:#991b1b}
+.fb{margin-top:14px;font-size:14px;font-weight:700;min-height:20px}
+.fb.g{color:#10b981}.fb.b{color:#ef4444}
+.nx{display:none;margin-top:16px;background:#f43f5e;color:#fff;border:none;border-radius:10px;padding:11px 26px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer}
+.ft{text-align:center;font-size:12px;font-weight:700;color:#64748b;margin-top:3.5rem}
+.ft span{color:#f43f5e}
+/* ── SKILL100 FONT OVERRIDES (v2) ─────────────────── */
+h1 { font-size: clamp(28px,5.5vw,44px) !important; line-height:1.2; margin-bottom:14px; }
+.sub, .header p, p.sub { font-size: 17px !important; }
+.badge, .bdg { font-size: 14px !important; padding: 7px 18px !important; }
+.story { font-size: 17px !important; line-height: 1.65 !important; }
+.card .ctitle, .card .ct, .ctitle { font-size: 22px !important; }
+.slider-row label, .sr label { font-size: 16px !important; min-width: 80px !important; }
+.result-box, .rb, #res, .res-bar { font-size: 26px !important; }
+.fml h3, .fm h3, .ainfo h3, .atype h3, .ttype h3 { font-size: 16px !important; margin-bottom: 7px !important; font-weight: 800 !important; }
+.fml p, .fm p { font-size: 20px !important; }
+.ainfo p { font-size: 26px !important; font-weight: 800 !important; }
+.info-box h3 { font-size: 22px !important; margin-bottom: 8px !important; }
+.info-box p { font-size: 17px !important; font-weight: 700 !important; }
+.score-pill, .sp { font-size: 15px !important; padding: 8px 18px !important; }
+.quiz-q, .qq { font-size: 19px !important; line-height: 1.6 !important; margin-bottom: 22px !important; }
+.qbtn, .qb { font-size: 17px !important; padding: 12px 26px !important; border-radius: 12px !important; }
+.qfb, .fb { font-size: 17px !important; margin-top: 18px !important; }
+.nxt, .nx { font-size: 16px !important; padding: 12px 28px !important; }
+.angle-disp { font-size: 40px !important; }
+.quiz-opts, .qo { gap: 12px !important; }
+.footer, .ft { font-size: 14px !important; }</style></head><body>
+<div class="pg"><div class="hdr"><div class="bdg">SKILL SPARK · CIRCLES</div><h1>Arc &amp; <span>Sector</span></h1><p class="sub">Adjust radius and angle to calculate arc length and sector area.</p></div>
+<div class="story">A <b>sector</b> is a pie-slice of a circle. Arc length = (θ/360) × 2πr. Sector area = (θ/360) × πr². The angle θ is the central angle in degrees!</div>
+<div class="card"><div class="ct"><div class="ic" style="background:#fee2e2">⭕</div>Arc & Sector Explorer</div><div class="sr"><label id="lr">r = 6</label><input type="range" min="1" max="12" step="1" value="6" id="slr" oninput="upd()"></div>
+<div class="sr"><label id="la">θ = 90°</label><input type="range" min="1" max="360" step="1" value="90" id="sla" oninput="upd()"></div>
+<div class="cw"><canvas id="cv" height="200"></canvas></div>
+<div class="rb" id="res">Arc = 9.42  Sector Area = 28.27</div>
+<div class="fg"><div class="fm" style="background:#fee2e2;color:#9f1239"><h3>Arc Length</h3><p>l = (θ/360)×2πr</p></div><div class="fm" style="background:#ede9fe;color:#4c1d95"><h3>Sector Area</h3><p>A = (θ/360)×πr²</p></div></div>
+<script>
+const PI=Math.PI;
+function upd(){const r=+document.getElementById("slr").value,t=+document.getElementById("sla").value;document.getElementById("lr").textContent="r = "+r;document.getElementById("la").textContent="θ = "+t+"°";const arc=(t/360*2*PI*r).toFixed(2),sa=(t/360*PI*r*r).toFixed(2);document.getElementById("res").textContent="Arc = "+arc+"  Sector Area = "+sa;draw(r,t);}
+function draw(r,t){const cv=document.getElementById("cv"),dpr=window.devicePixelRatio||1;cv.width=cv.offsetWidth*dpr||600;cv.height=200*dpr;const ctx=cv.getContext("2d");ctx.scale(dpr,dpr);const W=cv.offsetWidth||600,H=200,cx=W/2,cy=H/2,sc=Math.min((W-40)/2/r,(H-40)/2/r,20),pr=r*sc,rad=t*PI/180;ctx.clearRect(0,0,W,H);ctx.strokeStyle="#e2e8f0";ctx.lineWidth=1;ctx.beginPath();ctx.arc(cx,cy,pr,0,2*PI);ctx.stroke();ctx.fillStyle="#f43f5e22";ctx.strokeStyle="#f43f5e";ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,pr,0,-rad,true);ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle="#f43f5e";ctx.beginPath();ctx.arc(cx,cy,4,0,2*PI);ctx.fill();ctx.fillStyle="#0f172a";ctx.font="bold 16px Nunito";ctx.textAlign="center";ctx.fillText("r="+r,cx+pr/2+10,cy-8);ctx.fillStyle="#f43f5e";ctx.fillText(t+"°",cx+25,cy-20);}
+const pool=[{q:"Arc length of sector r=6,θ=60° (π≈3.14):",opts:["6.28","12.56","3.14","18.84"],ans:"6.28"},{q:"Sector area r=4,θ=90° (π≈3.14):",opts:["12.56","50.24","6.28","25.12"],ans:"12.56"},{q:"A semicircle has a central angle of:",opts:["90°","270°","180°","360°"],ans:"180°"},{q:"A quarter circle sector has θ=:",opts:["45°","90°","180°","120°"],ans:"90°"},{q:"Arc length formula is:",opts:["(θ/360)×πr²","(θ/360)×2πr","2πr","πr²"],ans:"(θ/360)×2πr"},{q:"Sector r=10,θ=36°: fraction of full circle?",opts:["1/4","1/10","1/6","1/12"],ans:"1/10"}];
+let sc=0,tq=0,ans=false,cq=null;function newQ(){ans=false;document.getElementById("qfb").textContent="";document.getElementById("qfb").className="fb";document.getElementById("nxt").style.display="none";cq=pool[Math.floor(Math.random()*pool.length)];document.getElementById("qq").textContent=cq.q;const el=document.getElementById("qopts");el.innerHTML="";cq.opts.forEach(o=>{const b=document.createElement("button");b.className="qb";b.textContent=o;b.onclick=()=>chk(o,b);el.appendChild(b);});}function chk(a,btn){if(ans)return;ans=true;tq++;document.getElementById("tq").textContent=tq;const fb=document.getElementById("qfb");if(a===cq.ans){sc++;document.getElementById("sc").textContent=sc;fb.textContent="Correct!";fb.className="fb g";btn.classList.add("ok");}else{fb.textContent="Answer: "+cq.ans;fb.className="fb b";btn.classList.add("no");document.querySelectorAll(".qb").forEach(b=>{if(b.textContent===cq.ans)b.classList.add("ok");});}document.getElementById("nxt").style.display="inline-block";}window.addEventListener("resize",upd);window.addEventListener("load",function(){upd();newQ();});
+</script></div>
+<div class="card"><div class="scr"><div class="ct" style="margin-bottom:0"><div class="ic" style="background:#fee2e2">&#x1F9E0;</div>Quick Quiz!</div><div class="sp">Score:<span id="sc">0</span>/<span id="tq">0</span></div></div>
+<div class="qq" id="qq">Loading...</div><div class="qo" id="qopts"></div><div class="fb" id="qfb"></div>
+<button class="nx" id="nxt" onclick="newQ()">Next &#x2192;</button></div>
+<div class="ft">Made with &#x2764; by <span>Skill100</span></div></div></body></html>
