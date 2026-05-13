@@ -364,6 +364,33 @@ export const NODE_IDS = {
   mathBranchInverseTrig2:                   'f3000000-0000-0000-0000-000000000132',
   mathBranchInverseTrig3:                   'f3000000-0000-0000-0000-000000000133',
 
+  // ── Chemistry Branches (Foundation) ──────────────────────────────────────
+
+  // Inorganic Chemistry Branch  (200–206)
+  chemBranchInorganic:                      'f3000000-0000-0000-0000-000000000200',
+  chemInorganicAtomicStructure:             'f3000000-0000-0000-0000-000000000201',
+  chemInorganicElectronicConfig:            'f3000000-0000-0000-0000-000000000202',
+  chemInorganicBondIdentification:          'f3000000-0000-0000-0000-000000000203',
+  chemInorganicElementClassification:       'f3000000-0000-0000-0000-000000000204',
+  chemInorganicTerminologyQuiz:             'f3000000-0000-0000-0000-000000000205',
+  chemInorganicIntroduction:                'f3000000-0000-0000-0000-000000000206',
+
+  // Organic Chemistry Branch  (210–215)
+  chemBranchOrganic:                        'f3000000-0000-0000-0000-000000000210',
+  chemOrganicClassification:                'f3000000-0000-0000-0000-000000000211',
+  chemOrganicMoleculeTypes:                 'f3000000-0000-0000-0000-000000000212',
+  chemOrganicCarbonProperties:              'f3000000-0000-0000-0000-000000000213',
+  chemOrganicTerminologyQuiz:               'f3000000-0000-0000-0000-000000000214',
+  chemOrganicIntroduction:                  'f3000000-0000-0000-0000-000000000215',
+
+  // Physical Chemistry Branch  (220–225)
+  chemBranchPhysical:                       'f3000000-0000-0000-0000-000000000220',
+  chemPhysicalStatesClassification:         'f3000000-0000-0000-0000-000000000221',
+  chemPhysicalStatesProperties:             'f3000000-0000-0000-0000-000000000222',
+  chemPhysicalBalancingEquations:           'f3000000-0000-0000-0000-000000000223',
+  chemPhysicalTerminologyQuiz:              'f3000000-0000-0000-0000-000000000224',
+  chemPhysicalIntroduction:                 'f3000000-0000-0000-0000-000000000225',
+
   // ── 5. CLASS 10 MATH ─────────────────────────────────────────────────────
 
   // Grade 10 Math: Surface Areas and Volumes (Chapter 13)
@@ -1234,7 +1261,30 @@ export const SLUG_TO_NODE_ID = {
   'inverse-trig-1':                     NODE_IDS.mathBranchInverseTrig1,
   'inverse-trig-2':                     NODE_IDS.mathBranchInverseTrig2,
   'inverse-trig-3':                     NODE_IDS.mathBranchInverseTrig3,
-  
+
+  // Chemistry Branches (Foundation)
+  'chem-branch-inorganic':             NODE_IDS.chemBranchInorganic,
+  'chem-inorganic-atomic-structure':   NODE_IDS.chemInorganicAtomicStructure,
+  'chem-inorganic-electronic-config':  NODE_IDS.chemInorganicElectronicConfig,
+  'chem-inorganic-bond-id':            NODE_IDS.chemInorganicBondIdentification,
+  'chem-inorganic-element-class':      NODE_IDS.chemInorganicElementClassification,
+  'chem-inorganic-terminology':        NODE_IDS.chemInorganicTerminologyQuiz,
+  'chem-inorganic-introduction':       NODE_IDS.chemInorganicIntroduction,
+
+  'chem-branch-organic':               NODE_IDS.chemBranchOrganic,
+  'chem-organic-classification':       NODE_IDS.chemOrganicClassification,
+  'chem-organic-molecule-types':       NODE_IDS.chemOrganicMoleculeTypes,
+  'chem-organic-carbon-properties':    NODE_IDS.chemOrganicCarbonProperties,
+  'chem-organic-terminology':          NODE_IDS.chemOrganicTerminologyQuiz,
+  'chem-organic-introduction':         NODE_IDS.chemOrganicIntroduction,
+
+  'chem-branch-physical':              NODE_IDS.chemBranchPhysical,
+  'chem-physical-states-class':        NODE_IDS.chemPhysicalStatesClassification,
+  'chem-physical-states-props':        NODE_IDS.chemPhysicalStatesProperties,
+  'chem-physical-balancing-eq':        NODE_IDS.chemPhysicalBalancingEquations,
+  'chem-physical-terminology':         NODE_IDS.chemPhysicalTerminologyQuiz,
+  'chem-physical-introduction':        NODE_IDS.chemPhysicalIntroduction,
+
   // Grade-based Slugs
   'g10-science-chemical-reactions':    NODE_IDS.g10ScienceChemicalReactions,
   'g10-science-cr-equations':          NODE_IDS.g10ScienceChemicalEquations,

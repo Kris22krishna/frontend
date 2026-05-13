@@ -106,6 +106,21 @@ import InverseTrigGr12Intro from './components/Math-Branches/Trigonometry/Grade1
 import InverseTrigGr12Terminology from './components/Math-Branches/Trigonometry/Grade12-InverseTrig/Topics/Terminology/InverseTrigGr12Terminology';
 import InverseTrigGr12Skills from './components/Math-Branches/Trigonometry/Grade12-InverseTrig/Topics/Skills/InverseTrigGr12Skills';
 
+// Chemistry Branches
+import ChemistryMainDashboard from './components/Chemistry-Branches/ChemistryMainDashboard';
+import InorganicChemDashboard from './components/Chemistry-Branches/Inorganic/InorganicChemDashboard';
+import InorganicChemIntro from './components/Chemistry-Branches/Inorganic/Topics/Introduction/InorganicChemIntro';
+import InorganicChemTerminology from './components/Chemistry-Branches/Inorganic/Topics/Terminology/InorganicChemTerminology';
+import InorganicChemSkills from './components/Chemistry-Branches/Inorganic/Topics/Skills/InorganicChemSkills';
+import OrganicChemDashboard from './components/Chemistry-Branches/Organic/OrganicChemDashboard';
+import OrganicChemIntro from './components/Chemistry-Branches/Organic/Topics/Introduction/OrganicChemIntro';
+import OrganicChemTerminology from './components/Chemistry-Branches/Organic/Topics/Terminology/OrganicChemTerminology';
+import OrganicChemSkills from './components/Chemistry-Branches/Organic/Topics/Skills/OrganicChemSkills';
+import PhysicalChemDashboard from './components/Chemistry-Branches/Physical/PhysicalChemDashboard';
+import PhysicalChemIntro from './components/Chemistry-Branches/Physical/Topics/Introduction/PhysicalChemIntro';
+import PhysicalChemTerminology from './components/Chemistry-Branches/Physical/Topics/Terminology/PhysicalChemTerminology';
+import PhysicalChemSkills from './components/Chemistry-Branches/Physical/Topics/Skills/PhysicalChemSkills';
+
 // Functions
 import FunctionsDashboard from './components/Math-Branches/Calculus/Functions/FunctionsDashboard';
 import FunctionsIntro5W1H from './components/Math-Branches/Calculus/Functions/Topics/5W1H/FunctionsIntro5W1H';
@@ -1551,6 +1566,21 @@ function App() {
           <Route path="trigonometry/grade-12-inverse/introduction" element={<ProtectedRoute redirectTo="/login"><InverseTrigGr12Intro /></ProtectedRoute>} />
           <Route path="trigonometry/grade-12-inverse/terminology" element={<ProtectedRoute redirectTo="/login"><InverseTrigGr12Terminology /></ProtectedRoute>} />
           <Route path="trigonometry/grade-12-inverse/skills" element={<ProtectedRoute redirectTo="/login"><InverseTrigGr12Skills /></ProtectedRoute>} />
+
+          {/* Chemistry Branches */}
+          <Route path="chemistry/dashboard" element={<ProtectedRoute redirectTo="/login"><ChemistryMainDashboard /></ProtectedRoute>} />
+          <Route path="chemistry/inorganic" element={<ProtectedRoute redirectTo="/login"><InorganicChemDashboard /></ProtectedRoute>} />
+          <Route path="chemistry/inorganic/introduction" element={<ProtectedRoute redirectTo="/login"><InorganicChemIntro /></ProtectedRoute>} />
+          <Route path="chemistry/inorganic/terminology" element={<ProtectedRoute redirectTo="/login"><InorganicChemTerminology /></ProtectedRoute>} />
+          <Route path="chemistry/inorganic/skills" element={<ProtectedRoute redirectTo="/login"><InorganicChemSkills /></ProtectedRoute>} />
+          <Route path="chemistry/organic" element={<ProtectedRoute redirectTo="/login"><OrganicChemDashboard /></ProtectedRoute>} />
+          <Route path="chemistry/organic/introduction" element={<ProtectedRoute redirectTo="/login"><OrganicChemIntro /></ProtectedRoute>} />
+          <Route path="chemistry/organic/terminology" element={<ProtectedRoute redirectTo="/login"><OrganicChemTerminology /></ProtectedRoute>} />
+          <Route path="chemistry/organic/skills" element={<ProtectedRoute redirectTo="/login"><OrganicChemSkills /></ProtectedRoute>} />
+          <Route path="chemistry/physical" element={<ProtectedRoute redirectTo="/login"><PhysicalChemDashboard /></ProtectedRoute>} />
+          <Route path="chemistry/physical/introduction" element={<ProtectedRoute redirectTo="/login"><PhysicalChemIntro /></ProtectedRoute>} />
+          <Route path="chemistry/physical/terminology" element={<ProtectedRoute redirectTo="/login"><PhysicalChemTerminology /></ProtectedRoute>} />
+          <Route path="chemistry/physical/skills" element={<ProtectedRoute redirectTo="/login"><PhysicalChemSkills /></ProtectedRoute>} />
 
           {/* Calculus Master Dashboard */}
           <Route path="calculus" element={<ProtectedRoute redirectTo="/login"><CalculusMainDashboard /></ProtectedRoute>} />
