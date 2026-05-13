@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -326,7 +326,7 @@ function draw(a,b,c){
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle="#0ea5e922";ctx.strokeStyle="#0ea5e9";ctx.lineWidth=2.5;
   ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox+pw,oy);ctx.lineTo(ox,oy-ph);ctx.closePath();ctx.fill();ctx.stroke();
-  ctx.strokeStyle="#0ea5e9";ctx.lineWidth=2;ctx.strokeRect(ox,oy-16,16,-16);
+  ctx.strokeStyle="rgba(14,165,233,0.8)";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(ox+16,oy);ctx.lineTo(ox+16,oy-16);ctx.lineTo(ox,oy-16);ctx.stroke();
   ctx.fillStyle="#0ea5e9";ctx.font="bold 17px Nunito";ctx.textAlign="center";
   ctx.fillText("a="+a,ox+pw/2,oy+16);
   ctx.textAlign="right";ctx.fillText("b="+b,ox-6,oy-ph/2+5);

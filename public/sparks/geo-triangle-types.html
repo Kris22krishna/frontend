@@ -137,7 +137,7 @@ function draw(t){
   ctx.fillStyle=t.col+'22';ctx.strokeStyle=t.col;ctx.lineWidth=3;
   ctx.beginPath();t.pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));
   ctx.closePath();ctx.fill();ctx.stroke();
-  if(t.name==='Right-angled'){ctx.strokeStyle=t.col;ctx.lineWidth=2;ctx.strokeRect(20,140,18,-18);}
+  if(t.name==='Right-angled'){ctx.strokeStyle=t.col;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(20+18,160);ctx.lineTo(20+18,160-18);ctx.lineTo(20,160-18);ctx.stroke();}
   // Tick marks for equal sides
   if(t.ticks && t.ticks.length){
     t.ticks.forEach(([i,j,n])=>{

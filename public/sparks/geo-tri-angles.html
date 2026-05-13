@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html><html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>geo-tri-angles.html - Skill100</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
@@ -276,7 +276,7 @@ h1 { font-size: clamp(28px,5.5vw,44px) !important; line-height:1.2; margin-botto
 <div class="ct"><div class="ic" style="background:#fef3c7">📐</div>Triangle Angle Explorer</div>
 <div class="sr"><label id="la">A=50°</label><input type="range" min="10" max="150" step="1" value="50" id="sla" oninput="upd()"></div>
 <div class="sr"><label id="lb">B=70°</label><input type="range" min="10" max="150" step="1" value="70" id="slb" oninput="upd()"></div>
-<div class="cw"><canvas id="cv" height="160"></canvas></div>
+<div class="cw"><canvas id="cv" height="240"></canvas></div>
 <div class="rb" id="res">C = 60°</div>
 <div class="fg">
 <div class="fm" style="background:#fffbeb;color:#92400e"><h3>Angle Sum</h3><p>A+B+C=180°</p></div>
@@ -284,7 +284,47 @@ h1 { font-size: clamp(28px,5.5vw,44px) !important; line-height:1.2; margin-botto
 </div>
 <script>
 function upd(){const a=+document.getElementById("sla").value,b=+document.getElementById("slb").value;document.getElementById("la").textContent="A="+a+"°";document.getElementById("lb").textContent="B="+b+"°";const c=180-a-b;if(c<=0){document.getElementById("res").textContent="Invalid! A+B must be < 180°";return;}document.getElementById("res").textContent="C = "+c+"°";draw(a,b,c);}
-function draw(A,B,C){const cv=document.getElementById("cv"),dpr=window.devicePixelRatio||1;cv.width=cv.offsetWidth*dpr||600;cv.height=160*dpr;const ctx=cv.getContext("2d");ctx.scale(dpr,dpr);const W=cv.offsetWidth||600,H=160;const aR=A*Math.PI/180,bR=B*Math.PI/180;const base=Math.min(W-80,200);const ox=(W-base)/2,oy=H-25;const cx2=ox+base*Math.cos(aR)/Math.cos(bR-Math.PI/2+aR);const cy2=oy-base*Math.tan(aR)*Math.cos(aR);ctx.clearRect(0,0,W,H);ctx.fillStyle="#f59e0b22";ctx.strokeStyle="#f59e0b";ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox+base,oy);const tx=ox+base*Math.cos(0)/1,th=oy-Math.tan(aR)*base*(1-Math.cos(bR));const apx=ox+base/(Math.tan(aR)/Math.tan(bR)+1),apy=oy-Math.tan(aR)*(apx-ox);ctx.lineTo(apx,apy);ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle="#f59e0b";ctx.font="bold 16px Nunito";ctx.textAlign="center";ctx.fillText("A="+A+"°",ox-8,oy+14);ctx.fillText("B="+B+"°",ox+base+10,oy+14);ctx.fillText("C="+C+"°",apx,apy-10);}
+function draw(A,B,C){
+  const cv=document.getElementById("cv"),dpr=window.devicePixelRatio||1;
+  cv.width=cv.offsetWidth*dpr||600;cv.height=240*dpr;
+  const ctx=cv.getContext("2d");ctx.scale(dpr,dpr);
+  const W=cv.offsetWidth||600,H=240;
+  const aR=A*Math.PI/180,bR=B*Math.PI/180;
+  const topPad=30,botPad=40,oy=H-botPad;
+  let base=Math.min(W-100,220);
+  // apex position: apx fraction = tan(B)/(tan(A)+tan(B))
+  const tA=Math.tan(aR),tB=Math.tan(bR);
+  const apxFrac=tB/(tA+tB);
+  const naturalH=base*apxFrac*tA;
+  // scale base so apex fits within topPad
+  const maxH=oy-topPad;
+  if(naturalH>maxH) base*=maxH/naturalH;
+  const ox=(W-base)/2;
+  const Ax=ox,Ay=oy,Bx=ox+base,By=oy;
+  const Cx=ox+base*tB/(tA+tB),Cy=oy-(Cx-ox)*tA;
+  // draw triangle
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle="#f59e0b22";ctx.strokeStyle="#f59e0b";ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(Ax,Ay);ctx.lineTo(Bx,By);ctx.lineTo(Cx,Cy);ctx.closePath();
+  ctx.fill();ctx.stroke();
+  // angle arcs
+  const arcR=24;
+  ctx.strokeStyle="#f59e0b";ctx.lineWidth=1.8;
+  // arc at A: from direction A->C to direction A->B (clockwise = interior)
+  const aAC=Math.atan2(Cy-Ay,Cx-Ax),aAB=Math.atan2(By-Ay,Bx-Ax);
+  ctx.beginPath();ctx.arc(Ax,Ay,arcR,aAC,aAB,false);ctx.stroke();
+  // arc at B: from direction B->A to direction B->C (clockwise = interior)
+  const aBA=Math.atan2(Ay-By,Ax-Bx),aBC=Math.atan2(Cy-By,Cx-Bx);
+  ctx.beginPath();ctx.arc(Bx,By,arcR,aBA,aBC,false);ctx.stroke();
+  // arc at C: from direction C->B to direction C->A (clockwise = interior)
+  const aCB=Math.atan2(By-Cy,Bx-Cx),aCA=Math.atan2(Ay-Cy,Ax-Cx);
+  ctx.beginPath();ctx.arc(Cx,Cy,arcR,aCB,aCA,false);ctx.stroke();
+  // labels
+  ctx.fillStyle="#f59e0b";ctx.font="bold 15px Nunito";ctx.textAlign="center";
+  ctx.fillText("A="+A+"°",Ax-4,Ay+28);
+  ctx.fillText("B="+B+"°",Bx+4,By+28);
+  ctx.fillText("C="+C+"°",Cx,Cy-14);
+}
 const pool=[{q:"If A=60° and B=80°, find C",opts:["40°","50°","60°","30°"],ans:"40°"},{q:"If A=B=C, each angle is",opts:["45°","60°","90°","30°"],ans:"60°"},{q:"Exterior angle = A + B. If A=40°,B=55°, exterior angle is",opts:["85°","95°","100°","75°"],ans:"95°"},{q:"If two angles are 90° and 45°, the third is",opts:["45°","55°","35°","50°"],ans:"45°"},{q:"Isosceles triangle: vertex=100°, each base angle is",opts:["40°","50°","60°","80°"],ans:"40°"},{q:"The exterior angle of a triangle is always __ than either remote interior angle",opts:["Less","Equal","Greater","Half"],ans:"Greater"}];
 let sc=0,tq=0,ans=false,cq=null;function newQ(){ans=false;document.getElementById("qfb").textContent="";document.getElementById("qfb").className="fb";document.getElementById("nxt").style.display="none";cq=pool[Math.floor(Math.random()*pool.length)];document.getElementById("qq").textContent=cq.q;const el=document.getElementById("qopts");el.innerHTML="";cq.opts.forEach(o=>{const b=document.createElement("button");b.className="qb";b.textContent=o;b.onclick=()=>chk(o,b);el.appendChild(b);});}function chk(a,btn){if(ans)return;ans=true;tq++;document.getElementById("tq").textContent=tq;const fb=document.getElementById("qfb");if(a===cq.ans){sc++;document.getElementById("sc").textContent=sc;fb.textContent="Correct!";fb.className="fb g";btn.classList.add("ok");}else{fb.textContent="Answer: "+cq.ans;fb.className="fb b";btn.classList.add("no");document.querySelectorAll(".qb").forEach(b=>{if(b.textContent===cq.ans)b.classList.add("ok");});}document.getElementById("nxt").style.display="inline-block";}
 window.addEventListener("resize",upd);window.addEventListener("load",function(){upd();newQ();});

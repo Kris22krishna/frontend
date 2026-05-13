@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>geo-circle-theorems.html-Skill100</title>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>geo-circle-theorems.html-Skill100</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
 <style>*{box-sizing:border-box;margin:0;padding:0}body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#fff1f2;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#fda4af 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}.pg{position:relative;z-index:1;max-width:760px;margin:0 auto}.hdr{text-align:center;margin-bottom:2.5rem}.bdg{display:inline-block;background:#f43f5e;color:#fff;font-family:'Fredoka One',cursive;font-size:12px;padding:4px 14px;border-radius:999px;margin-bottom:10px}h1{font-family:'Fredoka One',cursive;font-size:clamp(26px,5vw,42px);line-height:1.2;margin-bottom:12px}h1 span{color:#f43f5e}.sub{font-size:17px;color:#64748b;font-weight:600}.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
 .ct{font-family:'Fredoka One',cursive;font-size:20px;margin-bottom:1.4rem;display:flex;align-items:center;gap:10px}
@@ -56,8 +56,123 @@ h1 { font-size: clamp(28px,5.5vw,44px) !important; line-height:1.2; margin-botto
 <div class="fg"><div class="fm" style="background:#fee2e2;color:#9f1239"><h3>Inscribed Angle</h3><p>= Central angle / 2</p></div><div class="fm" style="background:#e0f2fe;color:#0369a1"><h3>Semicircle</h3><p>Angle in semicircle = 90°</p></div><div class="fm" style="background:#ede9fe;color:#4c1d95"><h3>Same Arc</h3><p>Inscribed angles equal</p></div><div class="fm" style="background:#d1fae5;color:#065f46"><h3>Cyclic Quadrilateral</h3><p>Opp. angles sum = 180°</p></div></div>
 <script>
 let cur=0;const thms=["Inscribed angle = Central angle / 2","Angle in semicircle = 90°","Inscribed angles on same arc are equal","Opposite angles of cyclic quad sum to 180°"];
-function draw(){const cv=document.getElementById("cv"),dpr=window.devicePixelRatio||1;cv.width=cv.offsetWidth*dpr||600;cv.height=220*dpr;const ctx=cv.getContext("2d");ctx.scale(dpr,dpr);const W=cv.offsetWidth||600,H=220,cx=W/2,cy=H/2,r=80;ctx.clearRect(0,0,W,H);const PI=Math.PI;ctx.strokeStyle="#f43f5e";ctx.lineWidth=2;ctx.beginPath();ctx.arc(cx,cy,r,0,2*PI);ctx.stroke();ctx.fillStyle="#f43f5e";ctx.beginPath();ctx.arc(cx,cy,4,0,2*PI);ctx.fill();if(cur===0){const a1=PI*1.5,a2=PI*0.2,ap=PI*0.9;const p1=[cx+r*Math.cos(a1),cy+r*Math.sin(a1)],p2=[cx+r*Math.cos(a2),cy+r*Math.sin(a2)],pp=[cx+r*Math.cos(ap),cy+r*Math.sin(ap)];ctx.strokeStyle="#0ea5e9";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(p1[0],p1[1]);ctx.stroke();ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(p2[0],p2[1]);ctx.stroke();ctx.strokeStyle="#10b981";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(pp[0],pp[1]);ctx.lineTo(p1[0],p1[1]);ctx.stroke();ctx.beginPath();ctx.moveTo(pp[0],pp[1]);ctx.lineTo(p2[0],p2[1]);ctx.stroke();ctx.fillStyle="#0ea5e9";ctx.font="bold 16px Nunito";ctx.textAlign="center";ctx.fillText("2θ (central)",cx-5,cy-10);ctx.fillStyle="#10b981";ctx.fillText("θ (inscribed)",pp[0],pp[1]-12);}else if(cur===1){const pL=[cx-r,cy],pR=[cx+r,cy],pT=[cx,cy-r*0.9];ctx.strokeStyle="#0ea5e9";ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(pL[0],pL[1]);ctx.lineTo(pR[0],pR[1]);ctx.stroke();ctx.strokeStyle="#10b981";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(pT[0],pT[1]);ctx.lineTo(pL[0],pL[1]);ctx.stroke();ctx.beginPath();ctx.moveTo(pT[0],pT[1]);ctx.lineTo(pR[0],pR[1]);ctx.stroke();ctx.strokeStyle="#10b981";ctx.lineWidth=1.5;ctx.strokeRect(pT[0]-8,pT[1]+4,8,8);ctx.fillStyle="#0ea5e9";ctx.font="bold 16px Nunito";ctx.textAlign="center";ctx.fillText("Diameter",cx,cy+16);ctx.fillStyle="#10b981";ctx.fillText("90° here!",pT[0]+20,pT[1]-8);}
-document.getElementById("res").textContent=thms[cur];}
+function draw(){
+  const cv=document.getElementById("cv"),dpr=window.devicePixelRatio||1;
+  cv.width=cv.offsetWidth*dpr||600;cv.height=220*dpr;
+  const ctx=cv.getContext("2d");ctx.scale(dpr,dpr);
+  const W=cv.offsetWidth||600,H=220,cx=W/2,cy=H/2,r=80,PI=Math.PI;
+  ctx.clearRect(0,0,W,H);
+  // Circle
+  ctx.strokeStyle="#f43f5e";ctx.lineWidth=2;
+  ctx.beginPath();ctx.arc(cx,cy,r,0,2*PI);ctx.stroke();
+  ctx.fillStyle="#f43f5e";ctx.beginPath();ctx.arc(cx,cy,4,0,2*PI);ctx.fill();
+
+  // Helper: draw angle arc at vertex V between directions to A and B, sweeping through interior
+  function angleArc(vx,vy,ax,ay,bx,by,rad,col){
+    const a1=Math.atan2(ay-vy,ax-vx),a2=Math.atan2(by-vy,bx-vx);
+    let diff=a2-a1;while(diff>Math.PI)diff-=2*Math.PI;while(diff<-Math.PI)diff+=2*Math.PI;
+    // In canvas (y-down), angles increase clockwise.
+    // diff>0 → short path is clockwise (anticlockwise=false)
+    // diff<0 → short path is counterclockwise (anticlockwise=true)
+    const acw=diff<0;
+    ctx.strokeStyle=col;ctx.lineWidth=1.8;
+    ctx.beginPath();ctx.arc(vx,vy,rad,a1,a2,acw);ctx.stroke();
+  }
+
+  if(cur===0){
+    // Theorem 0: Inscribed angle = half central angle
+    const a1=PI*1.5,a2=PI*0.2,ap=PI*0.9;
+    const p1=[cx+r*Math.cos(a1),cy+r*Math.sin(a1)];
+    const p2=[cx+r*Math.cos(a2),cy+r*Math.sin(a2)];
+    const pp=[cx+r*Math.cos(ap),cy+r*Math.sin(ap)];
+    // Central angle lines (blue)
+    ctx.strokeStyle="#0ea5e9";ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(p1[0],p1[1]);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(p2[0],p2[1]);ctx.stroke();
+    // Inscribed angle lines (green)
+    ctx.strokeStyle="#10b981";ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(pp[0],pp[1]);ctx.lineTo(p1[0],p1[1]);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(pp[0],pp[1]);ctx.lineTo(p2[0],p2[1]);ctx.stroke();
+    // Central angle arc (blue) at centre
+    angleArc(cx,cy,p1[0],p1[1],p2[0],p2[1],28,"#0ea5e9");
+    // Inscribed angle arc (green) at pp — must be smaller
+    angleArc(pp[0],pp[1],p1[0],p1[1],p2[0],p2[1],22,"#10b981");
+    // Labels
+    ctx.fillStyle="#0ea5e9";ctx.font="bold 15px Nunito";ctx.textAlign="center";
+    ctx.fillText("2θ",cx+6,cy+14);
+    ctx.fillStyle="#10b981";
+    ctx.fillText("θ",pp[0]-16,pp[1]-10);
+
+  }else if(cur===1){
+    // Theorem 1: Angle in a semicircle = 90°
+    const pL=[cx-r,cy],pR=[cx+r,cy],pT=[cx,cy-r*0.9];
+    ctx.strokeStyle="#0ea5e9";ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(pL[0],pL[1]);ctx.lineTo(pR[0],pR[1]);ctx.stroke();
+    ctx.strokeStyle="#10b981";ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(pT[0],pT[1]);ctx.lineTo(pL[0],pL[1]);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(pT[0],pT[1]);ctx.lineTo(pR[0],pR[1]);ctx.stroke();
+    // Right-angle marker at pT (apex), going left and downward into the angle
+    ctx.strokeStyle="#10b981";ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(pT[0]-10,pT[1]);ctx.lineTo(pT[0]-10,pT[1]+10);ctx.lineTo(pT[0],pT[1]+10);ctx.stroke();
+    // Dot at apex
+    ctx.fillStyle="#10b981";ctx.beginPath();ctx.arc(pT[0],pT[1],4,0,2*PI);ctx.fill();
+    // Labels
+    ctx.fillStyle="#0ea5e9";ctx.font="bold 15px Nunito";ctx.textAlign="center";
+    ctx.fillText("Diameter",cx,cy+18);
+    ctx.fillStyle="#10b981";ctx.fillText("90°",pT[0]+22,pT[1]+6);
+
+  }else if(cur===2){
+    // Theorem 2: Inscribed angles on same arc are equal
+    const aA=PI*1.1,aB=PI*1.8,aP=PI*0.4,aQ=PI*0.75;
+    const A=[cx+r*Math.cos(aA),cy+r*Math.sin(aA)];
+    const B=[cx+r*Math.cos(aB),cy+r*Math.sin(aB)];
+    const P=[cx+r*Math.cos(aP),cy+r*Math.sin(aP)];
+    const Q=[cx+r*Math.cos(aQ),cy+r*Math.sin(aQ)];
+    // Two inscribed angles: P and Q both subtend arc AB
+    ctx.strokeStyle="#0ea5e9";ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(P[0],P[1]);ctx.lineTo(A[0],A[1]);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(P[0],P[1]);ctx.lineTo(B[0],B[1]);ctx.stroke();
+    ctx.strokeStyle="#8b5cf6";ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(Q[0],Q[1]);ctx.lineTo(A[0],A[1]);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(Q[0],Q[1]);ctx.lineTo(B[0],B[1]);ctx.stroke();
+    // Angle arcs
+    angleArc(P[0],P[1],A[0],A[1],B[0],B[1],22,"#0ea5e9");
+    angleArc(Q[0],Q[1],A[0],A[1],B[0],B[1],22,"#8b5cf6");
+    // Dots at A and B
+    ctx.fillStyle="#f43f5e";
+    [[A],[B]].forEach(([pt])=>{ctx.beginPath();ctx.arc(pt[0],pt[1],4,0,2*PI);ctx.fill();});
+    // Labels
+    ctx.font="bold 14px Nunito";ctx.textAlign="center";
+    ctx.fillStyle="#0ea5e9";ctx.fillText("θ",P[0]+14,P[1]-8);
+    ctx.fillStyle="#8b5cf6";ctx.fillText("θ",Q[0]-14,Q[1]-8);
+    ctx.fillStyle="#f43f5e";ctx.fillText("A",A[0]-12,A[1]+4);ctx.fillText("B",B[0]+12,B[1]+4);
+
+  }else if(cur===3){
+    // Theorem 3: Opposite angles of cyclic quad sum to 180°
+    const aA=PI*1.3,aB=PI*1.8,aC=PI*0.1,aD=PI*0.7;
+    const A=[cx+r*Math.cos(aA),cy+r*Math.sin(aA)];
+    const B=[cx+r*Math.cos(aB),cy+r*Math.sin(aB)];
+    const C=[cx+r*Math.cos(aC),cy+r*Math.sin(aC)];
+    const D=[cx+r*Math.cos(aD),cy+r*Math.sin(aD)];
+    // Quad sides
+    ctx.strokeStyle="#0ea5e9";ctx.lineWidth=2;
+    [A,B,C,D].forEach((p,i)=>{
+      const q=[A,B,C,D][(i+1)%4];
+      ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.lineTo(q[0],q[1]);ctx.stroke();
+    });
+    // Opposite angle arcs: A&C (blue), B&D (purple)
+    angleArc(A[0],A[1],D[0],D[1],B[0],B[1],22,"#0ea5e9");
+    angleArc(C[0],C[1],B[0],B[1],D[0],D[1],22,"#0ea5e9");
+    angleArc(B[0],B[1],A[0],A[1],C[0],C[1],22,"#8b5cf6");
+    angleArc(D[0],D[1],C[0],C[1],A[0],A[1],22,"#8b5cf6");
+    // Labels
+    ctx.font="bold 14px Nunito";ctx.textAlign="center";
+    ctx.fillStyle="#0ea5e9";ctx.fillText("α",A[0]-14,A[1]);ctx.fillText("α",C[0]+14,C[1]);
+    ctx.fillStyle="#8b5cf6";ctx.fillText("β",B[0]+4,B[1]+16);ctx.fillText("β",D[0]+4,D[1]-10);
+    ctx.fillStyle="#64748b";ctx.font="bold 13px Nunito";ctx.fillText("α+β=180°",cx,cy-14);
+  }
+  document.getElementById("res").textContent=thms[cur];
+}
 document.querySelectorAll||0;
 const pool=[{q:"Inscribed angle = ?",opts:["Central angle","Central angle / 2","Central angle × 2","Arc length"],ans:"Central angle / 2"},{q:"Angle in a semicircle is always:",opts:["60°","45°","90°","180°"],ans:"90°"},{q:"Angles inscribed in the same arc are:",opts:["Supplementary","Equal","Complementary","Different"],ans:"Equal"},{q:"Opposite angles of a cyclic quadrilateral sum to:",opts:["90°","270°","360°","180°"],ans:"180°"},{q:"If central angle = 120°, inscribed angle on same arc =",opts:["120°","240°","60°","30°"],ans:"60°"},{q:"A chord that passes through the centre is the:",opts:["Radius","Arc","Diameter","Tangent"],ans:"Diameter"}];
 let sc=0,tq=0,ans=false,cq=null;function newQ(){ans=false;document.getElementById("qfb").textContent="";document.getElementById("qfb").className="fb";document.getElementById("nxt").style.display="none";cq=pool[Math.floor(Math.random()*pool.length)];document.getElementById("qq").textContent=cq.q;const el=document.getElementById("qopts");el.innerHTML="";cq.opts.forEach(o=>{const b=document.createElement("button");b.className="qb";b.textContent=o;b.onclick=()=>chk(o,b);el.appendChild(b);});}function chk(a,btn){if(ans)return;ans=true;tq++;document.getElementById("tq").textContent=tq;const fb=document.getElementById("qfb");if(a===cq.ans){sc++;document.getElementById("sc").textContent=sc;fb.textContent="Correct!";fb.className="fb g";btn.classList.add("ok");}else{fb.textContent="Answer: "+cq.ans;fb.className="fb b";btn.classList.add("no");document.querySelectorAll(".qb").forEach(b=>{if(b.textContent===cq.ans)b.classList.add("ok");});}document.getElementById("nxt").style.display="inline-block";}window.addEventListener("resize",draw);window.addEventListener("load",function(){draw();newQ();});
