@@ -141,12 +141,12 @@ import IntDashboard from './components/Math-Branches/Calculus/Integration/IntDas
 import IntIntro5W1H from './components/Math-Branches/Calculus/Integration/Topics/5W1H/IntIntro5W1H';
 import IntTerminology from './components/Math-Branches/Calculus/Integration/Topics/Terminology/IntTerminology';
 import IntSkills from './components/Math-Branches/Calculus/Integration/Topics/Skills/IntSkills';
-import SetsDashboard from './components/Math-Branches/Sets/SetsDashboard';
-import SetsIntro from './components/Math-Branches/Sets/Topics/Introduction/SetsIntro';
-import SetsTerminology from './components/Math-Branches/Sets/Topics/Terminology/SetsTerminology';
-import SetsSkills from './components/Math-Branches/Sets/Topics/Skills/SetsSkills';
-import SetsConnectomics from './components/Math-Branches/Sets/Topics/Connectomics/SetsConnectomics';
-import SetsExamEdge from './components/Math-Branches/Sets/Topics/ExamEdge/SetsExamEdge';
+import SetsDashboard from './components/practice/class-11/maths/Sets/SetsDashboard';
+import SetsIntro from './components/practice/class-11/maths/Sets/Topics/Introduction/SetsIntro';
+import SetsTerminology from './components/practice/class-11/maths/Sets/Topics/Terminology/SetsTerminology';
+import SetsSkills from './components/practice/class-11/maths/Sets/Topics/Skills/SetsSkills';
+import SetsConnectomics from './components/practice/class-11/maths/Sets/Topics/Connectomics/SetsConnectomics';
+import SetsExamEdge from './components/practice/class-11/maths/Sets/Topics/ExamEdge/SetsExamEdge';
 
 // Class 11 - Maths: Relations & Functions
 import RelFuncDashboard from './components/practice/class-11/maths/RelationsAndFunctions/RelationsAndFunctions';

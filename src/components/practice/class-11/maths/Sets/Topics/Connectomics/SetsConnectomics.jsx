@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { setsConnectomicsData } from './SetsConnectomicsData';
 import '../../SetsBranch.css';
-import MathRenderer from '../../../../MathRenderer';
+import MathRenderer from '../../../../../../MathRenderer';
 import { Share2, Globe, Box, Link2 } from 'lucide-react';
 
 export default function SetsConnectomics() {

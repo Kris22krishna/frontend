@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { setsIntroData } from './SetsIntroData';
 import '../../SetsBranch.css';
-import { LatexText } from '../../../../LatexText';
+import { LatexText } from '../../../../../../LatexText';
 
 /* ── Single card ─────────────────────────────────── */
 function W1HCard({ card }) {

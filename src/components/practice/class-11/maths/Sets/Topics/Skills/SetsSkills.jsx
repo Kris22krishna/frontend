@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SKILLS } from './SetsSkillsData';
 import '../../SetsBranch.css';
-import MathRenderer from '../../../../MathRenderer';
-import { LatexText } from '../../../../LatexText';
+import MathRenderer from '../../../../../../MathRenderer';
+import { LatexText } from '../../../../../../LatexText';
 import { NODE_IDS } from '@/lib/curriculumIds';
 
 import QuizEngine from './Engines/QuizEngine';

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import MathRenderer from '../../../../../MathRenderer';
+import MathRenderer from '../../../../../../../MathRenderer';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 export default function AssessmentEngine({ 

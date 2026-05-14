@@ -1221,25 +1221,19 @@
   .sets-quiz-active {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    min-height: calc(100dvh - 220px);
-    max-height: calc(100dvh - 220px);
-    overflow: hidden;
+    overflow-y: auto;
+    padding-bottom: 24px;
   }
 
   .sets-quiz-container,
   .sets-assessment-layout > div:first-child {
     display: flex;
     flex-direction: column;
-    min-height: 0;
-    height: 100%;
   }
 
   .sets-quiz-active .sets-quiz-card,
   .sets-assessment-layout .sets-quiz-card {
-    flex: 1;
-    min-height: 0;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
   }
 
   .sets-quiz-question-text {
@@ -1531,10 +1525,8 @@
     padding: 16px !important;
   }
 
-  .sets-quiz-active,
-  .sets-assessment-layout {
-    min-height: calc(100dvh - 205px);
-    max-height: calc(100dvh - 205px);
+  .sets-quiz-active {
+    padding-bottom: 20px;
   }
 
   .sets-palette-trigger {

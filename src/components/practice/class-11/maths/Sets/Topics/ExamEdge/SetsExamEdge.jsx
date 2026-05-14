@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { setsExamEdgeData } from './SetsExamEdgeData';
 import '../../SetsBranch.css';
-import MathRenderer from '../../../../MathRenderer';
+import MathRenderer from '../../../../../../MathRenderer';
 import { Trophy, Target, AlertTriangle, Lightbulb } from 'lucide-react';
 
 export default function SetsExamEdge() {
