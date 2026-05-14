@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from '../../../geometry.module.css';
 import MathRenderer from '../../../../../MathRenderer';
 import QuizEngine from '../../../../../Math-Branches/Calculus/Engines/QuizEngine';
+import PracticeEngine from '../../../../../Math-Branches/Calculus/Engines/PracticeEngine';
 import AssessmentEngine from '../../../../../Math-Branches/Calculus/Engines/AssessmentEngine';
 import '../../../../../Math-Branches/Calculus/calculus.css';
 import { SKILLS } from './GeoSkillsData';
@@ -204,12 +205,11 @@ export default function GeoSkills() {
                             </div>
                         </div>
                     ) : view === 'practice' ? (
-                        <QuizEngine
+                        <PracticeEngine
                             questions={skill.practice}
                             title={`Practice: ${skill.title}`}
                             color={skill.color}
                             onBack={() => setView('list')}
-                            prefix="calc"
                         />
                     ) : (
                         <AssessmentEngine
