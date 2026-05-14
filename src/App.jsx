@@ -173,6 +173,14 @@ import RelFuncTerminology from './components/practice/class-11/maths/RelationsAn
 import RelFuncSkills from './components/practice/class-11/maths/RelationsAndFunctions/Topics/Skills/RelFuncSkills';
 import RelFuncConnectomics from './components/practice/class-11/maths/RelationsAndFunctions/Topics/Connectomics/RelFuncConnectomics';
 import RelFuncExamEdge from './components/practice/class-11/maths/RelationsAndFunctions/Topics/ExamEdge/RelFuncExamEdge';
+
+// Class 11 - Maths: Trigonometric Functions
+import TrigDashboard from './components/practice/class-11/maths/TrigonometricFunctions/TrigonometricFunctions';
+import TrigIntro from './components/practice/class-11/maths/TrigonometricFunctions/Topics/Introduction/TrigIntro5W1H';
+import TrigTerminology from './components/practice/class-11/maths/TrigonometricFunctions/Topics/Terminology/TrigTerminology';
+import TrigSkills from './components/practice/class-11/maths/TrigonometricFunctions/Topics/Skills/TrigSkills';
+import TrigConnectomics from './components/practice/class-11/maths/TrigonometricFunctions/Topics/Connectomics/TrigConnectomics';
+import TrigExamEdge from './components/practice/class-11/maths/TrigonometricFunctions/Topics/ExamEdge/TrigExamEdge';
 import MathsChapters12 from './components/practice/class-12/maths/MathsChapters12';
 
 import TheCellDashboard from './components/Biology-Branches/The-Cell/TheCellDashboard';
@@ -1403,6 +1411,14 @@ function App() {
           <Route path="senior/grade/11/maths/relations-and-functions/skills" element={<ProtectedRoute redirectTo="/login"><RelFuncSkills /></ProtectedRoute>} />
           <Route path="senior/grade/11/maths/relations-and-functions/connectomics" element={<ProtectedRoute redirectTo="/login"><RelFuncConnectomics /></ProtectedRoute>} />
           <Route path="senior/grade/11/maths/relations-and-functions/exam-edge" element={<ProtectedRoute redirectTo="/login"><RelFuncExamEdge /></ProtectedRoute>} />
+
+          {/* Class 11 Maths: Trigonometric Functions */}
+          <Route path="senior/grade/11/maths/trigonometric-functions" element={<ProtectedRoute redirectTo="/login"><TrigDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/trigonometric-functions/introduction" element={<ProtectedRoute redirectTo="/login"><TrigIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/trigonometric-functions/terminology" element={<ProtectedRoute redirectTo="/login"><TrigTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/trigonometric-functions/skills" element={<ProtectedRoute redirectTo="/login"><TrigSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/trigonometric-functions/connectomics" element={<ProtectedRoute redirectTo="/login"><TrigConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/trigonometric-functions/exam-edge" element={<ProtectedRoute redirectTo="/login"><TrigExamEdge /></ProtectedRoute>} />
 
           {/* Class 11 Physics */}
           <Route path="senior/grade/11/physics" element={<PhysicsChapters />} />
