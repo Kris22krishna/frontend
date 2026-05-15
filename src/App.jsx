@@ -174,6 +174,14 @@ import RelFuncSkills from './components/practice/class-11/maths/RelationsAndFunc
 import RelFuncConnectomics from './components/practice/class-11/maths/RelationsAndFunctions/Topics/Connectomics/RelFuncConnectomics';
 import RelFuncExamEdge from './components/practice/class-11/maths/RelationsAndFunctions/Topics/ExamEdge/RelFuncExamEdge';
 
+// Class 11 - Maths: Linear Inequalities
+import LinIneqDashboard from './components/practice/class-11/maths/LinearInequalities/LinearInequalities';
+import LinIneqIntro from './components/practice/class-11/maths/LinearInequalities/Topics/5W1H/LinIneqIntro5W1H';
+import LinIneqTerminology from './components/practice/class-11/maths/LinearInequalities/Topics/Terminology/LinIneqTerminology';
+import LinIneqSkills from './components/practice/class-11/maths/LinearInequalities/Topics/Skills/LinIneqSkills';
+import LinIneqConnectomics from './components/practice/class-11/maths/LinearInequalities/Topics/Connectomics/LinIneqConnectomics';
+import LinIneqExamEdge from './components/practice/class-11/maths/LinearInequalities/Topics/ExamEdge/LinIneqExamEdge';
+
 // Class 11 - Maths: Trigonometric Functions
 import TrigDashboard from './components/practice/class-11/maths/TrigonometricFunctions/TrigonometricFunctions';
 import TrigIntro from './components/practice/class-11/maths/TrigonometricFunctions/Topics/Introduction/TrigIntro5W1H';
@@ -1411,6 +1419,14 @@ function App() {
           <Route path="senior/grade/11/maths/relations-and-functions/skills" element={<ProtectedRoute redirectTo="/login"><RelFuncSkills /></ProtectedRoute>} />
           <Route path="senior/grade/11/maths/relations-and-functions/connectomics" element={<ProtectedRoute redirectTo="/login"><RelFuncConnectomics /></ProtectedRoute>} />
           <Route path="senior/grade/11/maths/relations-and-functions/exam-edge" element={<ProtectedRoute redirectTo="/login"><RelFuncExamEdge /></ProtectedRoute>} />
+
+          {/* Class 11 Maths: Linear Inequalities */}
+          <Route path="senior/grade/11/maths/linear-inequalities" element={<ProtectedRoute redirectTo="/login"><LinIneqDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/linear-inequalities/introduction" element={<ProtectedRoute redirectTo="/login"><LinIneqIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/linear-inequalities/terminology" element={<ProtectedRoute redirectTo="/login"><LinIneqTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/linear-inequalities/skills" element={<ProtectedRoute redirectTo="/login"><LinIneqSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/linear-inequalities/connectomics" element={<ProtectedRoute redirectTo="/login"><LinIneqConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/linear-inequalities/exam-edge" element={<ProtectedRoute redirectTo="/login"><LinIneqExamEdge /></ProtectedRoute>} />
 
           {/* Class 11 Maths: Trigonometric Functions */}
           <Route path="senior/grade/11/maths/trigonometric-functions" element={<ProtectedRoute redirectTo="/login"><TrigDashboard /></ProtectedRoute>} />

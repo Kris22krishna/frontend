@@ -12,8 +12,19 @@ import {
   generateTrigEquationsQuestions, generateTrigEquationsAssessment,
 } from "./trigQuestions";
 import AssessmentEngine from "../../../../../../Math-Branches/Algebra/Topics/Skills/Engines/AssessmentEngine";
+import { NODE_IDS } from "@/lib/curriculumIds";
+import { useSessionLogger } from "@/hooks/useSessionLogger";
 
 const BASE = "/senior/grade/11/maths/trigonometric-functions";
+
+const SKILL_NODE_ID_MAP = {
+  angles:     NODE_IDS.g11MathTrigFuncRadians,
+  trigvalues: NODE_IDS.g11MathTrigFuncTrigValues,
+  signs:      NODE_IDS.g11MathTrigFuncGraphs,
+  allied:     NODE_IDS.g11MathTrigFuncRules,
+  sumdiff:    NODE_IDS.g11MathTrigFuncSumDiff,
+  equations:  NODE_IDS.g11MathTrigFuncEquations,
+};
 
 const SKILLS = [
   {
@@ -133,7 +144,11 @@ const SKILLS = [
 ];
 
 // ─── CUSTOM PRACTICE ENGINE (with Previous button and state preservation) ────
-function TrigPracticeEngine({ questions, title, color, onBack }) {
+function TrigPracticeEngine({ questions, title, color, onBack, nodeId }) {
+  const { startSession, logAnswer, finishSession } = useSessionLogger();
+  const answersPayload = useRef([]);
+  const sessionStartedRef = useRef(false);
+
   const [questionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState(Array(questionSet.length).fill(null));
@@ -142,6 +157,14 @@ function TrigPracticeEngine({ questions, title, color, onBack }) {
   const [questionTimes, setQuestionTimes] = useState(Array(questionSet.length).fill(0));
   const timerRef = useRef(null);
   const startTimeRef = useRef(Date.now());
+
+  // Start session once on mount
+  useEffect(() => {
+    if (!nodeId || sessionStartedRef.current) return;
+    sessionStartedRef.current = true;
+    startSession({ nodeId, sessionType: 'practice' });
+    answersPayload.current = [];
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     timerRef.current = setInterval(() => setTimeTaken(t => t + 1), 1000);
@@ -158,15 +181,37 @@ function TrigPracticeEngine({ questions, title, color, onBack }) {
   const q = questionSet[current];
   const isAnswered = answers[current] !== null;
 
-  const handleSelect = (idx) => {
+  const handleSelect = async (idx) => {
     if (isAnswered) return;
     const elapsed = Math.floor((Date.now() - startTimeRef.current) / 1000);
     setQuestionTimes(t => { const n = [...t]; n[current] = elapsed; return n; });
     setAnswers(a => { const n = [...a]; n[current] = idx; return n; });
+
+    if (nodeId) {
+      const isCorrect = idx === q.correct;
+      const answerData = {
+        question_index: current + 1,
+        answer_json: { selected: idx, text: q.options[idx] },
+        is_correct: isCorrect ? 1.0 : 0.0,
+        marks_awarded: isCorrect ? 1 : 0,
+        marks_possible: 1,
+        time_taken_ms: elapsed * 1000,
+      };
+      answersPayload.current[current] = answerData;
+      await logAnswer({ questionIndex: answerData.question_index, answerJson: answerData.answer_json, isCorrect: answerData.is_correct });
+    }
   };
 
-  const handleNext = () => {
-    if (current + 1 >= questionSet.length) { setFinished(true); clearInterval(timerRef.current); return; }
+  const handleNext = async () => {
+    if (current + 1 >= questionSet.length) {
+      setFinished(true);
+      clearInterval(timerRef.current);
+      if (nodeId) {
+        const payload = answersPayload.current.filter(Boolean);
+        await finishSession({ totalQuestions: questionSet.length, questionsAnswered: payload.length, answersPayload: payload });
+      }
+      return;
+    }
     setCurrent(c => c + 1);
   };
   const handlePrev = () => { if (current > 0) setCurrent(c => c - 1); };
@@ -425,10 +470,12 @@ export default function TrigSkills() {
           ) : view === "practice" ? (
             <div style={{ maxWidth: 900, margin: "0 auto" }}>
               <TrigPracticeEngine
+                key={`practice-${skill.id}`}
                 questions={skill.practice}
                 title={skill.title}
                 color={skill.color}
                 onBack={() => setView("list")}
+                nodeId={SKILL_NODE_ID_MAP[skill.id]}
               />
             </div>
           ) : (
@@ -440,7 +487,7 @@ export default function TrigSkills() {
                 onSecondaryBack={() => navigate(BASE)}
                 color={skill.color}
                 prefix="mat"
-                nodeId={null}
+                nodeId={SKILL_NODE_ID_MAP[skill.id]}
                 sessionType="assessment"
               />
             </div>
