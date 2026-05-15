@@ -1185,6 +1185,21 @@ export const NODE_IDS = {
   // Terminology Quiz
   g11MathRAFTerminologyQuiz:               'a4111002-0010-0000-0000-000000000000',
 
+  // Ch 4: Complex Numbers and Quadratic Equations
+  g11MathsComplexNumbers:                  'a3111004-0000-0000-0000-000000000001',
+
+  // Skills (7 skills)
+  g11MathCNComplexBasics:                  'a4111004-0001-0000-0000-000000000000',
+  g11MathCNAdditionSubtraction:            'a4111004-0002-0000-0000-000000000000',
+  g11MathCNMultiplication:                 'a4111004-0003-0000-0000-000000000000',
+  g11MathCNDivisionInverse:                'a4111004-0004-0000-0000-000000000000',
+  g11MathCNPowersOfI:                      'a4111004-0005-0000-0000-000000000000',
+  g11MathCNModulusConjugate:               'a4111004-0006-0000-0000-000000000000',
+  g11MathCNArgandPlane:                    'a4111004-0007-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11MathCNTerminologyQuiz:                'a4111004-0010-0000-0000-000000000000',
+
   // ── 10. GRADE 11 BIOLOGY ──────────────────────────────────────────────────
   // Prefix: e = Biology (hex-safe) | Biology subject code: 16
 
@@ -1435,6 +1450,17 @@ export const SLUG_TO_NODE_ID = {
   'g11-math-raf-special':                      NODE_IDS.g11MathRAFSpecial,
   'g11-math-raf-algebra':                      NODE_IDS.g11MathRAFAlgebra,
   'g11-math-raf-terminology':                  NODE_IDS.g11MathRAFTerminologyQuiz,
+
+  // Grade 11 Maths: Complex Numbers and Quadratic Equations
+  'g11-math-cn':                               NODE_IDS.g11MathsComplexNumbers,
+  'g11-math-cn-complex-basics':                NODE_IDS.g11MathCNComplexBasics,
+  'g11-math-cn-addition-subtraction':          NODE_IDS.g11MathCNAdditionSubtraction,
+  'g11-math-cn-multiplication':                NODE_IDS.g11MathCNMultiplication,
+  'g11-math-cn-division-inverse':              NODE_IDS.g11MathCNDivisionInverse,
+  'g11-math-cn-powers-of-i':                   NODE_IDS.g11MathCNPowersOfI,
+  'g11-math-cn-modulus-conjugate':             NODE_IDS.g11MathCNModulusConjugate,
+  'g11-math-cn-argand-plane':                  NODE_IDS.g11MathCNArgandPlane,
+  'g11-math-cn-terminology':                   NODE_IDS.g11MathCNTerminologyQuiz,
 
   // Grade 11 Biology: The Cell — The Unit of Life
   'g11-bio-the-cell':                          NODE_IDS.g11BiologyTheCell,

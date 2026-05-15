@@ -148,6 +148,14 @@ import SetsSkills from './components/practice/class-11/maths/Sets/Topics/Skills/
 import SetsConnectomics from './components/practice/class-11/maths/Sets/Topics/Connectomics/SetsConnectomics';
 import SetsExamEdge from './components/practice/class-11/maths/Sets/Topics/ExamEdge/SetsExamEdge';
 
+// Class 11 - Maths: Complex Numbers & Quadratic Equations
+import ComplexDashboard from './components/practice/class-11/maths/ComplexNumbers/ComplexDashboard';
+import ComplexIntro from './components/practice/class-11/maths/ComplexNumbers/Topics/Introduction/ComplexIntro';
+import ComplexTerminology from './components/practice/class-11/maths/ComplexNumbers/Topics/Terminology/ComplexTerminology';
+import ComplexSkills from './components/practice/class-11/maths/ComplexNumbers/Topics/Skills/ComplexSkills';
+import ComplexConnectomics from './components/practice/class-11/maths/ComplexNumbers/Topics/Connectomics/ComplexConnectomics';
+import ComplexExamEdge from './components/practice/class-11/maths/ComplexNumbers/Topics/ExamEdge/ComplexExamEdge';
+
 // Class 11 - Maths: Relations & Functions
 import RelFuncDashboard from './components/practice/class-11/maths/RelationsAndFunctions/RelationsAndFunctions';
 import RelFuncIntro from './components/practice/class-11/maths/RelationsAndFunctions/Topics/5W1H/RelFuncIntro5W1H';
@@ -1377,6 +1385,14 @@ function App() {
           <Route path="senior/grade/11/maths/sets/skills" element={<ProtectedRoute redirectTo="/login"><SetsSkills /></ProtectedRoute>} />
           <Route path="senior/grade/11/maths/sets/connectomics" element={<ProtectedRoute redirectTo="/login"><SetsConnectomics /></ProtectedRoute>} />
           <Route path="senior/grade/11/maths/sets/exam-edge" element={<ProtectedRoute redirectTo="/login"><SetsExamEdge /></ProtectedRoute>} />
+
+          {/* Class 11 Maths: Complex Numbers & Quadratic Equations */}
+          <Route path="senior/grade/11/maths/complex-numbers" element={<ProtectedRoute redirectTo="/login"><ComplexDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/complex-numbers/introduction" element={<ProtectedRoute redirectTo="/login"><ComplexIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/complex-numbers/terminology" element={<ProtectedRoute redirectTo="/login"><ComplexTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/complex-numbers/skills" element={<ProtectedRoute redirectTo="/login"><ComplexSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/complex-numbers/connectomics" element={<ProtectedRoute redirectTo="/login"><ComplexConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/complex-numbers/exam-edge" element={<ProtectedRoute redirectTo="/login"><ComplexExamEdge /></ProtectedRoute>} />
 
           {/* Class 11 Maths: Relations & Functions */}
           <Route path="senior/grade/11/maths/relations-and-functions" element={<ProtectedRoute redirectTo="/login"><RelFuncDashboard /></ProtectedRoute>} />

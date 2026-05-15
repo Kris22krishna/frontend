@@ -1320,9 +1320,10 @@
 
   .sets-assessment-layout {
     position: relative;
-    min-height: calc(100dvh - 220px);
-    max-height: calc(100dvh - 220px);
-    overflow: hidden;
+    min-height: auto;
+    max-height: none;
+    overflow: visible;
+    padding-bottom: 90px;
   }
 
   .sets-assessment-palette {
