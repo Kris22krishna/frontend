@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Triangle Types — Skill100 Spark</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#fffbeb;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#fcd34d 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.header{text-align:center;margin-bottom:2.5rem}
+.badge{display:inline-block;background:#f59e0b;color:#fff;font-family:'Fredoka One',cursive;font-size:14px;letter-spacing:1px;padding:7px 18px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,5.5vw,44px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#f59e0b}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+.ctitle{font-family:'Fredoka One',cursive;font-size:22px;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.story{background:#fef3c7;border:2px solid #f59e0b;border-radius:14px;padding:18px 22px;font-size:17px;font-weight:700;color:#78350f;line-height:1.65;margin-bottom:2rem}
+.types-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.5rem}
+.ttype{border-radius:14px;padding:18px 12px;text-align:center;cursor:pointer;border:2.5px solid transparent;transition:all .18s}
+.ttype:hover,.ttype.active{border-color:currentColor;transform:translateY(-2px)}
+.ttype h3{font-size:16px;font-weight:800;margin-bottom:4px}
+.ttype p{font-size:13px;font-weight:600;opacity:.8}
+.canvas-wrap{background:#f8fafc;border-radius:14px;padding:14px;margin-bottom:1.5rem;border:1.5px dashed #e2e8f0}
+canvas{display:block;width:100%;border-radius:6px}
+.info-box{background:#fef3c7;border:2px solid #f59e0b;border-radius:14px;padding:20px;text-align:center;margin-bottom:1.5rem}
+.info-box h3{font-family:'Fredoka One',cursive;font-size:22px;color:#92400e;margin-bottom:8px}
+.info-box p{font-size:17px;font-weight:700;color:#78350f}
+.score-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.score-pill{background:#fef3c7;color:#92400e;font-size:15px;font-weight:800;padding:8px 18px;border-radius:999px}
+.quiz-q{font-size:19px;font-weight:700;margin-bottom:20px;line-height:1.6}
+.quiz-opts{display:flex;gap:12px;flex-wrap:wrap}
+.qbtn{border:2px solid #e2e8f0;border-radius:12px;padding:12px 26px;font-family:'Nunito',sans-serif;font-size:17px;font-weight:800;cursor:pointer;background:#fff;transition:all .15s}
+.qbtn:hover{border-color:#f59e0b;color:#92400e}
+.qbtn.ok{background:#d1fae5;border-color:#10b981;color:#065f46}
+.qbtn.no{background:#fee2e2;border-color:#ef4444;color:#991b1b}
+.qfb{margin-top:18px;font-size:17px;font-weight:700;min-height:24px}
+.qfb.g{color:#10b981}.qfb.b{color:#ef4444}
+.nxt{display:none;margin-top:16px;background:#f59e0b;color:#fff;border:none;border-radius:12px;padding:12px 28px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer}
+.footer{text-align:center;font-size:14px;font-weight:700;color:#64748b;margin-top:3.5rem}
+.footer span{color:#f59e0b}</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="badge">SKILL SPARK · BASIC GEOMETRY</div>
+    <h1>Triangle <span>Types</span></h1>
+    <p class="sub">Click a type to explore its properties.</p>
+  </div>
+  <div class="story">Triangles are classified by their <b>sides</b> (equilateral, isosceles, scalene) or by their <b>angles</b> (acute, right, obtuse). The angles always sum to 180°!</div>
+  <div class="card">
+    <div class="ctitle"><div class="icon" style="background:#fef3c7">🔺</div> Triangle Explorer</div>
+    <div class="types-grid" id="tgrid"></div>
+    <div class="canvas-wrap"><canvas id="cv" height="160"></canvas></div>
+    <div class="info-box">
+      <h3 id="tname">Equilateral</h3>
+      <p id="tdesc">All 3 sides equal · All angles = 60°</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="score-row">
+      <div class="ctitle" style="margin-bottom:0"><div class="icon" style="background:#fef3c7">🧠</div> Quick Quiz!</div>
+      <div class="score-pill">Score: <span id="sc">0</span>/<span id="tq">0</span></div>
+    </div>
+    <div class="quiz-q" id="qq">Loading...</div>
+    <div class="quiz-opts" id="qopts"></div>
+    <div class="qfb" id="qfb"></div>
+    <button class="nxt" id="nxt" onclick="newQ()">Next →</button>
+  </div>
+  <div class="footer">Made with ❤️ by <span>Skill100</span></div>
+</div>
+<script>
+const triangles=[
+  {name:'Equilateral',desc:'All 3 sides equal · All angles = 60°',col:'#f59e0b',pts:[[120,30],[20,160],[220,160]],ticks:[[0,1,1],[1,2,1],[2,0,1]]},
+  {name:'Isosceles',desc:'2 equal sides · 2 equal base angles',col:'#10b981',pts:[[120,20],[30,160],[210,160]],ticks:[[0,1,1],[0,2,1]]},
+  {name:'Scalene',desc:'No equal sides · No equal angles',col:'#0ea5e9',pts:[[60,20],[20,160],[220,140]],ticks:[[0,1,1],[1,2,2],[0,2,3]]},
+  {name:'Right-angled',desc:'One angle = 90°',col:'#8b5cf6',pts:[[20,160],[20,20],[200,160]],ticks:[]},
+  {name:'Acute',desc:'All angles less than 90°',col:'#ef4444',pts:[[120,20],[30,160],[210,160]],ticks:[],arcs:[[0,1,2,false],[1,0,2,false],[2,1,0,false]]},
+  {name:'Obtuse',desc:'One angle greater than 90°',col:'#f43f5e',pts:[[10,80],[20,160],[230,160]],ticks:[],arcs:[[1,0,2,true],[0,1,2,false],[2,1,0,false]]},
+];
+let cur=0;
+const grid=document.getElementById('tgrid');
+triangles.forEach((t,i)=>{
+  const d=document.createElement('div');
+  d.className='ttype'+(i===0?' active':'');
+  d.style.background=t.col+'18'; d.style.color=t.col;
+  d.innerHTML=`<h3>${t.name}</h3>`;
+  d.onclick=()=>{cur=i;document.querySelectorAll('.ttype').forEach((e,j)=>e.classList.toggle('active',j===i));showTri();};
+  grid.appendChild(d);
+});
+function showTri(){
+  const t=triangles[cur];
+  document.getElementById('tname').textContent=t.name;
+  document.getElementById('tdesc').textContent=t.desc;
+  draw(t);
+}
+function drawTick(ctx, x1, y1, x2, y2, n, col) {
+  const mx=(x1+x2)/2, my=(y1+y2)/2;
+  const dx=x2-x1, dy=y2-y1, L=Math.sqrt(dx*dx+dy*dy);
+  if(L<1) return;
+  const px=-dy/L, py=dx/L;  // perpendicular unit vector
+  const lx=dx/L,  ly=dy/L;  // along-line unit vector
+  const sz=7, gap=6;
+  const start=-(n-1)*gap/2;
+  ctx.save();
+  ctx.strokeStyle=col; ctx.lineWidth=2.5; ctx.lineCap='round';
+  for(let k=0;k<n;k++){
+    const off=start+k*gap;
+    ctx.beginPath();
+    ctx.moveTo(mx+lx*off+px*sz, my+ly*off+py*sz);
+    ctx.lineTo(mx+lx*off-px*sz, my+ly*off-py*sz);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+function drawAngleArc(ctx,pts,vi,ai,bi,r,col,dbl){
+  const [vx,vy]=pts[vi],[ax,ay]=pts[ai],[bx,by]=pts[bi];
+  const dax=ax-vx,day=ay-vy,dbx=bx-vx,dby=by-vy;
+  const a1=Math.atan2(day,dax),a2=Math.atan2(dby,dbx);
+  const cross=dax*dby-day*dbx;
+  const acw=cross<0;
+  ctx.save();
+  ctx.strokeStyle=col;ctx.lineWidth=2;ctx.setLineDash([]);
+  ctx.beginPath();ctx.arc(vx,vy,r,a1,a2,acw);ctx.stroke();
+  if(dbl){ctx.beginPath();ctx.arc(vx,vy,r+7,a1,a2,acw);ctx.stroke();}
+  ctx.restore();
+}
+function draw(t){
+  const cv=document.getElementById('cv'),dpr=window.devicePixelRatio||1;
+  cv.width=cv.offsetWidth*dpr||600;cv.height=220*dpr;
+  const ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
+  const W=cv.offsetWidth||600,H=220;
+  const sx=(W-240)/2,sy=(H-180)/2;
+  ctx.clearRect(0,0,W,H);
+  ctx.save();ctx.translate(sx,sy);
+  ctx.fillStyle=t.col+'22';ctx.strokeStyle=t.col;ctx.lineWidth=3;
+  ctx.beginPath();t.pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));
+  ctx.closePath();ctx.fill();ctx.stroke();
+  if(t.name==='Right-angled'){ctx.strokeStyle=t.col;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(20+18,160);ctx.lineTo(20+18,160-18);ctx.lineTo(20,160-18);ctx.stroke();}
+  // Tick marks for equal sides
+  if(t.ticks && t.ticks.length){
+    t.ticks.forEach(([i,j,n])=>{
+      const [x1,y1]=t.pts[i], [x2,y2]=t.pts[j];
+      drawTick(ctx,x1,y1,x2,y2,n,t.col);
+    });
+  }
+  // Angle arcs
+  if(t.arcs && t.arcs.length){
+    t.arcs.forEach(([vi,ai,bi,dbl])=>{
+      drawAngleArc(ctx,t.pts,vi,ai,bi,22,t.col,dbl);
+    });
+  }
+  ctx.fillStyle=t.col;ctx.font='bold 16px Nunito';ctx.textAlign='center';
+  t.pts.forEach((p,i)=>{
+    const labels=['A','B','C'];
+    const ox=[0,-12,12];const oy=[-10,10,10];
+    ctx.fillText(labels[i],p[0]+ox[i],p[1]+oy[i]);
+  });
+  ctx.restore();
+}
+const pool=[
+  {q:'A triangle with all three sides equal is called:',opts:['Scalene','Isosceles','Equilateral','Right'],ans:'Equilateral'},
+  {q:'A right-angled triangle has one angle of:',opts:['45°','60°','90°','180°'],ans:'90°'},
+  {q:'An isosceles triangle has:',opts:['No equal sides','2 equal sides','3 equal sides','3 equal angles'],ans:'2 equal sides'},
+  {q:'The sum of all angles in any triangle is:',opts:['90°','180°','270°','360°'],ans:'180°'},
+  {q:'A scalene triangle has:',opts:['All sides equal','2 equal sides','No equal sides','One right angle'],ans:'No equal sides'},
+  {q:'An obtuse triangle has:',opts:['One angle > 90°','All angles < 90°','One angle = 90°','Two equal angles'],ans:'One angle > 90°'},
+  {q:'In an equilateral triangle, each angle measures:',opts:['45°','60°','90°','30°'],ans:'60°'},
+];
+let sc=0,tq=0,ans=false,cq=null;
+function newQ(){
+  ans=false;document.getElementById('qfb').textContent='';document.getElementById('qfb').className='qfb';
+  document.getElementById('nxt').style.display='none';
+  cq=pool[Math.floor(Math.random()*pool.length)];
+  document.getElementById('qq').textContent=cq.q;
+  const el=document.getElementById('qopts');el.innerHTML='';
+  cq.opts.forEach(o=>{const b=document.createElement('button');b.className='qbtn';b.textContent=o;b.onclick=()=>chk(o,b);el.appendChild(b);});
+}
+function chk(a,btn){
+  if(ans)return;ans=true;tq++;document.getElementById('tq').textContent=tq;
+  const fb=document.getElementById('qfb');
+  if(a===cq.ans){sc++;document.getElementById('sc').textContent=sc;fb.textContent='🎉 Correct!';fb.className='qfb g';btn.classList.add('ok');}
+  else{fb.textContent='Answer: '+cq.ans;fb.className='qfb b';btn.classList.add('no');document.querySelectorAll('.qbtn').forEach(b=>{if(b.textContent===cq.ans)b.classList.add('ok');});}
+  document.getElementById('nxt').style.display='inline-block';
+}
+window.addEventListener('resize',()=>draw(triangles[cur]));window.addEventListener('load',function(){showTri();newQ();});
+</script>
+</body>
+</html>

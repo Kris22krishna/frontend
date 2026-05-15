@@ -897,11 +897,11 @@ export const LAGraphMini = ({ config, onProtractorChange }) => {
         const pMid = pAngQ + diffP / 2;
 
         // Angle at Q
-        const qAngP = Math.atan2(-(Py - Qy), Px - Qx) * 180 / Math.PI;
+        let qAngP = Math.atan2(-(Py - Qy), Px - Qx) * 180 / Math.PI;
         if (qAngP < 0) qAngP += 360;
         
         // Exterior angle at R
-        const rAngP = Math.atan2(-(Py - Ry), Px - Rx) * 180 / Math.PI;
+        let rAngP = Math.atan2(-(Py - Ry), Px - Rx) * 180 / Math.PI;
         if (rAngP < 0) rAngP += 360;
 
         return (

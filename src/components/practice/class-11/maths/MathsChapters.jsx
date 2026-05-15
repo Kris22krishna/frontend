@@ -24,6 +24,24 @@ const chapters = [
         gradient: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
         shadow: 'rgba(99,102,241,0.35)',
     },
+    {
+        key: 'trigonometric-functions',
+        title: 'Trigonometric Functions',
+        desc: 'Angles, radians, unit circle, sin/cos/tan values, identities, allied angles, sum-difference formulas, and trig equations.',
+        icon: 'sin θ',
+        questions: 240,
+        gradient: 'linear-gradient(135deg, #0891b2 0%, #312e81 100%)',
+        shadow: 'rgba(8,145,178,0.35)',
+    },
+    {
+        key: 'linear-inequalities',
+        title: 'Linear Inequalities',
+        desc: 'Properties of inequalities, solving in one variable, graphical representation on number line, two-variable inequalities, and systems of linear inequalities.',
+        icon: '≤ x',
+        questions: 240,
+        gradient: 'linear-gradient(135deg, #0369a1 0%, #0891b2 100%)',
+        shadow: 'rgba(3,105,161,0.35)',
+    },
     // Future chapters can be added here
 ];
 

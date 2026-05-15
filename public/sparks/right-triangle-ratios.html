@@ -143,7 +143,11 @@
             const dirX = originPt.x < adjPoint.x ? 1 : -1;
             ctx.strokeStyle = '#cbd5e1';
             ctx.lineWidth = 1.5;
-            ctx.strokeRect(adjPoint.x - dirX * sq, adjPoint.y - sq, dirX * sq, sq);
+            ctx.beginPath();
+            ctx.moveTo(adjPoint.x - dirX * sq, adjPoint.y);
+            ctx.lineTo(adjPoint.x - dirX * sq, adjPoint.y - sq);
+            ctx.lineTo(adjPoint.x, adjPoint.y - sq);
+            ctx.stroke();
 
             ctx.strokeStyle = '#6366f1';
             ctx.lineWidth = 4; ctx.lineCap = 'round';

@@ -1,0 +1,206 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Angles — Skill100 Spark</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#F0F9FF;--blue:#0ea5e9;--blue-l:#e0f2fe;--green:#10b981;--green-l:#d1fae5;--red:#ef4444;--red-l:#fee2e2;--amber:#f59e0b;--amber-l:#fef3c7;--muted:#64748b;--text:#0f172a;--border:#e2e8f0;--sh:0 4px 24px rgba(0,0,0,.08)}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#7dd3fc 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.header{text-align:center;margin-bottom:1.5rem}
+.badge{display:inline-block;background:var(--blue);color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(28px,5.5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:var(--blue)}
+.sub{font-size:17px;color:var(--muted);font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:var(--sh);margin-bottom:2rem;border:1.5px solid var(--border)}
+.ctitle{font-family:'Fredoka One',cursive;font-size:20px;margin-bottom:1.4rem;display:flex;align-items:center;gap:10px}
+.icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.story{background:var(--blue-l);border:2px solid var(--blue);border-radius:14px;padding:18px 22px;font-size:15px;font-weight:700;color:#0369a1;line-height:1.55;margin-bottom:2rem}
+.slider-row{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.slider-row label{font-size:14px;font-weight:700;color:var(--muted);min-width:70px}
+input[type=range]{-webkit-appearance:none;appearance:none;flex:1;height:6px;border-radius:3px;background:var(--border);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--blue);border:3px solid #fff;box-shadow:0 0 0 2px var(--blue);cursor:pointer}
+.canvas-wrap{background:#f8fafc;border-radius:14px;padding:14px;margin-bottom:1.5rem;border:1.5px dashed var(--border)}
+canvas{display:block;width:100%;border-radius:6px}
+.angle-disp{font-family:'Fredoka One',cursive;font-size:32px;text-align:center;color:var(--blue);margin:.75rem 0}
+.type-lbl{display:block;width:fit-content;font-family:'Fredoka One',cursive;font-size:16px;font-weight:800;padding:9px 22px;border-radius:999px;margin:0 auto .75rem auto}
+.types-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:.5rem}
+.atype{border-radius:14px;padding:16px 14px;border-left:4px solid currentColor}
+.atype h3{font-size:14px;font-weight:800;margin-bottom:4px}
+.atype p{font-size:13px;font-weight:600;opacity:.8}
+.score-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.score-pill{background:var(--blue-l);color:#0369a1;font-size:13px;font-weight:800;padding:6px 14px;border-radius:999px}
+.quiz-q{font-size:16px;font-weight:700;margin-bottom:14px;line-height:1.5}
+.quiz-opts{display:flex;gap:10px;flex-wrap:wrap}
+.qbtn{border:2px solid var(--border);border-radius:10px;padding:10px 20px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer;background:#fff;color:var(--text);transition:all .15s}
+.qbtn:hover{border-color:var(--blue);color:var(--blue)}
+.qbtn.ok{background:var(--green-l);border-color:var(--green);color:#065f46}
+.qbtn.no{background:var(--red-l);border-color:var(--red);color:#991b1b}
+.qfb{margin-top:14px;font-size:14px;font-weight:700;min-height:20px}
+.qfb.g{color:var(--green)}.qfb.b{color:var(--red)}
+.nxt{display:none;margin-top:16px;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:11px 26px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;cursor:pointer}
+.footer{text-align:center;font-size:12px;font-weight:700;color:var(--muted);margin-top:3.5rem}
+.footer span{color:var(--blue)}
+/* ── SKILL100 FONT OVERRIDES (v2) ─────────────────── */
+h1 { font-size: clamp(28px,5.5vw,44px) !important; line-height:1.2; margin-bottom:14px; }
+.sub, .header p, p.sub { font-size: 17px !important; }
+.badge, .bdg { font-size: 14px !important; padding: 7px 18px !important; }
+.story { font-size: 17px !important; line-height: 1.65 !important; }
+.card .ctitle, .card .ct, .ctitle { font-size: 22px !important; }
+.slider-row label, .sr label { font-size: 16px !important; min-width: 80px !important; }
+.result-box, .rb, #res, .res-bar { font-size: 26px !important; }
+.fml h3, .fm h3, .ainfo h3, .atype h3, .ttype h3 { font-size: 16px !important; margin-bottom: 7px !important; font-weight: 800 !important; }
+.fml p, .fm p { font-size: 20px !important; }
+.ainfo p { font-size: 26px !important; font-weight: 800 !important; }
+.info-box h3 { font-size: 22px !important; margin-bottom: 8px !important; }
+.info-box p { font-size: 17px !important; font-weight: 700 !important; }
+.score-pill, .sp { font-size: 15px !important; padding: 8px 18px !important; }
+.quiz-q, .qq { font-size: 19px !important; line-height: 1.6 !important; margin-bottom: 22px !important; }
+.qbtn, .qb { font-size: 17px !important; padding: 12px 26px !important; border-radius: 12px !important; }
+.qfb, .fb { font-size: 17px !important; margin-top: 18px !important; }
+.nxt, .nx { font-size: 16px !important; padding: 12px 28px !important; }
+.angle-disp { font-size: 40px !important; }
+.quiz-opts, .qo { gap: 12px !important; }
+.footer, .ft { font-size: 14px !important; }</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="badge">SKILL SPARK · BASIC GEOMETRY</div>
+    <h1>Angles — <span>more than corners!</span></h1>
+    <p class="sub">Drag the slider to explore every angle type.</p>
+  </div>
+  <div class="story">An <b>angle</b> is formed when two rays share a vertex. We measure angles in degrees (°). From a tiny sliver to a full revolution — every angle has a name!</div>
+  <div class="card">
+    <div class="ctitle"><div class="icon" style="background:#e0f2fe">📐</div> Angle Explorer</div>
+    <div class="slider-row">
+      <label>Angle</label>
+      <input type="range" min="0" max="360" step="1" value="45" id="sl" oninput="upd()">
+      <span style="font-family:'Fredoka One',cursive;font-size:22px;min-width:52px;text-align:right" id="degLbl">45°</span>
+    </div>
+    <div class="canvas-wrap"><canvas id="cv" height="240"></canvas></div>
+    <div class="angle-disp" id="aDeg">45°</div>
+    <div class="type-lbl" id="tLbl">Acute Angle</div>
+    <p style="text-align:center;font-size:13px;font-weight:700;color:var(--muted)" id="tDesc">Less than 90°</p>
+  </div>
+  <div class="card">
+    <div class="ctitle"><div class="icon" style="background:#e0f2fe">📋</div> Types Cheat Sheet</div>
+    <div class="types-grid">
+      <div class="atype" style="background:#eff6ff;color:#1d4ed8"><h3>Acute</h3><p>0° &lt; θ &lt; 90°</p></div>
+      <div class="atype" style="background:#f0fdf4;color:#166534"><h3>Right</h3><p>θ = 90°</p></div>
+      <div class="atype" style="background:#fffbeb;color:#92400e"><h3>Obtuse</h3><p>90° &lt; θ &lt; 180°</p></div>
+      <div class="atype" style="background:#fdf2f8;color:#86198f"><h3>Straight</h3><p>θ = 180°</p></div>
+      <div class="atype" style="background:#fff1f2;color:#9f1239"><h3>Reflex</h3><p>180° &lt; θ &lt; 360°</p></div>
+      <div class="atype" style="background:#f5f3ff;color:#4c1d95"><h3>Full Turn</h3><p>θ = 360°</p></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="score-row">
+      <div class="ctitle" style="margin-bottom:0"><div class="icon" style="background:#e0f2fe">🧠</div> Quick Quiz!</div>
+      <div class="score-pill">Score: <span id="sc">0</span>/<span id="tq">0</span></div>
+    </div>
+    <div class="quiz-q" id="qq">Loading...</div>
+    <div class="quiz-opts" id="qopts"></div>
+    <div class="qfb" id="qfb"></div>
+    <button class="nxt" id="nxt" onclick="newQ()">Next →</button>
+  </div>
+  <div class="footer">Made with ❤️ by <span>Skill100</span></div>
+</div>
+<script>
+const types=[
+  {min:0,max:0,name:'Zero Angle',desc:'Exactly 0°',col:'#64748b'},
+  {min:1,max:89,name:'Acute Angle',desc:'Less than 90°',col:'#1d4ed8'},
+  {min:90,max:90,name:'Right Angle',desc:'Exactly 90° — a perfect corner',col:'#166534'},
+  {min:91,max:179,name:'Obtuse Angle',desc:'Between 90° and 180°',col:'#92400e'},
+  {min:180,max:180,name:'Straight Angle',desc:'Exactly 180° — a straight line',col:'#86198f'},
+  {min:181,max:359,name:'Reflex Angle',desc:'Between 180° and 360°',col:'#9f1239'},
+  {min:360,max:360,name:'Full Turn',desc:'Complete revolution — 360°',col:'#4c1d95'},
+];
+function getT(a){return types.find(t=>a>=t.min&&a<=t.max)||types[1];}
+function upd(){
+  const a=+document.getElementById('sl').value;
+  document.getElementById('degLbl').textContent=a+'°';
+  document.getElementById('aDeg').textContent=a+'°';
+  const t=getT(a);
+  const lbl=document.getElementById('tLbl');
+  lbl.textContent=t.name; lbl.style.background=t.col+'22'; lbl.style.color=t.col;
+  document.getElementById('tDesc').textContent=t.desc;
+  draw(a,t.col);
+}
+function draw(deg,col){
+  const cv=document.getElementById('cv'),dpr=window.devicePixelRatio||1;
+  cv.width=cv.offsetWidth*dpr||600; cv.height=240*dpr;
+  const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr);
+  const W=cv.offsetWidth||600,H=240;
+  // Centre slightly above middle so reflex arcs have room below
+  const cx=W/2, cy=H/2+10, r=90;
+  ctx.clearRect(0,0,W,H);
+
+  // Guide semicircle (top half only for reference)
+  ctx.strokeStyle='#e2e8f0'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,-Math.PI,true); ctx.stroke();
+
+  // Baseline ray (0° reference, pointing right)
+  ctx.strokeStyle='#94a3b8'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+r+20,cy); ctx.stroke();
+
+  const rad=deg*Math.PI/180;
+  // Endpoint of the angle ray (measured CCW from positive-x, drawn CW on canvas)
+  const ex=cx+r*Math.cos(-rad), ey=cy+r*Math.sin(-rad);
+
+  // Angle arc
+  ctx.strokeStyle=col+'88'; ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.arc(cx,cy,50,0,-rad,true); ctx.stroke();
+
+  // Angle ray
+  ctx.strokeStyle=col; ctx.lineWidth=3;
+  ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(ex,ey); ctx.stroke();
+
+  // For reflex angles draw the outer full arc hint
+  if(deg>180){
+    ctx.strokeStyle=col+'33'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,-rad,true); ctx.stroke();
+  }
+
+  // Vertex dot
+  ctx.fillStyle=col; ctx.beginPath(); ctx.arc(cx,cy,5,0,Math.PI*2); ctx.fill();
+  // End dot
+  ctx.fillStyle=col; ctx.beginPath(); ctx.arc(ex,ey,4,0,Math.PI*2); ctx.fill();
+
+  // Right-angle box
+  if(deg===90){ctx.strokeStyle=col;ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cx+18,cy);ctx.lineTo(cx+18,cy-18);ctx.lineTo(cx,cy-18);ctx.stroke();}
+}
+const pool=[
+  {q:'What type of angle is 75°?',opts:['Acute','Right','Obtuse','Reflex'],ans:'Acute'},
+  {q:'What type of angle is 145°?',opts:['Acute','Right','Obtuse','Straight'],ans:'Obtuse'},
+  {q:'A right angle measures exactly:',opts:['45°','90°','180°','360°'],ans:'90°'},
+  {q:'An angle of 200° is a:',opts:['Obtuse','Straight','Reflex','Full Turn'],ans:'Reflex'},
+  {q:'An angle of 180° is called a:',opts:['Straight angle','Right angle','Reflex angle','Full angle'],ans:'Straight angle'},
+  {q:'Which is NOT an acute angle?',opts:['35°','67°','89°','91°'],ans:'91°'},
+  {q:'A complete revolution equals:',opts:['180°','270°','360°','90°'],ans:'360°'},
+  {q:'Two angles that add to 90° are:',opts:['Supplementary','Complementary','Vertically opposite','Adjacent'],ans:'Complementary'},
+  {q:'Two angles that add to 180° are:',opts:['Supplementary','Complementary','Alternate','Co-interior'],ans:'Supplementary'},
+];
+let sc=0,tq=0,ans=false,cq=null;
+function newQ(){
+  ans=false; document.getElementById('qfb').textContent=''; document.getElementById('qfb').className='qfb';
+  document.getElementById('nxt').style.display='none';
+  cq=pool[Math.floor(Math.random()*pool.length)];
+  document.getElementById('qq').textContent=cq.q;
+  const el=document.getElementById('qopts'); el.innerHTML='';
+  cq.opts.forEach(o=>{const b=document.createElement('button');b.className='qbtn';b.textContent=o;b.onclick=()=>chk(o,b);el.appendChild(b);});
+}
+function chk(a,btn){
+  if(ans)return; ans=true; tq++; document.getElementById('tq').textContent=tq;
+  const fb=document.getElementById('qfb');
+  if(a===cq.ans){sc++;document.getElementById('sc').textContent=sc;fb.textContent='🎉 Correct!';fb.className='qfb g';btn.classList.add('ok');}
+  else{fb.textContent='Not quite — answer is '+cq.ans;fb.className='qfb b';btn.classList.add('no');document.querySelectorAll('.qbtn').forEach(b=>{if(b.textContent===cq.ans)b.classList.add('ok');});}
+  document.getElementById('nxt').style.display='inline-block';
+}
+window.addEventListener('resize',upd);window.addEventListener('load',function(){upd();newQ();});
+</script>
+</body>
+</html>
