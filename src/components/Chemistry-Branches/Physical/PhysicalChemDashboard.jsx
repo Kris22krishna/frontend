@@ -56,10 +56,10 @@ export default function PhysicalChemDashboard() {
                 <div className="chemLeftContent">
                     <button
                         className="chemNavBack"
-                        onClick={() => navigate('/chemistry/dashboard')}
+                        onClick={() => navigate('/')}
                         style={{ marginBottom: 40, background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)' }}
                     >
-                        ← Chemistry Dashboard
+                        🏠 Back
                     </button>
 
                     <h1 className="chemMainTitle" style={{ color: 'white' }}>

@@ -107,7 +107,7 @@ import InverseTrigGr12Terminology from './components/Math-Branches/Trigonometry/
 import InverseTrigGr12Skills from './components/Math-Branches/Trigonometry/Grade12-InverseTrig/Topics/Skills/InverseTrigGr12Skills';
 
 // Chemistry Branches
-import ChemistryMainDashboard from './components/Chemistry-Branches/ChemistryMainDashboard';
+
 import InorganicChemDashboard from './components/Chemistry-Branches/Inorganic/InorganicChemDashboard';
 import InorganicChemIntro from './components/Chemistry-Branches/Inorganic/Topics/Introduction/InorganicChemIntro';
 import InorganicChemTerminology from './components/Chemistry-Branches/Inorganic/Topics/Terminology/InorganicChemTerminology';
@@ -1568,7 +1568,7 @@ function App() {
           <Route path="trigonometry/grade-12-inverse/skills" element={<ProtectedRoute redirectTo="/login"><InverseTrigGr12Skills /></ProtectedRoute>} />
 
           {/* Chemistry Branches */}
-          <Route path="chemistry/dashboard" element={<ProtectedRoute redirectTo="/login"><ChemistryMainDashboard /></ProtectedRoute>} />
+
           <Route path="chemistry/inorganic" element={<ProtectedRoute redirectTo="/login"><InorganicChemDashboard /></ProtectedRoute>} />
           <Route path="chemistry/inorganic/introduction" element={<ProtectedRoute redirectTo="/login"><InorganicChemIntro /></ProtectedRoute>} />
           <Route path="chemistry/inorganic/terminology" element={<ProtectedRoute redirectTo="/login"><InorganicChemTerminology /></ProtectedRoute>} />
