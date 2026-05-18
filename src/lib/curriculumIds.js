@@ -523,6 +523,8 @@ export const NODE_IDS = {
   g11MathTrigFuncGraphs:                    'a4111003-0002-0000-0000-000000000000',
   g11MathTrigFuncEquations:                 'a4111003-0003-0000-0000-000000000000',
   g11MathTrigFuncRules:                     'a4111003-0004-0000-0000-000000000000',
+  g11MathTrigFuncTrigValues:               'a4111003-0005-0000-0000-000000000000',
+  g11MathTrigFuncSumDiff:                  'a4111003-0006-0000-0000-000000000000',
   g11MathTrigFuncTerminologyQuiz:           'a4111003-0010-0000-0000-000000000000',
   
   // Grade 10 Math: Probability (Chapter 15)
@@ -1199,6 +1201,19 @@ export const NODE_IDS = {
 
   // Terminology Quiz
   g11MathCNTerminologyQuiz:                'a4111004-0010-0000-0000-000000000000',
+  // Ch 6: Linear Inequalities
+  g11MathLinIneq:                          'a3111006-0000-0000-0000-000000000001',
+
+  // Skills (6 skills)
+  g11MathLinIneqProperties:               'a4111006-0001-0000-0000-000000000000',
+  g11MathLinIneqOneVariable:              'a4111006-0002-0000-0000-000000000000',
+  g11MathLinIneqNumberLine:               'a4111006-0003-0000-0000-000000000000',
+  g11MathLinIneqTwoVariable:              'a4111006-0004-0000-0000-000000000000',
+  g11MathLinIneqSystems:                  'a4111006-0005-0000-0000-000000000000',
+  g11MathLinIneqWordProblems:             'a4111006-0006-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11MathLinIneqTerminologyQuiz:          'a4111006-0010-0000-0000-000000000000',
 
   // ── 10. GRADE 11 BIOLOGY ──────────────────────────────────────────────────
   // Prefix: e = Biology (hex-safe) | Biology subject code: 16
@@ -1461,6 +1476,25 @@ export const SLUG_TO_NODE_ID = {
   'g11-math-cn-modulus-conjugate':             NODE_IDS.g11MathCNModulusConjugate,
   'g11-math-cn-argand-plane':                  NODE_IDS.g11MathCNArgandPlane,
   'g11-math-cn-terminology':                   NODE_IDS.g11MathCNTerminologyQuiz,
+  // Grade 11 Maths: Trigonometric Functions
+  'g11-math-trig':                             NODE_IDS.g11MathTrigFunc,
+  'g11-math-trig-angles':                      NODE_IDS.g11MathTrigFuncRadians,
+  'g11-math-trig-trigvalues':                  NODE_IDS.g11MathTrigFuncTrigValues,
+  'g11-math-trig-signs':                       NODE_IDS.g11MathTrigFuncGraphs,
+  'g11-math-trig-allied':                      NODE_IDS.g11MathTrigFuncRules,
+  'g11-math-trig-sumdiff':                     NODE_IDS.g11MathTrigFuncSumDiff,
+  'g11-math-trig-equations':                   NODE_IDS.g11MathTrigFuncEquations,
+  'g11-math-trig-terminology':                 NODE_IDS.g11MathTrigFuncTerminologyQuiz,
+
+  // Grade 11 Maths: Linear Inequalities
+  'g11-math-linear-inequalities':              NODE_IDS.g11MathLinIneq,
+  'g11-math-li-properties':                   NODE_IDS.g11MathLinIneqProperties,
+  'g11-math-li-one-variable':                 NODE_IDS.g11MathLinIneqOneVariable,
+  'g11-math-li-number-line':                  NODE_IDS.g11MathLinIneqNumberLine,
+  'g11-math-li-two-variable':                 NODE_IDS.g11MathLinIneqTwoVariable,
+  'g11-math-li-systems':                      NODE_IDS.g11MathLinIneqSystems,
+  'g11-math-li-word-problems':                NODE_IDS.g11MathLinIneqWordProblems,
+  'g11-math-li-terminology':                  NODE_IDS.g11MathLinIneqTerminologyQuiz,
 
   // Grade 11 Biology: The Cell — The Unit of Life
   'g11-bio-the-cell':                          NODE_IDS.g11BiologyTheCell,

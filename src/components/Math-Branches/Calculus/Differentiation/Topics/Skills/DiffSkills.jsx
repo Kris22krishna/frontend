@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import '../../../calculus.css';
 import MathRenderer from '../../../../../MathRenderer';
 import QuizEngine from '../../../Engines/QuizEngine';
+import PracticeEngine from '../../../Engines/PracticeEngine';
 import AssessmentEngine from '../../../Engines/AssessmentEngine';
 import { SKILLS } from './DiffSkillsData';
 
@@ -209,12 +210,11 @@ export default function DiffSkills() {
                             </div>
                         </div>
                     ) : view === 'practice' ? (
-                        <QuizEngine
+                        <PracticeEngine
                             questions={skill.practice}
                             title={`Practice: ${skill.title}`}
                             color={skill.color}
                             onBack={() => setView('list')}
-                            prefix="calc"
                         />
                     ) : (
                         <AssessmentEngine

@@ -1,0 +1,339 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>geo-tri-angles.html - Skill100</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#fffbeb;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#fcd34d 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.pg{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.hdr{text-align:center;margin-bottom:2.5rem}
+.bdg{display:inline-block;background:#f59e0b;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(26px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#f59e0b}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#fffbeb;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#fcd34d 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.pg{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.hdr{text-align:center;margin-bottom:2.5rem}
+.bdg{display:inline-block;background:#f59e0b;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(26px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#f59e0b}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+.ct{font-family:'Fredoka One',cursive;font-size:22px;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.ic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#fffbeb;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#fcd34d 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.pg{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.hdr{text-align:center;margin-bottom:2.5rem}
+.bdg{display:inline-block;background:#f59e0b;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(26px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#f59e0b}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#fffbeb;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#fcd34d 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.pg{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.hdr{text-align:center;margin-bottom:2.5rem}
+.bdg{display:inline-block;background:#f59e0b;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(26px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#f59e0b}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+.ct{font-family:'Fredoka One',cursive;font-size:22px;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.ic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.story{background:#fef3c7;border:2px solid #f59e0b;border-radius:14px;padding:18px 22px;font-size:16px;font-weight:700;color:#92400e;line-height:1.5;margin-bottom:2rem}
+.sr{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.sr label{font-size:16px;font-weight:700;color:#64748b;min-width:76px}
+input[type=range]{-webkit-appearance:none;flex:1;height:6px;border-radius:3px;background:#e2e8f0;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#f59e0b;border:3px solid #fff;box-shadow:0 0 0 2px #f59e0b;cursor:pointer}
+.cw{background:#f8fafc;border-radius:14px;padding:14px;margin-bottom:1.5rem;border:1.5px dashed #e2e8f0}
+canvas{display:block;width:100%;border-radius:6px}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#fffbeb;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#fcd34d 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.pg{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.hdr{text-align:center;margin-bottom:2.5rem}
+.bdg{display:inline-block;background:#f59e0b;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(26px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#f59e0b}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#fffbeb;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#fcd34d 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.pg{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.hdr{text-align:center;margin-bottom:2.5rem}
+.bdg{display:inline-block;background:#f59e0b;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(26px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#f59e0b}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+.ct{font-family:'Fredoka One',cursive;font-size:22px;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.ic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#fffbeb;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#fcd34d 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.pg{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.hdr{text-align:center;margin-bottom:2.5rem}
+.bdg{display:inline-block;background:#f59e0b;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(26px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#f59e0b}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#fffbeb;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#fcd34d 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.pg{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.hdr{text-align:center;margin-bottom:2.5rem}
+.bdg{display:inline-block;background:#f59e0b;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(26px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#f59e0b}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+.ct{font-family:'Fredoka One',cursive;font-size:22px;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.ic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.story{background:#fef3c7;border:2px solid #f59e0b;border-radius:14px;padding:18px 22px;font-size:16px;font-weight:700;color:#92400e;line-height:1.5;margin-bottom:2rem}
+.sr{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.sr label{font-size:16px;font-weight:700;color:#64748b;min-width:76px}
+input[type=range]{-webkit-appearance:none;flex:1;height:6px;border-radius:3px;background:#e2e8f0;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#f59e0b;border:3px solid #fff;box-shadow:0 0 0 2px #f59e0b;cursor:pointer}
+.cw{background:#f8fafc;border-radius:14px;padding:14px;margin-bottom:1.5rem;border:1.5px dashed #e2e8f0}
+canvas{display:block;width:100%;border-radius:6px}
+.rb{background:#fef3c7;border:2px solid #f59e0b;border-radius:12px;padding:16px;text-align:center;margin-bottom:1.25rem;font-family:'Fredoka One',cursive;font-size:24px;color:#92400e}
+.fg{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:1.25rem}
+.fm{border-radius:14px;padding:18px 16px;text-align:center}
+.fm h3{font-size:15px;font-weight:800;margin-bottom:8px}
+.fm p{font-size:20px;font-weight:800;font-family:'Fredoka One',cursive}
+.scr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#fffbeb;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#fcd34d 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.pg{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.hdr{text-align:center;margin-bottom:2.5rem}
+.bdg{display:inline-block;background:#f59e0b;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(26px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#f59e0b}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#fffbeb;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#fcd34d 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.pg{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.hdr{text-align:center;margin-bottom:2.5rem}
+.bdg{display:inline-block;background:#f59e0b;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(26px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#f59e0b}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+.ct{font-family:'Fredoka One',cursive;font-size:22px;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.ic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#fffbeb;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#fcd34d 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.pg{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.hdr{text-align:center;margin-bottom:2.5rem}
+.bdg{display:inline-block;background:#f59e0b;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(26px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#f59e0b}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#fffbeb;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#fcd34d 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.pg{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.hdr{text-align:center;margin-bottom:2.5rem}
+.bdg{display:inline-block;background:#f59e0b;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(26px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#f59e0b}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+.ct{font-family:'Fredoka One',cursive;font-size:22px;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.ic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.story{background:#fef3c7;border:2px solid #f59e0b;border-radius:14px;padding:18px 22px;font-size:16px;font-weight:700;color:#92400e;line-height:1.5;margin-bottom:2rem}
+.sr{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.sr label{font-size:16px;font-weight:700;color:#64748b;min-width:76px}
+input[type=range]{-webkit-appearance:none;flex:1;height:6px;border-radius:3px;background:#e2e8f0;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#f59e0b;border:3px solid #fff;box-shadow:0 0 0 2px #f59e0b;cursor:pointer}
+.cw{background:#f8fafc;border-radius:14px;padding:14px;margin-bottom:1.5rem;border:1.5px dashed #e2e8f0}
+canvas{display:block;width:100%;border-radius:6px}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#fffbeb;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#fcd34d 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.pg{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.hdr{text-align:center;margin-bottom:2.5rem}
+.bdg{display:inline-block;background:#f59e0b;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(26px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#f59e0b}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#fffbeb;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#fcd34d 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.pg{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.hdr{text-align:center;margin-bottom:2.5rem}
+.bdg{display:inline-block;background:#f59e0b;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(26px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#f59e0b}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+.ct{font-family:'Fredoka One',cursive;font-size:22px;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.ic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#fffbeb;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#fcd34d 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.pg{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.hdr{text-align:center;margin-bottom:2.5rem}
+.bdg{display:inline-block;background:#f59e0b;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(26px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#f59e0b}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+ 
+*{box-sizing:border-box;margin:0;padding:0}
+body{overflow-x:hidden;font-family:'Nunito',sans-serif;background:#fffbeb;color:#0f172a;min-height:100vh;padding:2.5rem 1.5rem 6rem}
+body::before{content:'';position:fixed;inset:0;background-image:radial-gradient(circle,#fcd34d 1px,transparent 1px);background-size:28px 28px;opacity:.2;pointer-events:none;z-index:0}
+.pg{position:relative;z-index:1;max-width:760px;margin:0 auto}
+.hdr{text-align:center;margin-bottom:2.5rem}
+.bdg{display:inline-block;background:#f59e0b;color:#fff;font-family:'Fredoka One',cursive;font-size:13px;letter-spacing:1px;padding:6px 16px;border-radius:999px;margin-bottom:14px}
+h1{font-family:'Fredoka One',cursive;font-size:clamp(26px,5vw,42px);line-height:1.2;margin-bottom:12px}
+h1 span{color:#f59e0b}
+.sub{font-size:17px;color:#64748b;font-weight:600}
+.card{background:#fff;border-radius:20px;padding:2rem 2.25rem;box-shadow:0 4px 24px rgba(0,0,0,.08);margin-bottom:2rem;border:1.5px solid #e2e8f0}
+.ct{font-family:'Fredoka One',cursive;font-size:22px;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.ic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.story{background:#fef3c7;border:2px solid #f59e0b;border-radius:14px;padding:18px 22px;font-size:16px;font-weight:700;color:#92400e;line-height:1.5;margin-bottom:2rem}
+.sr{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.sr label{font-size:16px;font-weight:700;color:#64748b;min-width:76px}
+input[type=range]{-webkit-appearance:none;flex:1;height:6px;border-radius:3px;background:#e2e8f0;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#f59e0b;border:3px solid #fff;box-shadow:0 0 0 2px #f59e0b;cursor:pointer}
+.cw{background:#f8fafc;border-radius:14px;padding:14px;margin-bottom:1.5rem;border:1.5px dashed #e2e8f0}
+canvas{display:block;width:100%;border-radius:6px}
+.rb{background:#fef3c7;border:2px solid #f59e0b;border-radius:12px;padding:16px;text-align:center;margin-bottom:1.25rem;font-family:'Fredoka One',cursive;font-size:24px;color:#92400e}
+.fg{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:1.25rem}
+.fm{border-radius:14px;padding:18px 16px;text-align:center}
+.fm h3{font-size:15px;font-weight:800;margin-bottom:8px}
+.fm p{font-size:20px;font-weight:800;font-family:'Fredoka One',cursive}
+.scr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+.sp{background:#fef3c7;color:#92400e;font-size:14px;font-weight:800;padding:7px 16px;border-radius:999px}
+.qq{font-size:19px;font-weight:700;margin-bottom:20px;line-height:1.6}
+.qo{display:flex;gap:12px;flex-wrap:wrap}
+.qb{border:2px solid #e2e8f0;border-radius:12px;padding:12px 24px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;background:#fff;transition:all .15s}
+.qb:hover{border-color:#f59e0b;color:#f59e0b}
+.qb.ok{background:#d1fae5;border-color:#10b981;color:#065f46}
+.qb.no{background:#fee2e2;border-color:#ef4444;color:#991b1b}
+.fb{margin-top:14px;font-size:16px;font-weight:700;min-height:22px}
+.fb.g{color:#10b981}.fb.b{color:#ef4444}
+.nx{display:none;margin-top:16px;background:#f59e0b;color:#fff;border:none;border-radius:10px;padding:11px 26px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer}
+.ft{text-align:center;font-size:13px;font-weight:700;color:#64748b;margin-top:3.5rem}
+.ft span{color:#f59e0b}
+/* ── SKILL100 FONT OVERRIDES (v2) ─────────────────── */
+h1 { font-size: clamp(28px,5.5vw,44px) !important; line-height:1.2; margin-bottom:14px; }
+.sub, .header p, p.sub { font-size: 17px !important; }
+.badge, .bdg { font-size: 14px !important; padding: 7px 18px !important; }
+.story { font-size: 17px !important; line-height: 1.65 !important; }
+.card .ctitle, .card .ct { font-size: 22px !important; }
+.ctitle { font-size: 22px !important; }
+.slider-row label, .sr label { font-size: 16px !important; min-width: 80px !important; }
+.result-box, .rb, #res, .res-bar { font-size: 26px !important; }
+.fml h3, .fm h3, .ainfo h3, .atype h3, .ttype h3 { font-size: 16px !important; margin-bottom: 7px !important; font-weight: 800 !important; }
+.fml p, .fm p { font-size: 20px !important; }
+.ainfo p { font-size: 26px !important; font-weight: 800 !important; }
+.ttype p { font-size: 13px !important; }
+.info-box h3 { font-size: 22px !important; margin-bottom: 8px !important; }
+.info-box p { font-size: 17px !important; font-weight: 700 !important; }
+.score-pill, .sp { font-size: 15px !important; padding: 8px 18px !important; }
+.quiz-q, .qq { font-size: 19px !important; line-height: 1.6 !important; margin-bottom: 22px !important; }
+.qbtn, .qb { font-size: 17px !important; padding: 12px 26px !important; border-radius: 12px !important; }
+.qfb, .fb { font-size: 17px !important; margin-top: 18px !important; }
+.nxt, .nx { font-size: 16px !important; padding: 12px 28px !important; }
+.angle-disp { font-size: 40px !important; }
+.type-lbl { font-size: 18px !important; padding: 10px 24px !important; }
+.footer, .ft { font-size: 14px !important; }</style></head><body>
+<div class="pg">
+<div class="hdr"><div class="bdg">SKILL SPARK · TRIANGLES</div><h1>Angle Sum <span>Property</span></h1><p class="sub">Set any two angles and see the third calculated!</p></div>
+<div class="story">Any triangle's angles <b>always add up to 180°</b>. The exterior angle equals the sum of the two non-adjacent interior angles!</div>
+<div class="card">
+<div class="ct"><div class="ic" style="background:#fef3c7">📐</div>Triangle Angle Explorer</div>
+<div class="sr"><label id="la">A=50°</label><input type="range" min="10" max="150" step="1" value="50" id="sla" oninput="upd()"></div>
+<div class="sr"><label id="lb">B=70°</label><input type="range" min="10" max="150" step="1" value="70" id="slb" oninput="upd()"></div>
+<div class="cw"><canvas id="cv" height="240"></canvas></div>
+<div class="rb" id="res">C = 60°</div>
+<div class="fg">
+<div class="fm" style="background:#fffbeb;color:#92400e"><h3>Angle Sum</h3><p>A+B+C=180°</p></div>
+<div class="fm" style="background:#eff6ff;color:#1d4ed8"><h3>Exterior Angle</h3><p>ext = A + B</p></div>
+</div>
+<script>
+function upd(){const a=+document.getElementById("sla").value,b=+document.getElementById("slb").value;document.getElementById("la").textContent="A="+a+"°";document.getElementById("lb").textContent="B="+b+"°";const c=180-a-b;if(c<=0){document.getElementById("res").textContent="Invalid! A+B must be < 180°";return;}document.getElementById("res").textContent="C = "+c+"°";draw(a,b,c);}
+function draw(A,B,C){
+  const cv=document.getElementById("cv"),dpr=window.devicePixelRatio||1;
+  cv.width=cv.offsetWidth*dpr||600;cv.height=240*dpr;
+  const ctx=cv.getContext("2d");ctx.scale(dpr,dpr);
+  const W=cv.offsetWidth||600,H=240;
+  const aR=A*Math.PI/180,bR=B*Math.PI/180;
+  const topPad=30,botPad=40,oy=H-botPad;
+  let base=Math.min(W-100,220);
+  // apex position: apx fraction = tan(B)/(tan(A)+tan(B))
+  const tA=Math.tan(aR),tB=Math.tan(bR);
+  const apxFrac=tB/(tA+tB);
+  const naturalH=base*apxFrac*tA;
+  // scale base so apex fits within topPad
+  const maxH=oy-topPad;
+  if(naturalH>maxH) base*=maxH/naturalH;
+  const ox=(W-base)/2;
+  const Ax=ox,Ay=oy,Bx=ox+base,By=oy;
+  const Cx=ox+base*tB/(tA+tB),Cy=oy-(Cx-ox)*tA;
+  // draw triangle
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle="#f59e0b22";ctx.strokeStyle="#f59e0b";ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.moveTo(Ax,Ay);ctx.lineTo(Bx,By);ctx.lineTo(Cx,Cy);ctx.closePath();
+  ctx.fill();ctx.stroke();
+  // angle arcs
+  const arcR=24;
+  ctx.strokeStyle="#f59e0b";ctx.lineWidth=1.8;
+  // arc at A: from direction A->C to direction A->B (clockwise = interior)
+  const aAC=Math.atan2(Cy-Ay,Cx-Ax),aAB=Math.atan2(By-Ay,Bx-Ax);
+  ctx.beginPath();ctx.arc(Ax,Ay,arcR,aAC,aAB,false);ctx.stroke();
+  // arc at B: from direction B->A to direction B->C (clockwise = interior)
+  const aBA=Math.atan2(Ay-By,Ax-Bx),aBC=Math.atan2(Cy-By,Cx-Bx);
+  ctx.beginPath();ctx.arc(Bx,By,arcR,aBA,aBC,false);ctx.stroke();
+  // arc at C: from direction C->B to direction C->A (clockwise = interior)
+  const aCB=Math.atan2(By-Cy,Bx-Cx),aCA=Math.atan2(Ay-Cy,Ax-Cx);
+  ctx.beginPath();ctx.arc(Cx,Cy,arcR,aCB,aCA,false);ctx.stroke();
+  // labels
+  ctx.fillStyle="#f59e0b";ctx.font="bold 15px Nunito";ctx.textAlign="center";
+  ctx.fillText("A="+A+"°",Ax-4,Ay+28);
+  ctx.fillText("B="+B+"°",Bx+4,By+28);
+  ctx.fillText("C="+C+"°",Cx,Cy-14);
+}
+const pool=[{q:"If A=60° and B=80°, find C",opts:["40°","50°","60°","30°"],ans:"40°"},{q:"If A=B=C, each angle is",opts:["45°","60°","90°","30°"],ans:"60°"},{q:"Exterior angle = A + B. If A=40°,B=55°, exterior angle is",opts:["85°","95°","100°","75°"],ans:"95°"},{q:"If two angles are 90° and 45°, the third is",opts:["45°","55°","35°","50°"],ans:"45°"},{q:"Isosceles triangle: vertex=100°, each base angle is",opts:["40°","50°","60°","80°"],ans:"40°"},{q:"The exterior angle of a triangle is always __ than either remote interior angle",opts:["Less","Equal","Greater","Half"],ans:"Greater"}];
+let sc=0,tq=0,ans=false,cq=null;function newQ(){ans=false;document.getElementById("qfb").textContent="";document.getElementById("qfb").className="fb";document.getElementById("nxt").style.display="none";cq=pool[Math.floor(Math.random()*pool.length)];document.getElementById("qq").textContent=cq.q;const el=document.getElementById("qopts");el.innerHTML="";cq.opts.forEach(o=>{const b=document.createElement("button");b.className="qb";b.textContent=o;b.onclick=()=>chk(o,b);el.appendChild(b);});}function chk(a,btn){if(ans)return;ans=true;tq++;document.getElementById("tq").textContent=tq;const fb=document.getElementById("qfb");if(a===cq.ans){sc++;document.getElementById("sc").textContent=sc;fb.textContent="Correct!";fb.className="fb g";btn.classList.add("ok");}else{fb.textContent="Answer: "+cq.ans;fb.className="fb b";btn.classList.add("no");document.querySelectorAll(".qb").forEach(b=>{if(b.textContent===cq.ans)b.classList.add("ok");});}document.getElementById("nxt").style.display="inline-block";}
+window.addEventListener("resize",upd);window.addEventListener("load",function(){upd();newQ();});
+</script>
+</div>
+<div class="card">
+<div class="scr"><div class="ct" style="margin-bottom:0"><div class="ic" style="background:#fef3c7">&#x1F9E0;</div>Quick Quiz!</div><div class="sp">Score:<span id="sc">0</span>/<span id="tq">0</span></div></div>
+<div class="qq" id="qq">Loading...</div><div class="qo" id="qopts"></div><div class="fb" id="qfb"></div>
+<button class="nx" id="nxt" onclick="newQ()">Next &#x2192;</button>
+</div>
+<div class="ft">Made with &#x2764; by <span>Skill100</span></div>
+</div></body></html>
