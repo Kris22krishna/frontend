@@ -36,79 +36,6 @@ export const NODE_IDS = {
   grade10: 'a2000000-0000-0000-0000-000000000010',
   grade11: 'a2000000-0000-0000-0000-000000000011',
 
-  // Ch 1: Rational Numbers
-  g8MathRNChapter:                   'a3081001-0000-0000-0000-000000000001',
-  g8MathRNCommutativity:             'a4081001-0001-0000-0000-000000000000',
-  g8MathRNAssociativity:             'a4081001-0002-0000-0000-000000000000',
-  g8MathRNDistributivity:            'a4081001-0003-0000-0000-000000000000',
-  g8MathRNIdentities:                'a4081001-0004-0000-0000-000000000000',
-  g8MathRNChapterTest:               'a4081001-0010-0000-0000-000000000000',
-
-  // Ch 3: Understanding Quadrilaterals
-  g8MathUQChapter:                   'a3081003-0000-0000-0000-000000000001',
-  g8MathUQAngleSumExterior:          'a4081003-0001-0000-0000-000000000000',
-  g8MathUQKindsOfQuadrilaterals:     'a4081003-0002-0000-0000-000000000000',
-  g8MathUQSpecialParallelograms:     'a4081003-0003-0000-0000-000000000000',
-
-  // Ch 5: Data Handling
-  g8MathDHChapter:                   'a3081005-0000-0000-0000-000000000001',
-  g8MathDHOrganisingData:            'a4081005-0001-0000-0000-000000000000',
-  g8MathDHBarGraphs:                 'a4081005-0002-0000-0000-000000000000',
-  g8MathDHPieCharts:                 'a4081005-0003-0000-0000-000000000000',
-  g8MathDHProbability:               'a4081005-0004-0000-0000-000000000000',
-
-  // Ch 6: Squares and Square Roots
-  g8MathSSRChapter:                  'a3081006-0000-0000-0000-000000000001',
-  g8MathSSRIdentifyPerfect:          'a4081006-0001-0000-0000-000000000000',
-  g8MathSSRProperties:               'a4081006-0002-0000-0000-000000000000',
-  g8MathSSRPythagorean:              'a4081006-0003-0000-0000-000000000000',
-  g8MathSSRConceptRoot:              'a4081006-0004-0000-0000-000000000000',
-  g8MathSSRPrimeFactorization:       'a4081006-0005-0000-0000-000000000000',
-  g8MathSSRLongDivision:             'a4081006-0006-0000-0000-000000000000',
-  g8MathSSRDecimals:                 'a4081006-0007-0000-0000-000000000000',
-  g8MathSSRIdentityPatterns:         'a4081006-0008-0000-0000-000000000000',
-  g8MathSSRChapterTest:              'a4081006-0010-0000-0000-000000000000',
-
-  // Ch 7: Cubes and Cube Roots
-  g8MathCCRChapter:                  'a3081007-0000-0000-0000-000000000001',
-  g8MathCCRPerfectCubes:             'a4081007-0001-0000-0000-000000000000',
-  g8MathCCRPrimeFactorisation:       'a4081007-0002-0000-0000-000000000000',
-  g8MathCCREstimatingRoots:          'a4081007-0003-0000-0000-000000000000',
-  g8MathCCRMissingMultiples:         'a4081007-0004-0000-0000-000000000000',
-
-  // Ch 11: Mensuration
-  g8MathMensChapter:                 'a3081011-0000-0000-0000-000000000001',
-  g8MathMensAreaPolygon:             'a4081011-0001-0000-0000-000000000000',
-  g8MathMensSACube:                  'a4081011-0002-0000-0000-000000000000',
-  g8MathMensSACuboid:                'a4081011-0003-0000-0000-000000000000',
-  g8MathMensSACylinder:              'a4081011-0004-0000-0000-000000000000',
-  g8MathMensVolCube:                 'a4081011-0005-0000-0000-000000000000',
-  g8MathMensVolCuboid:               'a4081011-0006-0000-0000-000000000000',
-  g8MathMensVolCylinder:             'a4081011-0007-0000-0000-000000000000',
-  g8MathMensVolCapacity:             'a4081011-0008-0000-0000-000000000000',
-  g8MathMensChapterTest:             'a4081011-0010-0000-0000-000000000000',
-
-  // Ch 13: Direct and Inverse Proportions
-  g8MathDIPChapter:                  'a3081013-0000-0000-0000-000000000001',
-  g8MathDIPDirect:                   'a4081013-0001-0000-0000-000000000000',
-  g8MathDIPInverse:                  'a4081013-0002-0000-0000-000000000000',
-
-  // Ch 14: Factorisation
-  g8MathFactChapter:                 'a3081014-0000-0000-0000-000000000001',
-  g8MathFactCommonFactors:           'a4081014-0001-0000-0000-000000000000',
-  g8MathFactRegrouping:              'a4081014-0002-0000-0000-000000000000',
-  g8MathFactIdentities:              'a4081014-0003-0000-0000-000000000000',
-  g8MathFactXplusAXplusB:            'a4081014-0004-0000-0000-000000000000',
-  g8MathFactDivMonomialMonomial:     'a4081014-0005-0000-0000-000000000000',
-  g8MathFactDivPolyMonomial:         'a4081014-0006-0000-0000-000000000000',
-  g8MathFactDivPolyPoly:             'a4081014-0007-0000-0000-000000000000',
-  g8MathFactChapterTest:             'a4081014-0010-0000-0000-000000000000',
-
-  // Ch 15: Introduction to Graphs
-  g8MathGraphsChapter:               'a3081015-0000-0000-0000-000000000001',
-  g8MathGraphsLineGraph:             'a4081015-0001-0000-0000-000000000000',
-  g8MathGraphsLinearGraph:           'a4081015-0002-0000-0000-000000000000',
-
   // ── 4. MATH-BRANCHES MODULE (Independent) ─────────────────────────────────
   mathBranchAlgebra:             'f1000000-0000-0000-0000-000000000001',
 
@@ -166,268 +93,6 @@ export const NODE_IDS = {
   chemPhysicalIntroduction:                 'f3000000-0000-0000-0000-000000000225',
 
   // ── 6. NEW GRADE-BASED TOPICS (v4) ───────────────────────────────────────
-
-  // Ch 1: The Fish Tale
-  g5MathFishTale:                     'a3051001-0000-0000-0000-000000000001',
-  g5MathFTNumberSensePlaceValue:      'a4051001-0001-0000-0000-000000000000',
-  g5MathFTReadingWritingBigNumbers:   'a4051001-0002-0000-0000-000000000000',
-  g5MathFTPlaceValueLakhs:            'a4051001-0003-0000-0000-000000000000',
-  g5MathFTComparison:                 'a4051001-0004-0000-0000-000000000000',
-  g5MathFTEstimation:                 'a4051001-0005-0000-0000-000000000000',
-  g5MathFTEstimationSkills:           'a4051001-0006-0000-0000-000000000000',
-  g5MathFTRealLifeData:               'a4051001-0007-0000-0000-000000000000',
-  g5MathFTRealLifeSituations:         'a4051001-0008-0000-0000-000000000000',
-
-  // Ch 2: Shapes and Angles
-  g5MathShapesAndAngles:              'a3051002-0000-0000-0000-000000000001',
-  g5MathSASkill1:                     'a4051002-0001-0000-0000-000000000000',
-  g5MathSASkill2:                     'a4051002-0002-0000-0000-000000000000',
-  g5MathSASkill3:                     'a4051002-0003-0000-0000-000000000000',
-  g5MathSASkill4:                     'a4051002-0004-0000-0000-000000000000',
-
-  // Ch 3: How Many Squares?
-  g5MathHowManySquares:               'a3051003-0000-0000-0000-000000000001',
-  g5MathHMSSkill1:                    'a4051003-0001-0000-0000-000000000000',
-  g5MathHMSSkill2:                    'a4051003-0002-0000-0000-000000000000',
-  g5MathHMSSkill3:                    'a4051003-0003-0000-0000-000000000000',
-
-  // Ch 4: Parts and Wholes
-  g5MathPartsAndWholes:               'a3051004-0000-0000-0000-000000000001',
-  g5MathPWPartsOfWhole:               'a4051004-0001-0000-0000-000000000000',
-  g5MathPWEquivalentFractions:        'a4051004-0002-0000-0000-000000000000',
-
-  // Ch 5: Does it Look the Same?
-  g5MathDoesItLookSame:               'a3051005-0000-0000-0000-000000000001',
-  g5MathDILSVisualSymmetry:           'a4051005-0001-0000-0000-000000000000',
-  g5MathDILSPatternObservation:       'a4051005-0002-0000-0000-000000000000',
-  g5MathDILSGeometricReasoning:       'a4051005-0003-0000-0000-000000000000',
-
-  // Ch 6: Be My Multiple, I'll be Your Factor
-  g5MathBeMyMultiple:                 'a3051006-0000-0000-0000-000000000001',
-  g5MathBMFSkill1:                    'a4051006-0001-0000-0000-000000000000',
-  g5MathBMFSkill2:                    'a4051006-0002-0000-0000-000000000000',
-  g5MathBMFSkill3:                    'a4051006-0003-0000-0000-000000000000',
-
-  // Ch 7: Can You See the Pattern? (engine-based)
-  g5MathCanYouSeePattern:             'a3051007-0000-0000-0000-000000000001',
-  g5MathCYSPNumberPatterns:           'a4051007-0001-0000-0000-000000000000',
-  g5MathCYSPShapePatterns:            'a4051007-0002-0000-0000-000000000000',
-  g5MathCYSPPatternRules:             'a4051007-0003-0000-0000-000000000000',
-  g5MathCYSPContinuingPatterns:       'a4051007-0004-0000-0000-000000000000',
-  // Ch 7: Can You See the Pattern? (flat-file skills)
-  g5MathCYSPPatternIdentification:    'a4051007-0005-0000-0000-000000000000',
-  g5MathCYSPGridPattern:              'a4051007-0006-0000-0000-000000000000',
-  g5MathCYSPRuleBasedPattern:         'a4051007-0007-0000-0000-000000000000',
-  g5MathCYSPUnderstandingRotations:   'a4051007-0008-0000-0000-000000000000',
-  g5MathCYSPPalindromeRecognition:    'a4051007-0009-0000-0000-000000000000',
-  g5MathCYSPDigitRelationships:       'a4051007-0010-0000-0000-000000000000',
-  g5MathCYSPPropertiesOfOperations:   'a4051007-0011-0000-0000-000000000000',
-  g5MathCYSPStructuredNumberPatterns: 'a4051007-0012-0000-0000-000000000000',
-  g5MathCYSPMentalCalcStrategies:     'a4051007-0013-0000-0000-000000000000',
-  g5MathCYSPMissingNumberReasoning:   'a4051007-0014-0000-0000-000000000000',
-  g5MathCYSPMultiStepOperations:      'a4051007-0015-0000-0000-000000000000',
-  g5MathCYSPRuleApplication:          'a4051007-0016-0000-0000-000000000000',
-  g5MathCYSPSkillApplicationPatterns: 'a4051007-0017-0000-0000-000000000000',
-  g5MathCYSPChapterTest:              'a4051007-0018-0000-0000-000000000000',
-
-  // Ch 8: Mapping Your Way
-  g5MathMappingYourWay:               'a3051008-0000-0000-0000-000000000001',
-  g5MathMYWMapsDirections:            'a4051008-0001-0000-0000-000000000000',
-  g5MathMYWReadingMaps:               'a4051008-0002-0000-0000-000000000000',
-  g5MathMYWGridReferences:            'a4051008-0003-0000-0000-000000000000',
-
-  // Ch 10: Tenths and Hundredths
-  g5MathTenthsAndHundredths:          'a3051010-0000-0000-0000-000000000001',
-  g5MathTHPlaceValues:                'a4051010-0001-0000-0000-000000000000',
-  g5MathTHVisualRepresentation:       'a4051010-0002-0000-0000-000000000000',
-  g5MathTHFractionToDecimal:          'a4051010-0003-0000-0000-000000000000',
-  g5MathTHComparingDecimals:          'a4051010-0004-0000-0000-000000000000',
-  g5MathTHDecimalInMoney:             'a4051010-0005-0000-0000-000000000000',
-  g5MathTHDecimalInMeasurement:       'a4051010-0006-0000-0000-000000000000',
-  g5MathTHDecimalOperations:          'a4051010-0007-0000-0000-000000000000',
-  g5MathTHConversionBetweenForms:     'a4051010-0008-0000-0000-000000000000',
-  g5MathTHSkillApplicationProb:       'a4051010-0009-0000-0000-000000000000',
-  g5MathTHChapterTest:                'a4051010-0010-0000-0000-000000000000',
-
-  // Ch 11: Area and its Boundary
-  g5MathAreaAndBoundary:              'a3051011-0000-0000-0000-000000000001',
-  g5MathAABFindingArea:               'a4051011-0001-0000-0000-000000000000',
-  g5MathAABAppropriateAreaUnits:      'a4051011-0002-0000-0000-000000000000',
-  g5MathAABAreaRealLife:              'a4051011-0003-0000-0000-000000000000',
-  g5MathAABCompareShapesSameArea:     'a4051011-0004-0000-0000-000000000000',
-  g5MathAABFindingPerimeter:          'a4051011-0005-0000-0000-000000000000',
-  g5MathAABPerimeterAsBoundary:       'a4051011-0006-0000-0000-000000000000',
-  g5MathAABPerimeterRealLife:         'a4051011-0007-0000-0000-000000000000',
-  g5MathAABSamePerimeterDiffShapes:   'a4051011-0008-0000-0000-000000000000',
-  g5MathAABAreaPerimeterRelation:     'a4051011-0009-0000-0000-000000000000',
-  g5MathAABSkillApplicationProblems:  'a4051011-0010-0000-0000-000000000000',
-  g5MathAABChapterTest:               'a4051011-0011-0000-0000-000000000000',
-
-  // Ch 13: Ways to Multiply and Divide
-  g5MathWaysToMultiplyDivide:         'a3051013-0000-0000-0000-000000000001',
-  g5MathWMDMult2Digit:                'a4051013-0001-0000-0000-000000000000',
-  g5MathWMDMult3Digit:                'a4051013-0002-0000-0000-000000000000',
-  g5MathWMDMultEndingZeros:           'a4051013-0003-0000-0000-000000000000',
-  g5MathWMDMultMultipleNumbers:       'a4051013-0004-0000-0000-000000000000',
-  g5MathWMDMultWordProblems:          'a4051013-0005-0000-0000-000000000000',
-  g5MathWMDDivOneDigit:               'a4051013-0006-0000-0000-000000000000',
-  g5MathWMDDivTwoDigit:               'a4051013-0007-0000-0000-000000000000',
-  g5MathWMDDivEndingZeros:            'a4051013-0008-0000-0000-000000000000',
-  g5MathWMDDivWordProblems:           'a4051013-0009-0000-0000-000000000000',
-  g5MathWMDSkillApplicationProblems:  'a4051013-0010-0000-0000-000000000000',
-  g5MathWMDChapterTest:               'a4051013-0011-0000-0000-000000000000',
-
-  // Ch 14: How Big? How Heavy?
-  g5MathHowBigHowHeavy:              'a3051014-0000-0000-0000-000000000001',
-  g5MathHBHHUnitsOfVolume:           'a4051014-0001-0000-0000-000000000000',
-  g5MathHBHHVolumeEstimation:        'a4051014-0002-0000-0000-000000000000',
-  g5MathHBHHVolumeUnitCubes:         'a4051014-0003-0000-0000-000000000000',
-  g5MathHBHHVolumeDisplacement:      'a4051014-0004-0000-0000-000000000000',
-  g5MathHBHHUnitsOfMass:             'a4051014-0005-0000-0000-000000000000',
-  g5MathHBHHWeightEstimation:        'a4051014-0006-0000-0000-000000000000',
-  g5MathHBHHMassConversion:          'a4051014-0007-0000-0000-000000000000',
-  g5MathHBHHMassCalculation:         'a4051014-0008-0000-0000-000000000000',
-  g5MathHBHHMeasurementRealLife:     'a4051014-0009-0000-0000-000000000000',
-  g5MathHBHH3DShapeConstruction:     'a4051014-0010-0000-0000-000000000000',
-  g5MathHBHHPackagingLayering:       'a4051014-0011-0000-0000-000000000000',
-  g5MathHBHHSkillApplicationProblem: 'a4051014-0012-0000-0000-000000000000',
-  g5MathHBHHChapterTest:             'a4051014-0013-0000-0000-000000000000',
-
-  // Ch 1: Structure of Atom
-  g11ChemistryStructureOfAtom:             'c3111401-0000-0000-0000-000000000001',
-
-  // Skills (9 skills)
-  g11ChemSOASubAtomicParticles:            'c4111401-0001-0000-0000-000000000000',
-  g11ChemSOAAtomicModels:                  'c4111401-0002-0000-0000-000000000000',
-  g11ChemSOABohrModel:                     'c4111401-0003-0000-0000-000000000000',
-  g11ChemSOAHydrogenSpectrum:              'c4111401-0004-0000-0000-000000000000',
-  g11ChemSOADualNature:                    'c4111401-0005-0000-0000-000000000000',
-  g11ChemSOAHeisenberg:                    'c4111401-0006-0000-0000-000000000000',
-  g11ChemSOAQuantumNumbers:                'c4111401-0007-0000-0000-000000000000',
-  g11ChemSOAShapesOfOrbitals:              'c4111401-0008-0000-0000-000000000000',
-  g11ChemSOAElectronicConfig:              'c4111401-0009-0000-0000-000000000000',
-
-  // Terminology Quiz
-  g11ChemSOATerminologyQuiz:               'c4111401-0010-0000-0000-000000000000',
-
-  // Ch 5: Laws of Motion
-  g11PhysicsLOM:                           'd3111505-0000-0000-0000-000000000001',
-
-  // Skills (6 skills)
-  g11PhysLOMNewtons3Laws:                  'd4111505-0001-0000-0000-000000000000',
-  g11PhysLOMMomentumImpulse:               'd4111505-0002-0000-0000-000000000000',
-  g11PhysLOMConservationMomentum:          'd4111505-0003-0000-0000-000000000000',
-  g11PhysLOMEquilibriumForces:             'd4111505-0004-0000-0000-000000000000',
-  g11PhysLOMFriction:                      'd4111505-0005-0000-0000-000000000000',
-  g11PhysLOMCircularMotion:                'd4111505-0006-0000-0000-000000000000',
-
-  // Terminology Quiz
-  g11PhysLOMTerminologyQuiz:               'd4111505-0010-0000-0000-000000000000',
-
-  // Ch 3: Motion in a Straight Line
-  g11PhysicsMSL:                           'd3111503-0000-0000-0000-000000000001',
-
-  // Skills (5 skills)
-  g11PhysMSLDistanceDisplacement:          'd4111503-0001-0000-0000-000000000000',
-  g11PhysMSLVelocityAcceleration:          'd4111503-0002-0000-0000-000000000000',
-  g11PhysMSLKinematicEquations:            'd4111503-0003-0000-0000-000000000000',
-  g11PhysMSLMotionGraphs:                  'd4111503-0004-0000-0000-000000000000',
-  g11PhysMSLRelativeVelocity:              'd4111503-0005-0000-0000-000000000000',
-
-  // Terminology Quiz
-  g11PhysMSLTerminologyQuiz:               'd4111503-0010-0000-0000-000000000000',
-
-  // Skills (4 skills)
-  g11PhysWEPWorkCalc:                      'd4111506-0001-0000-0000-000000000000',
-  g11PhysWEPWorkEnergyTheorem:             'd4111506-0002-0000-0000-000000000000',
-  g11PhysWEPPotentialEnergy:               'd4111506-0003-0000-0000-000000000000',
-  g11PhysWEPConservation:                  'd4111506-0004-0000-0000-000000000000',
-
-  // Terminology Quiz
-  g11PhysWEPTerminologyQuiz:               'd4111506-0010-0000-0000-000000000000',
-
-  // Ch 1: Sets
-  g11MathsSets:                            'a3111001-0000-0000-0000-000000000001',
-
-  // Skills (9 skills)
-  g11MathSetsWhatIsSet:                    'a4111001-0001-0000-0000-000000000000',
-  g11MathSetsTypes:                        'a4111001-0002-0000-0000-000000000000',
-  g11MathSetsEqualEquivalent:              'a4111001-0003-0000-0000-000000000000',
-  g11MathSetsSubsetsIntervals:             'a4111001-0004-0000-0000-000000000000',
-  g11MathSetsUniversalComplement:          'a4111001-0005-0000-0000-000000000000',
-  g11MathSetsOperations:                   'a4111001-0006-0000-0000-000000000000',
-  g11MathSetsVennDiagrams:                 'a4111001-0007-0000-0000-000000000000',
-  g11MathSetsLawsProperties:               'a4111001-0008-0000-0000-000000000000',
-  g11MathSetsCardinality:                  'a4111001-0009-0000-0000-000000000000',
-
-  // Terminology Quiz
-  g11MathSetsTerminologyQuiz:              'a4111001-0010-0000-0000-000000000000',
-
-  // Ch 2: Relations and Functions
-  g11MathsRAF:                             'a3111002-0000-0000-0000-000000000001',
-
-  // Skills (6 skills)
-  g11MathRAFCartesian:                     'a4111002-0001-0000-0000-000000000000',
-  g11MathRAFRelations:                     'a4111002-0002-0000-0000-000000000000',
-  g11MathRAFCounting:                      'a4111002-0003-0000-0000-000000000000',
-  g11MathRAFFunctions:                     'a4111002-0004-0000-0000-000000000000',
-  g11MathRAFSpecial:                       'a4111002-0005-0000-0000-000000000000',
-  g11MathRAFAlgebra:                       'a4111002-0006-0000-0000-000000000000',
-
-  // Terminology Quiz
-  g11MathRAFTerminologyQuiz:               'a4111002-0010-0000-0000-000000000000',
-
-  // Ch 4: Complex Numbers and Quadratic Equations
-  g11MathsComplexNumbers:                  'a3111004-0000-0000-0000-000000000001',
-
-  // Skills (7 skills)
-  g11MathCNComplexBasics:                  'a4111004-0001-0000-0000-000000000000',
-  g11MathCNAdditionSubtraction:            'a4111004-0002-0000-0000-000000000000',
-  g11MathCNMultiplication:                 'a4111004-0003-0000-0000-000000000000',
-  g11MathCNDivisionInverse:                'a4111004-0004-0000-0000-000000000000',
-  g11MathCNPowersOfI:                      'a4111004-0005-0000-0000-000000000000',
-  g11MathCNModulusConjugate:               'a4111004-0006-0000-0000-000000000000',
-  g11MathCNArgandPlane:                    'a4111004-0007-0000-0000-000000000000',
-
-  // Terminology Quiz
-  g11MathCNTerminologyQuiz:                'a4111004-0010-0000-0000-000000000000',
-  // Ch 6: Linear Inequalities
-  g11MathLinIneq:                          'a3111006-0000-0000-0000-000000000001',
-
-  // Skills (6 skills)
-  g11MathLinIneqProperties:               'a4111006-0001-0000-0000-000000000000',
-  g11MathLinIneqOneVariable:              'a4111006-0002-0000-0000-000000000000',
-  g11MathLinIneqNumberLine:               'a4111006-0003-0000-0000-000000000000',
-  g11MathLinIneqTwoVariable:              'a4111006-0004-0000-0000-000000000000',
-  g11MathLinIneqSystems:                  'a4111006-0005-0000-0000-000000000000',
-  g11MathLinIneqWordProblems:             'a4111006-0006-0000-0000-000000000000',
-
-  // Terminology Quiz
-  g11MathLinIneqTerminologyQuiz:          'a4111006-0010-0000-0000-000000000000',
-
-  // Ch 4: The Cell — The Unit of Life
-  g11BiologyTheCell:                       'e3111604-0000-0000-0000-000000000001',
-
-  // Skills (8 skills)
-  g11BiolTheCellCellTheory:                'e4111604-0001-0000-0000-000000000000',
-  g11BiolTheCellProkEuk:                   'e4111604-0002-0000-0000-000000000000',
-  g11BiolTheCellMembrane:                  'e4111604-0003-0000-0000-000000000000',
-  g11BiolTheCellWall:                      'e4111604-0004-0000-0000-000000000000',
-  g11BiolTheCellEndomembrane:              'e4111604-0005-0000-0000-000000000000',
-  g11BiolTheCellOrganelles:               'e4111604-0006-0000-0000-000000000000',
-  g11BiolTheCellNucleus:                   'e4111604-0007-0000-0000-000000000000',
-  g11BiolTheCellPlantVsAnimal:             'e4111604-0008-0000-0000-000000000000',
-
-  // Terminology Quiz
-  g11BiolTheCellTerminologyQuiz:           'e4111604-0010-0000-0000-000000000000',
-
-  // Skills (5 skills)
-  g12BiolSRTheFlower:                          'e4121602-0001-0000-0000-000000000000',
-  g12BiolSRPreFertilisation:                   'e4121602-0002-0000-0000-000000000000',
-  g12BiolSRDoubleFertilisation:                'e4121602-0003-0000-0000-000000000000',
-  g12BiolSRPostFertilisation:                  'e4121602-0004-0000-0000-000000000000',
-  g12BiolSRApomixisPolyembryony:               'e4121602-0005-0000-0000-000000000000',
-  g12BiolSRTerminologyQuiz:                    'e4121602-0010-0000-0000-000000000000',
 
   // ── GRADE 1: SHAPES AND SPACE (CHAPTER 1) ────────────────────────────────
   g1MathShapesSpace:         'a3011001-0000-0000-0000-000000000001',
@@ -630,6 +295,132 @@ export const NODE_IDS = {
   g4EvsOurCommunityWork:       'b4041001-0002-0000-0000-000000000000',
   g4EvsOurCommunityFestivals:  'b4041001-0003-0000-0000-000000000000',
   g4EvsOurCommunityTeamwork:   'b4041001-0004-0000-0000-000000000000',
+
+  // Ch 1: The Fish Tale
+  g5MathFishTale:                     'a3051001-0000-0000-0000-000000000001',
+  g5MathFTNumberSensePlaceValue:      'a4051001-0001-0000-0000-000000000000',
+  g5MathFTReadingWritingBigNumbers:   'a4051001-0002-0000-0000-000000000000',
+  g5MathFTPlaceValueLakhs:            'a4051001-0003-0000-0000-000000000000',
+  g5MathFTComparison:                 'a4051001-0004-0000-0000-000000000000',
+  g5MathFTEstimation:                 'a4051001-0005-0000-0000-000000000000',
+  g5MathFTEstimationSkills:           'a4051001-0006-0000-0000-000000000000',
+  g5MathFTRealLifeData:               'a4051001-0007-0000-0000-000000000000',
+  g5MathFTRealLifeSituations:         'a4051001-0008-0000-0000-000000000000',
+
+  // Ch 2: Shapes and Angles
+  g5MathShapesAndAngles:              'a3051002-0000-0000-0000-000000000001',
+  g5MathSASkill1:                     'a4051002-0001-0000-0000-000000000000',
+  g5MathSASkill2:                     'a4051002-0002-0000-0000-000000000000',
+  g5MathSASkill3:                     'a4051002-0003-0000-0000-000000000000',
+  g5MathSASkill4:                     'a4051002-0004-0000-0000-000000000000',
+
+  // Ch 3: How Many Squares?
+  g5MathHowManySquares:               'a3051003-0000-0000-0000-000000000001',
+  g5MathHMSSkill1:                    'a4051003-0001-0000-0000-000000000000',
+  g5MathHMSSkill2:                    'a4051003-0002-0000-0000-000000000000',
+  g5MathHMSSkill3:                    'a4051003-0003-0000-0000-000000000000',
+
+  // Ch 4: Parts and Wholes
+  g5MathPartsAndWholes:               'a3051004-0000-0000-0000-000000000001',
+  g5MathPWPartsOfWhole:               'a4051004-0001-0000-0000-000000000000',
+  g5MathPWEquivalentFractions:        'a4051004-0002-0000-0000-000000000000',
+
+  // Ch 5: Does it Look the Same?
+  g5MathDoesItLookSame:               'a3051005-0000-0000-0000-000000000001',
+  g5MathDILSVisualSymmetry:           'a4051005-0001-0000-0000-000000000000',
+  g5MathDILSPatternObservation:       'a4051005-0002-0000-0000-000000000000',
+  g5MathDILSGeometricReasoning:       'a4051005-0003-0000-0000-000000000000',
+
+  // Ch 6: Be My Multiple, I'll be Your Factor
+  g5MathBeMyMultiple:                 'a3051006-0000-0000-0000-000000000001',
+  g5MathBMFSkill1:                    'a4051006-0001-0000-0000-000000000000',
+  g5MathBMFSkill2:                    'a4051006-0002-0000-0000-000000000000',
+  g5MathBMFSkill3:                    'a4051006-0003-0000-0000-000000000000',
+
+  // Ch 7: Can You See the Pattern? (engine-based)
+  g5MathCanYouSeePattern:             'a3051007-0000-0000-0000-000000000001',
+  g5MathCYSPNumberPatterns:           'a4051007-0001-0000-0000-000000000000',
+  g5MathCYSPShapePatterns:            'a4051007-0002-0000-0000-000000000000',
+  g5MathCYSPPatternRules:             'a4051007-0003-0000-0000-000000000000',
+  g5MathCYSPContinuingPatterns:       'a4051007-0004-0000-0000-000000000000',
+  // Ch 7: Can You See the Pattern? (flat-file skills)
+  g5MathCYSPPatternIdentification:    'a4051007-0005-0000-0000-000000000000',
+  g5MathCYSPGridPattern:              'a4051007-0006-0000-0000-000000000000',
+  g5MathCYSPRuleBasedPattern:         'a4051007-0007-0000-0000-000000000000',
+  g5MathCYSPUnderstandingRotations:   'a4051007-0008-0000-0000-000000000000',
+  g5MathCYSPPalindromeRecognition:    'a4051007-0009-0000-0000-000000000000',
+  g5MathCYSPDigitRelationships:       'a4051007-0010-0000-0000-000000000000',
+  g5MathCYSPPropertiesOfOperations:   'a4051007-0011-0000-0000-000000000000',
+  g5MathCYSPStructuredNumberPatterns: 'a4051007-0012-0000-0000-000000000000',
+  g5MathCYSPMentalCalcStrategies:     'a4051007-0013-0000-0000-000000000000',
+  g5MathCYSPMissingNumberReasoning:   'a4051007-0014-0000-0000-000000000000',
+  g5MathCYSPMultiStepOperations:      'a4051007-0015-0000-0000-000000000000',
+  g5MathCYSPRuleApplication:          'a4051007-0016-0000-0000-000000000000',
+  g5MathCYSPSkillApplicationPatterns: 'a4051007-0017-0000-0000-000000000000',
+  g5MathCYSPChapterTest:              'a4051007-0018-0000-0000-000000000000',
+
+  // Ch 8: Mapping Your Way
+  g5MathMappingYourWay:               'a3051008-0000-0000-0000-000000000001',
+  g5MathMYWMapsDirections:            'a4051008-0001-0000-0000-000000000000',
+  g5MathMYWReadingMaps:               'a4051008-0002-0000-0000-000000000000',
+  g5MathMYWGridReferences:            'a4051008-0003-0000-0000-000000000000',
+
+  // Ch 10: Tenths and Hundredths
+  g5MathTenthsAndHundredths:          'a3051010-0000-0000-0000-000000000001',
+  g5MathTHPlaceValues:                'a4051010-0001-0000-0000-000000000000',
+  g5MathTHVisualRepresentation:       'a4051010-0002-0000-0000-000000000000',
+  g5MathTHFractionToDecimal:          'a4051010-0003-0000-0000-000000000000',
+  g5MathTHComparingDecimals:          'a4051010-0004-0000-0000-000000000000',
+  g5MathTHDecimalInMoney:             'a4051010-0005-0000-0000-000000000000',
+  g5MathTHDecimalInMeasurement:       'a4051010-0006-0000-0000-000000000000',
+  g5MathTHDecimalOperations:          'a4051010-0007-0000-0000-000000000000',
+  g5MathTHConversionBetweenForms:     'a4051010-0008-0000-0000-000000000000',
+  g5MathTHSkillApplicationProb:       'a4051010-0009-0000-0000-000000000000',
+  g5MathTHChapterTest:                'a4051010-0010-0000-0000-000000000000',
+
+  // Ch 11: Area and its Boundary
+  g5MathAreaAndBoundary:              'a3051011-0000-0000-0000-000000000001',
+  g5MathAABFindingArea:               'a4051011-0001-0000-0000-000000000000',
+  g5MathAABAppropriateAreaUnits:      'a4051011-0002-0000-0000-000000000000',
+  g5MathAABAreaRealLife:              'a4051011-0003-0000-0000-000000000000',
+  g5MathAABCompareShapesSameArea:     'a4051011-0004-0000-0000-000000000000',
+  g5MathAABFindingPerimeter:          'a4051011-0005-0000-0000-000000000000',
+  g5MathAABPerimeterAsBoundary:       'a4051011-0006-0000-0000-000000000000',
+  g5MathAABPerimeterRealLife:         'a4051011-0007-0000-0000-000000000000',
+  g5MathAABSamePerimeterDiffShapes:   'a4051011-0008-0000-0000-000000000000',
+  g5MathAABAreaPerimeterRelation:     'a4051011-0009-0000-0000-000000000000',
+  g5MathAABSkillApplicationProblems:  'a4051011-0010-0000-0000-000000000000',
+  g5MathAABChapterTest:               'a4051011-0011-0000-0000-000000000000',
+
+  // Ch 13: Ways to Multiply and Divide
+  g5MathWaysToMultiplyDivide:         'a3051013-0000-0000-0000-000000000001',
+  g5MathWMDMult2Digit:                'a4051013-0001-0000-0000-000000000000',
+  g5MathWMDMult3Digit:                'a4051013-0002-0000-0000-000000000000',
+  g5MathWMDMultEndingZeros:           'a4051013-0003-0000-0000-000000000000',
+  g5MathWMDMultMultipleNumbers:       'a4051013-0004-0000-0000-000000000000',
+  g5MathWMDMultWordProblems:          'a4051013-0005-0000-0000-000000000000',
+  g5MathWMDDivOneDigit:               'a4051013-0006-0000-0000-000000000000',
+  g5MathWMDDivTwoDigit:               'a4051013-0007-0000-0000-000000000000',
+  g5MathWMDDivEndingZeros:            'a4051013-0008-0000-0000-000000000000',
+  g5MathWMDDivWordProblems:           'a4051013-0009-0000-0000-000000000000',
+  g5MathWMDSkillApplicationProblems:  'a4051013-0010-0000-0000-000000000000',
+  g5MathWMDChapterTest:               'a4051013-0011-0000-0000-000000000000',
+
+  // Ch 14: How Big? How Heavy?
+  g5MathHowBigHowHeavy:              'a3051014-0000-0000-0000-000000000001',
+  g5MathHBHHUnitsOfVolume:           'a4051014-0001-0000-0000-000000000000',
+  g5MathHBHHVolumeEstimation:        'a4051014-0002-0000-0000-000000000000',
+  g5MathHBHHVolumeUnitCubes:         'a4051014-0003-0000-0000-000000000000',
+  g5MathHBHHVolumeDisplacement:      'a4051014-0004-0000-0000-000000000000',
+  g5MathHBHHUnitsOfMass:             'a4051014-0005-0000-0000-000000000000',
+  g5MathHBHHWeightEstimation:        'a4051014-0006-0000-0000-000000000000',
+  g5MathHBHHMassConversion:          'a4051014-0007-0000-0000-000000000000',
+  g5MathHBHHMassCalculation:         'a4051014-0008-0000-0000-000000000000',
+  g5MathHBHHMeasurementRealLife:     'a4051014-0009-0000-0000-000000000000',
+  g5MathHBHH3DShapeConstruction:     'a4051014-0010-0000-0000-000000000000',
+  g5MathHBHHPackagingLayering:       'a4051014-0011-0000-0000-000000000000',
+  g5MathHBHHSkillApplicationProblem: 'a4051014-0012-0000-0000-000000000000',
+  g5MathHBHHChapterTest:             'a4051014-0013-0000-0000-000000000000',
 
   // Grade 5 Science: Water
   g5ScienceWater:               'b3051001-0000-0000-0000-000000000001',
@@ -844,6 +635,79 @@ export const NODE_IDS = {
   g7MathVSSDrawingSolids:                  'a4071015-0004-0000-0000-000000000000',
   g7MathVSSViewingSections:                'a4071015-0005-0000-0000-000000000000',
   g7MathVSSChapterTest:                    'a4071015-0010-0000-0000-000000000000',
+
+  // Ch 1: Rational Numbers
+  g8MathRNChapter:                   'a3081001-0000-0000-0000-000000000001',
+  g8MathRNCommutativity:             'a4081001-0001-0000-0000-000000000000',
+  g8MathRNAssociativity:             'a4081001-0002-0000-0000-000000000000',
+  g8MathRNDistributivity:            'a4081001-0003-0000-0000-000000000000',
+  g8MathRNIdentities:                'a4081001-0004-0000-0000-000000000000',
+  g8MathRNChapterTest:               'a4081001-0010-0000-0000-000000000000',
+
+  // Ch 3: Understanding Quadrilaterals
+  g8MathUQChapter:                   'a3081003-0000-0000-0000-000000000001',
+  g8MathUQAngleSumExterior:          'a4081003-0001-0000-0000-000000000000',
+  g8MathUQKindsOfQuadrilaterals:     'a4081003-0002-0000-0000-000000000000',
+  g8MathUQSpecialParallelograms:     'a4081003-0003-0000-0000-000000000000',
+
+  // Ch 5: Data Handling
+  g8MathDHChapter:                   'a3081005-0000-0000-0000-000000000001',
+  g8MathDHOrganisingData:            'a4081005-0001-0000-0000-000000000000',
+  g8MathDHBarGraphs:                 'a4081005-0002-0000-0000-000000000000',
+  g8MathDHPieCharts:                 'a4081005-0003-0000-0000-000000000000',
+  g8MathDHProbability:               'a4081005-0004-0000-0000-000000000000',
+
+  // Ch 6: Squares and Square Roots
+  g8MathSSRChapter:                  'a3081006-0000-0000-0000-000000000001',
+  g8MathSSRIdentifyPerfect:          'a4081006-0001-0000-0000-000000000000',
+  g8MathSSRProperties:               'a4081006-0002-0000-0000-000000000000',
+  g8MathSSRPythagorean:              'a4081006-0003-0000-0000-000000000000',
+  g8MathSSRConceptRoot:              'a4081006-0004-0000-0000-000000000000',
+  g8MathSSRPrimeFactorization:       'a4081006-0005-0000-0000-000000000000',
+  g8MathSSRLongDivision:             'a4081006-0006-0000-0000-000000000000',
+  g8MathSSRDecimals:                 'a4081006-0007-0000-0000-000000000000',
+  g8MathSSRIdentityPatterns:         'a4081006-0008-0000-0000-000000000000',
+  g8MathSSRChapterTest:              'a4081006-0010-0000-0000-000000000000',
+
+  // Ch 7: Cubes and Cube Roots
+  g8MathCCRChapter:                  'a3081007-0000-0000-0000-000000000001',
+  g8MathCCRPerfectCubes:             'a4081007-0001-0000-0000-000000000000',
+  g8MathCCRPrimeFactorisation:       'a4081007-0002-0000-0000-000000000000',
+  g8MathCCREstimatingRoots:          'a4081007-0003-0000-0000-000000000000',
+  g8MathCCRMissingMultiples:         'a4081007-0004-0000-0000-000000000000',
+
+  // Ch 11: Mensuration
+  g8MathMensChapter:                 'a3081011-0000-0000-0000-000000000001',
+  g8MathMensAreaPolygon:             'a4081011-0001-0000-0000-000000000000',
+  g8MathMensSACube:                  'a4081011-0002-0000-0000-000000000000',
+  g8MathMensSACuboid:                'a4081011-0003-0000-0000-000000000000',
+  g8MathMensSACylinder:              'a4081011-0004-0000-0000-000000000000',
+  g8MathMensVolCube:                 'a4081011-0005-0000-0000-000000000000',
+  g8MathMensVolCuboid:               'a4081011-0006-0000-0000-000000000000',
+  g8MathMensVolCylinder:             'a4081011-0007-0000-0000-000000000000',
+  g8MathMensVolCapacity:             'a4081011-0008-0000-0000-000000000000',
+  g8MathMensChapterTest:             'a4081011-0010-0000-0000-000000000000',
+
+  // Ch 13: Direct and Inverse Proportions
+  g8MathDIPChapter:                  'a3081013-0000-0000-0000-000000000001',
+  g8MathDIPDirect:                   'a4081013-0001-0000-0000-000000000000',
+  g8MathDIPInverse:                  'a4081013-0002-0000-0000-000000000000',
+
+  // Ch 14: Factorisation
+  g8MathFactChapter:                 'a3081014-0000-0000-0000-000000000001',
+  g8MathFactCommonFactors:           'a4081014-0001-0000-0000-000000000000',
+  g8MathFactRegrouping:              'a4081014-0002-0000-0000-000000000000',
+  g8MathFactIdentities:              'a4081014-0003-0000-0000-000000000000',
+  g8MathFactXplusAXplusB:            'a4081014-0004-0000-0000-000000000000',
+  g8MathFactDivMonomialMonomial:     'a4081014-0005-0000-0000-000000000000',
+  g8MathFactDivPolyMonomial:         'a4081014-0006-0000-0000-000000000000',
+  g8MathFactDivPolyPoly:             'a4081014-0007-0000-0000-000000000000',
+  g8MathFactChapterTest:             'a4081014-0010-0000-0000-000000000000',
+
+  // Ch 15: Introduction to Graphs
+  g8MathGraphsChapter:               'a3081015-0000-0000-0000-000000000001',
+  g8MathGraphsLineGraph:             'a4081015-0001-0000-0000-000000000000',
+  g8MathGraphsLinearGraph:           'a4081015-0002-0000-0000-000000000000',
 
   // ── 2. GRADE 8 CHAPTERS ───────────────────────────────────────────────────
   g8MathRationalNumbers:   'a3000000-0000-0000-0000-000000000001',
@@ -1144,6 +1008,134 @@ export const NODE_IDS = {
   g10ScienceChemicalOxidation:         'b4101001-0003-0000-0000-000000000000',
   g10ScienceChemicalTerminologyQuiz:   'b4101001-0010-0000-0000-000000000000',
 
+  // Ch 1: Structure of Atom
+  g11ChemistryStructureOfAtom:             'c3111401-0000-0000-0000-000000000001',
+
+  // Skills (9 skills)
+  g11ChemSOASubAtomicParticles:            'c4111401-0001-0000-0000-000000000000',
+  g11ChemSOAAtomicModels:                  'c4111401-0002-0000-0000-000000000000',
+  g11ChemSOABohrModel:                     'c4111401-0003-0000-0000-000000000000',
+  g11ChemSOAHydrogenSpectrum:              'c4111401-0004-0000-0000-000000000000',
+  g11ChemSOADualNature:                    'c4111401-0005-0000-0000-000000000000',
+  g11ChemSOAHeisenberg:                    'c4111401-0006-0000-0000-000000000000',
+  g11ChemSOAQuantumNumbers:                'c4111401-0007-0000-0000-000000000000',
+  g11ChemSOAShapesOfOrbitals:              'c4111401-0008-0000-0000-000000000000',
+  g11ChemSOAElectronicConfig:              'c4111401-0009-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11ChemSOATerminologyQuiz:               'c4111401-0010-0000-0000-000000000000',
+
+  // Ch 5: Laws of Motion
+  g11PhysicsLOM:                           'd3111505-0000-0000-0000-000000000001',
+
+  // Skills (6 skills)
+  g11PhysLOMNewtons3Laws:                  'd4111505-0001-0000-0000-000000000000',
+  g11PhysLOMMomentumImpulse:               'd4111505-0002-0000-0000-000000000000',
+  g11PhysLOMConservationMomentum:          'd4111505-0003-0000-0000-000000000000',
+  g11PhysLOMEquilibriumForces:             'd4111505-0004-0000-0000-000000000000',
+  g11PhysLOMFriction:                      'd4111505-0005-0000-0000-000000000000',
+  g11PhysLOMCircularMotion:                'd4111505-0006-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11PhysLOMTerminologyQuiz:               'd4111505-0010-0000-0000-000000000000',
+
+  // Ch 3: Motion in a Straight Line
+  g11PhysicsMSL:                           'd3111503-0000-0000-0000-000000000001',
+
+  // Skills (5 skills)
+  g11PhysMSLDistanceDisplacement:          'd4111503-0001-0000-0000-000000000000',
+  g11PhysMSLVelocityAcceleration:          'd4111503-0002-0000-0000-000000000000',
+  g11PhysMSLKinematicEquations:            'd4111503-0003-0000-0000-000000000000',
+  g11PhysMSLMotionGraphs:                  'd4111503-0004-0000-0000-000000000000',
+  g11PhysMSLRelativeVelocity:              'd4111503-0005-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11PhysMSLTerminologyQuiz:               'd4111503-0010-0000-0000-000000000000',
+
+  // Skills (4 skills)
+  g11PhysWEPWorkCalc:                      'd4111506-0001-0000-0000-000000000000',
+  g11PhysWEPWorkEnergyTheorem:             'd4111506-0002-0000-0000-000000000000',
+  g11PhysWEPPotentialEnergy:               'd4111506-0003-0000-0000-000000000000',
+  g11PhysWEPConservation:                  'd4111506-0004-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11PhysWEPTerminologyQuiz:               'd4111506-0010-0000-0000-000000000000',
+
+  // Ch 1: Sets
+  g11MathsSets:                            'a3111001-0000-0000-0000-000000000001',
+
+  // Skills (9 skills)
+  g11MathSetsWhatIsSet:                    'a4111001-0001-0000-0000-000000000000',
+  g11MathSetsTypes:                        'a4111001-0002-0000-0000-000000000000',
+  g11MathSetsEqualEquivalent:              'a4111001-0003-0000-0000-000000000000',
+  g11MathSetsSubsetsIntervals:             'a4111001-0004-0000-0000-000000000000',
+  g11MathSetsUniversalComplement:          'a4111001-0005-0000-0000-000000000000',
+  g11MathSetsOperations:                   'a4111001-0006-0000-0000-000000000000',
+  g11MathSetsVennDiagrams:                 'a4111001-0007-0000-0000-000000000000',
+  g11MathSetsLawsProperties:               'a4111001-0008-0000-0000-000000000000',
+  g11MathSetsCardinality:                  'a4111001-0009-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11MathSetsTerminologyQuiz:              'a4111001-0010-0000-0000-000000000000',
+
+  // Ch 2: Relations and Functions
+  g11MathsRAF:                             'a3111002-0000-0000-0000-000000000001',
+
+  // Skills (6 skills)
+  g11MathRAFCartesian:                     'a4111002-0001-0000-0000-000000000000',
+  g11MathRAFRelations:                     'a4111002-0002-0000-0000-000000000000',
+  g11MathRAFCounting:                      'a4111002-0003-0000-0000-000000000000',
+  g11MathRAFFunctions:                     'a4111002-0004-0000-0000-000000000000',
+  g11MathRAFSpecial:                       'a4111002-0005-0000-0000-000000000000',
+  g11MathRAFAlgebra:                       'a4111002-0006-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11MathRAFTerminologyQuiz:               'a4111002-0010-0000-0000-000000000000',
+
+  // Ch 4: Complex Numbers and Quadratic Equations
+  g11MathsComplexNumbers:                  'a3111004-0000-0000-0000-000000000001',
+
+  // Skills (7 skills)
+  g11MathCNComplexBasics:                  'a4111004-0001-0000-0000-000000000000',
+  g11MathCNAdditionSubtraction:            'a4111004-0002-0000-0000-000000000000',
+  g11MathCNMultiplication:                 'a4111004-0003-0000-0000-000000000000',
+  g11MathCNDivisionInverse:                'a4111004-0004-0000-0000-000000000000',
+  g11MathCNPowersOfI:                      'a4111004-0005-0000-0000-000000000000',
+  g11MathCNModulusConjugate:               'a4111004-0006-0000-0000-000000000000',
+  g11MathCNArgandPlane:                    'a4111004-0007-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11MathCNTerminologyQuiz:                'a4111004-0010-0000-0000-000000000000',
+  // Ch 6: Linear Inequalities
+  g11MathLinIneq:                          'a3111006-0000-0000-0000-000000000001',
+
+  // Skills (6 skills)
+  g11MathLinIneqProperties:               'a4111006-0001-0000-0000-000000000000',
+  g11MathLinIneqOneVariable:              'a4111006-0002-0000-0000-000000000000',
+  g11MathLinIneqNumberLine:               'a4111006-0003-0000-0000-000000000000',
+  g11MathLinIneqTwoVariable:              'a4111006-0004-0000-0000-000000000000',
+  g11MathLinIneqSystems:                  'a4111006-0005-0000-0000-000000000000',
+  g11MathLinIneqWordProblems:             'a4111006-0006-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11MathLinIneqTerminologyQuiz:          'a4111006-0010-0000-0000-000000000000',
+
+  // Ch 4: The Cell — The Unit of Life
+  g11BiologyTheCell:                       'e3111604-0000-0000-0000-000000000001',
+
+  // Skills (8 skills)
+  g11BiolTheCellCellTheory:                'e4111604-0001-0000-0000-000000000000',
+  g11BiolTheCellProkEuk:                   'e4111604-0002-0000-0000-000000000000',
+  g11BiolTheCellMembrane:                  'e4111604-0003-0000-0000-000000000000',
+  g11BiolTheCellWall:                      'e4111604-0004-0000-0000-000000000000',
+  g11BiolTheCellEndomembrane:              'e4111604-0005-0000-0000-000000000000',
+  g11BiolTheCellOrganelles:               'e4111604-0006-0000-0000-000000000000',
+  g11BiolTheCellNucleus:                   'e4111604-0007-0000-0000-000000000000',
+  g11BiolTheCellPlantVsAnimal:             'e4111604-0008-0000-0000-000000000000',
+
+  // Terminology Quiz
+  g11BiolTheCellTerminologyQuiz:           'e4111604-0010-0000-0000-000000000000',
+
   // Grade 11 Functions
   mathBranchTrigFuncTerminology:            'f3000000-0000-0000-0000-000000000120',
   mathBranchTrigFunc1:                      'f3000000-0000-0000-0000-000000000121',
@@ -1174,6 +1166,30 @@ export const NODE_IDS = {
 
   // ── 10. GRADE 11 BIOLOGY ──────────────────────────────────────────────────
   // Prefix: e = Biology (hex-safe) | Biology subject code: 16
+
+  // Ch 8: Cell — Structure and Functions (legacy test)
+  // g11BiologyCellStructure:                 'e4111608-0001-0000-0000-000000000000',
+  // Grade 12 Chemistry: Solutions
+  g12ChemSolutions:                            'e3121601-0000-0000-0000-000000000001',
+  g12ChemSolutionsTypes:                       'e4121601-0001-0000-0000-000000000000',
+  g12ChemSolutionsConcentration:               'e4121601-0002-0000-0000-000000000000',
+  g12ChemSolutionsSolubility:                  'e4121601-0003-0000-0000-000000000000',
+  g12ChemSolutionsVapourPressure:              'e4121601-0004-0000-0000-000000000000',
+  g12ChemSolutionsIdeal:                       'e4121601-0005-0000-0000-000000000000',
+  g12ChemSolutionsColligative:                 'e4121601-0006-0000-0000-000000000000',
+  g12ChemSolutionsTerminologyQuiz:             'e4121601-0010-0000-0000-000000000000',
+  g12ChemSolutionsIntro:                       'e4121601-0011-0000-0000-000000000000',
+  g12ChemSolutionsConnectomics:                'e4121601-0012-0000-0000-000000000000',
+  g12ChemSolutionsVirtualLab:                  'e4121601-0013-0000-0000-000000000000',
+  g12ChemSolutionsExamEdge:                    'e4121601-0014-0000-0000-000000000000',
+
+  // Skills (5 skills)
+  g12BiolSRTheFlower:                          'e4121602-0001-0000-0000-000000000000',
+  g12BiolSRPreFertilisation:                   'e4121602-0002-0000-0000-000000000000',
+  g12BiolSRDoubleFertilisation:                'e4121602-0003-0000-0000-000000000000',
+  g12BiolSRPostFertilisation:                  'e4121602-0004-0000-0000-000000000000',
+  g12BiolSRApomixisPolyembryony:               'e4121602-0005-0000-0000-000000000000',
+  g12BiolSRTerminologyQuiz:                    'e4121602-0010-0000-0000-000000000000',
 
   // Grade 12 Inverse
   mathBranchInverseTrigTerminology:         'f3000000-0000-0000-0000-000000000130',
@@ -1241,22 +1257,6 @@ export const NODE_IDS = {
   // Ch 6: Work, Energy and Power
   g11PhysicsWEP:                           'd3111506-0000-0000-0000-000000000001',
 
-  // Ch 8: Cell — Structure and Functions (legacy test)
-  // g11BiologyCellStructure:                 'e4111608-0001-0000-0000-000000000000',
-  // Grade 12 Chemistry: Solutions
-  g12ChemSolutions:                            'e3121601-0000-0000-0000-000000000001',
-  g12ChemSolutionsTypes:                       'e4121601-0001-0000-0000-000000000000',
-  g12ChemSolutionsConcentration:               'e4121601-0002-0000-0000-000000000000',
-  g12ChemSolutionsSolubility:                  'e4121601-0003-0000-0000-000000000000',
-  g12ChemSolutionsVapourPressure:              'e4121601-0004-0000-0000-000000000000',
-  g12ChemSolutionsIdeal:                       'e4121601-0005-0000-0000-000000000000',
-  g12ChemSolutionsColligative:                 'e4121601-0006-0000-0000-000000000000',
-  g12ChemSolutionsTerminologyQuiz:             'e4121601-0010-0000-0000-000000000000',
-  g12ChemSolutionsIntro:                       'e4121601-0011-0000-0000-000000000000',
-  g12ChemSolutionsConnectomics:                'e4121601-0012-0000-0000-000000000000',
-  g12ChemSolutionsVirtualLab:                  'e4121601-0013-0000-0000-000000000000',
-  g12ChemSolutionsExamEdge:                    'e4121601-0014-0000-0000-000000000000',
-
   // ── GRADE 12 BIOLOGY: Sexual Reproduction in Flowering Plants (Chapter 2) ─
   // Prefix: e = Biology | Biology subject code: 16 | Chapter: 02
   g12BiolSexualReproduction:                   'e3121602-0000-0000-0000-000000000001',
@@ -1313,20 +1313,6 @@ export const SLUG_TO_NODE_ID = {
   'chem-physical-balancing-eq':        NODE_IDS.chemPhysicalBalancingEquations,
   'chem-physical-terminology':         NODE_IDS.chemPhysicalTerminologyQuiz,
   'chem-physical-introduction':        NODE_IDS.chemPhysicalIntroduction,
-
-  // Grade-based Slugs
-  'g10-science-chemical-reactions':    NODE_IDS.g10ScienceChemicalReactions,
-  'g10-science-cr-equations':          NODE_IDS.g10ScienceChemicalEquations,
-  'g10-science-cr-types':              NODE_IDS.g10ScienceChemicalTypes,
-  'g10-science-cr-oxidation':          NODE_IDS.g10ScienceChemicalOxidation,
-  'g10-science-cr-terminology':        NODE_IDS.g10ScienceChemicalTerminologyQuiz,
-  'g6-science-wonderful-world':         NODE_IDS.g6ScienceWonderfulWorld,
-  'g5-science-water-essence':           NODE_IDS.g5ScienceWater,
-  'g8-science-investigative':          NODE_IDS.g8ScienceInvestigative,
-  'g3-math-time-goes-on':               NODE_IDS.g3MathTimeGoesOn,
-  'g6-math-patterns':                  NODE_IDS.g6MathPatterns,
-  'g3-science-our-families':           NODE_IDS.g3EvsOurFamilies,
-  'g4-science-our-community':          NODE_IDS.g4EvsOurCommunity,
 
   // GRADE 1: SHAPES AND SPACE
   'g1-math-shapes-space-identify': NODE_IDS.g1MathShapesSpaceIdentify,
@@ -1570,6 +1556,20 @@ export const SLUG_TO_NODE_ID = {
   'g9-math-stat-skill-2':                   NODE_IDS.g9MathStatSkill2,
   'g9-math-stat-skill-3':                   NODE_IDS.g9MathStatSkill3,
   'g9-math-stat-terminology':               NODE_IDS.g9MathStatTerminologyQuiz,
+
+  // Grade-based Slugs
+  'g10-science-chemical-reactions':    NODE_IDS.g10ScienceChemicalReactions,
+  'g10-science-cr-equations':          NODE_IDS.g10ScienceChemicalEquations,
+  'g10-science-cr-types':              NODE_IDS.g10ScienceChemicalTypes,
+  'g10-science-cr-oxidation':          NODE_IDS.g10ScienceChemicalOxidation,
+  'g10-science-cr-terminology':        NODE_IDS.g10ScienceChemicalTerminologyQuiz,
+  'g6-science-wonderful-world':         NODE_IDS.g6ScienceWonderfulWorld,
+  'g5-science-water-essence':           NODE_IDS.g5ScienceWater,
+  'g8-science-investigative':          NODE_IDS.g8ScienceInvestigative,
+  'g3-math-time-goes-on':               NODE_IDS.g3MathTimeGoesOn,
+  'g6-math-patterns':                  NODE_IDS.g6MathPatterns,
+  'g3-science-our-families':           NODE_IDS.g3EvsOurFamilies,
+  'g4-science-our-community':          NODE_IDS.g4EvsOurCommunity,
 
   // Grade 10 Math: Quadratic Equations
   'g10-math-quadratic-equations':       NODE_IDS.g10MathQuadraticEquations,
