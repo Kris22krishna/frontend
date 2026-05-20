@@ -106,6 +106,21 @@ import InverseTrigGr12Intro from './components/Math-Branches/Trigonometry/Grade1
 import InverseTrigGr12Terminology from './components/Math-Branches/Trigonometry/Grade12-InverseTrig/Topics/Terminology/InverseTrigGr12Terminology';
 import InverseTrigGr12Skills from './components/Math-Branches/Trigonometry/Grade12-InverseTrig/Topics/Skills/InverseTrigGr12Skills';
 
+// Chemistry Branches
+
+import InorganicChemDashboard from './components/Chemistry-Branches/Inorganic/InorganicChemDashboard';
+import InorganicChemIntro from './components/Chemistry-Branches/Inorganic/Topics/Introduction/InorganicChemIntro';
+import InorganicChemTerminology from './components/Chemistry-Branches/Inorganic/Topics/Terminology/InorganicChemTerminology';
+import InorganicChemSkills from './components/Chemistry-Branches/Inorganic/Topics/Skills/InorganicChemSkills';
+import OrganicChemDashboard from './components/Chemistry-Branches/Organic/OrganicChemDashboard';
+import OrganicChemIntro from './components/Chemistry-Branches/Organic/Topics/Introduction/OrganicChemIntro';
+import OrganicChemTerminology from './components/Chemistry-Branches/Organic/Topics/Terminology/OrganicChemTerminology';
+import OrganicChemSkills from './components/Chemistry-Branches/Organic/Topics/Skills/OrganicChemSkills';
+import PhysicalChemDashboard from './components/Chemistry-Branches/Physical/PhysicalChemDashboard';
+import PhysicalChemIntro from './components/Chemistry-Branches/Physical/Topics/Introduction/PhysicalChemIntro';
+import PhysicalChemTerminology from './components/Chemistry-Branches/Physical/Topics/Terminology/PhysicalChemTerminology';
+import PhysicalChemSkills from './components/Chemistry-Branches/Physical/Topics/Skills/PhysicalChemSkills';
+
 // Functions
 import FunctionsDashboard from './components/Math-Branches/Calculus/Functions/FunctionsDashboard';
 import FunctionsIntro5W1H from './components/Math-Branches/Calculus/Functions/Topics/5W1H/FunctionsIntro5W1H';
@@ -126,6 +141,20 @@ import IntDashboard from './components/Math-Branches/Calculus/Integration/IntDas
 import IntIntro5W1H from './components/Math-Branches/Calculus/Integration/Topics/5W1H/IntIntro5W1H';
 import IntTerminology from './components/Math-Branches/Calculus/Integration/Topics/Terminology/IntTerminology';
 import IntSkills from './components/Math-Branches/Calculus/Integration/Topics/Skills/IntSkills';
+import SetsDashboard from './components/practice/class-11/maths/Sets/SetsDashboard';
+import SetsIntro from './components/practice/class-11/maths/Sets/Topics/Introduction/SetsIntro';
+import SetsTerminology from './components/practice/class-11/maths/Sets/Topics/Terminology/SetsTerminology';
+import SetsSkills from './components/practice/class-11/maths/Sets/Topics/Skills/SetsSkills';
+import SetsConnectomics from './components/practice/class-11/maths/Sets/Topics/Connectomics/SetsConnectomics';
+import SetsExamEdge from './components/practice/class-11/maths/Sets/Topics/ExamEdge/SetsExamEdge';
+
+// Class 11 - Maths: Complex Numbers & Quadratic Equations
+import ComplexDashboard from './components/practice/class-11/maths/ComplexNumbers/ComplexDashboard';
+import ComplexIntro from './components/practice/class-11/maths/ComplexNumbers/Topics/Introduction/ComplexIntro';
+import ComplexTerminology from './components/practice/class-11/maths/ComplexNumbers/Topics/Terminology/ComplexTerminology';
+import ComplexSkills from './components/practice/class-11/maths/ComplexNumbers/Topics/Skills/ComplexSkills';
+import ComplexConnectomics from './components/practice/class-11/maths/ComplexNumbers/Topics/Connectomics/ComplexConnectomics';
+import ComplexExamEdge from './components/practice/class-11/maths/ComplexNumbers/Topics/ExamEdge/ComplexExamEdge';
 
 // Geometry Math-Branch
 import GeometryMainDashboard from './components/Math-Branches/Geometry/GeometryMainDashboard';
@@ -159,12 +188,7 @@ import GeoTransformationsTerminology from './components/Math-Branches/Geometry/T
 import GeoTransformationsSkills from './components/Math-Branches/Geometry/Transformations/Topics/Skills/TransformationsSkills';
 import GeometrySparks from './components/Math-Branches/Geometry/GeometrySparks';
 
-import SetsDashboard from './components/Math-Branches/Sets/SetsDashboard';
-import SetsIntro from './components/Math-Branches/Sets/Topics/Introduction/SetsIntro';
-import SetsTerminology from './components/Math-Branches/Sets/Topics/Terminology/SetsTerminology';
-import SetsSkills from './components/Math-Branches/Sets/Topics/Skills/SetsSkills';
-import SetsConnectomics from './components/Math-Branches/Sets/Topics/Connectomics/SetsConnectomics';
-import SetsExamEdge from './components/Math-Branches/Sets/Topics/ExamEdge/SetsExamEdge';
+
 
 // Class 11 - Maths: Relations & Functions
 import RelFuncDashboard from './components/practice/class-11/maths/RelationsAndFunctions/RelationsAndFunctions';
@@ -1412,6 +1436,14 @@ function App() {
           <Route path="senior/grade/11/maths/sets/connectomics" element={<ProtectedRoute redirectTo="/login"><SetsConnectomics /></ProtectedRoute>} />
           <Route path="senior/grade/11/maths/sets/exam-edge" element={<ProtectedRoute redirectTo="/login"><SetsExamEdge /></ProtectedRoute>} />
 
+          {/* Class 11 Maths: Complex Numbers & Quadratic Equations */}
+          <Route path="senior/grade/11/maths/complex-numbers" element={<ProtectedRoute redirectTo="/login"><ComplexDashboard /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/complex-numbers/introduction" element={<ProtectedRoute redirectTo="/login"><ComplexIntro /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/complex-numbers/terminology" element={<ProtectedRoute redirectTo="/login"><ComplexTerminology /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/complex-numbers/skills" element={<ProtectedRoute redirectTo="/login"><ComplexSkills /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/complex-numbers/connectomics" element={<ProtectedRoute redirectTo="/login"><ComplexConnectomics /></ProtectedRoute>} />
+          <Route path="senior/grade/11/maths/complex-numbers/exam-edge" element={<ProtectedRoute redirectTo="/login"><ComplexExamEdge /></ProtectedRoute>} />
+
           {/* Class 11 Maths: Relations & Functions */}
           <Route path="senior/grade/11/maths/relations-and-functions" element={<ProtectedRoute redirectTo="/login"><RelFuncDashboard /></ProtectedRoute>} />
           <Route path="senior/grade/11/maths/relations-and-functions/introduction" element={<ProtectedRoute redirectTo="/login"><RelFuncIntro /></ProtectedRoute>} />
@@ -1616,6 +1648,21 @@ function App() {
           <Route path="trigonometry/grade-12-inverse/introduction" element={<ProtectedRoute redirectTo="/login"><InverseTrigGr12Intro /></ProtectedRoute>} />
           <Route path="trigonometry/grade-12-inverse/terminology" element={<ProtectedRoute redirectTo="/login"><InverseTrigGr12Terminology /></ProtectedRoute>} />
           <Route path="trigonometry/grade-12-inverse/skills" element={<ProtectedRoute redirectTo="/login"><InverseTrigGr12Skills /></ProtectedRoute>} />
+
+          {/* Chemistry Branches */}
+
+          <Route path="chemistry/inorganic" element={<ProtectedRoute redirectTo="/login"><InorganicChemDashboard /></ProtectedRoute>} />
+          <Route path="chemistry/inorganic/introduction" element={<ProtectedRoute redirectTo="/login"><InorganicChemIntro /></ProtectedRoute>} />
+          <Route path="chemistry/inorganic/terminology" element={<ProtectedRoute redirectTo="/login"><InorganicChemTerminology /></ProtectedRoute>} />
+          <Route path="chemistry/inorganic/skills" element={<ProtectedRoute redirectTo="/login"><InorganicChemSkills /></ProtectedRoute>} />
+          <Route path="chemistry/organic" element={<ProtectedRoute redirectTo="/login"><OrganicChemDashboard /></ProtectedRoute>} />
+          <Route path="chemistry/organic/introduction" element={<ProtectedRoute redirectTo="/login"><OrganicChemIntro /></ProtectedRoute>} />
+          <Route path="chemistry/organic/terminology" element={<ProtectedRoute redirectTo="/login"><OrganicChemTerminology /></ProtectedRoute>} />
+          <Route path="chemistry/organic/skills" element={<ProtectedRoute redirectTo="/login"><OrganicChemSkills /></ProtectedRoute>} />
+          <Route path="chemistry/physical" element={<ProtectedRoute redirectTo="/login"><PhysicalChemDashboard /></ProtectedRoute>} />
+          <Route path="chemistry/physical/introduction" element={<ProtectedRoute redirectTo="/login"><PhysicalChemIntro /></ProtectedRoute>} />
+          <Route path="chemistry/physical/terminology" element={<ProtectedRoute redirectTo="/login"><PhysicalChemTerminology /></ProtectedRoute>} />
+          <Route path="chemistry/physical/skills" element={<ProtectedRoute redirectTo="/login"><PhysicalChemSkills /></ProtectedRoute>} />
 
           {/* Calculus Master Dashboard */}
           <Route path="calculus" element={<ProtectedRoute redirectTo="/login"><CalculusMainDashboard /></ProtectedRoute>} />

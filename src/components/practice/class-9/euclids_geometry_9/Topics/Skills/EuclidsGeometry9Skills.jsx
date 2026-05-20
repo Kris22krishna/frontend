@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../euclids_geometry_9.module.css';
 import { LatexText } from '../../../../../LatexText';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 import EGScenarioPracticeEngine from './Engines/EGScenarioPracticeEngine';
 import EGScenarioAssessmentEngine from './Engines/EGScenarioAssessmentEngine';
@@ -23,7 +24,7 @@ import {
 const SKILLS = [
     {
         id: 'defs-axioms',
-        nodeId: 'eg9-defs-axioms',
+        nodeId: NODE_IDS.g9MathEGDefsAxioms,
         title: 'Definitions & Axioms',
         subtitle: 'Skill 1 · Universal Truths',
         icon: '🌌',
@@ -62,7 +63,7 @@ const SKILLS = [
     },
     {
         id: 'postulates',
-        nodeId: 'eg9-postulates',
+        nodeId: NODE_IDS.g9MathEGPostulates,
         title: 'The Five Postulates',
         subtitle: 'Skill 2 · Geometric Assumptions',
         icon: '📐',
@@ -93,7 +94,7 @@ const SKILLS = [
     },
     {
         id: 'equivalents',
-        nodeId: 'eg9-equivalents',
+        nodeId: NODE_IDS.g9MathEGEquivalents,
         title: 'Equivalents of 5th Postulate',
         subtitle: 'Skill 3 · Parallel Consequences',
         icon: '🚊',

@@ -25,6 +25,13 @@ const chapters = [
         shadow: 'rgba(99,102,241,0.35)',
     },
     {
+        key: 'complex-numbers',
+        title: 'Complex Numbers & Quadratic Equations',
+        desc: 'Complex numbers, algebra of complex numbers, modulus, conjugate, Argand plane, and quadratic equations with complex roots.',
+        icon: 'i²',
+        questions: 84,
+        gradient: 'linear-gradient(135deg, #4c1d95 0%, #6d28d9 100%)',
+        shadow: 'rgba(76,29,149,0.35)',
         key: 'trigonometric-functions',
         title: 'Trigonometric Functions',
         desc: 'Angles, radians, unit circle, sin/cos/tan values, identities, allied angles, sum-difference formulas, and trig equations.',

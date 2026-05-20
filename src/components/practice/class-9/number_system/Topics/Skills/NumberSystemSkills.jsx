@@ -6,6 +6,7 @@ import QuizEngine from './Engines/QuizEngine.jsx';
 import AssessmentEngine from './Engines/AssessmentEngine.jsx';
 import CategorizedPracticeEngine from './Engines/CategorizedPracticeEngine.jsx';
 import { SKILLS } from './NumberSystemSkillsData';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 export default function NumberSystemSkills() {
     const navigate = useNavigate();
@@ -106,6 +107,7 @@ export default function NumberSystemSkills() {
                             <CategorizedPracticeEngine
                                 skill={skill}
                                 onBack={() => setView('list')}
+                                nodeId={skill.nodeId}
                             />
                         ) : (
                             <QuizEngine
@@ -113,6 +115,7 @@ export default function NumberSystemSkills() {
                                 title={`Practice: ${skill.title}`}
                                 color={skill.color}
                                 onBack={() => setView('list')}
+                                nodeId={skill.nodeId}
                             />
                         )
                     ) : (
@@ -121,6 +124,7 @@ export default function NumberSystemSkills() {
                             title={skill.title}
                             color={skill.color}
                             onBack={() => setView('list')}
+                            nodeId={skill.nodeId || NODE_IDS.g9MathNSChapterAssessment}
                         />
                     )}
                 </div>

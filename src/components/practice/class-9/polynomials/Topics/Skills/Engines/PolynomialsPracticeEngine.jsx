@@ -89,13 +89,21 @@ export default function PolynomialsPracticeEngine({ questionPool, sampleSize = 2
     };
 
     const handleNext = () => {
-        if (current + 1 >= questions.length) { 
+        if (current + 1 >= questions.length) {
+            const payload = Object.entries(answers).map(([i, a]) => ({
+                question_index: parseInt(i),
+                answer_json: { selected: a.selectedOption },
+                is_correct: a.isCorrect ? 1 : 0,
+                marks_awarded: a.isCorrect ? 1 : 0,
+                marks_possible: 1,
+                time_taken_ms: 0,
+            }));
             finishSession({
                 totalQuestions: questions.length,
                 questionsAnswered: Object.keys(answers).length,
-                answersPayload: answers
+                answersPayload: payload
             });
-            setFinished(true); 
+            setFinished(true);
         }
         else { setCurrent((c) => c + 1); setSelected(null); setFillValue(''); setAnswered(false); setFillCorrect(false); }
     };

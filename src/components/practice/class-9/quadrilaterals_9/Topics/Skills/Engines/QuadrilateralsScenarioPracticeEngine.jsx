@@ -29,7 +29,7 @@ export default function QuadrilateralsScenarioPracticeEngine({ scenarios = [], t
     const isFinishedRef = useRef(false);
 
     useEffect(() => {
-        startSession({ nodeId: nodeId || 'quadrilaterals9-skill-practice', sessionType: 'practice' });
+        if (nodeId) startSession({ nodeId, sessionType: 'practice' });
     }, []); // eslint-disable-line
 
     useEffect(() => {
@@ -104,7 +104,7 @@ export default function QuadrilateralsScenarioPracticeEngine({ scenarios = [], t
 
     const handleRetry = () => {
         isFinishedRef.current = false;
-        startSession({ nodeId: nodeId || 'quadrilaterals9-skill-practice', sessionType: 'practice' });
+        if (nodeId) startSession({ nodeId, sessionType: 'practice' });
         setQIndex(0);
         setAnswers({});
         setSelectedOpt(null);

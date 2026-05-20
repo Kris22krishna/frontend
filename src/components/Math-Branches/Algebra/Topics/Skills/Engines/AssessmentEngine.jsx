@@ -151,7 +151,7 @@ export default function AssessmentEngine({
     const handleSelect = async (optIdx) => {
         if (finished) return;
         const newAns = [...answers];
-        newAns[current] = optIdx;
+        newAns[current] = newAns[current] === optIdx ? null : optIdx;
         setAnswers(newAns);
 
         // v4 Log

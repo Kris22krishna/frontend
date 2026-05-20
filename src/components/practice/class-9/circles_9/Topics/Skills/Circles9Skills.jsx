@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../circles_9.module.css';
 import { LatexText } from '../../../../../LatexText';
+import { NODE_IDS } from '@/lib/curriculumIds';
+
 
 import CirclesScenarioPracticeEngine from './Engines/CirclesScenarioPracticeEngine';
 import CirclesScenarioAssessmentEngine from './Engines/CirclesScenarioAssessmentEngine';
@@ -16,7 +18,7 @@ import {
 const SKILLS = [
     {
         id: 'chords-and-perpendiculars',
-        nodeId: 'cirlces-9-0001',
+        nodeId: NODE_IDS.g9MathCircleChordsPerp,
         title: 'Chords & Perpendiculars',
         subtitle: 'Skill 1 · Theorems 9.1 to 9.6',
         icon: '📐',
@@ -47,7 +49,7 @@ const SKILLS = [
     },
     {
         id: 'arcs-and-angles',
-        nodeId: 'cirlces-9-0002',
+        nodeId: NODE_IDS.g9MathCircleArcsAngles,
         title: 'Arcs & Subtended Angles',
         subtitle: 'Skill 2 · Theorems 9.7 to 9.9',
         icon: '🔄',
@@ -78,7 +80,7 @@ const SKILLS = [
     },
     {
         id: 'cyclic-quadrilaterals',
-        nodeId: 'cirlces-9-0003',
+        nodeId: NODE_IDS.g9MathCircleCyclicQuad,
         title: 'Cyclic Quadrilaterals',
         subtitle: 'Skill 3 · Theorems 9.10 to 9.11',
         icon: '🔳',
@@ -231,7 +233,7 @@ export default function Circles9Skills() {
                             title={skill.title} 
                             color={skill.color} 
                             onBack={goBack}
-                            nodeId={skill.nodeId + '-assess'}
+                            nodeId={skill.nodeId}
                         />
                     )}
                 </div>

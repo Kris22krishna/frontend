@@ -10,7 +10,7 @@ export const TERMS = [
         word: 'Unit Circle',
         def: 'A circle with a radius of 1, centered at the origin (0,0) of a coordinate plane.',
         icon: '⭕',
-        example: 'Any point $(x, y)$ on the unit circle corresponds to $(\\cos\\theta, \\sin\\theta)$.',
+        example: 'For any point $(x, y)$ on the unit circle, the $x$-coordinate is $\\cos\\theta$ and the $y$-coordinate is $\\sin\\theta$.',
         realLifeExample: 'The fundamental tool used to define sine and cosine for angles greater than 90° or less than 0°.',
     },
     {
@@ -83,8 +83,8 @@ export const KEY_IDENTITIES = [
 export const VOCAB_QUIZ = [
     {
         id: 1,
-        q: 'What is the period of the function y = sin(x)?',
-        options: ['π', '2π', 'π/2', '4π'],
+        q: 'What is the period of the function $y = \\sin(x)$?',
+        options: ['$\\pi$', '$2\\pi$', '$\\frac{\\pi}{2}$', '$4\\pi$'],
         correct: 1
     },
     {
@@ -101,8 +101,8 @@ export const VOCAB_QUIZ = [
     },
     {
         id: 4,
-        q: 'How many radians are in a full circle (360 degrees)?',
-        options: ['π', '2π', 'π/2', '4π'],
+        q: 'How many radians are in a full circle ($360^\\circ$)?',
+        options: ['$\\pi$', '$2\\pi$', '$\\frac{\\pi}{2}$', '$4\\pi$'],
         correct: 1
     },
     {

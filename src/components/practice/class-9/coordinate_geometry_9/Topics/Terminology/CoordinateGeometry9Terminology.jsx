@@ -146,7 +146,7 @@ function QuizEngine({ onBack }) {
     const progress = ((current + (finished ? 1 : 0)) / QUIZ_QUESTIONS.length) * 100;
 
     useEffect(() => {
-        startSession({ nodeId: TERMINOLOGY_QUIZ_NODE_ID, sessionType: 'quiz' });
+        startSession({ nodeId: TERMINOLOGY_QUIZ_NODE_ID, sessionType: 'terminology' });
     }, []); // eslint-disable-line
 
     const handleSelect = (idx) => {
@@ -158,7 +158,7 @@ function QuizEngine({ onBack }) {
         const entry = {
             question_index: current,
             answer_json: { selected: idx, correct_answer: q.ans },
-            is_correct: isCorrect,
+            is_correct: isCorrect ? 1 : 0,
             marks_awarded: isCorrect ? 1 : 0,
             marks_possible: 1,
             time_taken_ms: 0,
@@ -195,7 +195,7 @@ function QuizEngine({ onBack }) {
                     {pct >= 75 ? 'Great understanding of Coordinate Geometry vocabulary!' : 'Review the terms and try again for a higher score.'}
                 </p>
                 <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-                    <button className={styles['btn-primary']} onClick={() => { quizAnswersRef.current = []; startSession({ nodeId: TERMINOLOGY_QUIZ_NODE_ID, sessionType: 'quiz' }); setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false); }}>
+                    <button className={styles['btn-primary']} onClick={() => { quizAnswersRef.current = []; startSession({ nodeId: TERMINOLOGY_QUIZ_NODE_ID, sessionType: 'terminology' }); setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false); }}>
                         Try Again
                     </button>
                     <button className={styles['nav-back']} onClick={onBack}>Return to Terminology</button>

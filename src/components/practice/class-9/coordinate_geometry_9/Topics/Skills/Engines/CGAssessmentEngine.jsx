@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styles from '../../../coordinate_geometry_9.module.css';
 import { LatexText } from '../../../../../../LatexText';
 import CGSvgGraph from './CGSvgGraph';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
 function sample(arr, n) {
     const copy = [...arr];
@@ -12,7 +13,7 @@ function sample(arr, n) {
     return copy.slice(0, n);
 }
 
-export default function CGAssessmentEngine({ questionPool, sampleSize = 10, title, color, onBack, skillId }) {
+export default function CGAssessmentEngine({ questionPool, sampleSize = 10, title, color, onBack, nodeId }) {
     const safeQuestionPool = Array.isArray(questionPool) ? questionPool : [];
     const [questions] = useState(() => {
         // We allow mcq, mcq_graph, and plot for CG.
@@ -26,6 +27,14 @@ export default function CGAssessmentEngine({ questionPool, sampleSize = 10, titl
     const [reviewMarks, setReviewMarks] = useState(Array(questions.length).fill(false));
     const [timeLeft, setTimeLeft] = useState(600); // 10-minute countdown
     const [finished, setFinished] = useState(false);
+    const answersRef = useRef([]);
+
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+
+    useEffect(() => {
+        if (nodeId) startSession({ nodeId, sessionType: 'assessment' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [nodeId]);
 
     const finish = useCallback(() => setFinished(true), []);
 
@@ -63,10 +72,26 @@ export default function CGAssessmentEngine({ questionPool, sampleSize = 10, titl
         setReviewMarks(next);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (answers.slice(0, questions.length).includes(null)) {
             if (!window.confirm('You have unanswered questions. Submit anyway?')) return;
         }
+        // Log all answers before finishing
+        questions.forEach((q, i) => {
+            const userAns = answers[i];
+            let isCorrect = 0;
+            if (q.type === 'plot') {
+                if (userAns && typeof userAns === 'object') {
+                    isCorrect = (userAns.x === q.correctPoint.x && userAns.y === q.correctPoint.y) ? 1 : 0;
+                }
+            } else {
+                isCorrect = userAns === q.correct ? 1 : 0;
+            }
+            const entry = { nodeId, questionIndex: i, isCorrect, timeTakenMs: 0 };
+            answersRef.current.push(entry);
+            logAnswer(entry);
+        });
+        await finishSession({ answers_payload: answersRef.current });
         finish();
     };
 

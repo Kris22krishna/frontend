@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../NumberSystem.css';
 import MathRenderer from '../../../../../MathRenderer';
 import { TERMS, FIVE_RULES, VOCAB_QUIZ } from './NumberSystemTerminologyData';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 export default function NumberSystemTerminology() {
     const navigate = useNavigate();
@@ -20,6 +22,19 @@ export default function NumberSystemTerminology() {
     const [quizAnswered, setQuizAnswered] = useState(false);
     const [quizTotalScore, setQuizTotalScore] = useState(0);
     const [quizFinished, setQuizFinished] = useState(false);
+    const answersRef = useRef([]);
+    const sessionStartedRef = useRef(false);
+
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+
+    // Start session when quiz tab is activated
+    useEffect(() => {
+        if (activeTab === 'quiz' && !sessionStartedRef.current) {
+            sessionStartedRef.current = true;
+            startSession({ nodeId: NODE_IDS.g9MathNSTerminologyQuiz, sessionType: 'terminology' });
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeTab]);
 
     const activeTerm = TERMS[selectedIdx];
     const activeRule = FIVE_RULES[selectedRuleIdx];
@@ -37,18 +52,23 @@ export default function NumberSystemTerminology() {
         if (quizAnswered) return;
         setQuizSelected(optIdx);
         setQuizAnswered(true);
-        if (optIdx === activeQuiz.correct) {
+        const isCorrect = optIdx === activeQuiz.correct;
+        if (isCorrect) {
             setQuizTotalScore(s => s + 1);
         }
+        const entry = { nodeId: NODE_IDS.g9MathNSTerminologyQuiz, questionIndex: quizIdx, isCorrect: isCorrect ? 1 : 0, timeTakenMs: 0 };
+        answersRef.current.push(entry);
+        logAnswer(entry);
     };
 
-    const nextQuiz = () => {
+    const nextQuiz = async () => {
         if (quizIdx + 1 < VOCAB_QUIZ.length) {
             setQuizIdx(i => i + 1);
             setQuizSelected(null);
             setQuizAnswered(false);
         } else {
             setQuizFinished(true);
+            await finishSession({ answers_payload: answersRef.current });
         }
     };
 

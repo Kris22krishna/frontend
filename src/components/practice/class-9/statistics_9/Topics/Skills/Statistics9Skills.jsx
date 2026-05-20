@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../statistics_9.module.css';
 import { LatexText } from '../../../../../LatexText';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 import StatisticsScenarioPracticeEngine from './Engines/StatisticsScenarioPracticeEngine';
 import StatisticsScenarioAssessmentEngine from './Engines/StatisticsScenarioAssessmentEngine';
@@ -16,7 +17,7 @@ import { BarGraphChart, HistogramChart, VaryingHistogramChart, FrequencyPolygonC
 const SKILLS = [
     {
         id: 'bar-graphs',
-        nodeId: 'stat-9-0001',
+        nodeId: NODE_IDS.g9MathStatSkill1,
         title: 'Bar Graphs & Data Visualization',
         subtitle: 'Skill 1 · Reading Metrics',
         icon: '📊',
@@ -39,7 +40,7 @@ const SKILLS = [
     },
     {
         id: 'histograms',
-        nodeId: 'stat-9-0002',
+        nodeId: NODE_IDS.g9MathStatSkill2,
         title: 'Histograms: Uniform & Varying Widths',
         subtitle: 'Skill 2 · Continuous Data',
         icon: '📶',
@@ -70,7 +71,7 @@ const SKILLS = [
     },
     {
         id: 'frequency-polygons',
-        nodeId: 'stat-9-0003',
+        nodeId: NODE_IDS.g9MathStatSkill3,
         title: 'Frequency Polygons',
         subtitle: 'Skill 3 · Line Representations',
         icon: '📉',
@@ -216,7 +217,7 @@ export default function Statistics9Skills() {
                             title={skill.title} 
                             color={skill.color} 
                             onBack={goBack}
-                            nodeId={skill.nodeId + '-assess'}
+                            nodeId={skill.nodeId}
                         />
                     )}
                 </div>

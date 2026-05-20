@@ -25,11 +25,11 @@ export default function HeronsFormulaScenarioAssessmentEngine({ scenarios = [], 
     const [score, setScore] = useState(0);
     const [showPalette, setShowPalette] = useState(false);
 
-    const { startSession, logAnswersBatch, finishSession } = useSessionLogger();
+    const { startSession, finishSession } = useSessionLogger();
     const isFinishedRef = useRef(false);
 
     useEffect(() => {
-        startSession({ nodeId: nodeId || 'herons-9-assess', sessionType: 'assessment' });
+        if (nodeId) startSession({ nodeId, sessionType: 'assessment' });
     }, []); // eslint-disable-line
 
     useEffect(() => {
@@ -62,11 +62,11 @@ export default function HeronsFormulaScenarioAssessmentEngine({ scenarios = [], 
     };
 
     const handleNext = () => {
-        if (qIndex < TOTAL_QUESTIONS - 1) setQIndex(q + 1);
+        if (qIndex < TOTAL_QUESTIONS - 1) setQIndex(qIndex + 1);
     };
 
     const handlePrev = () => {
-        if (qIndex > 0) setQIndex(q - 1);
+        if (qIndex > 0) setQIndex(qIndex - 1);
     };
 
     const handleFinishTest = async () => {
@@ -100,8 +100,7 @@ export default function HeronsFormulaScenarioAssessmentEngine({ scenarios = [], 
         });
 
         setScore(finalScore);
-        await logAnswersBatch(logs);
-        await finishSession();
+        await finishSession({ answers_payload: logs });
     };
 
     if (questions.length === 0) return null;

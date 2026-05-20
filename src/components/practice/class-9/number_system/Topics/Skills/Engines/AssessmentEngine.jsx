@@ -2,13 +2,22 @@ import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../../../MathRenderer';
 import mascotImg from '../../../../../../../assets/mascot.png';
 import '../../../NumberSystem.css';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
-export default function AssessmentEngine({ questions, title, onBack, color }) {
+export default function AssessmentEngine({ questions, title, onBack, color, nodeId }) {
     const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
     const [current, setCurrent] = useState(0);
     const [answers, setAnswers] = useState(Array(questionSet.length).fill(null));
     const [finished, setFinished] = useState(false);
     const topRef = useRef(null);
+    const answersLogRef = useRef([]);
+
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+
+    useEffect(() => {
+        if (nodeId) startSession({ nodeId, sessionType: 'assessment' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [nodeId]);
 
     useEffect(() => {
         const newQs = typeof questions === 'function' ? questions() : questions;
@@ -67,10 +76,19 @@ export default function AssessmentEngine({ questions, title, onBack, color }) {
         if (current > 0) setCurrent(c => c - 1);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (answers.includes(null)) {
             if (!window.confirm("You have unanswered questions. Are you sure you want to submit?")) return;
         }
+        // Log answered questions only (skip nulls so they don't appear as incorrect)
+        questionSet.forEach((q, i) => {
+            if (answers[i] === null) return;
+            const isCorrect = answers[i] === q.correct ? 1 : 0;
+            const entry = { nodeId, questionIndex: i, isCorrect, timeTakenMs: 0 };
+            answersLogRef.current.push(entry);
+            logAnswer(entry);
+        });
+        await finishSession({ answers_payload: answersLogRef.current });
         setFinished(true);
     };
 

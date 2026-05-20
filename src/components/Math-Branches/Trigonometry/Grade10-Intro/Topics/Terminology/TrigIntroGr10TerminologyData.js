@@ -80,7 +80,7 @@ export const KEY_IDENTITIES = [
     },
     {
         name: 'Standard Angle Values',
-        desc: 'The exact values of trig functions at 0°, 30°, 45°, 60°, 90°. The sin row follows the pattern √0/2, √1/2, √2/2, √3/2, √4/2.',
+        desc: 'The exact values of trig functions at $0^\\circ$, $30^\\circ$, $45^\\circ$, $60^\\circ$, $90^\\circ$. The $\\sin$ row follows the pattern $\\frac{\\sqrt{0}}{2}, \\frac{\\sqrt{1}}{2}, \\frac{\\sqrt{2}}{2}, \\frac{\\sqrt{3}}{2}, \\frac{\\sqrt{4}}{2}$.',
         formula: '\\sin 0°=0,\\; \\sin 30°=\\tfrac{1}{2},\\; \\sin 45°=\\tfrac{\\sqrt{2}}{2},\\; \\sin 60°=\\tfrac{\\sqrt{3}}{2},\\; \\sin 90°=1'
     },
 ];
@@ -88,20 +88,20 @@ export const KEY_IDENTITIES = [
 export const VOCAB_QUIZ = [
     {
         id: 1,
-        q: 'In a right triangle, which ratio gives sin θ?',
+        q: 'In a right triangle, which ratio gives $\\sin \\theta$?',
         options: ['Adjacent / Hypotenuse', 'Opposite / Adjacent', 'Opposite / Hypotenuse', 'Hypotenuse / Opposite'],
         correct: 2
     },
     {
         id: 2,
-        q: 'What is the value of tan 45°?',
-        options: ['0', '1/2', '√3', '1'],
+        q: 'What is the value of $\\tan 45^\\circ$?',
+        options: ['$0$', '$\\frac{1}{2}$', '$\\sqrt{3}$', '$1$'],
         correct: 3
     },
     {
         id: 3,
-        q: 'Which identity is ALWAYS true for every angle θ?',
-        options: ['sin θ = cos θ', 'sin²θ + cos²θ = 1', 'tan θ = sin θ + cos θ', 'sin θ · cos θ = 1'],
+        q: 'Which identity is ALWAYS true for every angle $\\theta$?',
+        options: ['$\\sin \\theta = \\cos \\theta$', '$\\sin^2\\theta + \\cos^2\\theta = 1$', '$\\tan \\theta = \\sin \\theta + \\cos \\theta$', '$\\sin \\theta \\cdot \\cos \\theta = 1$'],
         correct: 1
     },
     {
@@ -112,8 +112,8 @@ export const VOCAB_QUIZ = [
     },
     {
         id: 5,
-        q: 'What is cosec θ equal to?',
-        options: ['1 / cos θ', '1 / tan θ', 'cos θ / sin θ', '1 / sin θ'],
+        q: 'What is $\\csc \\theta$ equal to?',
+        options: ['$\\frac{1}{\\cos \\theta}$', '$\\frac{1}{\\tan \\theta}$', '$\\frac{\\cos \\theta}{\\sin \\theta}$', '$\\frac{1}{\\sin \\theta}$'],
         correct: 3
     },
 ];
