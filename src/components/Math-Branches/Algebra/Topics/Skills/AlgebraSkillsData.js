@@ -253,7 +253,7 @@ const genExpressions = () => {
     });
     // Block B – distribution with subtraction
     const subData = [
-        [3,'x',4,'6x-12','6x-4','5x-7','x-12', 2],
+        [3,'x',4,'3x-12','3x-4','5x-7','x-12', 2],
         [2,'y',5,'2y-10','2y-5','7y','y-10', 1],
         [4,'a',3,'4a-12','4a-3','7a','a-12', 1],
         [5,'b',2,'5b-10','5b-2','7b','b-10', 1],

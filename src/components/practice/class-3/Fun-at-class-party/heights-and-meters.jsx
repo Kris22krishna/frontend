@@ -418,8 +418,8 @@ const HeightsAndMeters = () => {
             const objColor = pick(['#795548', '#607D8B', '#8BC34A', '#FF7043']);
 
             let answer;
-            if (diff > 8) answer = `${objName} is taller`;
-            else if (diff < -8) answer = `${childName} is taller`;
+            if (compH > childH) answer = `${objName} is taller`;
+            else if (childH > compH) answer = `${childName} is taller`;
             else answer = 'They are equal';
 
             const baseY = 210;
@@ -537,7 +537,10 @@ const HeightsAndMeters = () => {
             const h1 = randomInt(62, 88);
             const h2 = randomInt(55, 78);
             const boxH = randomInt(18, 32);
-            const actuallyTaller = h1 > h2 ? name1 : name2;
+            let actuallyTaller;
+            if (h1 > h2) actuallyTaller = name1;
+            else if (h2 > h1) actuallyTaller = name2;
+            else actuallyTaller = 'They are the same';
 
             const baseY = 220;
             const c1color = '#E91E63';
@@ -564,7 +567,7 @@ const HeightsAndMeters = () => {
                 </svg>`,
                 options: [name1, name2, 'They are the same'],
                 correctAnswer: actuallyTaller,
-                solution: `Without the box: ${name1} = ${h1} cm, ${name2} = ${h2} cm. So ${actuallyTaller} is actually taller!`
+                solution: `Without the box: ${name1} = ${h1} cm, ${name2} = ${h2} cm. So ${actuallyTaller === 'They are the same' ? 'they are the same height' : actuallyTaller + ' is actually taller'}!`
             };
         },
     ];
@@ -740,7 +743,7 @@ const HeightsAndMeters = () => {
                                                 {shuffledOptions.map((option, idx) => (
                                                     <button
                                                         key={idx}
-                                                        onClick={() => { if (!isSubmitted) setSelectedOption(option); }}
+                                                        onClick={() => { if (!isSubmitted) setSelectedOption(selectedOption === option ? null : option); }}
                                                         disabled={isSubmitted}
                                                         className={`option-btn-modern ${selectedOption === option ? 'selected' : ''} ${isSubmitted && option === currentQuestion.correctAnswer ? 'correct' : ''} ${isSubmitted && selectedOption === option && option !== currentQuestion.correctAnswer ? 'wrong' : ''}`}
                                                     >
