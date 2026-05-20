@@ -1571,6 +1571,18 @@ export const SLUG_TO_NODE_ID = {
   'g3-science-our-families':           NODE_IDS.g3EvsOurFamilies,
   'g4-science-our-community':          NODE_IDS.g4EvsOurCommunity,
 
+  // Grade 10 Math: Real Numbers
+  'g10-math-real-numbers':              NODE_IDS.g10MathRealNumbers,
+  'g10-math-rn-understanding':          NODE_IDS.g10MathRNUnderstanding,
+  'g10-math-rn-euclids-algorithm':      NODE_IDS.g10MathRNEuclidsAlgorithm,
+  'g10-math-rn-prime-factorisation':    NODE_IDS.g10MathRNPrimeFactorisation,
+  'g10-math-rn-fundamental-theorem':    NODE_IDS.g10MathRNFundamentalTheorem,
+  'g10-math-rn-hcf-lcm-method':         NODE_IDS.g10MathRNHCFLCMMethod,
+  'g10-math-rn-applications-hcf-lcm':   NODE_IDS.g10MathRNApplicationsHCFLCM,
+  'g10-math-rn-proving-irrational':     NODE_IDS.g10MathRNProvingIrrational,
+  'g10-math-rn-operations-irrational':  NODE_IDS.g10MathRNOperationsIrrational,
+  'g10-math-rn-terminology':            NODE_IDS.g10MathRNTerminologyQuiz,
+
   // Grade 10 Math: Quadratic Equations
   'g10-math-quadratic-equations':       NODE_IDS.g10MathQuadraticEquations,
   'g10-math-quadratic-foundations':     NODE_IDS.g10MathQuadraticFoundations,

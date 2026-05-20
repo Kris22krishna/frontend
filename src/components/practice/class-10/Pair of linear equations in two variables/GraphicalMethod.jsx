@@ -6,7 +6,6 @@ import { LatexText } from '../../../LatexText';
 import mascotImg from '../../../../assets/mascot.png';
 import ExplanationModal from '../../../ExplanationModal';
 import PracticeReportModal from '../../PracticeReportModal';
-import { api } from '../../../../services/api';
 import InteractiveGraph from '../../../InteractiveGraph'; // Keep this from original
 import { useSessionLogger } from '@/hooks/useSessionLogger';
 import '../TenthPracticeSession.css';
@@ -19,6 +18,7 @@ const GraphicalMethod = () => {
     const [qIndex, setQIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null); // For MCQ
     const [userLines, setUserLines] = useState([]); // For Graphing
+    const [graphResetKey, setGraphResetKey] = useState(0);
     const [userInput, setUserInput] = useState({ x: '', y: '' }); // For Graphing Answer
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
@@ -368,36 +368,24 @@ const GraphicalMethod = () => {
             }
         }));
 
-        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId) {
-            let t = accumulatedTime.current;
-            if (isTabActive.current) t += Date.now() - questionStartTime.current;
-            const sec = Math.max(0, Math.round(t / 1000));
+        let t = accumulatedTime.current;
+        if (isTabActive.current) t += Date.now() - questionStartTime.current;
 
-            // v4 Log
-            const entry = {
-                question_index: qIndex + 1,
-                answer_json: { answer: answerToLog },
-                is_correct: isRight ? 1.0 : 0.0,
-                marks_awarded: isRight ? 1 : 0,
-                marks_possible: 1,
-                time_taken_ms: t
-            };
-            v4Answers.current[qIndex] = entry;
-            logAnswer({
-                questionIndex: entry.question_index,
-                answerJson: entry.answer_json,
-                isCorrect: entry.is_correct
-            });
-
-            api.recordAttempt({
-                difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard',
-                user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10), session_id: null, skill_id: SKILL_ID,
-                question_text: currentQ.text, correct_answer: currentQ.correctAnswer,
-                student_answer: String(answerToLog), is_correct: isRight, solution_text: currentQ.solution,
-                time_spent_seconds: sec
-            }).catch(console.error);
-        }
+        // v4 Log
+        const entry = {
+            question_index: qIndex + 1,
+            answer_json: { answer: answerToLog },
+            is_correct: isRight ? 1.0 : 0.0,
+            marks_awarded: isRight ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: t
+        };
+        v4Answers.current[qIndex] = entry;
+        logAnswer({
+            questionIndex: entry.question_index,
+            answerJson: entry.answer_json,
+            isCorrect: entry.is_correct
+        });
     };
 
     const handlePrevious = () => {
@@ -421,24 +409,6 @@ const GraphicalMethod = () => {
                 questionsAnswered: payload.length,
                 answersPayload: payload
             });
-            const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            if (userId) {
-                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
-                await api.createReport({
-                    title: SKILL_NAME,
-                    type: 'practice',
-                    score: (totalCorrect / questions.length) * 100,
-                    parameters: {
-                        skill_id: SKILL_ID,
-                        skill_name: SKILL_NAME,
-                        total_questions: questions.length,
-                        correct_answers: totalCorrect,
-                        timestamp: new Date().toISOString(),
-                        time_taken_seconds: timeElapsed
-                    },
-                    user_id: String(userId, 10).includes("-") ? 1 : parseInt(userId, 10, 10)
-                }).catch(console.error);
-            }
             setShowReportModal(true);
         }
     };
@@ -602,11 +572,12 @@ const GraphicalMethod = () => {
                                 {/* Left Side/Top: Large Graph */}
                                 <div style={{ background: '#F8FAFC', padding: '10px', borderRadius: '16px', display: 'flex', justifyContent: 'center' }}>
                                     <InteractiveGraph
+                                        key={graphResetKey}
                                         onLinesUpdate={setUserLines}
                                         readOnly={false}
                                         initialLines={userLines}
                                         maxLines={2}
-                                        size={graphSize} // Significantly larger
+                                        size={graphSize}
                                         showControls={false}
                                     />
                                 </div>
@@ -633,7 +604,7 @@ const GraphicalMethod = () => {
 
                                     <div style={{ display: 'flex', gap: '1rem', marginTop: 'auto' }}>
                                         <button
-                                            onClick={() => setUserLines([])}
+                                            onClick={() => { setUserLines([]); setGraphResetKey(k => k + 1); }}
                                             style={{
                                                 flex: 1,
                                                 padding: '0.8rem',

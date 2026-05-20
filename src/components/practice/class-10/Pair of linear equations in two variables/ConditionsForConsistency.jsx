@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookOpen, ChevronRight, Check, X, Info, ChevronLeft, Eye, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
 import ExplanationModal from '../../../ExplanationModal';
 import PracticeReportModal from '../../PracticeReportModal';
@@ -179,15 +178,6 @@ const ConditionsForConsistency = () => {
             isCorrect: entry.is_correct
         });
 
-        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId) {
-            api.recordAttempt({
-                user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10), session_id: null, skill_id: SKILL_ID,
-                question_text: questions[qIndex].text, correct_answer: questions[qIndex].correctAnswer,
-                student_answer: selectedOption, is_correct: isRight, solution_text: questions[qIndex].solution,
-                time_spent_seconds: Math.round(t / 1000)
-            }).catch(console.error);
-        }
     };
 
     const handlePrevious = () => {
@@ -211,24 +201,6 @@ const ConditionsForConsistency = () => {
                 questionsAnswered: payload.length,
                 answersPayload: payload
             });
-            const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            if (userId) {
-                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
-                await api.createReport({
-                    title: SKILL_NAME,
-                    type: 'practice',
-                    score: (totalCorrect / questions.length) * 100,
-                    parameters: {
-                        skill_id: SKILL_ID,
-                        skill_name: SKILL_NAME,
-                        total_questions: questions.length,
-                        correct_answers: totalCorrect,
-                        timestamp: new Date().toISOString(),
-                        time_taken_seconds: timeElapsed
-                    },
-                    user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10)
-                }).catch(console.error);
-            }
             setShowReportModal(true);
         }
     };

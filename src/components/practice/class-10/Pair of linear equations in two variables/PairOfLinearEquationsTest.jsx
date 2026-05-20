@@ -432,23 +432,6 @@ const PairOfLinearEquationsTest = () => {
             isCorrect: entry.is_correct
         });
 
-        const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        const uid = parseInt(rawUid, 10);
-        if (!isNaN(uid)) {
-            const attemptData = {
-                difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard',
-                user_id: String(uid).includes("-") ? 1 : parseInt(uid, 10),
-                session_id: null,
-                skill_id: SKILL_ID,
-                question_text: currentQ.text,
-                correct_answer: currentQ.correctAnswer,
-                student_answer: isSkipped ? "SKIPPED" : selectedOption,
-                is_correct: isSkipped ? false : isCorrect,
-                solution_text: currentQ.solution,
-                time_spent_seconds: timeSpent
-            };
-            api.recordAttempt(attemptData).catch(console.error);
-        }
     };
 
     const navigateToQuestion = (targetIndex) => {
@@ -484,26 +467,6 @@ const PairOfLinearEquationsTest = () => {
         });
         if (sessionId) await api.finishSession(sessionId).catch(console.error);
 
-        const rawUid = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        const uid = parseInt(rawUid, 10);
-        if (!isNaN(uid)) {
-            const correctCount = Object.values(responses).filter(r => r.isCorrect === true).length;
-            const wrongCount = Object.values(responses).filter(r => r.isCorrect === false && !r.isSkipped).length;
-            const skippedCount = questions.length - correctCount - wrongCount;
-            await api.createReport({
-                title: SKILL_NAME,
-                type: 'practice',
-                score: (correctCount / questions.length) * 100,
-                parameters: {
-                    skill_id: SKILL_ID,
-                    total_questions: questions.length,
-                    correct_answers: correctCount,
-                    skipped_questions: skippedCount,
-                    time_taken_seconds: timeElapsed
-                },
-                user_id: uid
-            }).catch(console.error);
-        }
     };
 
     const formatTime = (seconds) => {

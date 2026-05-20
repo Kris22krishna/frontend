@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { BookOpen, ChevronRight, Check, X, Info, ChevronLeft, Eye, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../../services/api';
 import { LatexText } from '../../../LatexText';
 import mascotImg from '../../../../assets/mascot.png';
 import ExplanationModal from '../../../ExplanationModal';
@@ -196,36 +195,24 @@ const AlgebraicMethods = () => {
             }
         }));
 
-        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId) {
-            let t = accumulatedTime.current;
-            if (isTabActive.current) t += Date.now() - questionStartTime.current;
-            const sec = Math.max(0, Math.round(t / 1000));
+        let t = accumulatedTime.current;
+        if (isTabActive.current) t += Date.now() - questionStartTime.current;
 
-            // v4 Log
-            const entry = {
-                question_index: qIndex + 1,
-                answer_json: { selected: selectedOption },
-                is_correct: isRight ? 1.0 : 0.0,
-                marks_awarded: isRight ? 1 : 0,
-                marks_possible: 1,
-                time_taken_ms: t
-            };
-            v4Answers.current[qIndex] = entry;
-            logAnswer({
-                questionIndex: entry.question_index,
-                answerJson: entry.answer_json,
-                isCorrect: entry.is_correct
-            });
-
-            api.recordAttempt({
-                difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard',
-                user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10), session_id: null, skill_id: SKILL_ID,
-                question_text: currentQ.text, correct_answer: currentQ.correctAnswer,
-                student_answer: selectedOption, is_correct: isRight, solution_text: currentQ.solution,
-                time_spent_seconds: sec
-            }).catch(console.error);
-        }
+        // v4 Log
+        const entry = {
+            question_index: qIndex + 1,
+            answer_json: { selected: selectedOption },
+            is_correct: isRight ? 1.0 : 0.0,
+            marks_awarded: isRight ? 1 : 0,
+            marks_possible: 1,
+            time_taken_ms: t
+        };
+        v4Answers.current[qIndex] = entry;
+        logAnswer({
+            questionIndex: entry.question_index,
+            answerJson: entry.answer_json,
+            isCorrect: entry.is_correct
+        });
     };
 
     const handlePrevious = () => {
@@ -249,24 +236,6 @@ const AlgebraicMethods = () => {
                 questionsAnswered: payload.length,
                 answersPayload: payload
             });
-            const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            if (userId) {
-                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
-                await api.createReport({
-                    title: SKILL_NAME,
-                    type: 'practice',
-                    score: (totalCorrect / questions.length) * 100,
-                    parameters: {
-                        skill_id: SKILL_ID,
-                        skill_name: SKILL_NAME,
-                        total_questions: questions.length,
-                        correct_answers: totalCorrect,
-                        timestamp: new Date().toISOString(),
-                        time_taken_seconds: timeElapsed
-                    },
-                    user_id: String(userId, 10).includes("-") ? 1 : parseInt(userId, 10, 10)
-                }).catch(console.error);
-            }
             setShowReportModal(true);
         }
     };

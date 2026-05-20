@@ -6,7 +6,6 @@ import { LatexText } from '../../../LatexText';
 import mascotImg from '../../../../assets/mascot.png';
 import ExplanationModal from '../../../ExplanationModal';
 import PracticeReportModal from '../../PracticeReportModal';
-import { api } from '../../../../services/api';
 import { useSessionLogger } from '@/hooks/useSessionLogger';
 import '../TenthPracticeSession.css';
 
@@ -281,16 +280,6 @@ const ApplicationProblems = () => {
             isCorrect: entry.is_correct
         });
 
-        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (userId) {
-            api.recordAttempt({
-                difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard',
-                user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10), session_id: null, skill_id: SKILL_ID,
-                question_text: currentQ.text, correct_answer: currentQ.correctAnswer,
-                student_answer: selectedOption, is_correct: isRight, solution_text: currentQ.solution,
-                time_spent_seconds: Math.round(t / 1000)
-            }).catch(console.error);
-        }
     };
 
     const handlePrevious = () => {
@@ -314,24 +303,6 @@ const ApplicationProblems = () => {
                 questionsAnswered: payload.length,
                 answersPayload: payload
             });
-            const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            if (userId) {
-                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
-                await api.createReport({
-                    title: SKILL_NAME,
-                    type: 'practice',
-                    score: (totalCorrect / questions.length) * 100,
-                    parameters: {
-                        skill_id: SKILL_ID,
-                        skill_name: SKILL_NAME,
-                        total_questions: questions.length,
-                        correct_answers: totalCorrect,
-                        timestamp: new Date().toISOString(),
-                        time_taken_seconds: timeElapsed
-                    },
-                    user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10)
-                }).catch(console.error);
-            }
             setShowReportModal(true);
         }
     };

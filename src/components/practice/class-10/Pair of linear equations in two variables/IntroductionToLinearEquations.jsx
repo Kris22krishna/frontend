@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookOpen, ChevronRight, Check, X, Info, ChevronLeft, Eye, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../../../services/api';
 import Whiteboard from '../../../Whiteboard';
 import { LatexText } from '../../../LatexText';
 import ExplanationModal from '../../../ExplanationModal';
@@ -210,35 +209,6 @@ const IntroductionToLinearEquations = () => {
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     };
 
-    const recordQuestionAttempt = async (question, selected, isCorrect) => {
-        const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-        if (!userId) return;
-
-        let timeSpent = accumulatedTime.current;
-        if (isTabActive.current) {
-            timeSpent += Date.now() - questionStartTime.current;
-        }
-        const seconds = Math.round(timeSpent / 1000);
-
-        try {
-            await api.recordAttempt({
-                difficulty_level: qIndex < 3 ? 'Easy' : qIndex < 6 ? 'Medium' : 'Hard',
-                user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10),
-                session_id: sessionId,
-                skill_id: SKILL_ID,
-                template_id: null,
-                question_text: String(question.text || ''),
-                correct_answer: String(question.correctAnswer || ''),
-                student_answer: String(selected || ''),
-                is_correct: isCorrect,
-                solution_text: String(question.solution || ''),
-                time_spent_seconds: seconds >= 0 ? seconds : 0
-            });
-        } catch (e) {
-            console.error("Failed to record attempt", e);
-        }
-    };
-
     const handleCheck = () => {
         if (!selectedOption || !questions[qIndex]) return;
         const currentQuestion = questions[qIndex];
@@ -276,7 +246,6 @@ const IntroductionToLinearEquations = () => {
             isCorrect: entry.is_correct
         });
 
-        recordQuestionAttempt(currentQuestion, selectedOption, isRight);
     };
 
     const handlePrevious = () => {
@@ -300,24 +269,6 @@ const IntroductionToLinearEquations = () => {
                 questionsAnswered: payload.length,
                 answersPayload: payload
             });
-            const userId = sessionStorage.getItem('userId') || localStorage.getItem('userId');
-            if (userId) {
-                const totalCorrect = Object.values(answers).filter(val => val.isCorrect === true).length;
-                await api.createReport({
-                    title: SKILL_NAME,
-                    type: 'practice',
-                    score: (totalCorrect / questions.length) * 100,
-                    parameters: {
-                        skill_id: SKILL_ID,
-                        skill_name: SKILL_NAME,
-                        total_questions: questions.length,
-                        correct_answers: totalCorrect,
-                        timestamp: new Date().toISOString(),
-                        time_taken_seconds: timeElapsed
-                    },
-                    user_id: String(userId).includes("-") ? 1 : parseInt(userId, 10)
-                }).catch(console.error);
-            }
             setShowReportModal(true);
         }
     };
