@@ -29,7 +29,7 @@ export default function LEScenarioPracticeEngine({ scenarios = [], title, color 
     const isFinishedRef = useRef(false);
 
     useEffect(() => {
-        startSession({ nodeId: nodeId || 'le9-skill-practice', sessionType: 'practice' });
+        if (nodeId) startSession({ nodeId, sessionType: 'practice' });
     }, []); // eslint-disable-line
 
     useEffect(() => {
@@ -94,7 +94,7 @@ export default function LEScenarioPracticeEngine({ scenarios = [], title, color 
 
     const handleRetry = () => {
         isFinishedRef.current = false;
-        startSession({ nodeId: nodeId || 'le9-skill-practice', sessionType: 'practice' });
+        if (nodeId) startSession({ nodeId, sessionType: 'practice' });
         setQIndex(0); setAnswers({}); setSelectedOpt(null);
         setIsSubmitted(false); setScore(0); setFinished(false); setTimeTaken(0);
     };

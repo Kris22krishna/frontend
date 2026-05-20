@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Right Triangle Ratios</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=JetBrains+Mono:wght@500;700&display=swap');
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { width: 100%; height: 100%; background: #fdf4ff; color: #1e293b; font-family: 'Outfit', sans-serif; user-select: none; }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 12px;
+            gap: 12px;
+            overflow-y: auto;
+        }
+        .container { display: flex; gap: 20px; width: 100%; max-width: 1000px; align-items: center; justify-content: center; }
+        .canvas-container {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1.5px solid #e9d5ff;
+            box-shadow: 0 8px 30px rgba(168, 85, 247, 0.10);
+            flex-shrink: 0;
+        }
+        canvas { display: block; cursor: crosshair; }
+        .info-panel {
+            background: #ffffff;
+            border: 1.5px solid #e9d5ff;
+            border-radius: 20px;
+            padding: 20px;
+            width: 280px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 8px 30px rgba(168, 85, 247, 0.10);
+        }
+        h2 { font-size: 18px; font-weight: 800; color: #1e293b; }
+        p  { color: #64748b; font-size: 13px; }
+        .ratio-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 12px 14px;
+            border-left: 5px solid transparent;
+        }
+        .ratio-sin { border-left-color: #f43f5e; background: #fff1f2; }
+        .ratio-cos { border-left-color: #6366f1; background: #eef2ff; }
+        .ratio-tan { border-left-color: #10b981; background: #f0fdf4; }
+        .ratio-title { font-weight: 800; font-size: 14px; margin-bottom: 4px; }
+        .ratio-math { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #475569; }
+        .val { font-weight: 700; }
+        .val-opp { color: #e11d48; }
+        .val-adj { color: #4f46e5; }
+        .val-hyp { color: #334155; }
+        .hint {
+            background: #f8fafc;
+            border: 1.5px solid #e9d5ff;
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+        @media (max-width: 620px) {
+            body { padding: 10px; }
+            .container { flex-direction: column; align-items: center; gap: 12px; }
+            .canvas-container { border-radius: 16px; width: 100%; display: flex; justify-content: center; }
+            .info-panel { width: 100%; padding: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="canvas-container">
+            <canvas id="triCanvas" width="480" height="480"></canvas>
+        </div>
+        <div class="info-panel">
+            <h2>SOH CAH TOA</h2>
+            <p>Drag the <strong>top vertex</strong> to change the triangle sides and watch the ratios update instantly.</p>
+
+            <div class="ratio-box ratio-sin">
+                <div class="ratio-title" style="color:#e11d48;">sin(θ) = Opp / Hyp</div>
+                <div class="ratio-math" id="lblSin">—</div>
+            </div>
+            
+            <div class="ratio-box ratio-cos">
+                <div class="ratio-title" style="color:#4f46e5;">cos(θ) = Adj / Hyp</div>
+                <div class="ratio-math" id="lblCos">—</div>
+            </div>
+            
+            <div class="ratio-box ratio-tan">
+                <div class="ratio-title" style="color:#059669;">tan(θ) = Opp / Adj</div>
+                <div class="ratio-math" id="lblTan">—</div>
+            </div>
+
+            <div class="hint">💡 Ratios are <strong>constant</strong> for a given angle, regardless of the triangle's size!</div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('triCanvas');
+        const ctx    = canvas.getContext('2d');
+        let canvasSize, originPt, topPoint, isDragging = false;
+
+        function resize() {
+            const isMobile = window.innerWidth <= 620;
+            const available = isMobile
+                ? Math.min(window.innerWidth - 20, 340)
+                : Math.min(window.innerWidth * 0.5, 480);
+            canvasSize = Math.floor(available);
+            canvas.width  = canvasSize;
+            canvas.height = canvasSize;
+            // Scale original coords: origin was (80,400) in a 480x480 canvas
+            const s = canvasSize / 480;
+            originPt = { x: 80 * s, y: 400 * s };
+            topPoint  = { x: 380 * s, y: 140 * s };
+            draw();
+        }
+
+        function dist(p1, p2) {
+            return Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const adjPoint = { x: topPoint.x, y: originPt.y };
+            const angleRad = Math.atan2(originPt.y - topPoint.y, topPoint.x - originPt.x);
+
+            ctx.fillStyle = 'rgba(99, 102, 241, 0.07)';
+            ctx.beginPath();
+            ctx.moveTo(originPt.x, originPt.y);
+            ctx.lineTo(adjPoint.x, adjPoint.y);
+            ctx.lineTo(topPoint.x, topPoint.y);
+            ctx.fill();
+
+            const sq = Math.max(12, canvasSize * 0.036);
+            const dirX = originPt.x < adjPoint.x ? 1 : -1;
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(adjPoint.x - dirX * sq, adjPoint.y);
+            ctx.lineTo(adjPoint.x - dirX * sq, adjPoint.y - sq);
+            ctx.lineTo(adjPoint.x, adjPoint.y - sq);
+            ctx.stroke();
+
+            ctx.strokeStyle = '#6366f1';
+            ctx.lineWidth = 4; ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(originPt.x, originPt.y); ctx.lineTo(adjPoint.x, adjPoint.y);
+            ctx.stroke();
+
+            ctx.strokeStyle = '#f43f5e'; ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(adjPoint.x, adjPoint.y); ctx.lineTo(topPoint.x, topPoint.y);
+            ctx.stroke();
+
+            ctx.strokeStyle = '#475569'; ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(originPt.x, originPt.y); ctx.lineTo(topPoint.x, topPoint.y);
+            ctx.stroke();
+
+            const arcR = Math.max(28, canvasSize * 0.08);
+            ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(originPt.x, originPt.y, arcR, 0, -angleRad, true);
+            ctx.stroke();
+
+            const fs = Math.max(11, canvasSize * 0.032);
+            ctx.fillStyle = '#d97706';
+            ctx.font = `bold ${fs}px Outfit`;
+            ctx.fillText('θ', originPt.x + arcR + 8, originPt.y - 10);
+
+            const midAdj = { x: (originPt.x + adjPoint.x) / 2, y: originPt.y + fs + 4 };
+            ctx.fillStyle = '#4f46e5';
+            ctx.font = `700 ${Math.max(10, fs - 2)}px Outfit`;
+            ctx.textAlign = 'center';
+            ctx.fillText('Adjacent', midAdj.x, midAdj.y);
+
+            const midOpp = { x: topPoint.x + (dirX * (fs * 2.6)), y: (adjPoint.y + topPoint.y) / 2 };
+            ctx.fillStyle = '#e11d48';
+            ctx.fillText('Opposite', midOpp.x, midOpp.y);
+            ctx.textAlign = 'left';
+
+            ctx.fillStyle = '#ffffff';
+            ctx.strokeStyle = '#475569'; ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.arc(topPoint.x, topPoint.y, Math.max(8, canvasSize * 0.021), 0, Math.PI * 2);
+            ctx.fill(); ctx.stroke();
+
+            updateDOM(angleRad);
+        }
+
+        function updateDOM(angle) {
+            const opp = Math.abs(originPt.y - topPoint.y);
+            const adj = Math.abs(topPoint.x - originPt.x);
+            const hyp = Math.sqrt(opp ** 2 + adj ** 2);
+            const pOpp = (opp / 100).toFixed(1);
+            const pAdj = (adj / 100).toFixed(1);
+            const pHyp = (hyp / 100).toFixed(1);
+            document.getElementById('lblSin').innerHTML =
+                `<span class="val val-opp">${pOpp}</span> / <span class="val val-hyp">${pHyp}</span> = ${(opp/hyp).toFixed(3)}`;
+            document.getElementById('lblCos').innerHTML =
+                `<span class="val val-adj">${pAdj}</span> / <span class="val val-hyp">${pHyp}</span> = ${(adj/hyp).toFixed(3)}`;
+            document.getElementById('lblTan').innerHTML =
+                `<span class="val val-opp">${pOpp}</span> / <span class="val val-adj">${pAdj}</span> = ${(opp/adj).toFixed(3)}`;
+        }
+
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const src = e.touches ? e.touches[0] : e;
+            return {
+                x: (src.clientX - rect.left) * scaleX,
+                y: (src.clientY - rect.top)  * scaleY
+            };
+        }
+
+        const hitR = () => Math.max(20, canvasSize * 0.05);
+
+        canvas.addEventListener('mousedown', (e) => {
+            const { x, y } = getPos(e);
+            if (dist({ x, y }, topPoint) < hitR()) isDragging = true;
+        });
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            let { x, y } = getPos(e);
+            const minX = originPt.x * 0.3;
+            const maxY = originPt.y * 0.93;
+            if (x < minX) x = minX;
+            if (y > maxY) y = maxY;
+            topPoint.x = x; topPoint.y = y;
+            draw();
+        });
+        window.addEventListener('mouseup', () => { isDragging = false; });
+
+        canvas.addEventListener('touchstart', (e) => {
+            const { x, y } = getPos(e);
+            if (dist({ x, y }, topPoint) < hitR() + 10) { isDragging = true; e.preventDefault(); }
+        }, { passive: false });
+        canvas.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            let { x, y } = getPos(e);
+            const minX = originPt.x * 0.3;
+            const maxY = originPt.y * 0.93;
+            if (x < minX) x = minX;
+            if (y > maxY) y = maxY;
+            topPoint.x = x; topPoint.y = y;
+            draw();
+        }, { passive: false });
+        window.addEventListener('touchend', () => { isDragging = false; });
+
+        window.addEventListener('resize', resize);
+        resize();
+    </script>
+</body>
+</html>

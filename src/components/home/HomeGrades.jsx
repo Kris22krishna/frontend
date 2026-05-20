@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+
 import { useNavigate } from 'react-router-dom';
 
 export function HomeGrades() {
@@ -39,7 +39,7 @@ export function HomeGrades() {
     return (
         <section className="py-16 px-8 bg-gradient-to-br from-orange-50 via-blue-50 to-purple-50">
             <div className="max-w-7xl mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-8 items-start">
                     {/* Column 1: Grades 1-4 with Orange/Amber gradient */}
                     <div className="rounded-2xl p-8 bg-gradient-to-br from-orange-200 via-amber-200 to-orange-300 relative overflow-hidden">
                         <div className="space-y-4 relative z-10">
@@ -92,8 +92,8 @@ export function HomeGrades() {
                     </div>
 
                     {/* Column 4: Math Branches */}
-                    <div className="rounded-2xl p-8 bg-gradient-to-br from-indigo-300 via-violet-300 to-indigo-400 relative overflow-hidden flex flex-col justify-center">
-                        <div className="space-y-4 relative z-10">
+                    <div className="rounded-2xl p-8 bg-gradient-to-br from-indigo-300 via-violet-300 to-indigo-400 relative overflow-hidden">
+                        <div className="space-y-4 relative z-10 overflow-y-auto max-h-72 pr-1" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(99,102,241,0.4) transparent' }}>
                             <button
                                 id="arithmetic-btn"
                                 onClick={() => navigate('/arithmetic/dashboard')}
@@ -129,6 +129,72 @@ export function HomeGrades() {
                                     <span className="text-gray-500 text-xs">Limits, Derivatives & Integrals</span>
                                 </div>
                                 <span className="opacity-0 group-hover:opacity-100 transition-opacity text-purple-600 font-bold text-lg">→</span>
+                            </button>
+                            <button
+                                id="trigonometry-btn"
+                                onClick={() => navigate('/trigonometry/dashboard')}
+                                className="w-full text-left px-6 py-4 rounded-xl bg-white/80 hover:bg-indigo-100 transition-all duration-300 shadow-[0_6px_12px_rgba(0,0,0,0.15),inset_0_-2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_16px_rgba(0,0,0,0.2),inset_0_-3px_6px_rgba(0,0,0,0.15)] hover:scale-105 border-b-4 border-indigo-400/50 group flex items-center justify-between"
+                                style={{ transform: 'translateZ(0)' }}
+                            >
+                                <div>
+                                    <span className="text-gray-800 font-semibold block">Trigonometry</span>
+                                    <span className="text-gray-500 text-xs">Angles, Ratios & Functions</span>
+                                </div>
+                                <span className="opacity-0 group-hover:opacity-100 transition-opacity text-indigo-600 font-bold text-lg">→</span>
+                            </button>
+                            <button
+                                id="geometry-btn"
+                                onClick={() => navigate('/geometry')}
+                                className="w-full text-left px-6 py-4 rounded-xl bg-white/80 hover:bg-indigo-100 transition-all duration-300 shadow-[0_6px_12px_rgba(0,0,0,0.15),inset_0_-2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_16px_rgba(0,0,0,0.2),inset_0_-3px_6px_rgba(0,0,0,0.15)] hover:scale-105 border-b-4 border-indigo-400/50 group flex items-center justify-between"
+                                style={{ transform: 'translateZ(0)' }}
+                            >
+                                <div>
+                                    <span className="text-gray-800 font-semibold block">Geometry</span>
+                                    <span className="text-gray-500 text-xs">Shapes, Angles &amp; Spatial Reasoning</span>
+                                </div>
+                                <span className="opacity-0 group-hover:opacity-100 transition-opacity text-indigo-600 font-bold text-lg">→</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Column 5: Chemistry Branches */}
+                    <div className="rounded-2xl p-8 bg-gradient-to-br from-green-200 via-emerald-200 to-teal-300 relative overflow-hidden">
+                        <div className="space-y-4 relative z-10 overflow-y-auto max-h-72 pr-1" style={{ scrollbarWidth: 'thin', scrollbarColor: 'rgba(16,185,129,0.4) transparent' }}>
+                            <button
+                                id="organic-chem-btn"
+                                onClick={() => navigate('/chemistry/organic')}
+                                className="w-full text-left px-6 py-4 rounded-xl bg-white/80 hover:bg-green-100 transition-all duration-300 shadow-[0_6px_12px_rgba(0,0,0,0.15),inset_0_-2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_16px_rgba(0,0,0,0.2),inset_0_-3px_6px_rgba(0,0,0,0.15)] hover:scale-105 border-b-4 border-green-400/50 group flex items-center justify-between"
+                                style={{ transform: 'translateZ(0)' }}
+                            >
+                                <div>
+                                    <span className="text-gray-800 font-semibold block">Organic</span>
+                                    <span className="text-gray-500 text-xs">Carbon Compounds & Reactions</span>
+                                </div>
+                                <span className="opacity-0 group-hover:opacity-100 transition-opacity text-green-600 font-bold text-lg">→</span>
+                            </button>
+                            <button
+                                id="inorganic-chem-btn"
+                                onClick={() => navigate('/chemistry/inorganic')}
+                                className="w-full text-left px-6 py-4 rounded-xl bg-white/80 hover:bg-emerald-100 transition-all duration-300 shadow-[0_6px_12px_rgba(0,0,0,0.15),inset_0_-2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_16px_rgba(0,0,0,0.2),inset_0_-3px_6px_rgba(0,0,0,0.15)] hover:scale-105 border-b-4 border-emerald-400/50 group flex items-center justify-between"
+                                style={{ transform: 'translateZ(0)' }}
+                            >
+                                <div>
+                                    <span className="text-gray-800 font-semibold block">Inorganic</span>
+                                    <span className="text-gray-500 text-xs">Elements, Metals & Minerals</span>
+                                </div>
+                                <span className="opacity-0 group-hover:opacity-100 transition-opacity text-emerald-600 font-bold text-lg">→</span>
+                            </button>
+                            <button
+                                id="physical-chem-btn"
+                                onClick={() => navigate('/chemistry/physical')}
+                                className="w-full text-left px-6 py-4 rounded-xl bg-white/80 hover:bg-teal-100 transition-all duration-300 shadow-[0_6px_12px_rgba(0,0,0,0.15),inset_0_-2px_4px_rgba(0,0,0,0.1)] hover:shadow-[0_8px_16px_rgba(0,0,0,0.2),inset_0_-3px_6px_rgba(0,0,0,0.15)] hover:scale-105 border-b-4 border-teal-400/50 group flex items-center justify-between"
+                                style={{ transform: 'translateZ(0)' }}
+                            >
+                                <div>
+                                    <span className="text-gray-800 font-semibold block">Physical</span>
+                                    <span className="text-gray-500 text-xs">Thermodynamics & Kinetics</span>
+                                </div>
+                                <span className="opacity-0 group-hover:opacity-100 transition-opacity text-teal-600 font-bold text-lg">→</span>
                             </button>
                         </div>
                     </div>

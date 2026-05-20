@@ -15,7 +15,7 @@ export default function StatisticsScenarioAssessmentEngine({ scenarios = [], tit
     const [timeLeft, setTimeLeft] = useState(TIME_LIMIT_SEC);
     const [finished, setFinished] = useState(false);
     
-    const { startSession, finishSession } = useSessionLogger();
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
     const isFinishedRef = useRef(false);
 
     // Init questions
@@ -29,7 +29,7 @@ export default function StatisticsScenarioAssessmentEngine({ scenarios = [], tit
     }, [scenarios]);
 
     useEffect(() => {
-        startSession({ nodeId: nodeId || 'stat9-skill-assessment', sessionType: 'assessment' });
+        if (nodeId) startSession({ nodeId, sessionType: 'assessment' });
     }, []); // eslint-disable-line
 
     useEffect(() => {
@@ -37,20 +37,18 @@ export default function StatisticsScenarioAssessmentEngine({ scenarios = [], tit
         isFinishedRef.current = true;
         const mappedAnswers = questions.map((q, i) => {
             const ans = answers[i];
-            let isCorrect = false;
-            if (ans !== null) {
-                isCorrect = ans === q.ans;
-            }
+            if (ans === null) return null;
+            const isCorrect = ans === q.ans;
             return {
                 question_index: i,
                 answer_json: { selected: ans, correct_answer: q.ans },
-                is_correct: isCorrect,
+                is_correct: isCorrect ? 1 : 0,
                 marks_awarded: isCorrect ? 1 : 0,
                 marks_possible: 1,
                 time_taken_ms: 0,
             };
-        });
-        finishSession({ answers_payload: mappedAnswers });
+        }).filter(Boolean);
+        finishSession({ answers_payload: mappedAnswers, totalQuestions: TOTAL_QUESTIONS });
     }, [finished, questions]); // eslint-disable-line
 
     // Timer countdown
@@ -75,6 +73,11 @@ export default function StatisticsScenarioAssessmentEngine({ scenarios = [], tit
         const newAns = [...answers];
         newAns[currentStep] = val;
         setAnswers(newAns);
+        if (nodeId && questions[currentStep]) {
+            const q = questions[currentStep];
+            const isCorrect = val === q.ans;
+            logAnswer({ question_index: currentStep, answer_json: { selected: val, correct_answer: q.ans }, is_correct: isCorrect ? 1.0 : 0.0 });
+        }
     };
 
     const toggleMark = () => {

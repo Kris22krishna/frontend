@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../lines_and_angles_9.module.css';
 import { LatexText } from '../../../../../LatexText';
+import { NODE_IDS } from '@/lib/curriculumIds';
+
 
 import LAScenarioPracticeEngine from './Engines/LAScenarioPracticeEngine';
 import LAScenarioAssessmentEngine from './Engines/LAScenarioAssessmentEngine';
@@ -19,7 +21,7 @@ import {
 const SKILLS = [
     {
         id: 'linear-pair',
-        nodeId: 'b5091003-0001-0000-0000-000000000000',
+        nodeId: NODE_IDS.g9MathLALinearPair,
         title: 'Linear Pair Axiom',
         subtitle: 'Skill 1 · Supplementary Angles',
         icon: '↔️',
@@ -42,7 +44,7 @@ const SKILLS = [
     },
     {
         id: 'vertically-opposite',
-        nodeId: 'b5091003-0002-0000-0000-000000000000',
+        nodeId: NODE_IDS.g9MathLAVerticallyOpposite,
         title: 'Vertically Opposite Angles',
         subtitle: 'Skill 2 · Intersecting Lines',
         icon: '✂️',
@@ -65,7 +67,7 @@ const SKILLS = [
     },
     {
         id: 'parallel-transversal',
-        nodeId: 'b5091003-0003-0000-0000-000000000000',
+        nodeId: NODE_IDS.g9MathLAParallelTransversal,
         title: 'Parallel Lines & Transversals',
         subtitle: 'Skill 3 · Grids & Intersections',
         icon: '🛤️',
@@ -96,7 +98,7 @@ const SKILLS = [
     },
     {
         id: 'angle-sum',
-        nodeId: 'b5091003-0004-0000-0000-000000000000',
+        nodeId: NODE_IDS.g9MathLAAngleSum,
         title: 'Angle Sum & Complex Proving',
         subtitle: 'Skill 4 · Putting it Together',
         icon: '🧠',

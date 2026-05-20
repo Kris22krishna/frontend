@@ -1,13 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MathRenderer from '../../../../../../MathRenderer';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
 
-export default function QuizEngine({ questions, title, onBack, color }) {
+export default function QuizEngine({ questions, title, onBack, color, nodeId }) {
     const [questionSet, setQuestionSet] = useState(() => typeof questions === 'function' ? questions() : questions);
     const [current, setCurrent] = useState(0);
     const [selected, setSelected] = useState(null);
     const [answered, setAnswered] = useState(false);
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
+    const answersRef = useRef([]);
+
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+
+    useEffect(() => {
+        if (nodeId) startSession({ nodeId, sessionType: 'practice' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [nodeId]);
 
     useEffect(() => {
         setQuestionSet(typeof questions === 'function' ? questions() : questions);
@@ -43,12 +52,17 @@ export default function QuizEngine({ questions, title, onBack, color }) {
         if (answered) return;
         setSelected(optIdx);
         setAnswered(true);
-        if (optIdx === q.correct) setScore(s => s + 1);
+        const isCorrect = optIdx === q.correct;
+        if (isCorrect) setScore(s => s + 1);
+        const entry = { nodeId, questionIndex: current, isCorrect: isCorrect ? 1 : 0, timeTakenMs: 0 };
+        answersRef.current.push(entry);
+        logAnswer(entry);
     };
 
-    const handleNext = () => {
+    const handleNext = async () => {
         if (current + 1 >= questionSet.length) {
             setFinished(true);
+            await finishSession({ answers_payload: answersRef.current });
         } else {
             setCurrent(c => c + 1);
             setSelected(null);

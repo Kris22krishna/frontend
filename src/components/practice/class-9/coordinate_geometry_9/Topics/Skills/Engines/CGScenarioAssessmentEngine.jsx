@@ -28,7 +28,7 @@ export default function CGScenarioAssessmentEngine({ scenarios, title, color, on
     const [finished, setFinished] = useState(false);
     const [timeLeft, setTimeLeft] = useState(20 * 60); // 20 min
     const svgRef = useRef(null);
-    const { startSession, finishSession } = useSessionLogger();
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
     const isFinishedRef = useRef(false);
 
     const stepInfo = allSteps[currentStep];
@@ -44,20 +44,48 @@ export default function CGScenarioAssessmentEngine({ scenarios, title, color, on
     useEffect(() => {
         if (!finished || isFinishedRef.current) return;
         isFinishedRef.current = true;
-        const mcqAnswers = allSteps.map((step, i) => {
-            if (step.type !== 'mcq') return null;
+        const allAnswers = allSteps.map((step, i) => {
             const sc = scenarios[step.scIdx];
-            const mcq = sc.mcqs[step.mcqIdx];
-            return {
-                question_index: i,
-                answer_json: { selected: answers[i] ?? null, correct_answer: mcq.ans },
-                is_correct: answers[i] === mcq.ans,
-                marks_awarded: answers[i] === mcq.ans ? 1 : 0,
-                marks_possible: 1,
-                time_taken_ms: 0,
-            };
-        }).filter(Boolean);
-        finishSession({ answers_payload: mcqAnswers });
+            if (step.type === 'mcq') {
+                const mcq = sc.mcqs[step.mcqIdx];
+                const isCorrect = answers[i] === mcq.ans;
+                return {
+                    question_index: i,
+                    answer_json: { selected: answers[i] ?? null, correct_answer: mcq.ans, step_type: 'mcq' },
+                    is_correct: isCorrect ? 1 : 0,
+                    marks_awarded: isCorrect ? 1 : 0,
+                    marks_possible: 1,
+                    time_taken_ms: 0,
+                };
+            } else {
+                const placed = answers[i];
+                let isCorrect = false;
+                if (sc.readOnly) {
+                    isCorrect = true; // auto-filled by system
+                } else if (placed) {
+                    if (sc.interactionType === 'click_region') {
+                        const target = sc.targetRegions || [];
+                        isCorrect = target.length > 0 &&
+                            placed.length === target.length &&
+                            target.every(r => placed.includes(r));
+                    } else {
+                        const required = sc.points || [];
+                        isCorrect = required.length > 0 &&
+                            placed.length === required.length &&
+                            required.every((pt, idx) => placed[idx] && placed[idx].x === pt.x && placed[idx].y === pt.y);
+                    }
+                }
+                return {
+                    question_index: i,
+                    answer_json: { step_type: 'plot', answered: placed !== null, correct_answer: sc.interactionType === 'click_region' ? sc.targetRegions : sc.points },
+                    is_correct: isCorrect ? 1 : 0,
+                    marks_awarded: isCorrect ? 1 : 0,
+                    marks_possible: 1,
+                    time_taken_ms: 0,
+                };
+            }
+        });
+        finishSession({ answers_payload: allAnswers, totalQuestions: allSteps.length });
     }, [finished]); // eslint-disable-line
 
     // Auto-answer readOnly plots
@@ -174,6 +202,12 @@ export default function CGScenarioAssessmentEngine({ scenarios, title, color, on
         const newAns = [...answers];
         newAns[currentStep] = idx;
         setAnswers(newAns);
+        if (nodeId && stepInfo.type === 'mcq') {
+            const sc = scenarios[stepInfo.scIdx];
+            const mcq = sc.mcqs[stepInfo.mcqIdx];
+            const isCorrect = idx === mcq.ans;
+            logAnswer({ question_index: currentStep, answer_json: { selected: idx, correct_answer: mcq.ans }, is_correct: isCorrect ? 1.0 : 0.0 });
+        }
     };
 
     const toggleMark = () => {

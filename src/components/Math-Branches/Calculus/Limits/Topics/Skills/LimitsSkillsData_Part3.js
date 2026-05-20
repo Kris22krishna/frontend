@@ -5,7 +5,8 @@ const shuf = (arr) => {
     return a;
 };
 const qMaker = (question, correctAnswer, distractors, explanation) => {
-    const options = [correctAnswer, ...distractors];
+    const uniqueDistractors = Array.from(new Set(distractors)).filter(d => d !== correctAnswer);
+    const options = [correctAnswer, ...uniqueDistractors];
     const shuffled = shuf(options);
     return { question, options: shuffled, correct: shuffled.indexOf(correctAnswer), explanation };
 };

@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../circles_9.module.css';
 import { LatexText } from '../../../../../LatexText';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 // SVGs for Terminology
 const RadiusSVG = () => (
@@ -214,6 +216,13 @@ function QuizEngine({ onBack }) {
     const [score, setScore] = useState(0);
     const [finished, setFinished] = useState(false);
     const quizAnswersRef = useRef([]);
+    const isFinishedRef = useRef(false);
+
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+
+    useEffect(() => {
+        startSession({ nodeId: NODE_IDS.g9MathCircleTerminologyQuiz, sessionType: 'terminology' });
+    }, []); // eslint-disable-line
 
     const q = QUIZ_QUESTIONS[current];
     const color = '#0f4c81';
@@ -225,16 +234,17 @@ function QuizEngine({ onBack }) {
         setAnswered(true);
         const isCorrect = idx === q.ans;
         if (isCorrect) setScore((s) => s + 1);
-        const entry = {
-            question_index: current,
-            answer: idx,
-            is_correct: isCorrect,
-        };
+        const entry = { question_index: current, answer: idx, is_correct: isCorrect };
         quizAnswersRef.current[current] = entry;
+        logAnswer({ questionIndex: current + 1, answerJson: { selected: idx, correct: q.ans }, isCorrect: isCorrect ? 1.0 : 0.0 });
     };
 
     const handleNext = async () => {
         if (current + 1 >= QUIZ_QUESTIONS.length) {
+            if (!isFinishedRef.current) {
+                isFinishedRef.current = true;
+                await finishSession({ totalQuestions: QUIZ_QUESTIONS.length, questionsAnswered: quizAnswersRef.current.length, answersPayload: quizAnswersRef.current });
+            }
             setFinished(true);
         } else { setCurrent((c) => c + 1); setSelected(null); setAnswered(false); }
     };
@@ -260,7 +270,12 @@ function QuizEngine({ onBack }) {
                     {pct >= 75 ? 'Great understanding of Circles vocabulary!' : 'Review the terms and try again for a higher score.'}
                 </p>
                 <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-                    <button className={styles['btn-primary']} onClick={() => { quizAnswersRef.current = []; setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false); }}>
+                    <button className={styles['btn-primary']} onClick={() => {
+                        quizAnswersRef.current = [];
+                        isFinishedRef.current = false;
+                        setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false);
+                        startSession({ nodeId: NODE_IDS.g9MathCircleTerminologyQuiz, sessionType: 'terminology' });
+                    }}>
                         Try Again
                     </button>
                     <button className={styles['nav-back']} onClick={onBack}>Return to Terminology</button>

@@ -148,6 +148,7 @@ export const SKILLS = [
     },
     {
         id: 'decimals',
+        nodeId: 'a4091001-0002-0000-0000-000000000000',
         title: 'Decimal Expansion',
         subtitle: 'Skill 2',
         icon: '🔢',
@@ -165,6 +166,7 @@ export const SKILLS = [
     },
     {
         id: 'surds',
+        nodeId: 'a4091001-0003-0000-0000-000000000000',
         title: 'Operations on Surds',
         subtitle: 'Skill 3',
         icon: '🧮',
@@ -182,6 +184,7 @@ export const SKILLS = [
     },
     {
         id: 'rationalisation',
+        nodeId: 'a4091001-0004-0000-0000-000000000000',
         title: 'Rationalisation',
         subtitle: 'Skill 4',
         icon: '🧹',
@@ -199,6 +202,7 @@ export const SKILLS = [
     },
     {
         id: 'exponents',
+        nodeId: 'a4091001-0005-0000-0000-000000000000',
         title: 'Laws of Exponents',
         subtitle: 'Skill 5',
         icon: '⚡',
@@ -216,6 +220,7 @@ export const SKILLS = [
     },
     {
         id: 'assessment',
+        nodeId: 'a4091001-0006-0000-0000-000000000000',
         title: 'Chapter Assessment',
         subtitle: 'Skill 6',
         icon: '📝',

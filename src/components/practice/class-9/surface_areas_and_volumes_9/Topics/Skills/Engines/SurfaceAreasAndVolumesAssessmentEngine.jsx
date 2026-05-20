@@ -25,7 +25,7 @@ export default function SurfaceAreasAndVolumesAssessmentEngine({ color = "#0f4c8
     }, []);
 
     useEffect(() => {
-        startSession({ nodeId: nodeId || 'sav-9-assess', sessionType: 'assessment' });
+        if (nodeId) startSession({ nodeId, sessionType: 'assessment' });
     }, []); // eslint-disable-line
 
     useEffect(() => {

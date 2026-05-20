@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../herons_formula_9.module.css';
 import { LatexText } from '../../../../../LatexText';
+import { NODE_IDS } from '@/lib/curriculumIds';
+
 
 import HeronsFormulaScenarioPracticeEngine from './Engines/HeronsFormulaScenarioPracticeEngine';
 import HeronsFormulaScenarioAssessmentEngine from './Engines/HeronsFormulaScenarioAssessmentEngine';
@@ -15,7 +17,7 @@ import {
 const SKILLS = [
     {
         id: 'direct-application',
-        nodeId: 'herons-9-0001',
+        nodeId: NODE_IDS.g9MathHFSkill1,
         title: 'Direct Application',
         subtitle: 'Skill 1 · Computing Area',
         icon: '🧮',
@@ -63,7 +65,7 @@ const SKILLS = [
     },
     {
         id: 'ratios-perimeters',
-        nodeId: 'herons-9-0002',
+        nodeId: NODE_IDS.g9MathHFSkill2,
         title: 'Ratios & Missing Sides',
         subtitle: 'Skill 2 · Algebraic Geometry',
         icon: '🧩',
@@ -112,7 +114,7 @@ const SKILLS = [
     },
     {
         id: 'word-problems',
-        nodeId: 'herons-9-0003',
+        nodeId: NODE_IDS.g9MathHFSkill3,
         title: 'Costs & Real World Applications',
         subtitle: 'Skill 3 · Contextual Problems',
         icon: '🏞️',
@@ -279,7 +281,7 @@ export default function HeronsFormula9Skills() {
                                 title={skill.title} 
                                 color={skill.color} 
                                 onBack={goBack}
-                                nodeId={skill.nodeId + '-assess'}
+                                nodeId={skill.nodeId}
                             />
                         </div>
                     )}

@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../herons_formula_9.module.css';
 import { LatexText } from '../../../../../LatexText';
+import { useSessionLogger } from '@/hooks/useSessionLogger';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 const KEY_TERMS = [
     {
@@ -180,6 +182,20 @@ export default function HeronsFormula9Terminology() {
 
     const [quizAnswers, setQuizAnswers] = useState({});
     const [quizStatus, setQuizStatus] = useState({}); // { qIdx: 'correct' | 'wrong' }
+    const answeredCountRef = useRef(0);
+    const answersRef = useRef([]);
+    const sessionStartedRef = useRef(false);
+
+    const { startSession, logAnswer, finishSession } = useSessionLogger();
+
+    // Start session when quiz tab is activated
+    useEffect(() => {
+        if (activeTab === 'quiz' && !sessionStartedRef.current) {
+            sessionStartedRef.current = true;
+            startSession({ nodeId: NODE_IDS.g9MathHFTerminologyQuiz, sessionType: 'terminology' });
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeTab]);
 
     return (
         <div className={styles['page']}>
@@ -312,7 +328,17 @@ export default function HeronsFormula9Terminology() {
                                                         disabled={isAns}
                                                         onClick={() => {
                                                             setQuizAnswers(p => ({ ...p, [qIdx]: oIdx }));
-                                                            setQuizStatus(p => ({ ...p, [qIdx]: oIdx === q.ans ? 'correct' : 'wrong' }));
+                                                            const isCorrect = oIdx === q.ans;
+                                                            setQuizStatus(p => ({ ...p, [qIdx]: isCorrect ? 'correct' : 'wrong' }));
+                                                            // Log the answer
+                                                            const entry = { nodeId: NODE_IDS.g9MathHFTerminologyQuiz, questionIndex: qIdx, isCorrect: isCorrect ? 1 : 0, timeTakenMs: 0 };
+                                                            answersRef.current.push(entry);
+                                                            logAnswer(entry);
+                                                            // Finish session when all questions answered
+                                                            answeredCountRef.current += 1;
+                                                            if (answeredCountRef.current >= QUIZ.length) {
+                                                                finishSession({ answers_payload: answersRef.current });
+                                                            }
                                                         }}
                                                         style={{
                                                             padding: '12px 16px',

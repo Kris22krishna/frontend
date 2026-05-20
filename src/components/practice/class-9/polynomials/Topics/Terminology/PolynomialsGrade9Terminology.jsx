@@ -151,7 +151,7 @@ function QuizEngine({ onBack }) {
     const [userAnswers, setUserAnswers] = useState({});
 
     useEffect(() => {
-        startSession({ nodeId: NODE_IDS.g9MathPolyTerminologyQuiz, sessionType: 'practice' });
+        startSession({ nodeId: NODE_IDS.g9MathPolyTerminologyQuiz, sessionType: 'terminology' });
     }, [startSession]);
 
     const q = QUIZ_QUESTIONS[current];
@@ -197,7 +197,7 @@ function QuizEngine({ onBack }) {
 
     const handleRetry = () => {
         setCurrent(0); setSelected(null); setAnswered(false); setScore(0); setFinished(false); setUserAnswers({});
-        startSession({ nodeId: NODE_IDS.g9MathPolyTerminologyQuiz, sessionType: 'practice' });
+        startSession({ nodeId: NODE_IDS.g9MathPolyTerminologyQuiz, sessionType: 'terminology' });
     };
 
     if (finished) {

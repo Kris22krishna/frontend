@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../quadrilaterals_9.module.css';
 import { LatexText } from '../../../../../LatexText';
+import { NODE_IDS } from '@/lib/curriculumIds';
 import { 
     ParallelogramChart, 
     RectangleChart, 
@@ -19,6 +20,7 @@ import QuadrilateralsScenarioAssessmentEngine from './Engines/QuadrilateralsScen
 const SKILLS = [
     {
         id: 'quad-properties',
+        nodeId: NODE_IDS.g9MathQuadProperties,
         title: 'Parallelogram Properties',
         icon: '▱',
         color: '#0f4c81',
@@ -55,6 +57,7 @@ const SKILLS = [
     },
     {
         id: 'special-quads',
+        nodeId: NODE_IDS.g9MathQuadSpecialQuads,
         title: 'Special Quadrilaterals',
         icon: '▭',
         color: '#10b981',
@@ -91,6 +94,7 @@ const SKILLS = [
     },
     {
         id: 'midpoint-theorem',
+        nodeId: NODE_IDS.g9MathQuadMidpointTheorem,
         title: 'The Mid-point Theorem',
         icon: '🔺',
         color: '#d97706',
@@ -254,11 +258,11 @@ export default function Quadrilaterals9Skills() {
                         </div>
                     ) : view === 'practice' ? (
                         <div style={{ maxWidth: 920, margin: '0 auto', fontFamily: 'Open Sans, sans-serif' }}>
-                            <QuadrilateralsScenarioPracticeEngine scenarios={scenarios} title={activeSkillTitle} color={activeColor} onBack={handleBackToMenu} nodeId={`quadrilaterals9-skill-${activeSkillId}`} />
+                        <QuadrilateralsScenarioPracticeEngine scenarios={scenarios} title={activeSkillTitle} color={activeColor} onBack={handleBackToMenu} nodeId={activeSkillObj?.nodeId} />
                         </div>
                     ) : (
                         <div style={{ maxWidth: 1050, margin: '0 auto', fontFamily: 'Open Sans, sans-serif' }}>
-                            <QuadrilateralsScenarioAssessmentEngine scenarios={scenarios} title={activeSkillTitle} color={activeColor} onBack={handleBackToMenu} nodeId={`quadrilaterals9-assess-${activeSkillId}`} />
+                        <QuadrilateralsScenarioAssessmentEngine scenarios={scenarios} title={activeSkillTitle} color={activeColor} onBack={handleBackToMenu} nodeId={activeSkillObj?.nodeId} />
                         </div>
                     )}
                 </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../../linear_equations_9.module.css';
 import { LatexText } from '../../../../../LatexText';
+import { NODE_IDS } from '@/lib/curriculumIds';
 
 import LEScenarioPracticeEngine from './Engines/LEScenarioPracticeEngine';
 import LEScenarioAssessmentEngine from './Engines/LEScenarioAssessmentEngine';
@@ -19,7 +20,7 @@ import {
 const SKILLS = [
     {
         id: 'finding-solutions',
-        nodeId: 'le9-finding-solutions',
+        nodeId: NODE_IDS.g9MathLE2VFindingSolutions,
         title: 'Finding Solutions',
         subtitle: 'Skill 1 · Substitution & Verification',
         icon: '🔍',
@@ -50,7 +51,7 @@ const SKILLS = [
     },
     {
         id: 'standard-form',
-        nodeId: 'le9-standard-form',
+        nodeId: NODE_IDS.g9MathLE2VStandardForm,
         title: 'Standard Form',
         subtitle: 'Skill 2 · Equation Conversion',
         icon: '📝',
@@ -73,7 +74,7 @@ const SKILLS = [
     },
     {
         id: 'graphing',
-        nodeId: 'le9-graphing',
+        nodeId: NODE_IDS.g9MathLE2VGraphing,
         title: 'Graphing Equations',
         subtitle: 'Skill 3 · Plotting & Intercepts',
         icon: '📈',
@@ -96,7 +97,7 @@ const SKILLS = [
     },
     {
         id: 'special-lines',
-        nodeId: 'le9-special-lines',
+        nodeId: NODE_IDS.g9MathLE2VSpecialLines,
         title: 'Special Lines (x=a, y=b)',
         subtitle: 'Skill 4 · Parallel to Axes',
         icon: '↔️',

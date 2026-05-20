@@ -44,10 +44,20 @@ export default function PolynomialsAssessmentEngine({ questionPool, sampleSize =
 
     const finish = useCallback(() => {
         const score = questions.reduce((acc, q, i) => acc + (answers[i] === q.correct ? 1 : 0), 0);
-        const payload = questions.reduce((acc, q, i) => {
-            acc[i] = { selectedOption: answers[i], isCorrect: answers[i] === q.correct };
-            return acc;
-        }, {});
+        const payload = questions
+            .map((q, i) => {
+                if (answers[i] === null) return null;
+                const isCorrect = answers[i] === q.correct;
+                return {
+                    question_index: i,
+                    answer_json: { selected: answers[i], correct_answer: q.correct },
+                    is_correct: isCorrect ? 1 : 0,
+                    marks_awarded: isCorrect ? 1 : 0,
+                    marks_possible: 1,
+                    time_taken_ms: 0,
+                };
+            })
+            .filter(Boolean);
 
         finishSession({
             totalQuestions: questions.length,
