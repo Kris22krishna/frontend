@@ -1610,6 +1610,106 @@ export const SLUG_TO_NODE_ID = {
   'g10-math-prob-medium-test':         NODE_IDS.g10MathProbMediumTest,
   'g10-math-prob-hard-test':           NODE_IDS.g10MathProbHardTest,
 
+  // Grade 10 Math: Surface Areas and Volumes
+  'g10-math-surface-areas-and-volumes':     NODE_IDS.g10MathSurfaceAreasAndVolumes,
+  'g10-math-sav-visualization':             NODE_IDS.g10MathSAVVisualization,
+  'g10-math-sav-surface-area':              NODE_IDS.g10MathSAVSurfaceArea,
+  'g10-math-sav-volume':                    NODE_IDS.g10MathSAVVolume,
+  'g10-math-sav-conversion':                NODE_IDS.g10MathSAVConversion,
+  'g10-math-sav-hollow-parts':              NODE_IDS.g10MathSAVHollowParts,
+  'g10-math-sav-capacity':                  NODE_IDS.g10MathSAVCapacity,
+  'g10-math-sav-real-world-problems':       NODE_IDS.g10MathSAVRealWorldProblems,
+  'g10-math-sav-terminology':               NODE_IDS.g10MathSAVTerminologyQuiz,
+
+  // Grade 10 Math: Areas Related to Circles
+  'g10-math-areas-circles':                 NODE_IDS.g10MathAreasCircles,
+  'g10-math-ac-regions':                    NODE_IDS.g10MathAreasCirclesRegions,
+  'g10-math-ac-arc-length':                 NODE_IDS.g10MathAreasCirclesArcLength,
+  'g10-math-ac-sector-area':                NODE_IDS.g10MathAreasCirclesSectorArea,
+  'g10-math-ac-segment-area':               NODE_IDS.g10MathAreasCirclesSegmentArea,
+  'g10-math-ac-real-life':                  NODE_IDS.g10MathAreasCirclesRealLife,
+  'g10-math-ac-composite':                  NODE_IDS.g10MathAreasCirclesComposite,
+  'g10-math-ac-terminology':                NODE_IDS.g10MathAreasCirclesTerminologyQuiz,
+
+  // Grade 10 Math: Triangles
+  'g10-math-triangles':                     NODE_IDS.g10MathTriangles,
+  'g10-math-tri-similar-figures':           NODE_IDS.g10MathTriSimilarFigures,
+  'g10-math-tri-similarity-of-triangles':   NODE_IDS.g10MathTriSimilarityOfTriangles,
+  'g10-math-tri-bpt-and-converse':          NODE_IDS.g10MathTriBPTAndConverse,
+  'g10-math-tri-applications-of-bpt':       NODE_IDS.g10MathTriApplicationsOfBPT,
+  'g10-math-tri-aaa-ss-sas':                NODE_IDS.g10MathTriAAASSSAS,
+  'g10-math-tri-using-similar-triangles':   NODE_IDS.g10MathTriUsingSimilarTriangles,
+  'g10-math-tri-real-life-applications':    NODE_IDS.g10MathTriRealLifeApplications,
+  'g10-math-tri-terminology':               NODE_IDS.g10MathTriTerminologyQuiz,
+
+  // Grade 10 Math: Arithmetic Progressions
+  'g10-math-arithmetic-progressions':       NODE_IDS.g10MathArithmeticProgressions,
+  'g10-math-ap-recognising-patterns':       NODE_IDS.g10MathAPRecognisingPatterns,
+  'g10-math-ap-understanding':              NODE_IDS.g10MathAPUnderstanding,
+  'g10-math-ap-identifying-terms':          NODE_IDS.g10MathAPIdentifyingTerms,
+  'g10-math-ap-finding-specific-terms':     NODE_IDS.g10MathAPFindingSpecificTerms,
+  'g10-math-ap-sum-of-terms':               NODE_IDS.g10MathAPSumOfTerms,
+  'g10-math-ap-chapter-test':               NODE_IDS.g10MathAPChapterTest,
+
+  // Grade 10 Math: Circles
+  'g10-math-circles':                       NODE_IDS.g10MathCircles,
+  'g10-math-circles-tangent-basics':        NODE_IDS.g10MathCirclesTangentBasics,
+  'g10-math-circles-tangent-perp':          NODE_IDS.g10MathCirclesTangentPerp,
+  'g10-math-circles-number-of-tangents':    NODE_IDS.g10MathCirclesNumberOfTangents,
+  'g10-math-circles-lengths-of-tangents':   NODE_IDS.g10MathCirclesLengthsOfTangents,
+  'g10-math-circles-angle-properties':      NODE_IDS.g10MathCirclesAngleProperties,
+  'g10-math-circles-circumscribed-polygons':NODE_IDS.g10MathCirclesCircumscribedPolygons,
+  'g10-math-circles-complex-applications':  NODE_IDS.g10MathCirclesComplexApplications,
+  'g10-math-circles-terminology':           NODE_IDS.g10MathCirclesTerminologyQuiz,
+
+  // Grade 10 Math: Polynomials
+  'g10-math-polynomials':                   NODE_IDS.g10MathPolynomials,
+  'g10-math-poly-types-degrees':            NODE_IDS.g10MathPolyTypesDegrees,
+  'g10-math-poly-evaluating-identifying':   NODE_IDS.g10MathPolyEvaluatingIdentifying,
+  'g10-math-poly-geometrical-interpretation':NODE_IDS.g10MathPolyGeometricalInterpretation,
+  'g10-math-poly-graphical-behaviour':      NODE_IDS.g10MathPolyGraphicalBehaviour,
+  'g10-math-poly-relationship-quadratic':   NODE_IDS.g10MathPolyRelationshipQuadratic,
+  'g10-math-poly-relationship-cubic':       NODE_IDS.g10MathPolyRelationshipCubic,
+  'g10-math-poly-constructing-quadratic':   NODE_IDS.g10MathPolyConstructingQuadratic,
+  'g10-math-poly-chapter-test':             NODE_IDS.g10MathPolyChapterTest,
+
+  // Grade 10 Math: Pair of Linear Equations
+  'g10-math-linear-equations':              NODE_IDS.g10MathLinearEquations,
+  'g10-math-le-intro':                      NODE_IDS.g10MathLEIntro,
+  'g10-math-le-graphical':                  NODE_IDS.g10MathLEGraphical,
+  'g10-math-le-consistency':                NODE_IDS.g10MathLEConsistency,
+  'g10-math-le-substitution':               NODE_IDS.g10MathLESubstitution,
+  'g10-math-le-elimination':                NODE_IDS.g10MathLEElimination,
+  'g10-math-le-applications':               NODE_IDS.g10MathLEApplications,
+  'g10-math-le-standard-form':              NODE_IDS.g10MathLEStandardForm,
+  'g10-math-le-chapter-test':               NODE_IDS.g10MathLEChapterTest,
+
+  // Grade 10 Math: Coordinate Geometry
+  'g10-math-coordinate-geometry':           NODE_IDS.g10MathCoordinateGeometry,
+  'g10-math-cg-distance-formula':           NODE_IDS.g10MathCGDistanceFormula,
+  'g10-math-cg-section-formula':            NODE_IDS.g10MathCGSectionFormula,
+  'g10-math-cg-area-of-triangle':           NODE_IDS.g10MathCGAreaOfTriangle,
+  'g10-math-cg-collinear-points':           NODE_IDS.g10MathCGCollinearPoints,
+  'g10-math-cg-geometric-figures':          NODE_IDS.g10MathCGGeometricFigures,
+
+  // Grade 10 Math: Introduction to Trigonometry
+  'g10-math-trigonometry':                  NODE_IDS.g10MathTrigonometry,
+  'g10-math-trig-real-life':                NODE_IDS.g10MathTrigRealLife,
+  'g10-math-trig-ratios':                   NODE_IDS.g10MathTrigRatios,
+  'g10-math-trig-triangle-sides':           NODE_IDS.g10MathTrigTriangleSides,
+  'g10-math-trig-standard-angles':          NODE_IDS.g10MathTrigStandardAngles,
+  'g10-math-trig-evaluating-values':        NODE_IDS.g10MathTrigEvaluatingValues,
+  'g10-math-trig-identities':               NODE_IDS.g10MathTrigIdentities,
+  'g10-math-trig-simplify-prove':           NODE_IDS.g10MathTrigSimplifyProve,
+  'g10-math-trig-angle-problems':           NODE_IDS.g10MathTrigAngleProblems,
+  'g10-math-trig-terminology':              NODE_IDS.g10MathTrigIntroTerminologyQuiz,
+
+  // Grade 10 Math: Some Applications of Trigonometry
+  'g10-math-trig-app':                      NODE_IDS.g10MathTrigApp,
+  'g10-math-trig-app-heights-distances':    NODE_IDS.g10MathTrigAppHeightsDistances,
+  'g10-math-trig-app-multi-step':           NODE_IDS.g10MathTrigAppMultiStep,
+  'g10-math-trig-app-terminology':          NODE_IDS.g10MathTrigAppTerminologyQuiz,
+
   // Grade 11 Chemistry: Structure of Atom
   'g11-chem-structure-of-atom':                NODE_IDS.g11ChemistryStructureOfAtom,
   'g11-chem-soa-sub-atomic-particles':         NODE_IDS.g11ChemSOASubAtomicParticles,
